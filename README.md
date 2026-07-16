@@ -11,4 +11,4 @@ Nothing yet — it's a sandbox for practicing git and GitHub.
 
 1. Clone the repo.
 2. Make a change on a new branch.
-3. Open a pull request and mege it.
+3. Open a pull request and merge it.
