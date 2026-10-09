@@ -19,6 +19,7 @@
   --serif:"Source Serif 4",Georgia,"Times New Roman",serif;
   --sans:Inter,system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
   --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  --s1:#2a78d6; --s2:#eb6834; --s3:#1baf7a;
   color-scheme:light;
 }
 @media (prefers-color-scheme:dark){
@@ -28,6 +29,7 @@
     --ok:#7cc79c; --ok-soft:#173226; --warn:#e3b264; --warn-soft:#33281a; --danger:#ec8f8f; --danger-soft:#3a1f22;
     --violet:#b6a7ec; --violet-soft:#29233f; --example:#e7b76c; --example-soft:#33291a;
     --shadow:0 1px 2px rgba(0,0,0,.3),0 4px 18px rgba(0,0,0,.25);
+    --s1:#3987e5; --s2:#d95926; --s3:#199e70;
     color-scheme:dark;
   }
 }
@@ -37,6 +39,7 @@
   --ok:#7cc79c; --ok-soft:#173226; --warn:#e3b264; --warn-soft:#33281a; --danger:#ec8f8f; --danger-soft:#3a1f22;
   --violet:#b6a7ec; --violet-soft:#29233f; --example:#e7b76c; --example-soft:#33291a;
   --shadow:0 1px 2px rgba(0,0,0,.3),0 4px 18px rgba(0,0,0,.25);
+  --s1:#3987e5; --s2:#d95926; --s3:#199e70;
   color-scheme:dark;
 }
 *{box-sizing:border-box}
@@ -63,7 +66,7 @@ header.top{position:sticky;top:0;z-index:20;background:color-mix(in srgb,var(--b
 .spacer{flex:1}
 nav.tabs{display:flex;gap:2px;overflow-x:auto;scrollbar-width:none;margin:0 -16px;padding:0 16px}
 nav.tabs::-webkit-scrollbar{display:none}
-.tab{appearance:none;border:0;background:none;color:var(--muted);font:500 .92rem var(--sans);padding:10px 12px 12px;display:flex;align-items:center;gap:7px;white-space:nowrap;cursor:pointer;border-bottom:2.5px solid transparent;border-radius:0}
+.tab{appearance:none;border:0;background:none;color:var(--muted);font:500 .9rem var(--sans);padding:10px 8px 12px;display:flex;align-items:center;gap:6px;white-space:nowrap;cursor:pointer;border-bottom:2.5px solid transparent;border-radius:0}
 .tab:hover{color:var(--ink)}
 .tab[aria-selected="true"]{color:var(--accent);border-bottom-color:var(--accent)}
 .tab:focus-visible{outline:2px solid var(--accent);outline-offset:-4px;border-radius:6px}
@@ -259,6 +262,43 @@ ol.qs{margin:12px 0 0;padding-left:22px}
 ol.qs li{margin-bottom:12px}
 @media(prefers-reduced-motion:reduce){.spin{animation:none}}
 
+
+/* Figure Lab */
+.mode-seg button{display:inline-flex;align-items:center;gap:7px;padding:10px 16px}
+.fl-layout{display:grid;gap:16px;grid-template-columns:1fr}
+.fl-layout > *{min-width:0}
+@media(min-width:900px){.fl-layout{grid-template-columns:270px 1fr;align-items:start}.fl-list{position:sticky;top:110px;max-height:calc(100vh - 130px);overflow:auto}}
+.fl-group{font:600 .72rem var(--sans);letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin:12px 0 6px}
+.fl-item{appearance:none;display:flex;align-items:center;gap:8px;width:100%;text-align:left;border:0;background:none;font:inherit;font-size:.88rem;color:var(--ink);padding:8px;border-radius:var(--radius-sm);cursor:pointer}
+.fl-item:hover{background:var(--surface-2)}
+.fl-item[aria-current="true"]{background:var(--accent-soft)}
+.fl-item-t{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.fl-ok{color:var(--ok);display:flex}
+.type-grid{display:flex;flex-wrap:wrap;gap:6px}
+ol.steps{margin:0;padding-left:20px;font-size:.92rem}
+ol.steps li{margin-bottom:6px}
+.check.flag.on-flag span{color:var(--danger);text-decoration:none}
+.checks-2{display:grid;grid-template-columns:1fr;gap:2px;margin:0 -10px}
+@media(min-width:760px){.checks-2{grid-template-columns:1fr 1fr}}
+.check-na{display:flex;align-items:center;gap:4px}
+.check-na .check{flex:1}
+.check-na.is-na .check span{color:var(--muted);text-decoration:line-through}
+.na-btn{appearance:none;border:1px solid var(--line);background:var(--surface);color:var(--muted);font:600 .7rem var(--sans);padding:3px 7px;border-radius:999px;cursor:pointer;min-height:26px}
+.na-btn[aria-pressed="true"]{background:var(--surface-2);color:var(--ink);border-color:var(--muted)}
+.output.prose{font:15px/1.65 var(--serif);white-space:normal}
+.output.code{max-height:260px;font-size:12px}
+.goal-card{display:grid;gap:16px;grid-template-columns:1fr;margin-top:14px;padding-top:14px;border-top:1px solid var(--line)}
+@media(min-width:760px){.goal-card{grid-template-columns:220px 1fr}}
+.goal-prev{background:var(--surface-2);border-radius:var(--radius-sm);padding:14px;display:grid;place-items:center;align-self:start}
+svg.mini{width:100%;max-width:220px;height:auto;display:block}
+.builder{display:grid;gap:18px;grid-template-columns:1fr}
+@media(min-width:980px){.builder{grid-template-columns:1fr 1.2fr;align-items:start}}
+.series-row{display:grid;grid-template-columns:14px minmax(0,.8fr) minmax(0,1.4fr);gap:8px;align-items:center;margin-bottom:8px}
+.swatch{width:14px;height:14px;border-radius:4px}
+.chart-frame{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius-sm);padding:8px}
+.chart-frame svg{width:100%;height:auto;display:block}
+.chart-frame path:hover,.chart-frame g:hover{opacity:.8}
+
 /* Writing */
 .write-layout{display:grid;gap:16px;grid-template-columns:1fr}
 @media(min-width:900px){.write-layout{grid-template-columns:290px 1fr;align-items:start}.stepper{position:sticky;top:110px}}
@@ -311,7 +351,8 @@ details.guide[open] summary::after{transform:rotate(-135deg)}
 
 /* Progress */
 .stats{display:grid;gap:14px;grid-template-columns:repeat(2,1fr)}
-@media(min-width:820px){.stats{grid-template-columns:repeat(4,1fr)}}
+@media(min-width:620px){.stats{grid-template-columns:repeat(3,1fr)}}
+@media(min-width:1000px){.stats{grid-template-columns:repeat(5,1fr)}}
 .stat{display:flex;flex-direction:column;gap:4px}
 .stat-ico{width:36px;height:36px;border-radius:10px;background:var(--accent-soft);color:var(--accent);display:grid;place-items:center;margin-bottom:6px}
 .stat-num{font-family:var(--serif);font-size:2.1rem;font-weight:600;line-height:1}
@@ -359,6 +400,7 @@ footer.foot{max-width:1180px;margin:0 auto;padding:0 16px 40px;color:var(--muted
   <section class="panel" id="panel-reader" role="tabpanel" aria-labelledby="tab-reader" hidden></section>
   <section class="panel" id="panel-critique" role="tabpanel" aria-labelledby="tab-critique" hidden></section>
   <section class="panel" id="panel-write" role="tabpanel" aria-labelledby="tab-write" hidden></section>
+  <section class="panel" id="panel-figlab" role="tabpanel" aria-labelledby="tab-figlab" hidden></section>
   <section class="panel" id="panel-present" role="tabpanel" aria-labelledby="tab-present" hidden></section>
   <section class="panel" id="panel-progress" role="tabpanel" aria-labelledby="tab-progress" hidden></section>
 </main>
@@ -394,6 +436,7 @@ const ICONS = {
   upload:'<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"/>',
   x:'<path d="M18 6 6 18M6 6l12 12"/>',
   link:'<path d="M10 13a5 5 0 0 0 7.5.5l3-3a5 5 0 0 0-7-7l-1.7 1.7"/><path d="M14 11a5 5 0 0 0-7.5-.5l-3 3a5 5 0 0 0 7 7l1.7-1.7"/>',
+  image:'<rect x="3" y="3" width="18" height="18" rx="2"/><path d="M7 16l4-5 3 3 2-2 3 4"/><circle cx="8.5" cy="8.5" r="1.5"/>',
   book:'<path d="M2 4h6a4 4 0 0 1 4 4v13a3 3 0 0 0-3-3H2zM22 4h-6a4 4 0 0 0-4 4v13a3 3 0 0 1 3-3h7z"/>',
   sparkle:'<path d="M12 3l1.9 5.1L19 10l-5.1 1.9L12 17l-1.9-5.1L5 10l5.1-1.9z"/>',
   clock:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
@@ -412,6 +455,7 @@ const TABS = [
   {id:'reader', label:'Paper Reader', icon:'book'},
   {id:'critique', label:'Critique Studio', icon:'clip'},
   {id:'write', label:'Write Your Paper', icon:'pen'},
+  {id:'figlab', label:'Figure Lab', icon:'image'},
   {id:'present', label:'Presentation Builder', icon:'slides'},
   {id:'progress', label:'My Progress', icon:'chart'}
 ];
@@ -649,7 +693,7 @@ const SLIDES = [
   {key:'background', title:'Background', w:.12, tip:'Give just enough context for a non-specialist. One idea per slide; use a visual instead of a wall of text.'},
   {key:'problem', title:'Problem & research question', w:.12, tip:'State the gap and the question clearly — this is the slide people remember. Pause after reading the question.'},
   {key:'method', title:'Method', w:.15, tip:'Use a simple diagram of the process (data → method → analysis). Skip details you can answer in Q&A.'},
-  {key:'findings', title:'Key findings', w:.2, tip:'Lead with the single most important result. Highlight the number that matters; explain what it means in plain words.'},
+  {key:'findings', title:'Key findings', w:.2, tip:'Lead with the single most important result. Highlight the number that matters; explain what it means in plain words. Use one figure from Figure Lab per main result — and say what to look at before you show it.'},
   {key:'critique', title:'Critique: strengths & weaknesses', w:.16, tip:'Be balanced and specific: two strengths, two weaknesses, each with evidence. Critique the work, not the authors.'},
   {key:'conclusion', title:'Conclusion & implications', w:.1, tip:'Return to the question and answer it. End with one takeaway sentence the audience can repeat.'},
   {key:'qa', title:'Questions & answers', w:.1, tip:'Prepare three likely questions in advance. Repeat each question before answering; it is fine to say "that is a great question for future work".'}
@@ -725,6 +769,10 @@ function seedState(){
     writing:{title:'', active:0, steps:{}, review:{}},
     pres:{source:'crit:ex-crit-aau', minutes:10},
     reader:{papers:[demoReaderPaper()], active:'ex-reader-1', view:'paras'},
+    figlab:{mode:'explain', reviews:[exampleFigure()], active:'ex-fig-1', filter:'', build:{goal:'classif',
+      chart:{title:'Accuracy by model and language', x:'Model', y:'Accuracy (%)', cats:'Model A, Model B, Model C', type:'grouped',
+        series:[{name:'Arabic', values:'71, 78, 86'}, {name:'English', values:'84, 88, 90'}, {name:'', values:''}]},
+      cap:{no:'2', shows:'Accuracy of three models on the Arabic and English test sets', data:'n = 1,200 essays per language', finding:'Model C performs best in both languages, but every model scores lower on Arabic'}}},
     ui:{tab:'hub', db:'scholar', status:'All', tag:'', paperIdea:''},
     theme:'auto'
   };
@@ -742,6 +790,7 @@ S.ui = Object.assign({}, base.ui, S.ui);
 S.writing = Object.assign({}, base.writing, S.writing);
 S.pres = Object.assign({}, base.pres, S.pres);
 S.reader = Object.assign({papers:[], active:'', view:'paras'}, S.reader);
+S.figlab = Object.assign({}, base.figlab, S.figlab); S.figlab.build = Object.assign({}, base.figlab.build, S.figlab.build);
 
 let saveTimer;
 function save(){
@@ -1959,12 +2008,454 @@ function paperOutline(){
   return L.join('\n').trim();
 }
 
+/* ---------- Figure Lab ---------- */
+const FIG_TYPES = [
+  {k:'bar', n:'Bar chart', name:'bar chart', axis:'xy',
+   steps:['Read the title, the axis labels and the units.','Check where the value axis starts — it should usually be zero.','Compare the bar lengths: find the highest, the lowest and the size of the gaps.','Look for error bars and whether they overlap between groups.','If bars are grouped, use the legend to match each colour to its condition.'],
+   flags:[['The value (y) axis does not start at zero, which exaggerates differences','the value axis does not start at zero, which exaggerates the differences'],['Means are compared without error bars or confidence intervals','means are compared without error bars or confidence intervals'],['3D or shadowed bars distort the lengths','3D effects distort the bar lengths'],['Too many groups or colours to compare easily','too many groups or colours make comparison difficult']]},
+  {k:'line', n:'Line chart', name:'line chart', axis:'xy',
+   steps:['Read the axes and units — is time (or another ordered variable) on the x-axis?','Follow each line’s overall direction: rising, falling or flat.','Compare slopes and turning points between lines.','Check that the x-values are evenly spaced or that uneven gaps are shown honestly.','Look for confidence bands or error bars around the lines.'],
+   flags:[['The line joins unrelated categories that have no natural order','a line joins unrelated categories that have no natural order'],['Uneven time intervals are drawn as equal steps','uneven time intervals are drawn as equal steps'],['A cropped y-axis exaggerates a small change','a cropped y-axis exaggerates a small change'],['Too many overlapping lines (“spaghetti chart”)','too many overlapping lines make the trends hard to follow'],['Two different y-axes on one chart','two different y-axes invite misleading comparisons']]},
+  {k:'scatter', n:'Scatter plot', name:'scatter plot', axis:'xy',
+   steps:['Read the axes and their units — which variable is on x and which on y?','Look at the overall direction: positive, negative or no clear trend.','Check how tightly the points cluster around that trend.','Spot outliers and ask how they affect the result.','Check whether a trend line or correlation value (r, R²) and n are reported.'],
+   flags:[['Correlation is presented as if it proves causation','the correlation is presented as if it proved causation'],['No correlation value or sample size is reported','no correlation value or sample size is reported'],['Overlapping points hide how dense the data is','overlapping points hide the density of the data'],['Outliers removed or ignored without explanation','outliers appear to be removed or ignored without explanation']]},
+  {k:'histogram', n:'Histogram', name:'histogram', axis:'xy',
+   steps:['Read the variable and units on the x-axis, and counts or percentages on the y-axis.','Check the bin width and whether all bins are equal.','Describe the shape: symmetric, skewed, one peak or several.','Note the spread and any extreme values.','Check that the sample size (n) is stated.'],
+   flags:[['Bins are so wide or narrow that the shape is hidden','the bin width hides the true shape of the distribution'],['Unequal bin widths','the bins have unequal widths'],['Raw counts compared across groups of different sizes','raw counts are compared across groups of different sizes']]},
+  {k:'box', n:'Box plot', name:'box plot', axis:'xy',
+   steps:['Identify the groups being compared.','Find the median line inside each box.','Read the box as the middle 50% of values (the interquartile range).','Check the whiskers and the individual outlier points.','Compare medians and spread across the groups.'],
+   flags:[['The whisker definition is not stated','the whisker definition is not stated'],['Small samples are hidden behind a box (no individual points)','small samples are hidden behind summary boxes'],['Sample size per group is not shown','the sample size of each group is not shown']]},
+  {k:'pie', n:'Pie chart', name:'pie chart', axis:'single', axisQ:'What do the slices represent — 100% of what?', axisLead:'Its slices represent',
+   steps:['Identify the whole: 100% of what?','Find the largest and smallest slices.','Read the labels or percentages for each slice.','Check that the slices add up to 100%.','Ask whether a bar chart would show the comparison more clearly.'],
+   flags:[['Too many slices (more than five)','it has too many slices to compare'],['3D, exploded or donut effects distort the angles','3D or exploded effects distort the slice angles'],['Percentages do not add up to 100%','the percentages do not add up to 100%'],['Several pies are compared side by side','several pies are compared side by side, which is hard to read']]},
+  {k:'table', n:'Table', name:'table', axis:'single', axisQ:'What do the rows and columns report (with units)?', axisLead:'It reports',
+   steps:['Read the title, column headers and units.','Identify what each row represents.','Find the best and worst values (often in bold).','Compare values across columns and rows.','Read footnotes for abbreviations, n and significance markers.'],
+   flags:[['Units are missing from headers','units are missing from the column headers'],['Inconsistent decimal places','decimal places are inconsistent'],['No standard deviation or other measure of variation','no measure of variation is reported'],['Baselines look selectively chosen','the comparison baselines appear selectively chosen']]},
+  {k:'heatmap', n:'Heatmap / confusion matrix', name:'heatmap (confusion matrix)', axis:'xy', xQ:'Rows show', yQ:'Columns show',
+   steps:['Read what the rows and columns represent (e.g. true vs. predicted class).','Read the colour scale or legend.','For a confusion matrix, the diagonal shows correct predictions.','Find the largest off-diagonal cells — which classes are confused?','Check whether cells show counts or percentages, and whether class totals are given.'],
+   flags:[['Confusion matrix without class totals','class totals are not reported, so imbalance is hidden'],['Rainbow colour scale','a rainbow colour scale makes values hard to compare'],['No numbers in the cells','the cells have no numbers'],['Normalisation (counts vs. %) is not stated','it is not stated whether cells show counts or percentages']]},
+  {k:'flowchart', n:'Flowchart / framework', name:'flowchart', axis:'single', axisQ:'What stages or components does it show?', axisLead:'It shows',
+   steps:['Find the start and the end points.','Follow the arrows in order.','Identify decision points or loops.','Match each box to the method described in the text.','Check for steps that are missing or unexplained.'],
+   flags:[['Arrows have unclear meaning','the meaning of the arrows is unclear'],['Some steps are not described in the text','some steps are not described in the text'],['Inconsistent shapes or colours for the same kind of step','shapes or colours are used inconsistently']]},
+  {k:'architecture', n:'Model architecture', name:'model architecture diagram', axis:'single', axisQ:'What are the main components, from input to output?', axisLead:'Its main components are',
+   steps:['Find the input and the output.','Trace how data flows through the layers or modules.','Note dimensions, sizes and key hyperparameters if shown.','Identify the novel component the authors propose.','Check that names match those used in the text and equations.'],
+   flags:[['The novel component is not highlighted','the novel component is not highlighted'],['Layer sizes or key hyperparameters are missing','layer sizes or key hyperparameters are missing'],['Names differ from the text or equations','component names differ from those in the text']]}
+];
+const FIG_CHECKS = [
+  ['axes','Axes labelled with units','does not label the axes with units'],
+  ['legend','Legend clear','lacks a clear legend'],
+  ['n','Sample size (n) stated','does not state the sample size (n)'],
+  ['err','Error bars or confidence intervals shown where needed','does not show error bars or confidence intervals'],
+  ['scale','Scale not misleading','uses a scale that may be misleading'],
+  ['bw','Readable in black and white','is hard to read in black and white'],
+  ['cb','Colour-blind friendly','is not colour-blind friendly'],
+  ['ref','Referenced in the text','is not referenced in the text'],
+  ['cap','Caption understandable on its own','has a caption that cannot be understood on its own'],
+  ['deco','No unnecessary 3D or decoration','includes unnecessary 3D effects or decoration']
+];
+const FIG_RATINGS = [['clarity','Clarity'],['accuracy','Accuracy / honesty'],['relevance','Relevance to the research question']];
+const figType = k => FIG_TYPES.find(t => t.k === k);
+
+function exampleFigure(){
+  return {id:'ex-fig-1', example:true, created:Date.now(), critId:'', figNo:'Fig. 3',
+    caption:'Accuracy of three AI feedback tools on Arabic and English student essays (illustrative example).',
+    type:'bar', x:'the three AI tools (A, B and C)', y:'accuracy of the feedback in percent (0–100%)', single:'',
+    pattern:'all three tools are more accurate on English essays than on Arabic essays, with the largest gap for Tool A',
+    claim:'current AI feedback tools serve Arabic-speaking learners less well', support:'partial',
+    supportWhy:'It shows a consistent gap, but without error bars or sample sizes it is unclear whether the gap is statistically meaningful.',
+    checks:{axes:true, legend:true, n:false, err:false, scale:true, bw:false, cb:true, ref:true, cap:true, deco:true}, flags:{},
+    ratings:{clarity:4, accuracy:3, relevance:5}};
+}
+function newFigure(){
+  const f = S.figlab.filter && S.critiques.some(c => c.id === S.figlab.filter) ? S.figlab.filter : '';
+  return {id:uid(), created:Date.now(), critId:f, figNo:'', caption:'', type:'', x:'', y:'', single:'', pattern:'', claim:'', support:'', supportWhy:'', checks:{}, flags:{}, ratings:{}};
+}
+const activeFig = () => S.figlab.reviews.find(r => r.id === S.figlab.active) || S.figlab.reviews[0];
+const figDone = r => !!(r.type && r.pattern.trim() && r.support);
+
+/* --- Generated paragraph --- */
+const lcFirst = s => s && /^(the|this|these|that|those|a|an|all|both|each|every|most|many|some|it|its|there|their|our|we|they|accuracy|performance|students|participants|results?)\b/i.test(s) && !/^[A-Z]{2,}/.test(s) ? s.charAt(0).toLowerCase() + s.slice(1) : s;
+const trimDot = s => (s || '').trim().replace(/[.;\s]+$/, '');
+const listJoin = a => a.length < 2 ? a.join('') : a.slice(0,-1).join(', ') + ' and ' + a[a.length-1];
+const figWord = no => { const t = (no || '').trim(); return /^fig\.?\s*/i.test(t) ? t.replace(/^fig\.?\s*/i, 'Figure ') : t || 'This figure'; };
+function figParagraph(r){
+  const t = figType(r.type), L = [], label = figWord(r.figNo);
+  const tn = t ? t.name : 'figure';
+  L.push(`${label} is ${/^[aeiou]/i.test(tn) ? 'an' : 'a'} ${tn}${r.caption.trim() ? ` captioned “${trimDot(r.caption)}”` : ''}.`);
+  if (t && t.axis === 'xy' && (r.x.trim() || r.y.trim())){
+    if (t.k === 'heatmap') L.push([r.x.trim() && `Its rows show ${trimDot(r.x)}`, r.y.trim() && `its columns show ${trimDot(r.y)}`].filter(Boolean).join(' and ').replace(/^its/, 'Its') + '.');
+    else L.push([r.x.trim() && `The x-axis shows ${trimDot(r.x)}`, r.y.trim() && `the y-axis shows ${trimDot(r.y)}`].filter(Boolean).join(' and ').replace(/^the/, 'The') + '.');
+  } else if (t && t.axis === 'single' && r.single.trim()) L.push(`${t.axisLead} ${trimDot(r.single)}.`);
+  if (r.pattern.trim()) L.push(`The main finding is that ${lcFirst(trimDot(r.pattern).replace(/^that\s+/i, ''))}.`);
+  const claim = trimDot(r.claim).replace(/^that\s+/i, '');
+  if (r.support && claim) L.push({full:`This fully supports the authors’ claim that ${lcFirst(claim)}.`, partial:`This partially supports the authors’ claim that ${lcFirst(claim)}.`, none:`However, it does not support the authors’ claim that ${lcFirst(claim)}.`}[r.support]);
+  else if (r.support) L.push({full:'It fully supports the related claim in the text.', partial:'It only partially supports the related claim in the text.', none:'It does not support the related claim in the text.'}[r.support]);
+  if (r.supportWhy.trim()) L.push(trimDot(r.supportWhy) + '.');
+  const weak = FIG_CHECKS.filter(([k]) => r.checks[k] === false || r.checks[k] === undefined).filter(([k]) => r.checks[k] !== 'na').map(c => c[2]);
+  const flags = t ? t.flags.filter((_,i) => r.flags[i]).map(f => f[1]) : [];
+  const noun = t && t.k === 'table' ? 'table' : 'figure';
+  if (weak.length) L.push(`${r.support === 'none' ? 'In addition' : 'However'}, the ${noun} ${listJoin(weak)}.`);
+  if (flags.length) L.push(`${weak.length ? 'Moreover' : 'However'}, ${listJoin(flags)}.`);
+  if (!weak.length && !flags.length && r.type) L.push(`The ${noun} meets all the quality checks applied in this review.`);
+  const rated = FIG_RATINGS.filter(([k]) => r.ratings[k]);
+  if (rated.length) L.push(`Overall, I rate it ${listJoin(rated.map(([k,l]) => `${r.ratings[k]}/5 for ${l.toLowerCase().replace(' / ', ' and ')}`))}.`);
+  return L.join(' ');
+}
+
+/* --- Build mode content --- */
+const FIG_GOALS = [
+  {k:'compare', t:'Compare groups', prev:'bars', rec:[['Bar chart','bar lengths from a shared zero baseline are the easiest values to compare'],['Grouped bar chart','shows several conditions or measures side by side for each group']], avoid:'Pie charts and 3D bars — angles and perspective distort the differences.', tips:['Start the value axis at zero.','Sort bars by value unless the categories have a natural order.','Give each series one colour and keep it the same in every figure.']},
+  {k:'time', t:'Change over time', prev:'line', rec:[['Line chart','a connected line shows the trend and rate of change across ordered time points'],['Bar chart','for a few separate periods that should be compared rather than connected']], avoid:'Joining unordered categories with a line, or drawing uneven time gaps as equal steps.', tips:['Put time on the x-axis, left to right.','Keep to 3–4 lines; use small multiples for more.','Mark important events (e.g. an intervention) with a thin reference line.']},
+  {k:'relation', t:'Relationship between two variables', prev:'scatter', rec:[['Scatter plot','each point is one observation, so direction, strength and outliers are visible'],['Scatter plot + trend line','add r or R² to quantify the relationship']], avoid:'Line charts (they imply order) and claiming causation from a correlation.', tips:['Put the explanatory variable on the x-axis.','Report r or R² and the sample size n.','Check and explain outliers instead of silently removing them.']},
+  {k:'dist', t:'Distribution of values', prev:'hist', rec:[['Histogram','shows the shape — skew, peaks and spread — of one variable'],['Box plot','compares medians, spread and outliers across groups']], avoid:'Bar charts of means only — they hide spread and outliers.', tips:['Choose the bin width deliberately and keep bins equal.','State n for every group.','Overlay individual points when samples are small.']},
+  {k:'parts', t:'Parts of a whole', prev:'stacked', rec:[['100% stacked bar','compares the make-up of several groups on a common scale'],['Pie chart','only for two or three parts of a single whole']], avoid:'Pies with many slices, 3D pies, and donuts when precise comparison matters.', tips:['Keep the segment order the same in every bar.','Label percentages directly on or beside segments.','Group very small parts into “Other”.']},
+  {k:'process', t:'A process or method', prev:'flow', rec:[['Flowchart','shows the order of steps and decision points in your method']], avoid:'Crossing arrows, many colours and text-heavy boxes.', tips:['Read left-to-right or top-to-bottom.','Use one short verb phrase per box.','Use the same shape for the same kind of step.']},
+  {k:'framework', t:'A proposed framework or model', prev:'framework', rec:[['Conceptual / framework diagram','shows components and how they relate, e.g. layers or inputs → outputs'],['Model architecture diagram','for machine-learning models: data flow through layers, with sizes']], avoid:'Decorative icons and unexplained arrows — every arrow must mean something.', tips:['Define what arrows mean, in the figure or the caption.','Group related components into layers or zones.','Use exactly the same names as in your text.']},
+  {k:'classif', t:'Classification / model performance', prev:'matrix', rec:[['Confusion matrix','shows which classes are confused, not just overall accuracy'],['Grouped bar chart of precision / recall / F1','compares several models across the same metrics']], avoid:'Pie charts, and reporting accuracy alone on imbalanced data.', tips:['Show counts and row-normalised percentages, with class totals.','Keep the metric order and model colours the same everywhere.','Include a baseline model for comparison.']},
+  {k:'exact', t:'Exact values to report', prev:'table', rec:[['Table','readers need the precise numbers more than a visual pattern']], avoid:'Charts with a number printed on every bar, and tables with too many decimals.', tips:['Bold the best result in each column.','Right-align numbers and use the same number of decimals.','Put units in the column headers.']}
+];
+const SER_HEX = {light:['#2a78d6','#eb6834','#1baf7a'], ink:'#1a2233', muted:'#5b6476', grid:'#e3e0d7', surface:'#ffffff'};
+function miniPreview(kind){
+  const s = i => `style="fill:var(--s${i})"`, st = i => `style="stroke:var(--s${i})"`, base = '<line x1="8" y1="62" x2="152" y2="62" style="stroke:var(--line)" stroke-width="1"/>';
+  const box = (x, y, w, h, t) => `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="4" style="fill:var(--accent-soft);stroke:var(--accent)" stroke-width="1"/>${t ? `<text x="${x+w/2}" y="${y+h/2+3}" text-anchor="middle" font-size="8" style="fill:var(--ink)">${t}</text>` : ''}`;
+  const arrow = (x1, y1, x2, y2) => `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" style="stroke:var(--muted)" stroke-width="1.2" marker-end="url(#mArrow)"/>`;
+  const defs = '<defs><marker id="mArrow" viewBox="0 0 6 6" refX="5" refY="3" markerWidth="5" markerHeight="5" orient="auto"><path d="M0,0L6,3L0,6z" style="fill:var(--muted)"/></marker></defs>';
+  const body = {
+    bars: base + [40,28,50,18].map((h,i) => `<rect x="${20+i*34}" y="${62-h}" width="22" height="${h}" rx="2" ${s(1)}/>`).join(''),
+    line: base + `<polyline points="12,52 46,44 80,40 114,26 148,16" fill="none" stroke-width="2" ${st(1)}/><polyline points="12,56 46,54 80,48 114,46 148,40" fill="none" stroke-width="2" ${st(2)}/>`,
+    scatter: base + [[16,54],[28,50],[40,47],[52,40],[66,42],[78,33],[92,30],[104,26],[118,22],[132,16],[144,12],[60,52]].map(([x,y]) => `<circle cx="${x}" cy="${y}" r="3" ${s(1)}/>`).join('') + '<line x1="12" y1="56" x2="148" y2="12" style="stroke:var(--muted)" stroke-dasharray="3 3"/>',
+    hist: base + [8,18,32,44,36,22,12,6].map((h,i) => `<rect x="${14+i*17}" y="${62-h}" width="16" height="${h}" ${s(1)}/>`).join(''),
+    stacked: base + [[30,20,12],[22,26,14],[40,14,8]].map((seg,i) => { let y = 62; return seg.map((h,j) => { y -= h; return `<rect x="${30+i*40}" y="${y+1}" width="26" height="${h-1}" ${s(j+1)}/>`; }).join(''); }).join(''),
+    flow: defs + box(6,24,36,20,'Collect') + arrow(42,34,56,34) + box(58,24,40,20,'Analyse') + arrow(98,34,112,34) + box(114,24,40,20,'Report'),
+    framework: defs + box(10,6,140,16,'Output') + box(10,28,64,16,'Module A') + box(86,28,64,16,'Module B') + box(10,50,140,14,'Input data') + arrow(42,50,42,45) + arrow(118,50,118,45) + arrow(42,28,42,23) + arrow(118,28,118,23),
+    matrix: [[0.9,0.1,0.05],[0.15,0.8,0.1],[0.05,0.2,0.75]].map((row,i) => row.map((v,j) => `<rect x="${44+j*24}" y="${4+i*20}" width="23" height="19" style="fill:var(--accent);fill-opacity:${(0.08+v*0.85).toFixed(2)}"/><text x="${55.5+j*24}" y="${17+i*20}" text-anchor="middle" font-size="8" style="fill:${v > 0.5 ? 'var(--accent-ink)' : 'var(--ink)'}">${Math.round(v*100)}</text>`).join('')).join(''),
+    table: '<rect x="14" y="6" width="132" height="58" rx="3" style="fill:none;stroke:var(--line)"/><line x1="14" y1="20" x2="146" y2="20" style="stroke:var(--muted)"/>' + [0,1,2].map(r => [0,1,2].map(c => `<rect x="${22+c*42}" y="${28+r*12}" width="${c ? 26 : 34}" height="4" rx="2" style="fill:${r === 1 && c === 2 ? 'var(--accent)' : 'var(--line)'}"/>`).join('')).join('') + [0,1,2].map(c => `<rect x="${22+c*42}" y="11" width="28" height="4" rx="2" style="fill:var(--muted)"/>`).join('')
+  }[kind] || '';
+  return `<svg class="mini" viewBox="0 0 160 68" role="img" aria-label="Preview">${body}</svg>`;
+}
+
+/* --- Chart builder --- */
+const numList = s => (s || '').split(',').map(v => v.trim() === '' ? null : Number(v.trim().replace(/[^\d.eE+-]/g, ''))).map(v => Number.isFinite(v) ? v : null);
+function chartData(c){
+  const cats = (c.cats || '').split(',').map(v => v.trim());
+  const series = c.series.map((s,i) => ({i, name:s.name.trim() || `Series ${i+1}`, values:numList(s.values)})).filter(s => s.values.some(v => v !== null));
+  const used = c.type === 'bar' ? series.slice(0,1) : series;
+  const n = Math.max(cats.filter(Boolean).length, ...used.map(s => s.values.length), 0);
+  used.forEach(s => { while (s.values.length < n) s.values.push(null); s.values = s.values.slice(0, n); });
+  while (cats.length < n) cats.push(`#${cats.length+1}`);
+  return {cats:cats.slice(0, n), series:used};
+}
+function niceTicks(min, max, count=5){
+  if (min === max){ max = min + 1; }
+  const raw = (max - min) / count, mag = Math.pow(10, Math.floor(Math.log10(raw))), f = raw / mag;
+  const step = (f <= 1 ? 1 : f <= 2 ? 2 : f <= 2.5 ? 2.5 : f <= 5 ? 5 : 10) * mag;
+  const lo = Math.floor(min / step) * step, hi = Math.ceil(max / step) * step, ticks = [];
+  for (let v = lo; v <= hi + step/2; v += step) ticks.push(+v.toFixed(10));
+  return ticks;
+}
+const fmtNum = v => Math.abs(v) >= 1000 ? v.toLocaleString('en-US') : String(+v.toFixed(3));
+function markShape(i, x, y, r, fill, ring){
+  const st = `style="fill:${fill};stroke:${ring}" stroke-width="2"`;
+  if (i === 1) return `<rect x="${(x-r).toFixed(1)}" y="${(y-r).toFixed(1)}" width="${2*r}" height="${2*r}" rx="1" ${st}/>`;
+  if (i === 2) return `<path d="M${x.toFixed(1)},${(y-r*1.15).toFixed(1)} L${(x+r*1.1).toFixed(1)},${(y+r*0.85).toFixed(1)} L${(x-r*1.1).toFixed(1)},${(y+r*0.85).toFixed(1)}Z" ${st}/>`;
+  return `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${r}" ${st}/>`;
+}
+function chartSVG(c, exp){
+  const {cats, series} = chartData(c);
+  const col = i => exp ? SER_HEX.light[i] : `var(--s${i+1})`;
+  const ink = exp ? SER_HEX.ink : 'var(--ink)', muted = exp ? SER_HEX.muted : 'var(--muted)', grid = exp ? SER_HEX.grid : 'var(--line)', surf = exp ? SER_HEX.surface : 'var(--surface)';
+  const W = 640, H = 400, legend = series.length > 1, top = (c.title ? 34 : 12) + (legend ? 26 : 0), L = 64, R = 20, B = 62;
+  const pw = W - L - R, ph = H - top - B;
+  const font = 'font-family="Inter, Arial, sans-serif"';
+  const out = [`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" ${font} role="img" aria-label="${esc(c.title || 'Chart')}">`];
+  if (exp) out.push(`<rect width="${W}" height="${H}" fill="${surf}"/>`);
+  if (c.title) out.push(`<text x="${L}" y="24" font-size="16" font-weight="600" style="fill:${ink}">${esc(c.title)}</text>`);
+  if (!series.length || !cats.length){ out.push(`<text x="${W/2}" y="${H/2}" text-anchor="middle" font-size="14" style="fill:${muted}">Type categories and at least one series of values</text></svg>`); return out.join(''); }
+  if (legend){ let lx = L; series.forEach(s => { out.push(markShape(s.i, lx + 6, top - 18, 5, col(s.i), surf), `<text x="${lx + 16}" y="${top - 14}" font-size="12" style="fill:${ink}">${esc(s.name)}</text>`); lx += 30 + s.name.length * 7; }); }
+  const scatter = c.type === 'scatter', xsNum = cats.map(v => Number(v)), xNumeric = scatter && xsNum.every(Number.isFinite);
+  const vals = series.flatMap(s => s.values).filter(v => v !== null);
+  let ymin = Math.min(...vals), ymax = Math.max(...vals);
+  if (c.type === 'bar' || c.type === 'grouped'){ ymin = Math.min(0, ymin); ymax = Math.max(0, ymax); }
+  else { const pad = (ymax - ymin) * 0.08 || 1; ymin -= pad; ymax += pad; }
+  const yt = niceTicks(ymin, ymax), y0 = yt[0], y1 = yt[yt.length-1], Y = v => top + ph - (v - y0) / (y1 - y0) * ph;
+  yt.forEach(v => out.push(`<line x1="${L}" x2="${W-R}" y1="${Y(v).toFixed(1)}" y2="${Y(v).toFixed(1)}" style="stroke:${grid}" stroke-width="1"/>`, `<text x="${L-8}" y="${(Y(v)+4).toFixed(1)}" text-anchor="end" font-size="12" style="fill:${muted}">${fmtNum(v)}</text>`));
+  let X, band = pw / cats.length;
+  if (xNumeric){
+    const xt = niceTicks(Math.min(...xsNum), Math.max(...xsNum)), x0 = xt[0], x1 = xt[xt.length-1];
+    X = j => L + (xsNum[j] - x0) / (x1 - x0) * pw;
+    xt.forEach(v => out.push(`<text x="${(L + (v - x0)/(x1 - x0)*pw).toFixed(1)}" y="${top+ph+20}" text-anchor="middle" font-size="12" style="fill:${muted}">${fmtNum(v)}</text>`));
+  } else {
+    X = j => L + band * (j + 0.5);
+    const every = Math.ceil(cats.length / 12);
+    cats.forEach((t,j) => { if (j % every === 0) out.push(`<text x="${X(j).toFixed(1)}" y="${top+ph+20}" text-anchor="middle" font-size="12" style="fill:${muted}">${esc(clip(t, Math.max(6, Math.floor(band*every/7))))}</text>`); });
+  }
+  out.push(`<line x1="${L}" x2="${W-R}" y1="${Y(Math.max(y0, Math.min(0, y1))).toFixed(1)}" y2="${Y(Math.max(y0, Math.min(0, y1))).toFixed(1)}" style="stroke:${muted}" stroke-width="1"/>`);
+  if (c.type === 'bar' || c.type === 'grouped'){
+    const k = series.length, gw = band * 0.72, bw = (gw - 2*(k-1)) / k, zero = Y(0);
+    series.forEach((s, si) => s.values.forEach((v, j) => {
+      if (v === null) return;
+      const x = X(j) - gw/2 + si * (bw + 2), y = Y(v), h = Math.abs(zero - y), r = Math.min(4, bw/2, h);
+      const d = v >= 0 ? `M${x},${zero} V${y+r} Q${x},${y} ${x+r},${y} H${x+bw-r} Q${x+bw},${y} ${x+bw},${y+r} V${zero}Z`
+                       : `M${x},${zero} V${y-r} Q${x},${y} ${x+r},${y} H${x+bw-r} Q${x+bw},${y} ${x+bw},${y-r} V${zero}Z`;
+      out.push(`<path d="${d.replace(/(\d+\.\d{2})\d+/g,'$1')}" style="fill:${col(s.i)}"><title>${esc(s.name)} · ${esc(cats[j])}: ${fmtNum(v)}</title></path>`);
+    }));
+  } else {
+    series.forEach(s => {
+      const pts = s.values.map((v,j) => v === null ? null : [X(j), Y(v)]);
+      if (c.type === 'line'){
+        let seg = [];
+        const lines = [];
+        pts.forEach(p => { if (p) seg.push(p); else { if (seg.length > 1) lines.push(seg); seg = []; } });
+        if (seg.length > 1) lines.push(seg);
+        lines.forEach(l => out.push(`<polyline points="${l.map(p => p.map(n => n.toFixed(1)).join(',')).join(' ')}" fill="none" style="stroke:${col(s.i)}" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>`));
+      }
+      pts.forEach((p,j) => { if (p) out.push(`<g>${markShape(s.i, p[0], p[1], 4.5, col(s.i), surf)}<title>${esc(s.name)} · ${esc(cats[j])}: ${fmtNum(s.values[j])}</title></g>`); });
+    });
+  }
+  if (c.x) out.push(`<text x="${L + pw/2}" y="${H - 14}" text-anchor="middle" font-size="13" style="fill:${ink}">${esc(c.x)}</text>`);
+  if (c.y) out.push(`<text transform="translate(16 ${top + ph/2}) rotate(-90)" text-anchor="middle" font-size="13" style="fill:${ink}">${esc(c.y)}</text>`);
+  out.push('</svg>');
+  return out.join('');
+}
+function chartTable(c){
+  const {cats, series} = chartData(c);
+  if (!series.length) return '(no data yet)';
+  return [[c.x || 'Category', ...series.map(s => s.name)].join('\t'), ...cats.map((t,j) => [t, ...series.map(s => s.values[j] === null ? '' : s.values[j])].join('\t'))].join('\n');
+}
+function chartPython(c){
+  const {cats, series} = chartData(c);
+  const py = v => JSON.stringify(v);
+  const vals = a => '[' + a.map(v => v === null ? 'None' : String(v)).join(', ') + ']';
+  const L = ['import matplotlib.pyplot as plt', 'import numpy as np', '',
+    '# IEEE single-column figure: 3.5 in wide, 8–9 pt fonts',
+    'plt.rcParams.update({', '    "font.family": "serif", "font.size": 8,', '    "axes.labelsize": 8, "axes.titlesize": 9,', '    "xtick.labelsize": 8, "ytick.labelsize": 8, "legend.fontsize": 8,', '    "axes.spines.top": False, "axes.spines.right": False,', '})', '',
+    `categories = ${py(cats)}`, 'series = {', ...series.map(s => `    ${py(s.name)}: ${vals(s.values)},`), '}',
+    'colors = ["#2a78d6", "#eb6834", "#1baf7a"]  # colour-blind-safe; hatches/markers keep it readable in B&W',
+    '', 'fig, ax = plt.subplots(figsize=(3.5, 2.4))'];
+  if (c.type === 'bar' || c.type === 'grouped') L.push('hatches = ["", "//", ".."]', 'x = np.arange(len(categories))', 'width = 0.8 / len(series)',
+    'for i, (name, values) in enumerate(series.items()):', '    vals = [np.nan if v is None else v for v in values]',
+    '    ax.bar(x + (i - (len(series) - 1) / 2) * width, vals, width, label=name,', '           color=colors[i], hatch=hatches[i], edgecolor="white", linewidth=0.5)',
+    'ax.set_xticks(x, categories)', 'ax.set_ylim(bottom=min(0, ax.get_ylim()[0]))  # bars start at zero', 'ax.grid(axis="y", linewidth=0.4, alpha=0.5)', 'ax.set_axisbelow(True)');
+  else if (c.type === 'line') L.push('markers = ["o", "s", "^"]', 'x = np.arange(len(categories))',
+    'for i, (name, values) in enumerate(series.items()):', '    vals = [np.nan if v is None else v for v in values]',
+    '    ax.plot(x, vals, marker=markers[i], markersize=4, linewidth=1.2, color=colors[i], label=name)',
+    'ax.set_xticks(x, categories)', 'ax.grid(axis="y", linewidth=0.4, alpha=0.5)');
+  else L.push('markers = ["o", "s", "^"]', 'x = np.array(categories, dtype=float)  # x values come from the category list',
+    'for i, (name, values) in enumerate(series.items()):', '    vals = np.array([np.nan if v is None else v for v in values], dtype=float)',
+    '    ax.scatter(x, vals, s=14, marker=markers[i], color=colors[i], edgecolors="white", linewidths=0.4, label=name)',
+    'ax.grid(linewidth=0.4, alpha=0.5)');
+  L.push(`ax.set_xlabel(${py(c.x || '')})`, `ax.set_ylabel(${py(c.y || '')})`, `# ax.set_title(${py(c.title || '')})  # IEEE: put the title in the caption instead`);
+  if (series.length > 1) L.push('ax.legend(frameon=False, ncol=len(series), loc="lower left", bbox_to_anchor=(0, 1.0), borderaxespad=0.2)  # above the plot');
+  L.push('fig.tight_layout()', 'fig.savefig("figure.pdf", bbox_inches="tight")             # vector: best for line art', 'fig.savefig("figure.png", dpi=600, bbox_inches="tight")   # 600 dpi for line art', 'plt.show()');
+  return L.join('\n');
+}
+function figCaption(cap){
+  const no = (cap.no || '').trim().replace(/^fig\.?\s*/i, '').replace(/\.$/, '');
+  const parts = [trimDot(cap.shows)];
+  let s = `Fig. ${no || '?'}. ${parts[0] || '[What the figure shows]'}`;
+  if (cap.data.trim()) s += ` (${trimDot(cap.data)})`;
+  s += '.';
+  if (cap.finding.trim()) s += ' ' + trimDot(cap.finding).replace(/^./, ch => ch.toUpperCase()) + '.';
+  return s;
+}
+function figAlt(cap, c){
+  const t = {bar:'Bar chart', grouped:'Grouped bar chart', line:'Line chart', scatter:'Scatter plot'}[c.type];
+  const {cats, series} = chartData(c);
+  const bits = [`${t}${cap.shows.trim() ? ` of ${lcFirst(trimDot(cap.shows))}` : c.title ? ` titled “${c.title}”` : ''}.`];
+  if (c.x || c.y) bits.push(`${c.x ? `The x-axis shows ${lcFirst(c.x)}` : ''}${c.x && c.y ? ' and the' : c.y ? 'The' : ''}${c.y ? ` y-axis shows ${lcFirst(c.y)}` : ''}.`);
+  if (series.length > 1) bits.push(`${series.length} series: ${listJoin(series.map(s => s.name))}.`);
+  if (cats.length && c.type !== 'scatter') bits.push(`Categories: ${listJoin(cats.slice(0, 6))}${cats.length > 6 ? ' and more' : ''}.`);
+  if (cap.finding.trim()) bits.push(`Key finding: ${lcFirst(trimDot(cap.finding))}.`);
+  return bits.join(' ');
+}
+
+/* --- Rendering --- */
+RENDER.figlab = () => {
+  const mode = S.figlab.mode || 'explain';
+  $('#panel-figlab').innerHTML = `
+  <div class="page-head"><div class="eyebrow">Figure Lab</div><h1>Read figures critically, build them clearly</h1>
+  <p>Explain and judge a figure in a paper you are critiquing — or plan, draw and caption the figures for your own paper.</p></div>
+  <div class="seg mode-seg" role="group" aria-label="Mode">
+    <button data-act="fl-mode" data-v="explain" aria-pressed="${mode==='explain'}">${icon('search')}Explain a figure</button>
+    <button data-act="fl-mode" data-v="build" aria-pressed="${mode==='build'}">${icon('chart')}Build a figure</button></div>
+  <div style="margin-top:18px">${mode === 'build' ? buildView() : explainView()}</div>`;
+  if (mode === 'build') updateBuild(); else updateExplain();
+};
+function critOptions(sel){
+  return `<option value="">— Not linked to a critique —</option>` + S.critiques.map(c => `<option value="${c.id}" ${c.id===sel?'selected':''}>${esc((c.example?'[Example] ':'') + (c.form==='aau'?'AAU · ':'') + clip(critTitle(c) || 'Untitled critique', 60))}</option>`).join('');
+}
+function explainView(){
+  const F = S.figlab, list = F.reviews.filter(r => !F.filter || r.critId === F.filter);
+  if (!F.reviews.length) F.reviews.push(newFigure());
+  const r = activeFig(); F.active = r.id;
+  const t = figType(r.type);
+  const groups = {};
+  list.forEach(x => (groups[x.critId] ||= []).push(x));
+  const nameOf = id => { const c = S.critiques.find(c => c.id === id); return c ? clip(critTitle(c) || 'Untitled critique', 50) : 'Not linked to a critique'; };
+  return `<div class="fl-layout">
+  <aside class="card fl-list">
+    <div class="row" style="justify-content:space-between;margin-bottom:10px"><h3 style="margin:0">Figure reviews</h3><button class="btn sm primary" data-act="fl-new">${icon('plus')}New</button></div>
+    <label class="sr-only" for="flFilter">Show reviews for</label>
+    <select id="flFilter" style="margin-bottom:10px"><option value="">All critiques (${F.reviews.length})</option>${S.critiques.map(c => `<option value="${c.id}" ${F.filter===c.id?'selected':''}>${esc(clip(critTitle(c) || 'Untitled', 40))}</option>`).join('')}</select>
+    ${Object.keys(groups).length ? Object.entries(groups).map(([cid, rs]) => `<div class="fl-group">${esc(nameOf(cid))}</div>` + rs.map(x => `<button class="fl-item" data-act="fl-open" data-id="${x.id}" ${x.id===r.id?'aria-current="true"':''}>
+      <span class="para-no">${esc(x.figNo || 'Fig. ?')}</span><span class="fl-item-t">${esc(clip(x.caption || (figType(x.type)||{}).n || 'New figure review', 46))}</span>${x.example ? '<span class="badge-example">Ex</span>' : ''}${figDone(x) ? `<span class="fl-ok">${icon('check')}</span>` : ''}</button>`).join('')).join('') : '<p class="small muted">No figure reviews for this critique yet.</p>'}
+  </aside>
+  <div class="stack">
+    <section class="card">
+      <div class="sec-head"><span class="sec-num">1</span><h3>Figure details</h3>${exampleBadge(r)}<span class="spacer"></span><button class="btn ghost sm danger" data-act="fl-del">${icon('trash')}Delete</button></div>
+      ${r.example ? '<p class="small muted" style="margin-top:-4px">An <b>example</b> review of an illustrative figure (not from a real paper). Edit it, or press <b>New</b> to review a figure from your own paper.</p>' : ''}
+      <div class="fields-2">
+        <div class="field"><label class="f" for="fl-no">Figure number</label><input class="input" id="fl-no" data-fl="figNo" value="${esc(r.figNo)}" placeholder="e.g. Fig. 3 or Table II"></div>
+        <div class="field"><label class="f" for="fl-crit">Belongs to critique</label><select id="fl-crit" data-fl="critId">${critOptions(r.critId)}</select></div>
+      </div>
+      <div class="field" style="margin:0"><label class="f" for="fl-cap">Original caption</label><textarea id="fl-cap" data-fl="caption" rows="2" style="min-height:64px" placeholder="Copy the caption exactly as printed">${esc(r.caption)}</textarea></div>
+    </section>
+    <section class="card">
+      <div class="sec-head"><span class="sec-num">2</span><h3>Figure type</h3></div>
+      <div class="type-grid" role="group" aria-label="Figure type">${FIG_TYPES.map(ft => `<button class="fchip" data-act="fl-type" data-v="${ft.k}" aria-pressed="${r.type===ft.k}">${ft.n}</button>`).join('')}</div>
+    </section>
+    <section class="card" id="flHow">${howToRead(r, t)}</section>
+    <section class="card">
+      <div class="sec-head"><span class="sec-num">4</span><h3>Guided questions</h3></div>
+      <div id="flAxes">${axesFields(r, t)}</div>
+      <div class="field"><label class="f" for="fl-pat">What is the main pattern or result?</label><textarea id="fl-pat" data-fl="pattern" rows="2" style="min-height:64px" placeholder="e.g. accuracy rises with training size but levels off after 5,000 examples">${esc(r.pattern)}</textarea></div>
+      <div class="field"><label class="f" for="fl-claim">Which claim in the text does this figure support?</label><textarea id="fl-claim" data-fl="claim" rows="2" style="min-height:64px" placeholder="Quote or paraphrase the authors’ claim (with page number)">${esc(r.claim)}</textarea></div>
+      <span class="f">Does it actually support the claim?</span>
+      <div class="seg" role="group" aria-label="Level of support" style="margin-bottom:12px">${[['full','Fully'],['partial','Partially'],['none','Not at all']].map(([v,l]) => `<button data-act="fl-support" data-v="${v}" aria-pressed="${r.support===v}">${l}</button>`).join('')}</div>
+      <div class="field" style="margin:0"><label class="f" for="fl-why">Why? (optional)</label><input class="input" id="fl-why" data-fl="supportWhy" value="${esc(r.supportWhy)}" placeholder="e.g. it shows the trend, but only for one dataset"></div>
+    </section>
+    <section class="card">
+      <div class="sec-head"><span class="sec-num">5</span><h3>Quality checklist</h3><span class="wc" id="flCheckN"></span></div>
+      <p class="small muted" style="margin-top:-4px">Tick what the figure does well. Anything left unticked becomes a weakness in the explanation — mark it <b>N/A</b> if it does not apply.</p>
+      <div class="checks-2">${FIG_CHECKS.map(([k,l]) => { const v = r.checks[k]; return `<div class="check-na ${v==='na'?'is-na':''}"><label class="check ${v===true?'on':''}"><input type="checkbox" data-flc="${k}" ${v===true?'checked':''} ${v==='na'?'disabled':''}><span>${l}</span></label><button class="na-btn" data-act="fl-na" data-k="${k}" aria-pressed="${v==='na'}" title="Not applicable to this figure">N/A</button></div>`; }).join('')}</div>
+    </section>
+    <section class="card">
+      <div class="sec-head"><span class="sec-num">6</span><h3>Ratings</h3></div>
+      ${FIG_RATINGS.map(([k,l]) => `<div class="parta"><div><b>${l}</b> <span class="muted small">(1–5)</span></div><div class="rating" role="group" aria-label="${l}">${[1,2,3,4,5].map(n => `<button type="button" class="rate" data-act="fl-rate" data-k="${k}" data-v="${n}" aria-pressed="${r.ratings[k]===n}">${n}</button>`).join('')}</div><span class="rate-hint">${r.ratings[k] ? RATING_LABELS[r.ratings[k]] : 'Not rated'}</span></div>`).join('')}
+    </section>
+    <section class="card">
+      <div class="output-head"><div class="sec-head" style="margin:0"><span class="sec-num">7</span><h3>Figure explanation</h3></div>
+        <span class="row">${copyBtn('#figPara')}<button class="btn sm primary" data-act="fl-add">${icon('plus')}Add to critique</button></span></div>
+      <p class="small muted" style="margin-top:0">Built from your answers — edit it after pasting so it reads in your own voice. <b>Add to critique</b> appends it to the Results section of the linked critique.</p>
+      <div class="output prose" id="figPara">${esc(figParagraph(r))}</div>
+    </section>
+  </div></div>`;
+}
+function howToRead(r, t){
+  if (!t) return `<div class="sec-head"><span class="sec-num">3</span><h3>How to read it</h3></div><p class="muted" style="margin:0">Choose a figure type above to see how to read it and which red flags to look for.</p>`;
+  return `<div class="sec-head"><span class="sec-num">3</span><h3>How to read a ${esc(t.n.toLowerCase())}</h3></div>
+    <div class="grid g-2"><div><h4>Steps</h4><ol class="steps">${t.steps.map(s => `<li>${esc(s)}</li>`).join('')}</ol></div>
+    <div><h4>Red flags <span class="small muted" style="font-family:var(--sans);font-weight:400">— tick any you spot</span></h4>
+      ${t.flags.map((f,i) => `<label class="check flag ${r.flags[i]?'on-flag':''}"><input type="checkbox" data-flr="${i}" ${r.flags[i]?'checked':''}><span>${esc(f[0])}</span></label>`).join('')}</div></div>`;
+}
+function axesFields(r, t){
+  if (t && t.axis === 'single') return `<div class="field"><label class="f" for="fl-single">${esc(t.axisQ)}</label><input class="input" id="fl-single" data-fl="single" value="${esc(r.single)}"></div>`;
+  const xq = t && t.xQ ? t.xQ : 'x-axis — what and in which units?', yq = t && t.yQ ? t.yQ : 'y-axis — what and in which units?';
+  return `<span class="f" style="display:block;margin-bottom:6px">What is on each axis, with units?</span><div class="fields-2">
+    <div class="field"><label class="f small muted" for="fl-x">${esc(xq)}</label><input class="input" id="fl-x" data-fl="x" value="${esc(r.x)}" placeholder="e.g. training set size (number of essays)"></div>
+    <div class="field"><label class="f small muted" for="fl-y">${esc(yq)}</label><input class="input" id="fl-y" data-fl="y" value="${esc(r.y)}" placeholder="e.g. F1 score (0–1)"></div></div>`;
+}
+function updateExplain(){
+  const r = activeFig(); if (!r || !$('#figPara')) return;
+  $('#figPara').textContent = figParagraph(r);
+  const n = FIG_CHECKS.filter(([k]) => r.checks[k] === true).length, na = FIG_CHECKS.filter(([k]) => r.checks[k] === 'na').length;
+  $('#flCheckN').textContent = `${n} / ${FIG_CHECKS.length - na} met`;
+}
+function buildView(){
+  const B = S.figlab.build, g = FIG_GOALS.find(x => x.k === B.goal) || FIG_GOALS[0], c = B.chart, cap = B.cap;
+  return `
+  <section class="card">
+    <div class="sec-head"><span class="sec-num">1</span><h3>What do you want to show?</h3></div>
+    <div class="type-grid" role="group" aria-label="Goal">${FIG_GOALS.map(x => `<button class="fchip" data-act="fl-goal" data-v="${x.k}" aria-pressed="${x.k===g.k}">${x.t}</button>`).join('')}</div>
+    <div class="goal-card">
+      <div class="goal-prev">${miniPreview(g.prev)}</div>
+      <div>
+        <h4 style="margin-top:0">Recommended</h4>
+        <ul class="tips">${g.rec.map(([n,why]) => `<li><b>${n}</b> — ${why}.</li>`).join('')}</ul>
+        <p class="warn">${icon('x')}<span><b>Avoid:</b> ${esc(g.avoid)}</span></p>
+        <h4>Design tips</h4><ol class="steps">${g.tips.map(t => `<li>${esc(t)}</li>`).join('')}</ol>
+      </div>
+    </div>
+  </section>
+
+  <section class="card" style="margin-top:16px">
+    <div class="sec-head"><span class="sec-num">2</span><h3>Chart builder</h3><span class="chip">Example data — replace with yours</span></div>
+    <div class="builder">
+      <div>
+        <div class="field"><label class="f" for="cb-title">Title</label><input class="input" id="cb-title" data-fb="title" value="${esc(c.title)}"></div>
+        <div class="fields-2"><div class="field"><label class="f" for="cb-x">X-axis label</label><input class="input" id="cb-x" data-fb="x" value="${esc(c.x)}"></div>
+          <div class="field"><label class="f" for="cb-y">Y-axis label</label><input class="input" id="cb-y" data-fb="y" value="${esc(c.y)}" placeholder="include units, e.g. Accuracy (%)"></div></div>
+        <div class="field"><label class="f" for="cb-cats">${c.type === 'scatter' ? 'X values (numbers, comma-separated)' : 'Category labels (comma-separated)'}</label><input class="input" id="cb-cats" data-fb="cats" value="${esc(c.cats)}"></div>
+        ${c.series.map((s,i) => `<div class="series-row"><span class="swatch" style="background:var(--s${i+1})" aria-hidden="true"></span>
+          <input class="input" data-fbs="${i}" data-field="name" value="${esc(s.name)}" placeholder="Series ${i+1} name" aria-label="Series ${i+1} name">
+          <input class="input" data-fbs="${i}" data-field="values" value="${esc(s.values)}" placeholder="${i ? 'optional — ' : ''}values, comma-separated" aria-label="Series ${i+1} values"></div>`).join('')}
+        <span class="f" style="display:block;margin-top:12px">Chart type</span>
+        <div class="seg" role="group" aria-label="Chart type">${[['bar','Bar'],['grouped','Grouped bar'],['line','Line'],['scatter','Scatter']].map(([v,l]) => `<button data-act="fl-ctype" data-v="${v}" aria-pressed="${c.type===v}">${l}</button>`).join('')}</div>
+        <p class="small muted" id="cbNote" style="margin:8px 0 0"></p>
+      </div>
+      <div><div class="chart-frame" id="chartPreview"></div><p class="small muted" style="margin:6px 0 0">Hover a bar or point to see its value. Colours are colour-blind safe; markers and hatches keep series apart in black and white.</p></div>
+    </div>
+    <div class="grid g-2" style="margin-top:14px">
+      <div><div class="output-head"><b class="small">Chart as SVG code</b>${copyBtn('#svgOut','Copy SVG')}</div><div class="output code" id="svgOut"></div></div>
+      <div><div class="output-head"><b class="small">Data as a table (paste into Word or Excel)</b>${copyBtn('#tableOut','Copy table')}</div><div class="output code" id="tableOut"></div></div>
+    </div>
+    <div style="margin-top:14px"><div class="output-head"><b class="small">Python (matplotlib) — IEEE single column, 3.5 in, 8 pt, 600 dpi</b>${copyBtn('#pyOut','Copy Python')}</div><div class="output code" id="pyOut"></div></div>
+  </section>
+
+  <section class="card" style="margin-top:16px">
+    <div class="sec-head"><span class="sec-num">3</span><h3>Caption builder</h3></div>
+    <div class="fields-2">
+      <div class="field"><label class="f" for="cp-no">Figure number</label><input class="input" id="cp-no" data-fcap="no" value="${esc(cap.no)}" placeholder="e.g. 2"></div>
+      <div class="field"><label class="f" for="cp-data">Data or sample</label><input class="input" id="cp-data" data-fcap="data" value="${esc(cap.data)}" placeholder="e.g. n = 1,200 essays"></div>
+    </div>
+    <div class="field"><label class="f" for="cp-shows">What it shows</label><input class="input" id="cp-shows" data-fcap="shows" value="${esc(cap.shows)}" placeholder="e.g. Accuracy of three models on the Arabic test set"></div>
+    <div class="field"><label class="f" for="cp-find">Key finding</label><input class="input" id="cp-find" data-fcap="finding" value="${esc(cap.finding)}" placeholder="e.g. Model C performs best"></div>
+    <div class="grid g-2">
+      <div><div class="output-head"><b class="small">IEEE caption (goes below the figure)</b>${copyBtn('#capOut','Copy caption')}</div><div class="output prose" id="capOut"></div></div>
+      <div><div class="output-head"><b class="small">Alt text (accessibility)</b>${copyBtn('#altOut','Copy alt text')}</div><div class="output prose" id="altOut"></div></div>
+    </div>
+  </section>
+
+  <div class="grid g-2" style="margin-top:16px">
+    <section class="card"><h3>Writing about figures</h3><ul class="tips">
+      <li><b>Refer to it before it appears:</b> “As Fig. 2 shows, …” — never leave a figure unmentioned.</li>
+      <li><b>Describe the pattern,</b> not every number: “Model C is consistently best” beats listing all values.</li>
+      <li><b>One main message per figure.</b> If you need two messages, make two figures.</li>
+      <li><b>Keep colours consistent:</b> the same model or group has the same colour in every figure.</li>
+      <li><b>Use a table</b> when exact values matter more than the pattern.</li></ul></section>
+    <section class="card"><h3>IEEE figure &amp; table rules</h3><ul class="tips">
+      <li>Figures: <b>“Fig. 1.”</b> with the caption <b>below</b> the figure.</li>
+      <li>Tables: <b>“TABLE I”</b> (Roman numerals) with the caption <b>above</b> the table.</li>
+      <li>In the text, cite as <b>“Fig. 1”</b> and <b>“Table I”</b>.</li>
+      <li>Width: single column ≈ <b>3.5 in</b> (88.9 mm); double column ≈ <b>7.16 in</b> (181.9 mm).</li>
+      <li>Fonts must stay readable at print size — about 8–9 pt.</li>
+      <li>Resolution: commonly <b>300 dpi</b> for photos and <b>600 dpi</b> for line art — always check the venue’s author kit.</li></ul></section>
+  </div>`;
+}
+function updateBuild(){
+  const B = S.figlab.build, c = B.chart;
+  const pv = $('#chartPreview'); if (!pv) return;
+  pv.innerHTML = chartSVG(c, false);
+  $('#svgOut').textContent = chartSVG(c, true);
+  $('#tableOut').textContent = chartTable(c);
+  $('#pyOut').textContent = chartPython(c);
+  $('#capOut').textContent = figCaption(B.cap);
+  $('#altOut').textContent = figAlt(B.cap, c);
+  const d = chartData(c), all = c.series.filter(s => numList(s.values).some(v => v !== null)).length;
+  $('#cbNote').textContent = c.type === 'bar' && all > 1 ? 'A simple bar chart uses only Series 1 — choose Grouped bar to compare all series.'
+    : c.type === 'scatter' && !d.cats.every(v => Number.isFinite(Number(v))) ? 'For a scatter plot, the X values must be numbers.' : '';
+}
+
 /* ---------- 5. Presentation Builder ---------- */
 function presSources(){
   return [
     ...S.critiques.map(c => ({id:'crit:'+c.id, label:`Critique: ${c.example?'[Example] ':''}${c.form==='aau'?'AAU · ':''}${clip(critTitle(c)||'Untitled',60)}${critDone(c)?' ✓':''}`})),
     {id:'paper', label:`My paper outline: ${clip(S.writing.title||'Untitled', 60)}`}
   ];
+}
+function figBullets(c){
+  const figs = S.figlab.reviews.filter(r => r.critId === c.id && (r.figNo || r.pattern));
+  return figs.slice(0, 2).map(r => `Show ${r.figNo || 'figure'}: ${clip(trimDot(r.pattern) || r.caption || '', 90)}`);
 }
 function bullets(text, n=3, fallback){
   const s = sentences(text).slice(0, n).map(x => clip(x, 160));
@@ -1982,7 +2473,7 @@ function buildSlides(){
         background:{b:bullets(t('summary'), 2, need('summary'))},
         problem:{b:[...bullets(t('problem'), 2, need('research problem & objectives')), ...bullets(t('litreview'), 1, need('literature review'))]},
         method:{b:bullets(t('method'), 3, need('methodology critique'))},
-        findings:{b:bullets(t('results'), 3, need('results & discussion'))},
+        findings:{b:[...bullets(t('results'), 3, need('results & discussion')), ...figBullets(c)]},
         critique:{b:[...bullets(t('strengths'), 2, need('strengths')).map(x => 'Strength: ' + x), ...bullets(t('weaknesses'), 2, need('weaknesses')).map(x => 'Weakness: ' + x)]},
         conclusion:{b:[...bullets(t('contribution'), 2, need('contribution')), ...bullets(t('future'), 1, need('future work')).map(x => 'Future work: ' + x),
           ...(AAU_A.some(a => (c.partA[a.k]||{}).score) ? ['Diagnostic ratings: ' + AAU_A.filter(a => (c.partA[a.k]||{}).score).map(a => `${a.t} ${c.partA[a.k].score}/${a.max}`).join(' · ')] : [])]},
@@ -2002,7 +2493,7 @@ function buildSlides(){
         background:{b:bullets(sec('citation') || sec('problem'), 2, ph('problem'))},
         problem:{b:[...bullets(sec('problem'), 2, ph('problem')), ...bullets(sec('objectives'), 1, ph('objectives'))]},
         method:{b:[...bullets(sec('methodology'), 2, ph('methodology')), ...bullets(sec('dataset'), 1, ph('dataset'))]},
-        findings:{b:bullets(sec('results'), 3, ph('results'))},
+        findings:{b:[...bullets(sec('results'), 3, ph('results')), ...figBullets(c)]},
         critique:{b:[
           'Strengths: ' + (strengths.join(', ') || 'rate sections 4–5 to list them'),
           'Weaknesses: ' + (weaknesses.join(', ') || 'rate sections 1–3 to list them'),
@@ -2094,6 +2585,7 @@ RENDER.progress = () => {
     ${stat('bulb', S.ideas.length, 'Research ideas', `${S.ideas.filter(i=>i.status==='Done').length} done`, 'ideas')}
     ${stat('book', S.papers.length, 'Papers logged', `${linked} linked to an idea`, 'ideas')}
     ${stat('clip', done, 'Critiques completed', `${S.critiques.length} started`, 'critique')}
+    ${stat('image', S.figlab.reviews.filter(figDone).length, 'Figures reviewed', `${S.figlab.reviews.length} started`, 'figlab')}
     ${stat('pen', `${stepsDone}<span class="muted" style="font-size:1.1rem">/${WRITE_STEPS.length}</span>`, 'Writing steps done', `Self-review ${revN}/${SELF_REVIEW.length}`, 'write')}
   </div>
 
@@ -2133,6 +2625,31 @@ const ACTIONS = {
   theme: () => { S.theme = {auto:'light', light:'dark', dark:'auto'}[S.theme] || 'auto'; applyTheme(); save(); toast({auto:'Theme follows your system', light:'Light mode', dark:'Dark mode'}[S.theme]); },
   copy: el => { const t = $(el.dataset.target); if (t) copyText(t.textContent); },
   search: () => { const r = buildSearch(); if (!r) return; window.open(r.url, '_blank', 'noopener'); if (r.db.note) copyText(r.q, 'Query copied — paste it into Web of Science'); },
+  'fl-mode': el => { S.figlab.mode = el.dataset.v; save(); RENDER.figlab(); },
+  'fl-new': () => { const r = newFigure(); S.figlab.reviews.unshift(r); S.figlab.active = r.id; save(); RENDER.figlab(); $('#fl-no')?.focus(); },
+  'fl-open': el => { S.figlab.active = el.dataset.id; save(); RENDER.figlab(); if (innerWidth < 900) $('#fl-no')?.scrollIntoView({behavior:'smooth', block:'center'}); },
+  'fl-del': () => { const r = activeFig(); if (!confirm(`Delete the review of ${r.figNo || 'this figure'}?`)) return; S.figlab.reviews = S.figlab.reviews.filter(x => x !== r); S.figlab.active = S.figlab.reviews[0]?.id || ''; save(); RENDER.figlab(); },
+  'fl-type': el => { const r = activeFig(); if (r.type !== el.dataset.v) r.flags = {}; r.type = el.dataset.v; save();
+    $$('[data-act="fl-type"]').forEach(b => b.setAttribute('aria-pressed', b.dataset.v === r.type));
+    $('#flHow').innerHTML = howToRead(r, figType(r.type)); $('#flAxes').innerHTML = axesFields(r, figType(r.type)); updateExplain(); },
+  'fl-support': el => { const r = activeFig(); r.support = r.support === el.dataset.v ? '' : el.dataset.v; save(); $$('[data-act="fl-support"]').forEach(b => b.setAttribute('aria-pressed', b.dataset.v === r.support)); updateExplain(); },
+  'fl-na': el => { const r = activeFig(), k = el.dataset.k; r.checks[k] = r.checks[k] === 'na' ? false : 'na'; save();
+    const wrap = el.closest('.check-na'), cb = wrap.querySelector('input'); wrap.classList.toggle('is-na', r.checks[k] === 'na'); cb.disabled = r.checks[k] === 'na'; cb.checked = false; wrap.querySelector('.check').classList.remove('on'); el.setAttribute('aria-pressed', r.checks[k] === 'na'); updateExplain(); },
+  'fl-rate': el => { const r = activeFig(), k = el.dataset.k, v = +el.dataset.v; r.ratings[k] = r.ratings[k] === v ? 0 : v; save();
+    $$(`[data-act="fl-rate"][data-k="${k}"]`).forEach(b => b.setAttribute('aria-pressed', +b.dataset.v === r.ratings[k])); el.parentElement.nextElementSibling.textContent = r.ratings[k] ? RATING_LABELS[r.ratings[k]] : 'Not rated'; updateExplain(); },
+  'fl-add': () => {
+    const r = activeFig(), c = S.critiques.find(x => x.id === r.critId);
+    if (!c) return toast('Choose the critique this figure belongs to first');
+    const para = figParagraph(r);
+    const sec = c.form === 'aau' ? (c.b.results ||= {}) : (c.sections.results ||= {});
+    if ((sec.text || '').includes(para)) return toast('This explanation is already in that critique');
+    sec.text = ((sec.text || '').trim() ? sec.text.trim() + '\n\n' : '') + para; save();
+    const n = words(sec.text);
+    toast(c.form === 'aau' ? `Added to Results — now ${n} / 200 words${n > 200 ? ' (over the limit, trim it)' : ''}` : 'Added to the Results section');
+  },
+  'fl-goal': el => { S.figlab.build.goal = el.dataset.v; save(); RENDER.figlab(); },
+  'fl-ctype': el => { S.figlab.build.chart.type = el.dataset.v; save(); $$('[data-act="fl-ctype"]').forEach(b => b.setAttribute('aria-pressed', b.dataset.v === el.dataset.v));
+    const lbl = $('label[for="cb-cats"]'); if (lbl) lbl.textContent = el.dataset.v === 'scatter' ? 'X values (numbers, comma-separated)' : 'Category labels (comma-separated)'; updateBuild(); },
   'rp-view': el => { S.reader.view = el.dataset.v; save(); RENDER.reader(); },
   'rp-paste': () => openDialog('Paste the paper text', `
     <div class="field"><label class="f" for="pt-title">Paper title</label><input class="input" id="pt-title" name="title" required></div>
@@ -2209,8 +2726,9 @@ const ACTIONS = {
     saveFile(`scholarpath-backup-${today()}.json`, new Blob([JSON.stringify(S, null, 2)], {type:'application/json'}), 'Backup saved');
   },
   'clear-examples': () => {
-    if (!confirm('Remove the example idea, papers, critique and demo reading? Your own work is kept.')) return;
+    if (!confirm('Remove the example idea, papers, critique, figure review and demo reading? Your own work is kept.')) return;
     S.ideas = S.ideas.filter(x => !x.example); S.papers = S.papers.filter(x => !x.example); S.critiques = S.critiques.filter(x => !x.example);
+    S.figlab.reviews = S.figlab.reviews.filter(x => !x.example); if (!S.figlab.reviews.some(r => r.id === S.figlab.active)) S.figlab.active = S.figlab.reviews[0]?.id || '';
     S.reader.papers = S.reader.papers.filter(x => !x.example); if (!S.reader.papers.some(p => p.id === S.reader.active)) S.reader.active = S.reader.papers[0]?.id || '';
     if (!S.critiques.some(c => c.id === S.activeCrit)) S.activeCrit = S.critiques[0]?.id;
     save(); RENDER.progress(); toast('Examples removed');
@@ -2220,6 +2738,7 @@ const ACTIONS = {
     S.ideas.push(...b.ideas.filter(x => !findIdea(x.id))); S.papers.push(...b.papers.filter(x => !S.papers.some(p => p.id === x.id)));
     if (!S.critiques.some(c => c.id === 'ex-crit-aau')) S.critiques.push(exampleAau());
     if (!S.reader.papers.some(p => p.id === 'ex-reader-1')) S.reader.papers.push(demoReaderPaper());
+    if (!S.figlab.reviews.some(r => r.id === 'ex-fig-1')) S.figlab.reviews.push(exampleFigure());
     save(); RENDER.progress(); toast('Examples added');
   },
   reset: () => {
@@ -2242,6 +2761,10 @@ document.addEventListener('keydown', e => {
 });
 document.addEventListener('input', e => {
   const t = e.target, c = () => activeCrit();
+  if (t.dataset.fl){ const r = activeFig(); r[t.dataset.fl] = t.value; save(); updateExplain(); return; }
+  if (t.dataset.fb){ S.figlab.build.chart[t.dataset.fb] = t.value; save(); updateBuild(); return; }
+  if (t.dataset.fbs){ S.figlab.build.chart.series[+t.dataset.fbs][t.dataset.field] = t.value; save(); updateBuild(); return; }
+  if (t.dataset.fcap){ S.figlab.build.cap[t.dataset.fcap] = t.value; save(); updateBuild(); return; }
   if (t.dataset.rp === 'idea' || t.dataset.rp === 'mine'){
     const para = rPaper().paras.find(x => x.id === t.dataset.id); if (!para) return;
     if (t.dataset.rp === 'idea'){ para.idea = t.value; para.src = t.value.trim() ? 'me' : ''; grow(t); } else para.mine = t.value;
@@ -2264,6 +2787,10 @@ document.addEventListener('input', e => {
 });
 document.addEventListener('change', e => {
   const t = e.target;
+  if (t.dataset.fl === 'critId'){ RENDER.figlab(); return; }
+  if (t.id === 'flFilter'){ S.figlab.filter = t.value; const vis = S.figlab.reviews.filter(r => !t.value || r.critId === t.value); if (vis.length && !vis.includes(activeFig())) S.figlab.active = vis[0].id; save(); RENDER.figlab(); return; }
+  if (t.dataset.flc){ const r = activeFig(); r.checks[t.dataset.flc] = t.checked; t.closest('.check').classList.toggle('on', t.checked); save(); updateExplain(); return; }
+  if (t.dataset.flr !== undefined){ const r = activeFig(); r.flags[+t.dataset.flr] = t.checked; t.closest('.check').classList.toggle('on-flag', t.checked); save(); updateExplain(); return; }
   if (t.dataset.rp === 'rel' || t.dataset.rp === 'to'){
     const para = rPaper().paras.find(x => x.id === t.dataset.id); if (!para) return;
     para.link[t.dataset.rp] = t.value;
@@ -2322,7 +2849,7 @@ document.addEventListener('change', e => {
         if (!d || !Array.isArray(d.ideas) || !Array.isArray(d.papers) || !Array.isArray(d.critiques)) throw new Error('bad');
         if (!confirm('Replace your current ScholarPath data with this backup?')) return;
         S = Object.assign(seedState(), d); S.ui = Object.assign(seedState().ui, d.ui, {tab:'progress'});
-        S.writing = Object.assign(seedState().writing, d.writing); S.pres = Object.assign(seedState().pres, d.pres); S.reader = Object.assign({papers:[], active:'', view:'paras'}, d.reader);
+        S.writing = Object.assign(seedState().writing, d.writing); S.pres = Object.assign(seedState().pres, d.pres); S.reader = Object.assign({papers:[], active:'', view:'paras'}, d.reader); S.figlab = Object.assign(seedState().figlab, d.figlab);
         save(); applyTheme(); showTab('progress'); toast('Backup restored');
       } catch { alert('That file is not a valid ScholarPath backup.'); }
     };
