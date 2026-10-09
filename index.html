@@ -218,6 +218,47 @@ details.what li{margin-bottom:3px}
 .ev-hit b{color:var(--accent);font-family:var(--mono);font-size:.8rem}
 mark{background:var(--warn-soft);color:var(--ink);padding:0 2px;border-radius:3px;font-weight:600}
 
+
+/* Paper Reader */
+.title-input{font-family:var(--serif);font-size:1.05rem;font-weight:600;border-color:transparent;background:transparent;padding-left:4px}
+.title-input:hover,.title-input:focus{border-color:var(--line);background:var(--surface)}
+.ok-chip{background:var(--ok-soft);color:var(--ok);border-color:transparent}
+.para{margin-bottom:12px;scroll-margin-top:150px;transition:box-shadow .3s}
+.para.has-idea{border-left:3px solid var(--ok)}
+.para.front{background:transparent;box-shadow:none}
+.para.flash{box-shadow:0 0 0 3px var(--accent)}
+.para-head{display:flex;align-items:center;gap:8px;margin-bottom:6px;flex-wrap:wrap}
+.para-no{font:600 .8rem var(--mono);color:var(--accent);background:var(--accent-soft);padding:2px 8px;border-radius:999px;flex:none}
+details.orig{margin:0 0 12px}
+details.orig summary{list-style:none;cursor:pointer;font-family:var(--serif);font-size:.98rem;line-height:1.6;color:var(--ink)}
+details.orig summary::-webkit-details-marker{display:none}
+details.orig summary .orig-text{display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+details.orig summary::after{content:"Show full paragraph";display:block;font:500 .8rem var(--sans);color:var(--accent);margin-top:4px}
+details.orig[open] summary{display:none}
+.orig-full{font-family:var(--serif);font-size:.98rem;line-height:1.65;background:var(--surface-2);border-radius:var(--radius-sm);padding:10px 12px}
+.idea-lbl{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+textarea[data-rp]{min-height:62px;font-size:.95rem}
+.ai-alt{display:flex;gap:10px;align-items:center;justify-content:space-between;background:var(--accent-soft);border-radius:var(--radius-sm);padding:8px 12px;margin-top:8px}
+.terms{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.term{font-size:.82rem;background:var(--violet-soft);color:var(--ink);padding:4px 10px;border-radius:999px}
+.term b{color:var(--violet)}
+.para-foot{display:grid;gap:12px;grid-template-columns:1fr;margin-top:12px}
+@media(min-width:820px){.para-foot{grid-template-columns:1fr 1fr}}
+.para-foot select{min-height:38px}
+.link-line{display:block;margin-top:6px;text-decoration:none}
+.ai-run{display:flex;align-items:center;gap:10px;justify-content:space-between;margin-top:10px;font-size:.88rem;background:var(--accent-soft);padding:8px 12px;border-radius:var(--radius-sm)}
+.spin{width:16px;height:16px;border-radius:50%;border:2px solid var(--accent);border-right-color:transparent;animation:spin .8s linear infinite;flex:none}
+@keyframes spin{to{transform:rotate(360deg)}}
+ol.flow{list-style:none;margin:0;padding:0;position:relative}
+.flow-sec{font:600 .76rem var(--sans);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:16px 0 8px}
+.flow-item{display:grid;grid-template-columns:auto 1fr;gap:12px;padding:10px 0 10px 12px;border-left:2px solid var(--line);margin-left:6px}
+.flow-item .para-no{align-self:start;margin-top:2px}
+.flow-item.empty-idea{color:var(--muted)}
+.flow-link{display:inline-block;margin-top:4px;font-size:.8rem;color:var(--accent);background:var(--accent-soft);padding:2px 8px;border-radius:999px}
+ol.qs{margin:12px 0 0;padding-left:22px}
+ol.qs li{margin-bottom:12px}
+@media(prefers-reduced-motion:reduce){.spin{animation:none}}
+
 /* Writing */
 .write-layout{display:grid;gap:16px;grid-template-columns:1fr}
 @media(min-width:900px){.write-layout{grid-template-columns:290px 1fr;align-items:start}.stepper{position:sticky;top:110px}}
@@ -315,6 +356,7 @@ footer.foot{max-width:1180px;margin:0 auto;padding:0 16px 40px;color:var(--muted
 <main>
   <section class="panel" id="panel-hub" role="tabpanel" aria-labelledby="tab-hub"></section>
   <section class="panel" id="panel-ideas" role="tabpanel" aria-labelledby="tab-ideas" hidden></section>
+  <section class="panel" id="panel-reader" role="tabpanel" aria-labelledby="tab-reader" hidden></section>
   <section class="panel" id="panel-critique" role="tabpanel" aria-labelledby="tab-critique" hidden></section>
   <section class="panel" id="panel-write" role="tabpanel" aria-labelledby="tab-write" hidden></section>
   <section class="panel" id="panel-present" role="tabpanel" aria-labelledby="tab-present" hidden></section>
@@ -367,6 +409,7 @@ const $$ = (s, r=document) => [...r.querySelectorAll(s)];
 const TABS = [
   {id:'hub', label:'Resource Hub', icon:'library'},
   {id:'ideas', label:'Idea Organizer', icon:'bulb'},
+  {id:'reader', label:'Paper Reader', icon:'book'},
   {id:'critique', label:'Critique Studio', icon:'clip'},
   {id:'write', label:'Write Your Paper', icon:'pen'},
   {id:'present', label:'Presentation Builder', icon:'slides'},
@@ -681,6 +724,7 @@ function seedState(){
     activeCrit:'ex-crit-aau',
     writing:{title:'', active:0, steps:{}, review:{}},
     pres:{source:'crit:ex-crit-aau', minutes:10},
+    reader:{papers:[demoReaderPaper()], active:'ex-reader-1', view:'paras'},
     ui:{tab:'hub', db:'scholar', status:'All', tag:'', paperIdea:''},
     theme:'auto'
   };
@@ -697,6 +741,7 @@ for (const k of Object.keys(base)) if (S[k] === undefined) S[k] = base[k];
 S.ui = Object.assign({}, base.ui, S.ui);
 S.writing = Object.assign({}, base.writing, S.writing);
 S.pres = Object.assign({}, base.pres, S.pres);
+S.reader = Object.assign({papers:[], active:'', view:'paras'}, S.reader);
 
 let saveTimer;
 function save(){
@@ -717,6 +762,17 @@ async function copyText(text, msg='Copied to clipboard'){
     document.body.appendChild(ta); ta.select(); try { document.execCommand('copy'); } catch {} ta.remove();
   }
   toast(msg);
+}
+// Offer a file: through the viewer's download permission when hosted on claude.ai, else a normal download link
+async function saveFile(filename, blob, okMsg){
+  const dl = await (window.claude && typeof window.claude.use === 'function' ? Promise.resolve(window.claude.use('downloads')).catch(() => null) : null);
+  if (dl){
+    try { await dl.save({filename, data:blob}); toast(okMsg); }
+    catch (e){ if (e && e.code !== 'declined') toast('This file could not be saved here'); }
+    return;
+  }
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = filename;
+  document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 1500); toast(okMsg);
 }
 const exampleBadge = o => o && o.example ? `<span class="badge-example" title="Example content — edit or delete it any time">${icon('sparkle')}Example</span>` : '';
 const copyBtn = (target, label='Copy') => `<button class="btn sm" data-act="copy" data-target="${target}">${icon('copy')}${label}</button>`;
@@ -1147,15 +1203,18 @@ function updateAau(){
 }
 
 /* --- Paper PDF: in-browser text extraction + evidence search --- */
-const PDFJS = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/';
+// pdf.js 3.11.174: the copy shipped next to this page (vendor/pdfjs/) first, then the CDN
+const PDFJS_SRC = ['vendor/pdfjs/', 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/'];
 let pdfjsP;
 function loadPdfJs(){
-  return pdfjsP ||= new Promise((res, rej) => {
-    const s = document.createElement('script'); s.src = PDFJS + 'pdf.min.js';
-    s.onload = () => { window.pdfjsLib.GlobalWorkerOptions.workerSrc = PDFJS + 'pdf.worker.min.js'; res(window.pdfjsLib); };
-    s.onerror = () => { pdfjsP = null; rej(new Error('PDF reader could not be loaded — check your internet connection.')); };
+  const tryAt = i => new Promise((res, rej) => {
+    if (i >= PDFJS_SRC.length) return rej(new Error('The PDF reader could not be loaded — check your internet connection.'));
+    const s = document.createElement('script'); s.src = PDFJS_SRC[i] + 'pdf.min.js';
+    s.onload = () => { window.pdfjsLib.GlobalWorkerOptions.workerSrc = PDFJS_SRC[i] + 'pdf.worker.min.js'; res(window.pdfjsLib); };
+    s.onerror = () => { s.remove(); tryAt(i + 1).then(res, rej); };
     document.head.appendChild(s);
   });
+  return pdfjsP ||= tryAt(0).catch(e => { pdfjsP = null; throw e; });
 }
 async function extractPdf(file){
   const lib = await loadPdfJs();
@@ -1422,6 +1481,411 @@ function updateCritChrome(){
   });
 }
 
+/* ---------- Paper Reader ---------- */
+const RELS = [['','—'],['supports','supports'],['explains','explains'],['example','is an example of'],['contrasts','contrasts with'],['leads-to','follows from'],['result','is a result of'],['defines','defines a term in']];
+const relLabel = r => (RELS.find(x => x[0] === r) || ['',''])[1];
+const HEAD_RE = /^(?:(?:\d+(?:\.\d+)*|[IVX]+)\.?\s+)?(abstract|introduction|background|related work|literature review|prior work|methods?|methodology|materials and methods|research design|experimental (?:setup|design|results)|experiments?|evaluation|results?(?: and discussion)?|findings|discussion|limitations|conclusions?(?: and future work)?|future work|acknowledge?ments?|references|bibliography|appendix)\b/i;
+const NUM_HEAD_RE = /^(?:[IVX]{1,5}|\d{1,2}(?:\.\d{1,2})*)\.?\s+[A-Z][A-Za-z ,:&()\/-]{2,70}$/;
+const REF_RE = /^(?:(?:\d+|[IVX]+)\.?\s+)?(references|bibliography)\s*$/i;
+
+function demoReaderPaper(){
+  const P = (id, section, page, text, idea, terms, mine, to, rel) => ({id, section, page, kind:'text', text, idea, src:'', terms, mine, link:{to, rel}});
+  return {
+    id:'ex-reader-1', example:true, created:Date.now(), name:'Demo text — written for ScholarPath (not a real study)',
+    title:'Demo: How students use AI feedback on their writing', pages:[], seq:7,
+    paras:[
+      P('p1','Abstract',1,'This demonstration text describes an imaginary small study, written only to show how the Paper Reader works. It imagines that twenty secondary-school students used an AI writing assistant for four weeks and that their drafts and interviews were analysed to understand how they used the feedback.',
+        'An imaginary study: 20 students used an AI writing helper for 4 weeks, and the researchers looked at their drafts and interviews.',[{term:'AI writing assistant',meaning:'a computer tool that gives comments on your writing'}],'4 weeks · 20 students · drafts + interviews','',''),
+      P('p2','Introduction',1,'Feedback is one of the strongest influences on learning, but teachers have limited time to give detailed comments on every draft. AI tools promise instant feedback, yet little is known about whether students act on it or simply accept the suggested corrections.',
+        'Feedback helps learning, but teachers have little time. AI gives instant feedback — but we don’t know if students really learn from it or just copy the fixes.',[{term:'feedback',meaning:'comments that help you improve your work'}],'The GAP: do students learn from AI feedback or just copy it?','p1','explains'),
+      P('p3','Method',2,'In this imagined design, students submitted three drafts of an argumentative essay. Each change between drafts was coded as either accepted unchanged, adapted, or ignored, and eight students were interviewed about their decisions.',
+        'Students wrote 3 drafts. Each change was labelled: copied as-is, changed, or ignored. 8 students were interviewed.',[{term:'coding',meaning:'labelling data into categories so it can be counted'}],'3 labels: copied / adapted / ignored','p2','leads-to'),
+      P('p4','Results',3,'In the imagined results, most suggestions about grammar were accepted unchanged, while suggestions about organisation and argument were usually ignored. Interviewed students said the grammar fixes were easy to apply but the comments on structure were hard to understand.',
+        'Students copied grammar fixes but ignored advice about structure and argument, because those comments were hard to understand.',[],'Easy fixes copied; hard advice ignored','p3','result'),
+      P('p5','Discussion',3,'These imagined findings would suggest that AI feedback helps with surface accuracy but not with deeper writing skills unless teachers help students interpret the higher-level comments.',
+        'AI feedback helps with small errors, but students need a teacher to understand the bigger comments.',[{term:'surface accuracy',meaning:'spelling and grammar, not ideas'}],'AI + teacher together','p4','explains'),
+      P('p6','Limitations',4,'Because the study is imaginary and the sample would be small and from one school, no real conclusions can be drawn. A real study would need more students, several schools and a comparison group.',
+        'Small sample from one school, no comparison group — so results can’t be generalised.',[{term:'comparison group',meaning:'students who did not use the tool, to compare with'}],'Weakness = small + one school','p5','contrasts')
+    ],
+    questions:{
+      overview:'A demo text about an imaginary study of 20 students who used an AI writing helper. Students copied grammar fixes but ignored harder advice about structure. The text suggests teachers are still needed to explain the bigger comments.',
+      audience:[{q:'Have you ever accepted an AI correction without understanding why it was correct?', why:'Connects the finding to the audience’s own experience.'},{q:'Which is more useful for learning: instant AI feedback or slower teacher feedback?', why:'Opens a debate about the main implication.'}],
+      professor:[{q:'Why was coding changes as copied / adapted / ignored a suitable method for this question?', tip:'Link the three codes to the gap in ¶2: they show whether students act on feedback or just copy it.', paras:['p2','p3']},{q:'How far can these findings be generalised?', tip:'Point to ¶6: one school, small sample, no comparison group — say what a stronger design would add.', paras:['p6']}],
+      colleagues:[{q:'What does “surface accuracy” mean?', tip:'Spelling and grammar — not the ideas or structure (¶5).'}]
+    }
+  };
+}
+
+function rPaper(){ return (S.reader.papers || []).find(p => p.id === S.reader.active) || S.reader.papers[0]; }
+const paraNo = (paper, id) => paper.paras.findIndex(p => p.id === id) + 1;
+
+/* --- PDF → paragraphs (uses item positions to find breaks, headings and repeated headers) --- */
+async function pdfToParagraphs(file){
+  const lib = await loadPdfJs();
+  const doc = await lib.getDocument({data:await file.arrayBuffer()}).promise;
+  const pages = [], pageLines = [];
+  for (let n = 1; n <= doc.numPages; n++){
+    const page = await doc.getPage(n), tc = await page.getTextContent(), ph = (page.view && page.view[3]) || 842;
+    const lines = []; let cur = null;
+    for (const it of tc.items){
+      if (!('str' in it)) continue;
+      const x = it.transform[4], y = it.transform[5], h = Math.abs(it.transform[3]) || it.height || 10;
+      if (cur && Math.abs(y - cur.y) < h * 0.6 && x >= cur.xEnd - h * 0.5 && x - cur.xEnd < h * 1.2){   // same line, same column
+        const gap = x - cur.xEnd;
+        if (gap > h * 0.15 && !/\s$/.test(cur.text) && !/^\s/.test(it.str)) cur.text += ' ';
+        cur.text += it.str; cur.xEnd = Math.max(cur.xEnd, x + (it.width || 0));
+      } else if (it.str.trim()){
+        if (cur) lines.push(cur);
+        cur = {text:it.str, x, y, h, xEnd:x + (it.width || 0)};
+      }
+      if (it.hasEOL && cur){ lines.push(cur); cur = null; }
+    }
+    if (cur) lines.push(cur);
+    lines.forEach(l => { l.text = l.text.replace(/\s+/g, ' ').trim(); l.w = l.xEnd - l.x; });
+    const byY = lines.filter(l => l.text).sort((a,b) => b.y - a.y);      // only the outermost lines can be headers / footers
+    [...byY.slice(0, 2), ...byY.slice(-2)].forEach(l => { l.edge = l.y > ph * 0.9 || l.y < ph * 0.1; });
+    const keep = lines.filter(l => l.text);
+    pageLines.push(keep);
+    pages.push(keep.map(l => l.text).join('\n'));
+  }
+  // running headers / footers / page numbers: identical short lines on 3+ pages
+  const freq = {};
+  pageLines.forEach(ls => new Set(ls.map(l => l.text.replace(/\d+/g,'#'))).forEach(t => freq[t] = (freq[t]||0) + 1));
+  const noise = l => /^\d{1,4}$/.test(l.text) || (pageLines.length >= 2 && l.edge && l.text.length < 120 && freq[l.text.replace(/\d+/g,'#')] >= Math.min(3, pageLines.length));
+
+  const paras = []; let section = 'Title & authors', buf = [], bufPage = 1, inRefs = false, seq = 0;
+  const flush = (kind) => {
+    if (!buf.length) return;
+    let text = '';
+    buf.forEach(t => { text = /[a-z]-$/.test(text) && /^[a-z]/.test(t) ? text.slice(0,-1) + t : (text ? text + ' ' + t : t); });
+    text = text.replace(/\s+/g,' ').trim();
+    if (text) paras.push({id:'p' + (++seq), section, page:bufPage, kind:kind || (/^(fig\.?|figure|table)\s*[\dIVX]+/i.test(text) ? 'caption' : section === 'Title & authors' ? 'front' : 'text'), text, idea:'', src:'', terms:[], mine:'', link:{to:'', rel:''}});
+    buf = [];
+  };
+  let prev = null;
+  pageLines.forEach((ls, pi) => {
+    const widths = ls.map(l => l.w).filter(w => w > 0).sort((a,b) => a-b);
+    const typical = widths[Math.floor(widths.length * 0.75)] || 300;
+    let newPage = true;
+    for (const l of ls){
+      if (inRefs) break;
+      if (noise(l)) continue;
+      const t = l.text;
+      const shortLine = t.length < 80 && !/[.,;]$/.test(t);
+      if (REF_RE.test(t)){ flush(); inRefs = true; break; }
+      const abs = t.match(/^abstract\s*[—–:\-.]\s*(.+)$/i);
+      if (abs){ flush(); section = 'Abstract'; buf = [abs[1]]; bufPage = pi + 1; prev = l; continue; }
+      if (shortLine && (HEAD_RE.test(t) && t.split(' ').length <= 8 || NUM_HEAD_RE.test(t) && t.split(' ').length <= 10)){
+        flush(); section = t.replace(/^(?:(?:\d+(?:\.\d+)*|[IVX]+)\.?\s+)/, '').replace(/\s+/g,' ');
+        section = section.charAt(0).toUpperCase() + section.slice(1).toLowerCase();
+        prev = null; continue;
+      }
+      let brk = !prev;
+      if (prev){
+        const dy = prev.y - l.y, sentenceEnd = /[.?!:"”]$/.test(prev.text);
+        if (newPage || dy < -l.h) brk = sentenceEnd && !/^[a-z]/.test(t);                     // new page or column: keep a running sentence together
+        else if (dy > Math.max(prev.h, l.h) * 1.8) brk = true;                               // big vertical gap
+        else if (l.x > prev.x + l.h * 0.8 && /[.?!:"”]$/.test(prev.text)) brk = true;        // first-line indent
+        else if (prev.w < typical * 0.7 && /[.?!:"”]$/.test(prev.text)) brk = true;          // short last line of a paragraph
+      }
+      if (brk && buf.length) flush();
+      if (!buf.length) bufPage = pi + 1;
+      buf.push(t); prev = l; newPage = false;
+    }
+  });
+  flush();
+  // merge fragments (< 25 words) into the next paragraph of the same section
+  for (let i = paras.length - 2; i >= 0; i--){
+    const a = paras[i], b = paras[i+1];
+    if (a.kind === 'text' && b.kind === 'text' && a.section === b.section && words(a.text) < 25){ b.text = a.text + ' ' + b.text; b.page = a.page; paras.splice(i, 1); }
+  }
+  return {pages, paras, seq};
+}
+function textToParagraphs(raw){
+  let section = 'Text', seq = 0; const paras = [];
+  raw.replace(/\r/g,'').split(/\n\s*\n/).map(b => b.replace(/\s*\n\s*/g,' ').trim()).filter(Boolean).forEach(b => {
+    if (REF_RE.test(b)) { section = '__refs'; return; }
+    if (section === '__refs') return;
+    if (b.length < 80 && !/[.,;]$/.test(b) && (HEAD_RE.test(b) || NUM_HEAD_RE.test(b))){ section = b.replace(/^(?:(?:\d+(?:\.\d+)*|[IVX]+)\.?\s+)/, ''); return; }
+    paras.push({id:'p' + (++seq), section, page:'', kind:/^(fig\.?|figure|table)\s*[\dIVX]+/i.test(b) ? 'caption' : 'text', text:b, idea:'', src:'', terms:[], mine:'', link:{to:'', rel:''}});
+  });
+  return {pages:[], paras, seq};
+}
+function addReaderPaper(name, title, res){
+  const paper = {id:uid(), created:Date.now(), name, title, pages:res.pages, paras:res.paras, seq:res.seq, questions:null};
+  S.reader.papers.unshift(paper); S.reader.active = paper.id; S.reader.view = 'paras'; save();
+  RENDER.reader(); toast(`${res.paras.length} paragraphs ready`);
+}
+
+/* --- Claude (sample capability), only where the viewer provides it --- */
+const capUse = n => (window.claude && typeof window.claude.use === 'function') ? Promise.resolve(window.claude.use(n)).catch(() => null) : Promise.resolve(null);
+let AI = null, aiOff = false, aiRun = null;
+capUse('sample').then(fn => { AI = fn; if (fn && S.ui.tab === 'reader') RENDER.reader(); });
+const aiReady = () => !!AI && !aiOff;
+function aiError(e){
+  const code = e && e.code;
+  if (['not_granted','sampling_disabled','not_declared','capability_disabled','capability_removed'].includes(code)){ aiOff = true; RENDER.reader(); return 'Claude is not available on this page, so AI features are hidden. You can still write your own summaries.'; }
+  return ({rate_limited:'Claude is busy or your usage limit was reached — try again a little later.', session_expired:'Please sign in to Claude again.', refused:'Claude declined this request.', prompt_too_large:'This paper is too long to send in one go.', invalid_json:'Claude’s answer could not be read — try again.', cancelled:'Stopped.'}[code]) || 'Something went wrong talking to Claude — try again.';
+}
+const ideaOf = p => (p.idea || '').trim();
+function summarizePrompt(paper, batch){
+  const before = paper.paras.slice(0, paper.paras.indexOf(batch[0])).filter(ideaOf).slice(-30)
+    .map(p => `[${p.id}] ${clip(ideaOf(p), 160)}`).join('\n');
+  return `You are helping a master's student read a research paper. For EACH paragraph below:
+1. "idea": the main idea in simple, clear English a non-expert understands (1–2 short sentences, under 40 words). Keep the meaning exact. Do NOT add facts, numbers or claims that are not in the paragraph.
+2. "terms": up to 3 difficult or technical terms from the paragraph, each with a plain meaning (under 12 words). Empty array if none.
+3. "linkTo": the id of ONE earlier paragraph this paragraph most clearly builds on (from "Earlier paragraphs" or earlier in this batch), or null if there is no clear link.
+4. "relation": how it relates to that paragraph — one of "supports", "explains", "example", "contrasts", "leads-to", "result", "defines" — or null.
+
+Paper: "${paper.title}"
+Earlier paragraphs (id: main idea):
+${before || '(none yet)'}
+
+Paragraphs to summarise:
+${batch.map(p => `[${p.id}] (section: ${p.section}${p.page ? `, page ${p.page}` : ''}${p.kind === 'caption' ? ', figure/table caption' : ''})\n${p.text.slice(0, 4000)}`).join('\n\n')}
+
+Reply with only a JSON array with one object per paragraph, in the same order, for example:
+[{"id":"p4","idea":"...","terms":[{"term":"...","meaning":"..."}],"linkTo":"p2","relation":"explains"}]`;
+}
+function applySummary(paper, items){
+  const ids = new Set(paper.paras.map(p => p.id));
+  for (const it of Array.isArray(items) ? items : []){
+    const p = paper.paras.find(x => x.id === String(it && it.id)); if (!p) continue;
+    const idea = String(it.idea || '').trim(); if (!idea) continue;
+    if (p.src === 'me' && ideaOf(p)) p.aiIdea = idea; else { p.idea = idea; p.src = 'ai'; p.aiIdea = ''; }
+    if (Array.isArray(it.terms)) p.terms = it.terms.filter(t => t && t.term).slice(0,3).map(t => ({term:String(t.term), meaning:String(t.meaning || '')}));
+    const to = it.linkTo ? String(it.linkTo) : '';
+    if (!p.link.to && to && ids.has(to) && paper.paras.findIndex(x => x.id === to) < paper.paras.indexOf(p))
+      p.link = {to, rel:RELS.some(r => r[0] === it.relation) ? it.relation : 'supports'};
+  }
+}
+async function summarizeParas(paper, list, label){
+  if (!aiReady() || aiRun) return;
+  const ctl = new AbortController(); aiRun = {ctl, label, done:0, total:list.length};
+  renderAiBar();
+  const batches = []; let cur = [], size = 0;
+  for (const p of list){ if (cur.length && (cur.length >= 8 || size + p.text.length > 9000)){ batches.push(cur); cur = []; size = 0; } cur.push(p); size += p.text.length; }
+  if (cur.length) batches.push(cur);
+  try {
+    for (const b of batches){
+      if (ctl.signal.aborted) break;
+      const items = await AI.json(summarizePrompt(paper, b), {signal:ctl.signal, modelTier:'default'});
+      applySummary(paper, items); save();
+      aiRun.done += b.length; renderAiBar(); refreshCards(b);
+    }
+    toast('Summaries ready');
+  } catch (e){ if (e && e.code !== 'cancelled') alert(aiError(e)); }
+  finally {
+    aiRun = null; renderAiBar();
+    const typing = document.activeElement && $('#panel-reader').contains(document.activeElement) && /INPUT|TEXTAREA|SELECT/.test(document.activeElement.tagName);
+    if (S.ui.tab === 'reader' && !typing) RENDER.reader();
+  }
+}
+async function generateQuestions(paper){
+  if (!aiReady() || aiRun) return;
+  const ctl = new AbortController(); aiRun = {ctl, label:'Writing questions', done:0, total:0}; renderAiBar();
+  const body = paper.paras.filter(p => p.kind !== 'front').map(p => `[${p.id}] (${p.section}${p.page ? `, p. ${p.page}` : ''}) ${ideaOf(p) || clip(p.text, 900)}`).join('\n');
+  const prompt = `A master's student will PRESENT this research paper to their professor and classmates. Using only the paper content below, write:
+- "overview": the whole paper in 3–4 simple sentences.
+- "audience": 5 discussion questions the PRESENTER can ask the professor and colleagues to start a good discussion, each with "why" (what it achieves, under 15 words).
+- "professor": 8 questions the PROFESSOR is likely to ask the presenter — about the gap, method choice, sampling, validity, results vs. research question, limitations, contribution and comparison with other work — each with "tip" (how to answer, pointing to the relevant paragraph ids such as ¶p4, under 30 words) and "paras" (array of relevant paragraph ids).
+- "colleagues": 5 questions classmates may ask (clarifying terms, method in simple words, practical meaning), each with "tip" (under 25 words).
+Questions must be specific to this paper, not generic. Do not invent details that are not in the content.
+
+Paper: "${paper.title}"
+Content (id, section, page, main idea or text):
+${body.slice(0, 150000)}
+
+Reply with only JSON: {"overview":"...","audience":[{"q":"...","why":"..."}],"professor":[{"q":"...","tip":"...","paras":["p3"]}],"colleagues":[{"q":"...","tip":"..."}]}`;
+  try {
+    const r = await AI.json(prompt, {signal:ctl.signal, modelTier:'default'});
+    const arr = (x, f) => Array.isArray(x) ? x.filter(o => o && o.q).map(f) : [];
+    paper.questions = {overview:String(r.overview || ''), ai:true,
+      audience:arr(r.audience, o => ({q:String(o.q), why:String(o.why || '')})),
+      professor:arr(r.professor, o => ({q:String(o.q), tip:String(o.tip || ''), paras:Array.isArray(o.paras) ? o.paras.map(String) : []})),
+      colleagues:arr(r.colleagues, o => ({q:String(o.q), tip:String(o.tip || '')}))};
+    save(); toast('Questions ready');
+  } catch (e){ if (e && e.code !== 'cancelled') alert(aiError(e)); }
+  finally { aiRun = null; RENDER.reader(); }
+}
+function renderAiBar(){
+  const el = $('#aiBar'); if (!el) return;
+  el.innerHTML = aiRun ? `<div class="ai-run"><span class="spin" aria-hidden="true"></span><span>${esc(aiRun.label)}${aiRun.total ? ` — ${aiRun.done} of ${aiRun.total} paragraphs` : '…'} <span class="muted small">(Claude may take a little while to start)</span></span><button class="btn sm" data-act="ai-stop">${icon('x')}Stop</button></div>` : '';
+  $$('[data-ai-btn]').forEach(b => b.disabled = !!aiRun);
+}
+
+/* --- Starter questions (always available, no AI) --- */
+function starterQuestions(paper){
+  const has = k => paper.paras.some(p => new RegExp(k, 'i').test(p.section));
+  const term = (paper.paras.flatMap(p => p.terms || [])[0] || {}).term;
+  return {
+    audience:[
+      {q:'Which finding surprised you most, and why?', why:'Gets the audience to engage with the results.'},
+      {q:'Would this approach work in our own context — for example, in UAE schools or universities?', why:'Tests how far the findings transfer.'},
+      {q:'If you could change one thing in the study design, what would it be?', why:'Invites critical thinking about the method.'},
+      {q:'Is the evidence strong enough to support the main claim?', why:'Opens a discussion on validity.'},
+      {q:'Who could be helped — or disadvantaged — if these results were applied?', why:'Brings in ethics and fairness.'}
+    ],
+    professor:[
+      {q:'What is the research gap, in one sentence?', tip:'Point to the paragraph in the Introduction that names what is missing in earlier work.'},
+      {q:'Why did the authors choose this method rather than an alternative?', tip:'Link the method to the research question; mention one alternative and why it fits less well.'},
+      {q:has('method|design|experiment') ? 'How was the sample or dataset selected, and is it representative?' : 'What data did the authors use, and is it appropriate?', tip:'Describe the sample in numbers, then say who is missing from it.'},
+      {q:'Do the results actually answer the research question?', tip:'Match each main result to the question it answers; say what remains unanswered.'},
+      {q:'What is the most important limitation, and how does it affect the conclusions?', tip:'Pick one limitation and explain its effect — don’t just list several.'},
+      {q:'How does this paper compare with other work you have read?', tip:'Name one related paper from your reading list and one clear difference.'},
+      {q:'What would you do as the next study?', tip:'Propose one feasible study that fixes the limitation you named.'},
+      {q:term ? `Can you explain “${term}” in your own words?` : 'Can you define the key term of this paper in your own words?', tip:'Give a one-sentence definition and a simple example.'}
+    ],
+    colleagues:[
+      {q:'Can you explain the method in simple terms?', tip:'Use 3 steps: what they collected, what they did with it, how they judged the results.'},
+      {q:'What does the main result mean in practice?', tip:'Give one real-world example of who would use this result.'},
+      {q:'How did they measure success?', tip:'Name the metric or evidence they used and what a good score means.'},
+      {q:'Is the data or code available?', tip:'Check the paper for a data-availability statement or link.'},
+      {q:'What was the hardest part of the paper to understand?', tip:'Be honest, then show how you worked it out.'}
+    ]
+  };
+}
+
+/* --- Rendering --- */
+RENDER.reader = () => {
+  const papers = S.reader.papers;
+  const paper = rPaper(); if (paper) S.reader.active = paper.id;
+  const view = S.reader.view || 'paras';
+  const aiChip = aiReady() ? `<span class="chip ok-chip">${icon('sparkle')}Claude summaries on</span>` : `<span class="chip" title="Automatic summaries need the published ScholarPath page on claude.ai">${icon('sparkle')}AI off — write your own</span>`;
+  $('#panel-reader').innerHTML = `
+  <div class="page-head"><div class="eyebrow">Paper Reader</div><h1>Read it, simplify it, connect it</h1>
+  <p>Upload a paper and read it paragraph by paragraph: the main idea in simple words, key terms, your own memory hook, and how each idea links to the one before. Then prepare the questions for your presentation.</p></div>
+
+  <div class="card">
+    <div class="crit-bar">
+      <div class="row" style="flex:1;min-width:240px">
+        ${papers.length ? `<label class="sr-only" for="rpSel">Choose paper</label><select id="rpSel" style="flex:1;max-width:460px">${papers.map(p => `<option value="${p.id}" ${paper && p.id===paper.id?'selected':''}>${esc((p.example?'[Demo] ':'') + clip(p.title || p.name, 70))}</option>`).join('')}</select>` : '<span class="muted">No papers yet — upload one to start.</span>'}
+        ${aiChip}
+      </div>
+      <div class="row">
+        <label class="btn primary" for="rpFile" style="cursor:pointer">${icon('upload')}Upload PDF</label>
+        <input type="file" id="rpFile" accept="application/pdf,.pdf" hidden>
+        <button class="btn" data-act="rp-paste">${icon('clip')}Paste text</button>
+        ${paper ? `<button class="btn ghost danger" data-act="rp-del">${icon('trash')}Delete</button>` : ''}
+      </div>
+    </div>
+    ${paper && paper.example ? `<p class="small muted" style="margin:12px 0 0">This is a <b>demo text written for ScholarPath</b> — not a real paper — so you can see a finished reading. Upload your own paper to begin.</p>` : ''}
+    <p class="small muted" style="margin:10px 0 0">PDF text is extracted inside your browser. Splitting into paragraphs is automatic and not always perfect — use <i>Merge with next</i> to fix broken paragraphs. The reference list is skipped.</p>
+  </div>
+  ${paper ? readerBody(paper, view) : ''}`;
+  renderAiBar();
+  $$('#panel-reader textarea[data-rp]').forEach(grow);
+};
+function readerBody(paper, view){
+  const text = paper.paras.filter(p => p.kind !== 'front');
+  const done = text.filter(ideaOf).length;
+  const todo = paper.paras.filter(p => !ideaOf(p) && p.kind !== 'front');
+  return `
+  <div class="card sticky-sub" style="margin-top:16px;padding:12px 16px">
+    <div class="row" style="justify-content:space-between;gap:12px">
+      <div style="flex:1;min-width:220px"><label class="sr-only" for="rpTitle">Paper title</label>
+        <input class="input title-input" id="rpTitle" value="${esc(paper.title)}" placeholder="Paper title"></div>
+      <div class="seg" role="group" aria-label="View">${[['paras','Paragraphs'],['flow','Idea flow'],['questions','Questions']].map(([k,l]) => `<button data-act="rp-view" data-v="${k}" aria-pressed="${view===k}">${l}</button>`).join('')}</div>
+    </div>
+    <div class="row" style="justify-content:space-between;margin:10px 0 6px"><span class="small"><b id="rpDone">${done}</b> of ${text.length} paragraphs have a main idea</span>
+      <span class="row">${aiReady() && todo.length ? `<button class="btn sm primary" data-act="rp-sum-all" data-ai-btn>${icon('sparkle')}Summarize ${done ? 'the rest' : 'all'} with Claude</button>` : ''}
+      ${copyBtn('#rpNotes','Copy reading notes')}<button class="btn sm" data-act="rp-to-crit">${icon('clip')}Use in Critique</button></span></div>
+    <div class="progress"><span style="width:${text.length ? done/text.length*100 : 0}%"></span></div>
+    <div id="aiBar"></div>
+  </div>
+  <div id="rpView" style="margin-top:16px">${view === 'flow' ? flowView(paper) : view === 'questions' ? questionsView(paper) : parasView(paper)}</div>
+  <pre class="sr-only" id="rpNotes" aria-hidden="true">${esc(readingNotes(paper))}</pre>`;
+}
+function parasView(paper){
+  let last = null;
+  return paper.paras.map(p => { const h = p.section !== last ? `<div class="form-part">${esc(p.section)}</div>` : ''; last = p.section; return h + paraCard(paper, p); }).join('') ||
+    '<div class="empty">No paragraphs were found. If this is a scanned PDF, try <b>Paste text</b> instead.</div>';
+}
+function paraCard(paper, p){
+  const n = paraNo(paper, p.id), earlier = paper.paras.slice(0, n - 1);
+  if (p.kind === 'front') return `<article class="card para front" id="para-${p.id}"><div class="para-head"><span class="para-no">¶${n}</span><span class="small muted">Title, authors and affiliations — not summarised</span><span class="spacer"></span>
+    <button class="btn ghost icon" data-act="rp-merge" data-id="${p.id}" title="Merge with next paragraph" aria-label="Merge with next paragraph">${icon('link')}</button>
+    <button class="btn ghost icon danger" data-act="rp-drop" data-id="${p.id}" title="Remove" aria-label="Remove paragraph">${icon('trash')}</button></div>
+    <div class="orig-full">${esc(p.text)}</div></article>`;
+  const linked = p.link.to && paper.paras.find(x => x.id === p.link.to);
+  return `<article class="card para ${ideaOf(p)?'has-idea':''}" id="para-${p.id}" data-pid="${p.id}">
+    <div class="para-head"><span class="para-no">¶${n}</span><span class="small muted">${p.page ? `p. ${p.page} · ` : ''}${esc(p.section)}${p.kind === 'caption' ? ' · figure/table' : p.kind === 'front' ? ' · title & authors' : ''}</span>
+      <span class="spacer"></span>
+      ${aiReady() ? `<button class="btn ghost sm" data-act="rp-sum-one" data-id="${p.id}" data-ai-btn title="Ask Claude to simplify this paragraph">${icon('sparkle')}Simplify</button>` : ''}
+      <button class="btn ghost icon" data-act="rp-merge" data-id="${p.id}" title="Merge with next paragraph" aria-label="Merge with next paragraph">${icon('link')}</button>
+      <button class="btn ghost icon danger" data-act="rp-drop" data-id="${p.id}" title="Remove this paragraph" aria-label="Remove paragraph">${icon('trash')}</button></div>
+    <details class="orig"><summary><span class="orig-text">${esc(p.text)}</span></summary><div class="orig-full">${esc(p.text)}</div></details>
+    <label class="f idea-lbl" for="ri-${p.id}">${icon('bulb')}Main idea in simple words ${p.src === 'ai' ? '<span class="chip">by Claude — check it</span>' : p.src === 'me' ? '<span class="chip tag">mine</span>' : ''}</label>
+    <textarea id="ri-${p.id}" data-rp="idea" data-id="${p.id}" rows="2" placeholder="What is this paragraph saying? Write it simply, in 1–2 sentences.">${esc(p.idea)}</textarea>
+    ${p.aiIdea ? `<div class="ai-alt"><span class="small"><b>Claude’s version:</b> ${esc(p.aiIdea)}</span><button class="btn sm" data-act="rp-use-ai" data-id="${p.id}">Use this</button></div>` : ''}
+    ${(p.terms||[]).length ? `<div class="terms">${p.terms.map(t => `<span class="term"><b>${esc(t.term)}</b> — ${esc(t.meaning)}</span>`).join('')}</div>` : ''}
+    <div class="para-foot">
+      <div><label class="f" for="rm-${p.id}">My memory hook</label><input class="input" id="rm-${p.id}" data-rp="mine" data-id="${p.id}" value="${esc(p.mine)}" placeholder="A keyword, example or picture that helps you remember"></div>
+      <div><span class="f">Connects to</span><div class="row" style="gap:6px;flex-wrap:nowrap">
+        <select data-rp="rel" data-id="${p.id}" aria-label="Relation" style="width:auto">${RELS.map(([v,l]) => `<option value="${v}" ${v===p.link.rel?'selected':''}>${l}</option>`).join('')}</select>
+        <select data-rp="to" data-id="${p.id}" aria-label="Earlier paragraph" style="min-width:0">${['<option value="">no link</option>', ...earlier.map((e,i) => `<option value="${e.id}" ${e.id===p.link.to?'selected':''}>¶${i+1} ${esc(clip(ideaOf(e) || e.text, 42))}</option>`)].join('')}</select></div>
+        ${linked ? `<a href="#para-${linked.id}" class="small link-line" data-act="rp-jump" data-id="${linked.id}">↳ ${esc(relLabel(p.link.rel) || 'linked to')} ¶${paraNo(paper, linked.id)}: ${esc(clip(ideaOf(linked) || linked.text, 70))}</a>` : ''}</div>
+    </div>
+  </article>`;
+}
+function refreshCards(list){
+  const paper = rPaper(); if (!paper || S.ui.tab !== 'reader' || (S.reader.view || 'paras') !== 'paras') return;
+  list.forEach(p => { const el = $('#para-' + p.id); if (!el || el.contains(document.activeElement)) return; el.outerHTML = paraCard(paper, p); });
+  $$('#panel-reader textarea[data-rp]').forEach(grow);
+  const text = paper.paras.filter(x => x.kind !== 'front'), done = text.filter(ideaOf).length;
+  const pr = $('#panel-reader .sticky-sub .progress span'); if (pr) pr.style.width = (done/text.length*100) + '%';
+  const cnt = $('#rpDone'); if (cnt) cnt.textContent = done;
+  const notes = $('#rpNotes'); if (notes) notes.textContent = readingNotes(paper);
+}
+function flowView(paper){
+  const items = paper.paras.filter(p => p.kind !== 'front');
+  if (!items.some(ideaOf)) return '<div class="empty">Write or generate main ideas first — the idea flow is built from them.</div>';
+  const ov = paper.questions && paper.questions.overview;
+  let last = null;
+  return `${ov ? `<div class="card" style="margin-bottom:16px"><h3>The paper in a nutshell</h3><p style="margin:0">${esc(ov)}</p></div>` : ''}
+  <div class="card"><h3>Idea flow</h3><p class="small muted" style="margin-top:-4px">Each main idea in reading order, with the link you set. Follow the chain to retell the paper in your own words.</p>
+  <ol class="flow">${items.map(p => {
+    const n = paraNo(paper, p.id), to = p.link.to && paper.paras.find(x => x.id === p.link.to);
+    const sec = p.section !== last ? `<li class="flow-sec">${esc(p.section)}</li>` : ''; last = p.section;
+    return sec + `<li class="flow-item ${ideaOf(p)?'':'empty-idea'}"><span class="para-no">¶${n}</span><div>
+      <div>${esc(ideaOf(p) || '(no main idea yet)')}</div>
+      ${p.mine ? `<div class="small muted">🔑 ${esc(p.mine)}</div>` : ''}
+      ${to ? `<span class="flow-link">↳ ${esc(relLabel(p.link.rel) || 'linked to')} ¶${paraNo(paper, to.id)}</span>` : ''}</div></li>`; }).join('')}</ol>
+  <div class="output-head" style="margin-top:12px"><span class="small muted">Plain-text version</span>${copyBtn('#flowOut')}</div>
+  <div class="output" id="flowOut">${esc(readingNotes(paper))}</div></div>`;
+}
+function qGroup(id, title, sub, list, kind, paper){
+  return `<div class="card qgroup"><div class="output-head"><div><h3 style="margin:0">${title}</h3><div class="small muted">${sub}</div></div>${copyBtn('#' + id)}</div>
+    <ol class="qs">${list.map(o => `<li><b>${esc(o.q)}</b>${o.why || o.tip ? `<div class="small muted">${kind === 'audience' ? 'Why ask: ' : 'How to answer: '}${esc(o.why || o.tip)}</div>` : ''}${(o.paras||[]).length ? `<div class="row" style="gap:4px;margin-top:4px">${o.paras.filter(id => paper.paras.some(p => p.id === id)).map(id => `<a href="#" class="chip" data-act="rp-jump" data-id="${esc(id)}">¶${paraNo(paper, id)}</a>`).join('')}</div>` : ''}</li>`).join('')}</ol>
+    <pre class="sr-only" id="${id}" aria-hidden="true">${esc(title + '\n' + list.map((o,i) => `${i+1}. ${o.q}${o.why ? `\n   Why ask: ${o.why}` : ''}${o.tip ? `\n   How to answer: ${o.tip}` : ''}`).join('\n'))}</pre></div>`;
+}
+function questionsView(paper){
+  const q = paper.questions, st = starterQuestions(paper);
+  const have = q && (q.audience||[]).length, useAi = have && q.ai;
+  const src = have ? q : st;
+  return `<div class="card" style="margin-bottom:16px"><div class="row" style="justify-content:space-between">
+    <div><h3 style="margin:0">Presentation questions</h3><p class="small muted" style="margin:4px 0 0">${useAi ? 'Written by Claude from this paper — check each against the text before you rely on it.' : have ? 'Example questions for this demo text.' : aiReady() ? 'These are starter questions. Generate questions specific to this paper with Claude.' : 'Starter questions that fit most papers. Edit them for your paper; on the published ScholarPath page, Claude can write paper-specific ones.'}</p></div>
+    ${aiReady() ? `<button class="btn primary" data-act="rp-questions" data-ai-btn>${icon('sparkle')}${have ? 'Regenerate' : 'Generate'} with Claude</button>` : ''}</div></div>
+  <div class="grid" style="gap:16px">
+    ${qGroup('qAud', 'You ask the class', 'Questions to ask your professor and colleagues to start a discussion', src.audience, 'audience', paper)}
+    ${qGroup('qProf', 'The professor may ask you', 'Prepare an answer for each — the tip shows where to look', src.professor, 'professor', paper)}
+    ${qGroup('qCol', 'Colleagues may ask you', 'Clarifying questions from classmates', src.colleagues, 'colleagues', paper)}
+  </div>`;
+}
+function readingNotes(paper){
+  const L = [`READING NOTES — ${paper.title || paper.name}`, '='.repeat(50)];
+  if (paper.questions && paper.questions.overview) L.push('', 'IN A NUTSHELL', paper.questions.overview);
+  let last = null;
+  paper.paras.filter(p => p.kind !== 'front').forEach(p => {
+    if (p.section !== last){ L.push('', p.section.toUpperCase()); last = p.section; }
+    const to = p.link.to && paper.paras.find(x => x.id === p.link.to);
+    L.push(`¶${paraNo(paper, p.id)}${p.page ? ` (p. ${p.page})` : ''}: ${ideaOf(p) || '—'}${to ? `  [${relLabel(p.link.rel) || 'linked to'} ¶${paraNo(paper, to.id)}]` : ''}`);
+    if (p.mine) L.push(`   Memory hook: ${p.mine}`);
+    (p.terms||[]).forEach(t => L.push(`   • ${t.term}: ${t.meaning}`));
+  });
+  return L.join('\n');
+}
+
 /* ---------- 4. Write Your Paper ---------- */
 RENDER.write = () => {
   const a = Math.min(Math.max(S.writing.active|0, 0), WRITE_STEPS.length-1);
@@ -1646,6 +2110,10 @@ RENDER.progress = () => {
     <div class="steps-mini">${WRITE_STEPS.map((s,i) => `<div class="step-mini ${stepDone(s)?'done':''}"><span class="step-dot">${stepDone(s)?icon('check'):i+1}</span>${s.title}</div>`).join('')}</div>
   </div>
 
+  <div class="card" style="margin-top:16px"><h3>Paper Reader</h3>
+    ${S.reader.papers.length ? S.reader.papers.map(p => { const t = p.paras.filter(x => x.kind !== 'front'), d = t.filter(x => (x.idea||'').trim()).length; return `<div class="bar-row" style="grid-template-columns:1fr 90px 60px"><span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(p.title || p.name)}${p.example?' <span class="badge-example">Demo</span>':''}</span><span class="bar"><span style="width:${t.length ? d/t.length*100 : 0}%;background:var(--ok)"></span></span><b>${d}/${t.length} ¶</b></div>`; }).join('') : '<p class="muted">No papers read yet.</p>'}
+  </div>
+
   <div class="section-title"><h2>Your data</h2></div>
   <div class="card">
     <p class="muted" style="margin-top:0">Everything is stored privately in this browser. Download a backup to move your work to another device or keep it safe.</p>
@@ -1665,6 +2133,32 @@ const ACTIONS = {
   theme: () => { S.theme = {auto:'light', light:'dark', dark:'auto'}[S.theme] || 'auto'; applyTheme(); save(); toast({auto:'Theme follows your system', light:'Light mode', dark:'Dark mode'}[S.theme]); },
   copy: el => { const t = $(el.dataset.target); if (t) copyText(t.textContent); },
   search: () => { const r = buildSearch(); if (!r) return; window.open(r.url, '_blank', 'noopener'); if (r.db.note) copyText(r.q, 'Query copied — paste it into Web of Science'); },
+  'rp-view': el => { S.reader.view = el.dataset.v; save(); RENDER.reader(); },
+  'rp-paste': () => openDialog('Paste the paper text', `
+    <div class="field"><label class="f" for="pt-title">Paper title</label><input class="input" id="pt-title" name="title" required></div>
+    <div class="field"><label class="f" for="pt-text">Paper text</label><textarea id="pt-text" name="text" required style="min-height:260px" placeholder="Paste the text. Leave an empty line between paragraphs; headings such as Introduction or 2. Method are detected."></textarea></div>`,
+    d => { const res = textToParagraphs(d.text); if (!res.paras.length) return false; addReaderPaper(d.title.trim(), d.title.trim(), res); }, 'Add paper'),
+  'rp-del': () => { const p = rPaper(); if (!p || !confirm(`Delete "${p.title || p.name}" and all your notes on it?`)) return; S.reader.papers = S.reader.papers.filter(x => x !== p); S.reader.active = S.reader.papers[0]?.id || ''; save(); RENDER.reader(); },
+  'rp-sum-all': () => { const p = rPaper(); summarizeParas(p, p.paras.filter(x => !ideaOf(x) && x.kind !== 'front'), 'Summarizing'); },
+  'rp-sum-one': el => { const p = rPaper(), para = p.paras.find(x => x.id === el.dataset.id); if (para){ if (ideaOf(para)) para.src = para.src || 'me'; summarizeParas(p, [para], 'Simplifying'); } },
+  'rp-questions': () => generateQuestions(rPaper()),
+  'ai-stop': () => aiRun && aiRun.ctl.abort(),
+  'rp-use-ai': el => { const p = rPaper().paras.find(x => x.id === el.dataset.id); p.idea = p.aiIdea; p.aiIdea = ''; p.src = 'ai'; save(); refreshCards([p]); },
+  'rp-merge': el => {
+    const paper = rPaper(), i = paper.paras.findIndex(x => x.id === el.dataset.id), a = paper.paras[i], b = paper.paras[i+1];
+    if (!b) return toast('This is the last paragraph');
+    a.text += ' ' + b.text; a.idea = [a.idea, b.idea].filter(x => x && x.trim()).join(' '); a.terms = [...(a.terms||[]), ...(b.terms||[])].slice(0,4);
+    paper.paras.splice(i+1, 1); paper.paras.forEach(x => { if (x.link.to === b.id) x.link.to = x === a ? '' : a.id; });
+    save(); RENDER.reader(); $('#para-' + a.id)?.scrollIntoView({block:'center'});
+  },
+  'rp-drop': el => { const paper = rPaper(); if (!confirm('Remove this paragraph from your reading?')) return; const id = el.dataset.id; paper.paras = paper.paras.filter(x => x.id !== id); paper.paras.forEach(x => { if (x.link.to === id) x.link = {to:'', rel:''}; }); save(); RENDER.reader(); },
+  'rp-jump': (el, e) => { e.preventDefault(); if ((S.reader.view||'paras') !== 'paras'){ S.reader.view = 'paras'; RENDER.reader(); } const t = $('#para-' + el.dataset.id); if (t){ t.scrollIntoView({behavior:'smooth', block:'center'}); t.classList.add('flash'); setTimeout(() => t.classList.remove('flash'), 1400); } },
+  'rp-to-crit': () => {
+    const paper = rPaper(); let c = activeCrit();
+    if (!c || c.form !== 'aau'){ c = newAau(); S.critiques.unshift(c); }
+    c.paper = {name:paper.name, pages:paper.pages.length ? paper.pages : paper.paras.map(p => p.text)};
+    S.activeCrit = c.id; save(); showTab('critique'); toast('Paper attached to your AAU critique — search it for evidence');
+  },
   'filter-status': el => { S.ui.status = el.dataset.v; save(); RENDER.ideas(); },
   'idea-new': () => ideaDialog(),
   'idea-edit': el => ideaDialog(el.dataset.id),
@@ -1703,10 +2197,8 @@ const ACTIONS = {
   'ref-look': el => { const t = activeCrit().refs[+el.dataset.i].text.trim(); if (!t) return toast('Type the reference first'); window.open('https://scholar.google.com/scholar?q=' + enc(t.replace(/,?\s*doi:.*$/i,'')), '_blank', 'noopener'); },
   'aau-prompt': () => copyText(aauPrompt(activeCrit()), 'AI-assistant prompt copied'),
   'aau-docx': () => {
-    const c = activeCrit(), a = document.createElement('a');
-    a.href = URL.createObjectURL(aauDocx(c));
-    a.download = `Paper Critique - ${(critTitle(c) || 'Untitled').replace(/[\\/:*?"<>|]+/g,'').slice(0,60).trim()}.docx`;
-    document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 1500); toast('Word document downloaded');
+    const c = activeCrit();
+    saveFile(`Paper Critique - ${(critTitle(c) || 'Untitled').replace(/[\\/:*?"<>|]+/g,'').slice(0,60).trim()}.docx`, aauDocx(c), 'Word document saved');
   },
   'pdf-remove': () => { const c = activeCrit(); if (!confirm('Remove the uploaded paper text from this critique?')) return; c.paper = null; save(); RENDER.critique(); },
   'crit-summary': (el, e) => { e.preventDefault(); const c = activeCrit(); $('#critSummary').textContent = c.form === 'aau' ? aauPlain(c) : genSummary(c); $('#critSummaryCard').scrollIntoView({behavior:'smooth', block:'start'}); toast('Summary generated'); },
@@ -1714,14 +2206,12 @@ const ACTIONS = {
   wstep: el => { S.writing.active = +el.dataset.v; save(); RENDER.write(); $('#stepper')?.scrollIntoView({behavior:'smooth', block:'nearest'}); },
   'pres-min': el => { S.pres.minutes = +el.dataset.v; save(); RENDER.present(); },
   export: () => {
-    const blob = new Blob([JSON.stringify(S, null, 2)], {type:'application/json'});
-    const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
-    a.download = `scholarpath-backup-${new Date().toISOString().slice(0,10)}.json`; a.click();
-    setTimeout(() => URL.revokeObjectURL(a.href), 1000); toast('Backup downloaded');
+    saveFile(`scholarpath-backup-${today()}.json`, new Blob([JSON.stringify(S, null, 2)], {type:'application/json'}), 'Backup saved');
   },
   'clear-examples': () => {
-    if (!confirm('Remove the example idea, papers and critique? Your own work is kept.')) return;
+    if (!confirm('Remove the example idea, papers, critique and demo reading? Your own work is kept.')) return;
     S.ideas = S.ideas.filter(x => !x.example); S.papers = S.papers.filter(x => !x.example); S.critiques = S.critiques.filter(x => !x.example);
+    S.reader.papers = S.reader.papers.filter(x => !x.example); if (!S.reader.papers.some(p => p.id === S.reader.active)) S.reader.active = S.reader.papers[0]?.id || '';
     if (!S.critiques.some(c => c.id === S.activeCrit)) S.activeCrit = S.critiques[0]?.id;
     save(); RENDER.progress(); toast('Examples removed');
   },
@@ -1729,6 +2219,7 @@ const ACTIONS = {
     const b = seedState();
     S.ideas.push(...b.ideas.filter(x => !findIdea(x.id))); S.papers.push(...b.papers.filter(x => !S.papers.some(p => p.id === x.id)));
     if (!S.critiques.some(c => c.id === 'ex-crit-aau')) S.critiques.push(exampleAau());
+    if (!S.reader.papers.some(p => p.id === 'ex-reader-1')) S.reader.papers.push(demoReaderPaper());
     save(); RENDER.progress(); toast('Examples added');
   },
   reset: () => {
@@ -1751,6 +2242,12 @@ document.addEventListener('keydown', e => {
 });
 document.addEventListener('input', e => {
   const t = e.target, c = () => activeCrit();
+  if (t.dataset.rp === 'idea' || t.dataset.rp === 'mine'){
+    const para = rPaper().paras.find(x => x.id === t.dataset.id); if (!para) return;
+    if (t.dataset.rp === 'idea'){ para.idea = t.value; para.src = t.value.trim() ? 'me' : ''; grow(t); } else para.mine = t.value;
+    save(); const n = $('#rpNotes'); if (n) n.textContent = readingNotes(rPaper()); return;
+  }
+  if (t.id === 'rpTitle'){ const p = rPaper(); p.title = t.value; save(); const o = $('#rpSel option:checked'); if (o) o.textContent = (p.example?'[Demo] ':'') + clip(t.value || p.name, 70); return; }
   if (t.id === 'q' || t.id === 'yr'){ S.ui[t.id] = t.value; save(); }
   else if (t.dataset.ai){ const cc = c(); cc.info[t.dataset.ai] = t.value; save(); updateAau();
     if (t.dataset.ai === 'title'){ const o = $('#critSel option:checked'); if (o) o.innerHTML = critOptLabel(cc); } }
@@ -1767,6 +2264,23 @@ document.addEventListener('input', e => {
 });
 document.addEventListener('change', e => {
   const t = e.target;
+  if (t.dataset.rp === 'rel' || t.dataset.rp === 'to'){
+    const para = rPaper().paras.find(x => x.id === t.dataset.id); if (!para) return;
+    para.link[t.dataset.rp] = t.value;
+    if (t.dataset.rp === 'to' && t.value && !para.link.rel) para.link.rel = 'supports';
+    if (t.dataset.rp === 'to' && !t.value) para.link.rel = '';
+    save(); refreshCards([para]); return;
+  }
+  if (t.id === 'rpSel'){ S.reader.active = t.value; save(); RENDER.reader(); return; }
+  if (t.id === 'rpFile' && t.files[0]){
+    const file = t.files[0]; t.value = ''; toast('Reading the paper…');
+    pdfToParagraphs(file).then(res => {
+      if (!res.paras.length){ alert('No text could be found — the PDF may be a scanned image. Try “Paste text” instead.'); return; }
+      const name = file.name.replace(/\.pdf$/i, '');
+      addReaderPaper(file.name, name, res);
+    }).catch(err => alert('Could not read this PDF. ' + (err && err.message || '')));
+    return;
+  }
   if (t.id === 'dbSel'){ S.ui.db = t.value; save(); if ($('#q').value.trim()) buildSearch(); }
   else if (t.id === 'tagSel'){ S.ui.tag = t.value; save(); RENDER.ideas(); }
   else if (t.id === 'paperIdeaSel'){ S.ui.paperIdea = t.value; save(); RENDER.ideas(); }
@@ -1808,7 +2322,7 @@ document.addEventListener('change', e => {
         if (!d || !Array.isArray(d.ideas) || !Array.isArray(d.papers) || !Array.isArray(d.critiques)) throw new Error('bad');
         if (!confirm('Replace your current ScholarPath data with this backup?')) return;
         S = Object.assign(seedState(), d); S.ui = Object.assign(seedState().ui, d.ui, {tab:'progress'});
-        S.writing = Object.assign(seedState().writing, d.writing); S.pres = Object.assign(seedState().pres, d.pres);
+        S.writing = Object.assign(seedState().writing, d.writing); S.pres = Object.assign(seedState().pres, d.pres); S.reader = Object.assign({papers:[], active:'', view:'paras'}, d.reader);
         save(); applyTheme(); showTab('progress'); toast('Backup restored');
       } catch { alert('That file is not a valid ScholarPath backup.'); }
     };
