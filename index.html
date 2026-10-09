@@ -175,6 +175,49 @@ textarea{min-height:110px;resize:vertical;line-height:1.55}
 .jump a.done{background:var(--accent-soft);color:var(--accent);border-color:transparent}
 @media(min-width:760px){.sticky-sub{position:sticky;top:110px;z-index:5}}
 
+
+/* AAU critique form */
+.form-part{font:600 .76rem var(--sans);letter-spacing:.09em;text-transform:uppercase;color:var(--muted);margin:30px 0 10px;display:flex;align-items:center;gap:10px}
+.form-part::after{content:"";flex:1;height:1px;background:var(--line)}
+.sec-head{flex-wrap:wrap}
+.sec-num svg{width:15px;height:15px}
+.pill{font:600 .74rem var(--sans);padding:3px 9px;border-radius:999px;background:var(--surface-2);color:var(--muted);border:1px solid var(--line);white-space:nowrap}
+.wc{margin-left:auto;font:600 .8rem var(--mono);color:var(--muted);background:var(--surface-2);padding:3px 9px;border-radius:999px;white-space:nowrap}
+.wc.ok{color:var(--ok);background:var(--ok-soft)}
+.wc.over{color:var(--danger);background:var(--danger-soft)}
+.fields-3{display:grid;gap:0 14px;grid-template-columns:1fr}
+@media(min-width:620px){.fields-3{grid-template-columns:1fr 1fr}.fields-3 .wide{grid-column:1/-1}}
+@media(min-width:980px){.fields-3{grid-template-columns:1fr 1fr 1fr}}
+details.what{margin:0 0 10px;border:1px solid var(--line);border-radius:var(--radius-sm);background:var(--surface-2)}
+details.what summary{cursor:pointer;padding:8px 12px;font-weight:500;font-size:.88rem;color:var(--accent)}
+details.what ol{margin:0;padding:0 14px 10px 34px;font-size:.88rem;color:var(--muted)}
+details.what li{margin-bottom:3px}
+.warn{display:flex;gap:8px;align-items:flex-start;font-size:.86rem;background:var(--warn-soft);color:var(--ink);padding:9px 12px;border-radius:var(--radius-sm);margin:0 0 12px}
+.warn svg{color:var(--warn);margin-top:2px}
+.parta{display:grid;gap:10px;grid-template-columns:1fr;padding:14px 0;border-top:1px solid var(--line)}
+.parta .rating{margin:0}
+@media(min-width:900px){.parta{grid-template-columns:1.3fr auto 1.2fr;align-items:center}}
+.refs{display:flex;flex-direction:column;gap:10px}
+.ref-row{display:grid;grid-template-columns:34px 1fr;gap:6px 8px;align-items:start}
+.ref-row textarea{min-height:58px;font-size:.9rem}
+.ref-n{font:600 .86rem var(--mono);color:var(--accent);padding-top:10px}
+.ref-tools{grid-column:2;display:flex;gap:6px;align-items:center;margin-top:-2px}
+@media(min-width:760px){.ref-row{grid-template-columns:34px 1fr auto}.ref-tools{grid-column:auto;flex-direction:column;align-items:flex-start;margin:0}}
+.sub{padding:16px 0 4px;border-top:1px solid var(--line)}
+.sub:first-of-type{border-top:0}
+.sub h4{font-size:1.05rem}
+.sub details.what{margin-top:10px}
+.reserved{opacity:.85;border-style:dashed}
+.input.ro{background:var(--surface-2);color:var(--muted);display:flex;align-items:center}
+.qc-auto{cursor:default}
+.qc-auto .qc-ico{width:20px;height:20px;border-radius:50%;display:grid;place-items:center;flex:none;margin-top:1px;background:var(--danger-soft);color:var(--danger)}
+.qc-auto.pass .qc-ico{background:var(--ok-soft);color:var(--ok)}
+.qc-ico svg{width:13px;height:13px;stroke-width:2.6}
+.ev-results{max-height:320px;overflow:auto;margin-top:4px}
+.ev-hit{display:grid;grid-template-columns:52px 1fr;gap:8px;font-size:.86rem;padding:8px 4px;border-bottom:1px solid var(--line)}
+.ev-hit b{color:var(--accent);font-family:var(--mono);font-size:.8rem}
+mark{background:var(--warn-soft);color:var(--ink);padding:0 2px;border-radius:3px;font-weight:600}
+
 /* Writing */
 .write-layout{display:grid;gap:16px;grid-template-columns:1fr}
 @media(min-width:900px){.write-layout{grid-template-columns:290px 1fr;align-items:start}.stepper{position:sticky;top:110px}}
@@ -383,6 +426,90 @@ const CRIT_SECTIONS = [
 const RATING_LABELS = ['','Poor','Weak','Adequate','Good','Excellent'];
 const RECS = ['','Accept','Minor revision','Major revision','Reject'];
 
+/* Al Ain University — Advanced Research Methods (0106112) Paper Critique Form */
+const AAU_NAME = 'Al Ain University · Advanced Research Methods (0106112) · Paper Critique Form';
+const AAU_INFO = [
+  {k:'studentName', l:'Student name', ph:'As provided on the form'},
+  {k:'studentId', l:'Student ID', ph:'University ID'},
+  {k:'topicId', l:'Topic ID', ph:'Leave blank if not assigned'},
+  {k:'paperId', l:'Paper ID', ph:'Leave blank if not assigned'},
+  {k:'presNo', l:'Presentation number', ph:'Leave blank if not assigned'},
+  {k:'date', l:'Date of critique', type:'date'},
+  {k:'title', l:'Paper title', ph:'Exact official title — original wording, spelling and capitalization', wide:true},
+  {k:'authors', l:'Authors', ph:'Full names, in the order shown in the publication', wide:true},
+  {k:'venue', l:'Venue', ph:'Journal, conference or official venue'},
+  {k:'year', l:'Year', ph:'Publication year'},
+  {k:'doi', l:'DOI or official record', ph:'https://doi.org/… (verified)', wide:true},
+  {k:'status', l:'Publication status', opts:['','Published','Accepted (in press)','Preprint','Other (documented)']},
+  {k:'version', l:'Reading version', opts:['','Final published version','Accepted manuscript','Preprint','Other']}
+];
+const AAU_A = [
+  {k:'contribution', t:'Work and Contribution', max:5, g:'Importance and usefulness: does the paper address a meaningful problem, produce valuable findings and add to existing knowledge? Higher = stronger, better-supported contribution.'},
+  {k:'originality', t:'Originality and Novelty', max:5, g:'Is there a new method, framework, dataset, theory or finding — or an adaptation of existing work? Justify against the paper and verified related literature.'},
+  {k:'related', t:'Related-Work / Citation Relevance', max:3, g:'Are the cited studies appropriate, relevant and comprehensive enough to establish a convincing research gap? (Original 1–3 scale.)'},
+  {k:'presentation', t:'Quality of Presentation', max:5, g:'Logical structure, clear academic writing, well-labelled figures and tables, conclusions consistent with the findings.'}
+];
+const AAU_B = [
+  {k:'summary', no:'1', t:'Summary of the Paper', s:'Summary', w:15, max:200,
+   intro:'A concise, objective academic summary in your own words. No personal opinions, unsupported interpretations or detailed criticism here.',
+   g:['Research context — the general area and why the topic matters','Research problem — the specific issue, challenge or knowledge gap','Research aim — what the authors set out to investigate, develop, explain, compare or evaluate','Research approach — the actual methodology (experiments, survey, interviews, simulation, case study, model, mixed methods…)','Data and setting — dataset, sample, participants, location or experimental environment, when reported','Main findings — the most important results, without exaggerating their significance','Qualified conclusion — what the authors conclude and the boundaries within which it is supported'],
+   warn:'Do not describe methods or findings that the authors did not report.'},
+  {k:'problem', no:'2', t:'Research Problem & Objectives', s:'Problem', w:10, max:150,
+   intro:'Critically evaluate the clarity, significance and suitability of the research problem and objectives.',
+   g:['Identify the central research problem','State the research question(s), if explicitly provided','Explain why the problem is scientifically, technically or socially important','Identify the objectives the authors aim to achieve','Evaluate whether the objectives are clearly defined and specific enough','Assess whether they are measurable or assessable through the chosen design','Judge whether the methodology is appropriate for achieving them','Identify the main scope boundary (location, population, dataset, technology, period, domain)','Explain any limitations in how the question or objectives are formulated'],
+   warn:'Clearly separate the authors’ stated objectives from your judgement of their quality.'},
+  {k:'litreview', no:'3', t:'Literature Review', s:'Literature', w:10, max:200,
+   intro:'Evaluate how effectively the authors review previous research and establish the need for their study.',
+   g:['Identify the major theories, frameworks, methods or research areas discussed','Explain how the authors connect previous studies to their problem','Identify the research gap claimed by the authors','Assess whether the cited literature shows that the gap really exists','Evaluate the relevance and credibility of the references','Consider whether important foundational or recent studies are included','Compare the paper’s approach or findings with relevant previous studies','Assess whether the claimed originality is supported by the literature','Identify important missing comparisons — only after verifying they exist and apply','Explain how the review could be improved, if necessary'],
+   warn:'Do not criticise the authors for omitting a reference unless you have verified it exists and is relevant. Use meaningful citations, e.g. [3], when comparing.'},
+  {k:'method', no:'4', t:'Research Design & Methodology', s:'Method', w:10, max:250,
+   intro:'A detailed critical evaluation of how the research was conducted. Address every element that applies.',
+   g:['Research design — qualitative, quantitative, experimental, observational, computational, theoretical or mixed','Methodological suitability for the research questions','Data collection — sources, sampling, participants, datasets, instruments, simulations','Sample adequacy for the objectives','Research procedures — main stages and how well they are documented','Models and algorithms — architectures or mathematical approaches, if applicable','Training and evaluation — train/validation/test separation and possible data leakage (ML studies)','Baselines and comparisons — appropriate benchmarks or comparison methods','Assumptions and their possible effect on the results','Validity and reliability — credibility, consistency, robustness','Reproducibility — could others repeat or assess the study?','Resource requirements — compute, time or budget, when relevant','Ethical considerations — privacy, consent, fairness, bias, ethical approval','Methodological limitations affecting interpretation or generalizability'],
+   warn:'Qualitative studies: prioritise sampling, data collection, interpretation, credibility, reflexivity and context. Quantitative / AI studies: prioritise design, datasets, baselines, metrics, robustness and reproducibility. Do not force irrelevant technical criteria onto a study.'},
+  {k:'results', no:'5', t:'Results & Discussion', s:'Results', w:10, max:200,
+   intro:'Critically evaluate the findings and how convincingly they support the research objectives.',
+   g:['Identify the most significant results reported','Link at least one key result to a specific figure, table, experiment or documented finding','Explain the conditions under which the result was obtained','Evaluate whether the findings directly address the research questions','Examine metrics, statistical evidence, effect sizes or qualitative themes, as applicable','Consider variability, uncertainty, confidence intervals or significance, when relevant and reported','Evaluate comparison with baselines or previous studies','Assess ablations, sensitivity or robustness analyses, or alternative explanations','Judge whether the authors’ interpretations are justified by their evidence','Identify overgeneralizations, unsupported claims or contradictions','Discuss limitations affecting generalization','Distinguish “not reported” from “explicitly confirmed not performed”'],
+   warn:'Never invent numerical results or statistical significance.'},
+  {k:'contribution', no:'6', t:'Contribution & Practical Implications', s:'Contribution', w:10, max:150,
+   intro:'Explain what the research contributes to knowledge and why that contribution matters.',
+   g:['Identify the main scientific contribution','Classify it: theoretical, methodological, technological, empirical, system-based or dataset-based','Explain what it adds beyond existing research','Describe the practical implications','Identify who could benefit (researchers, engineers, policymakers, practitioners, communities…)','Explain possible real-world applications without presenting them as demonstrated','Evaluate whether the contribution is sufficiently supported','Identify limitations that restrict its applicability','Distinguish demonstrated contributions from future possibilities'],
+   warn:'Evaluate the actual contribution — do not simply repeat the authors’ claims.'}
+];
+const AAU_REFS_GUIDE = ['Correct author names','Full publication title','Publication year','Journal, conference or venue','Volume, issue and pages where available','Valid DOI or official record when available','One consistent style — IEEE preferred','Recent, directly relevant work plus key foundational studies','Each reference verified as real and accurately described','Used meaningfully in the critique (literature review, comparisons, evaluation)'];
+const AAU_8 = [
+  {k:'strengths', t:'8(a). Strengths', rec:150,
+   g:['Importance and relevance of the research problem','Originality of the contribution','Clarity of the objectives','Suitability and rigour of the methodology','Quality and credibility of the data','Strength of the analysis and evidence','Relevance and quality of the literature review','Clarity of results and discussion','Significance of the theoretical or practical contribution','Transparency, ethics and reproducibility, where relevant'],
+   warn:'Choose the strongest genuinely supported points — no generic praise. For each, explain why it matters and cite evidence from the paper.'},
+  {k:'weaknesses', t:'8(b). Weaknesses', rec:200,
+   g:['Unclear questions or poorly justified objectives','Weaknesses in the literature review','Limitations of the dataset, sample or setting','Possible sampling or selection bias','Insufficient methodological explanation','Weak validation or inappropriate comparisons','Missing robustness tests or alternative explanations','Limited generalizability','Unaddressed ethical concerns','Conclusions that exceed the evidence','Missing references (independently verified)','Incomplete reporting that makes findings hard to assess'],
+   warn:'Explain how each weakness affects credibility, interpretation, reproducibility or applicability. Avoid generic statements like “the sample is small” without saying why. Separate confirmed weaknesses from uncertainty caused by incomplete reporting.'},
+  {k:'future', t:'8(c). Future Work', rec:150,
+   g:['Expand the sample or dataset','Study additional settings or populations','Test findings across different contexts','Improve methodological transparency','Add baseline comparisons','Strengthen validation or robustness analyses','Examine alternative explanations','Run longitudinal or follow-up research','Investigate fairness, privacy, transparency or ethics','Develop new questions from unresolved findings'],
+   warn:'Each recommendation must address an identified weakness: say what to do, which limitation it addresses, and how it would improve the evidence. Keep it feasible and connected to the paper.'}
+];
+const AAU_QC = [
+  'Every section of the form has been addressed',
+  'Each section is within its own maximum word count',
+  'Sections 8(a), 8(b) and 8(c) total 500 words or fewer',
+  'All 10 related references are entered and verified as authentic and relevant',
+  'Summary, methodology, results, contribution and evaluation are consistent with one another',
+  'The authors’ statements are never confused with my own analysis',
+  'Important critical claims are supported by specific evidence (pages, sections, figures, tables)',
+  'The critique discusses both strengths and limitations',
+  'Unsupported assumptions, fabricated information and repetition have been removed',
+  'Academic language, grammar and paragraph structure are clear and appropriate',
+  'Technical evaluations suit the paper’s methodology',
+  'The tone is balanced, objective and constructive'
+];
+const AAU_RULES = [
+  'Write in clear, professional academic English; explain technical ideas accurately and simply.',
+  'Signal whose voice it is: “The authors report…” for their claims; “In my assessment…” for yours.',
+  'Never invent findings, experiments, statistics, references, DOIs or methodological details.',
+  'Support important claims with evidence — page numbers, sections, figures or tables.',
+  'Be balanced: genuine strengths, weaknesses, limitations and future research — not a summary.',
+  'Keep all eight sections consistent with one another and within their word limits.'
+];
+
 const WRITE_STEPS = [
   {key:'topic', title:'Choose your topic', explain:'Start broad, then narrow. A good master\'s topic sits where your interest, your supervisor\'s expertise and accessible data overlap. Aim for something you can finish — not something that would take a whole career.',
    checks:['It genuinely interests me and I can sustain it for months','It fits my programme and my supervisor\'s expertise','I can access the data, participants or tools it needs','It is narrow enough to finish in the time available']},
@@ -491,23 +618,50 @@ const TALK_GUIDE = {
 };
 
 /* ---------- Example data ---------- */
-function exampleCritique(){
+function exampleAau(){
+  const b = (text, ev='') => ({text, ev, rev:false});
   return {
-    id:'ex-crit-1', example:true, created:Date.now(), recommendation:'Accept',
-    citation:{authors:'Joy Buolamwini, Timnit Gebru', title:'Gender Shades: Intersectional Accuracy Disparities in Commercial Gender Classification', year:'2018', venue:'Proceedings of the 1st Conference on Fairness, Accountability and Transparency, PMLR 81, pp. 77–91', doi:'https://proceedings.mlr.press/v81/buolamwini18a.html'},
-    sections:{
-      citation:{text:'Highly cited, foundational paper in algorithmic fairness, published at the first FAT* (now ACM FAccT) conference. Peer-reviewed and widely used as a model for audit studies.'},
-      problem:{rating:5,text:'Clear problem: commercial facial-analysis systems were reported with high overall accuracy, but nobody had checked how accuracy varies across intersecting subgroups (gender × skin type). The gap is well motivated by the lack of phenotypically balanced benchmarks.'},
-      objectives:{rating:4,text:'The aim is explicit — measure intersectional accuracy disparities in commercial gender classifiers. Objectives are focused and measurable, though formal research questions or hypotheses are not stated as such.'},
-      methodology:{rating:4,text:'An audit design: three commercial gender-classification APIs (Microsoft, IBM, Face++) are tested on a new benchmark and errors are broken down by subgroup. Simple, transparent and replicable. Using the Fitzpatrick skin-type scale instead of race labels is a thoughtful choice.'},
-      dataset:{rating:3,text:'The Pilot Parliaments Benchmark (1,270 images of parliamentarians from three African and three European countries) is better balanced than existing datasets. However, official portraits are posed, well-lit and high-quality, so they may not represent real-world images, and the sample covers only six countries.'},
-      results:{rating:5,text:'Results directly answer the aim: all systems performed worst on darker-skinned women, with error rates up to 34.7%, versus at most 0.8% for lighter-skinned men. Tables are clear and the subgroup breakdown makes the disparity impossible to miss.'},
-      discussion:{rating:4,text:'Convincingly argues that aggregate accuracy hides subgroup failures and calls for intersectional reporting and more inclusive benchmarks. Could discuss more about why the disparities arise (training data vs. model design).'},
-      limitations:{rating:3,text:'Binary gender labels are a known simplification. Only three systems were tested at one point in time, and commercial APIs change. Skin-type labels were assigned manually, which introduces some subjectivity.'},
-      ethics:{rating:4,text:'Uses publicly available images of public figures, which reduces privacy concerns. Raises important questions about deploying biased systems. Consent of the depicted parliamentarians is not discussed.'},
-      contribution:{rating:5,text:'A new balanced benchmark, an intersectional evaluation method, and strong evidence that influenced industry practice and policy. Highly relevant as a template for auditing AI for under-represented groups — e.g. Arabic speakers.'},
-      verdict:{rating:5,text:'A short, clear and highly influential audit study. Strengths: simple replicable method, striking evidence, real-world impact. Weaknesses: posed-image dataset, binary gender labels, limited number of systems. Strongly recommended reading for anyone working on fairness.'}
-    }
+    id:'ex-crit-aau', form:'aau', example:true, created:Date.now(), paper:null, qc:{},
+    info:{studentName:'', studentId:'', topicId:'', paperId:'', presNo:'', date:new Date().toISOString().slice(0,10),
+      title:'Gender Shades: Intersectional Accuracy Disparities in Commercial Gender Classification',
+      authors:'Joy Buolamwini, Timnit Gebru',
+      venue:'Proceedings of the 1st Conference on Fairness, Accountability and Transparency, PMLR vol. 81, pp. 77–91',
+      year:'2018', doi:'https://proceedings.mlr.press/v81/buolamwini18a.html', status:'Published', version:'Final published version'},
+    partA:{
+      contribution:{score:5, note:'Exposed large, previously hidden disparities in deployed commercial systems and changed audit practice.'},
+      originality:{score:4, note:'Intersectional, phenotype-based auditing of commercial products was new; demographic performance studies already existed.'},
+      related:{score:2, note:'Relevant but concise review; the gap is shown mainly through the authors’ own dataset analysis.'},
+      presentation:{score:4, note:'Clear structure and striking subgroup tables; conclusions match the evidence.'}
+    },
+    b:{
+      summary:b('Commercial facial-analysis services were marketed with high overall accuracy, yet their performance across demographic subgroups had not been examined systematically. Buolamwini and Gebru investigate whether automated gender classifiers perform equally well for groups defined jointly by gender and skin type. The authors first analyse two widely used face benchmarks, IJB-A and Adience, and report that both consist overwhelmingly of lighter-skinned subjects. They then build the Pilot Parliaments Benchmark (PPB): 1,270 images of parliamentarians from three African and three European countries, labelled for binary gender and for skin type using the Fitzpatrick scale. Using PPB, they audit three commercial gender-classification services (Microsoft, IBM and Face++) and report error rates for four intersectional subgroups. All three performed better on male than female faces and on lighter than darker faces; darker-skinned females had the highest error rates (up to 34.7%), while lighter-skinned males had error rates of at most 0.8%. The authors conclude that aggregate accuracy can hide substantial subgroup disparities and that intersectional, phenotype-based evaluation is needed, within the limits of binary gender labels and the systems tested at that time.',
+        'Benchmark analysis and PPB description; subgroup results (PMLR 81, pp. 77–91)'),
+      problem:b('The central problem is that commercial gender classifiers were evaluated mainly by aggregate accuracy, which can hide disparities for intersectional subgroups. The authors do not state formal research questions; their aim is to measure accuracy across gender × skin-type subgroups and to provide a more balanced benchmark. In my assessment, the problem is highly significant because these systems were already commercially available, so disparities could cause real harm. The objectives are specific and measurable: subgroup error rates are a clear outcome, and an audit design is appropriate for obtaining them. The scope is deliberately bounded to binary gender classification, three commercial services and official portraits from six countries. The main weakness in the formulation is the absence of explicit research questions or hypotheses, which makes it harder to judge which analyses were planned in advance.',
+        'Introduction; PPB design'),
+      litreview:b('The authors situate their work in research on algorithmic bias and on demographic differences in automated face analysis, and they motivate the joint analysis of gender and skin type through intersectionality, a framework originating in Crenshaw’s legal scholarship [10]. They connect this literature to their problem by showing that widely used benchmarks are dominated by lighter-skinned subjects; the gap they claim — no phenotypically balanced, intersectional evaluation of commercial gender classifiers — is therefore supported by their own dataset analysis as well as by prior work. Earlier evidence that face-recognition accuracy varies with demographic attributes [6] is consistent with this framing. The choice of the Fitzpatrick scale over ethnicity labels is well justified. In my assessment, the review is relevant and credible but concise, and it could explain more explicitly how findings about face recognition transfer to the different task of gender classification. Later large-scale work, including NIST’s demographic evaluation [5] and the FairFace dataset [7], confirms that the gap was real, which supports the paper’s claimed originality.',
+        'Introduction and related-work discussion; benchmark composition analysis'),
+      method:b('This is a quantitative, observational audit study. Testing deployed systems on a controlled benchmark and disaggregating errors by subgroup is appropriate for the aim, because it isolates performance differences without access to the proprietary models. Data consisted of publicly available official portraits of parliamentarians from Rwanda, Senegal, South Africa, Iceland, Finland and Sweden, selected to balance gender and skin type. Each image was labelled for binary gender and for Fitzpatrick skin type, grouped into lighter (types I–III) and darker (types IV–VI). The three services were queried and their outputs compared with these labels to compute error rates and related metrics for each subgroup. The procedure is simple and clearly described, and because PPB was made available, the evaluation is reproducible in principle; however, the commercial services are black boxes that change over time, so the exact numbers cannot be replicated. Several assumptions affect validity. Gender is treated as binary, excluding non-binary people. Collapsing six skin types into two groups may hide variation within each group. Posed, high-quality official portraits of adult professionals differ from real-world images, which limits external validity. Resource requirements are modest, which makes the method accessible to other auditors. Ethically, using public images of public officials reduces privacy risk, although the individuals pictured did not explicitly consent to this use.',
+        'Methodology / PPB construction; skin-type labelling'),
+      results:b('The key result is that all three classifiers performed worst on darker-skinned females, with error rates of up to 34.7%, compared with at most 0.8% for lighter-skinned males. This intersectional gap is considerably larger than the gap observed for gender or skin type alone, which directly answers the research aim and justifies the intersectional framing. The results were obtained on PPB’s well-lit, frontal portraits, so error rates on unconstrained real-world images could differ. The reported metrics are appropriate and presented transparently by subgroup, making the disparities easy to verify. In my assessment, the authors’ main interpretation — that aggregate metrics conceal subgroup failures — is well supported, and they remain cautious about causes. However, the study does not test why the disparities arise, for example through training-data composition or image-quality factors, so causal explanations remain hypotheses. Generalization is limited to three systems, binary gender classification and a single point in time.',
+        'Subgroup results tables; discussion'),
+      contribution:b('The paper makes three linked contributions: empirical evidence of large intersectional disparities in commercial systems; a methodological approach, namely disaggregated, phenotype-based evaluation; and a dataset, PPB. Its novelty lies in combining intersectional analysis with skin type rather than race labels and applying it to deployed commercial products. Practically, the findings matter to developers, procurement teams, regulators and affected communities, and disaggregated reporting now appears in documentation practices such as Model Cards [2]. A follow-up study reported that audited vendors reduced these disparities after public disclosure [1]; this is evidence from later work, not a result of this paper. In my assessment, the contribution is well supported for gender classification, but its applicability is limited by binary labels, the specific image domain and the rapid evolution of commercial systems.',
+        'Conclusion; later work [1], [2]'),
+      strengths:b('First, the paper addresses an important real-world problem: it audits commercial systems that were already in use, rather than research prototypes, which gives its findings immediate practical relevance. Second, the design is simple, transparent and well matched to the aim: disaggregating errors by gender and skin type exposes disparities that aggregate accuracy hides, and the Fitzpatrick scale provides a phenotype-based alternative to unstable ethnicity labels. Third, the evidence is clear and compelling; the contrast between at most 0.8% error for lighter-skinned males and up to 34.7% for darker-skinned females is difficult to dispute. Finally, making PPB available allows other researchers to assess and extend the work, which has supported substantial follow-up research on auditing [1], [3].'),
+      weaknesses:b('The first weakness concerns external validity. PPB contains posed, well-lit official portraits of adult parliamentarians, so the reported error rates may not reflect performance on the varied images these systems process in practice. Second, gender is treated as binary, which excludes non-binary and gender-nonconforming people; the audit therefore cannot assess harms to these groups. Third, collapsing six Fitzpatrick types into “lighter” and “darker” may hide important differences within each group, so subgroup estimates are coarse. Fourth, only three systems were evaluated at one point in time, and commercial services are updated without notice, which limits the reproducibility of the exact figures. Finally, the study documents disparities but does not investigate their causes, such as training-data composition, so it offers limited guidance on which technical remedies would be most effective. In my assessment, none of these weaknesses undermines the central conclusion that aggregate accuracy can mask subgroup failures, but they restrict how far the specific numbers can be generalised.'),
+      future:b('First, the audit should be repeated on unconstrained real-world images with varied lighting, pose and age, addressing the limited external validity of posed portraits. Second, future work should move beyond binary gender labels, or question whether automated gender classification is appropriate at all, addressing the exclusion of non-binary people. Third, longitudinal re-audits of the same systems would address the single-snapshot limitation and test whether disclosure leads to lasting improvement, as later work began to examine [1]. Fourth, controlled experiments that vary training-data composition would help explain the causes of disparities and identify effective mitigations. Finally, the intersectional audit approach could be extended to generative AI and language technologies, for example by evaluating output quality for Arabic-speaking users, where similar representation gaps may exist.')
+    },
+    refs:[
+      'I. D. Raji and J. Buolamwini, “Actionable auditing: Investigating the impact of publicly naming biased performance results of commercial AI products,” in Proc. AAAI/ACM Conf. AI, Ethics, and Society (AIES), 2019, pp. 429–435, doi: 10.1145/3306618.3314244.',
+      'M. Mitchell et al., “Model cards for model reporting,” in Proc. Conf. Fairness, Accountability, and Transparency (FAT*), 2019, pp. 220–229, doi: 10.1145/3287560.3287596.',
+      'I. D. Raji, T. Gebru, M. Mitchell, J. Buolamwini, J. Lee, and E. Denton, “Saving face: Investigating the ethical concerns of facial recognition auditing,” in Proc. AAAI/ACM Conf. AI, Ethics, and Society (AIES), 2020, pp. 145–151, doi: 10.1145/3375627.3375820.',
+      'T. Gebru et al., “Datasheets for datasets,” Commun. ACM, vol. 64, no. 12, pp. 86–92, 2021, doi: 10.1145/3458723.',
+      'P. Grother, M. Ngan, and K. Hanaoka, “Face Recognition Vendor Test (FRVT) Part 3: Demographic effects,” Nat. Inst. Standards Technol., Gaithersburg, MD, USA, NISTIR 8280, 2019, doi: 10.6028/NIST.IR.8280.',
+      'B. F. Klare, M. J. Burge, J. C. Klontz, R. W. Vorder Bruegge, and A. K. Jain, “Face recognition performance: Role of demographic information,” IEEE Trans. Inf. Forensics Security, vol. 7, no. 6, pp. 1789–1801, 2012, doi: 10.1109/TIFS.2012.2214212.',
+      'K. Kärkkäinen and J. Joo, “FairFace: Face attribute dataset for balanced race, gender, and age for bias measurement and mitigation,” in Proc. IEEE/CVF Winter Conf. Applications of Computer Vision (WACV), 2021, pp. 1548–1558.',
+      'M. Hardt, E. Price, and N. Srebro, “Equality of opportunity in supervised learning,” in Advances in Neural Information Processing Systems 29 (NeurIPS), 2016, pp. 3315–3323.',
+      'S. Barocas and A. D. Selbst, “Big data’s disparate impact,” California Law Review, vol. 104, no. 3, pp. 671–732, 2016.',
+      'K. Crenshaw, “Demarginalizing the intersection of race and sex: A Black feminist critique of antidiscrimination doctrine, feminist theory and antiracist politics,” University of Chicago Legal Forum, vol. 1989, no. 1, pp. 139–167, 1989.'
+    ].map(text => ({text, ok:false}))
   };
 }
 function seedState(){
@@ -523,10 +677,10 @@ function seedState(){
       {id:'ex-paper-1', example:true, ideaId, created:Date.now(), title:'Gender Shades: Intersectional Accuracy Disparities in Commercial Gender Classification', authors:'J. Buolamwini, T. Gebru', year:'2018', venue:'Conf. on Fairness, Accountability and Transparency (PMLR 81)', link:'https://proceedings.mlr.press/v81/buolamwini18a.html', takeaway:'High average accuracy hid error rates up to 34.7% for darker-skinned women — always audit by subgroup, not just on average.'},
       {id:'ex-paper-2', example:true, ideaId, created:Date.now(), title:'On the Dangers of Stochastic Parrots: Can Language Models Be Too Big?', authors:'E. M. Bender, T. Gebru, A. McMillan-Major, S. Shmitchell', year:'2021', venue:'ACM FAccT 2021', link:'https://doi.org/10.1145/3442188.3445922', takeaway:'Bigger web-scraped training data does not mean more diverse data; under-represented languages and communities need curated, documented datasets.'}
     ],
-    critiques:[exampleCritique()],
-    activeCrit:'ex-crit-1',
+    critiques:[exampleAau()],
+    activeCrit:'ex-crit-aau',
     writing:{title:'', active:0, steps:{}, review:{}},
-    pres:{source:'crit:ex-crit-1', minutes:10},
+    pres:{source:'crit:ex-crit-aau', minutes:10},
     ui:{tab:'hub', db:'scholar', status:'All', tag:'', paperIdea:''},
     theme:'auto'
   };
@@ -571,17 +725,6 @@ const activeCrit = () => S.critiques.find(c => c.id === S.activeCrit) || S.criti
 const sentences = t => (t||'').replace(/\s+/g,' ').trim().split(/(?<=[.!?])\s+(?=[A-Z0-9"“(])/).filter(Boolean);
 const clip = (s, n=150) => s.length > n ? s.slice(0, n-1).replace(/\s+\S*$/,'') + '…' : s;
 
-function critFilled(c, key){
-  if (key === 'citation') return !!(c.citation.title||'').trim();
-  const s = c.sections[key] || {};
-  return !!(s.text||'').trim() && !!s.rating;
-}
-function critProgress(c){ const n = CRIT_SECTIONS.filter(s => critFilled(c, s.key)).length; return {n, total:CRIT_SECTIONS.length}; }
-const critDone = c => { const p = critProgress(c); return p.n === p.total; };
-function critAvg(c){
-  const r = CRIT_SECTIONS.filter(s => s.rated !== false).map(s => (c.sections[s.key]||{}).rating).filter(Boolean);
-  return r.length ? (r.reduce((a,b)=>a+b,0)/r.length) : 0;
-}
 const stepState = k => (S.writing.steps[k] ||= {checks:[], notes:''});
 const stepDone = st => { const ws = stepState(st.key); return st.checks.every((_,i) => ws.checks[i]); };
 const stepCount = st => { const ws = stepState(st.key); return st.checks.filter((_,i) => ws.checks[i]).length; };
@@ -789,44 +932,426 @@ function paperDialog(id){
 }
 
 /* ---------- 3. Critique Studio ---------- */
+const words = t => ((t||'').trim().match(/\S+/g) || []).length;
+const critTitle = c => (c.form === 'aau' ? c.info.title : c.citation.title) || '';
+const today = () => new Date().toISOString().slice(0,10);
+function newCritique(){ return {id:uid(), form:'general', created:Date.now(), recommendation:'', citation:{authors:'',title:'',year:'',venue:'',doi:''}, sections:{}}; }
+function newAau(){
+  return {id:uid(), form:'aau', created:Date.now(), paper:null, qc:{}, partA:{}, b:{},
+    info:Object.fromEntries(AAU_INFO.map(f => [f.k, f.k === 'date' ? today() : ''])),
+    refs:Array.from({length:10}, () => ({text:'', ok:false}))};
+}
+function fixCrit(c){
+  if (c.form === 'aau'){
+    c.info ||= {}; c.partA ||= {}; c.b ||= {}; c.qc ||= {};
+    c.refs = Array.from({length:10}, (_,i) => (c.refs||[])[i] || {text:'', ok:false});
+  } else { c.form = 'general'; c.citation ||= {}; c.sections ||= {}; }
+  return c;
+}
+
+/* --- shared helpers (both templates) --- */
+function critFilled(c, key){
+  if (key === 'citation') return !!(c.citation.title||'').trim();
+  const s = c.sections[key] || {};
+  return !!(s.text||'').trim() && !!s.rating;
+}
+const aauText = (c, k) => (c.b[k]||{}).text || '';
+const evalTotal = c => AAU_8.reduce((a,s) => a + words(aauText(c, s.k)), 0);
+function aauUnits(c){
+  const i = c.info, e = AAU_8.map(s => words(aauText(c, s.k)));
+  return [
+    {k:'info', l:'Info', ok:!!(i.title && i.authors && i.venue && i.year)},
+    {k:'partA', l:'Part A', ok:AAU_A.every(a => (c.partA[a.k]||{}).score)},
+    ...AAU_B.map(s => { const n = words(aauText(c, s.k)); return {k:s.k, l:`${s.no}. ${s.s}`, ok:n > 0 && n <= s.max}; }),
+    {k:'refs', l:'7. References', ok:c.refs.filter(r => r.text.trim()).length === 10},
+    {k:'eval', l:'8. Evaluation', ok:e.every(n => n > 0) && e.reduce((a,b)=>a+b,0) <= 500}
+  ];
+}
+function critProgress(c){
+  if (c.form === 'aau'){ const u = aauUnits(c); return {n:u.filter(x => x.ok).length, total:u.length}; }
+  const n = CRIT_SECTIONS.filter(s => critFilled(c, s.key)).length; return {n, total:CRIT_SECTIONS.length};
+}
+const critDone = c => { const p = critProgress(c); return p.n === p.total; };
+function critAvg(c){
+  if (c.form === 'aau') return 0;
+  const r = CRIT_SECTIONS.filter(s => s.rated !== false).map(s => (c.sections[s.key]||{}).rating).filter(Boolean);
+  return r.length ? (r.reduce((a,b)=>a+b,0)/r.length) : 0;
+}
+
 RENDER.critique = () => {
-  if (!S.critiques.length) S.critiques.push(newCritique());
+  if (!S.critiques.length) S.critiques.push(newAau());
+  S.critiques.forEach(fixCrit);
   const c = activeCrit(); S.activeCrit = c.id;
-  const p = critProgress(c);
+  const aau = c.form === 'aau';
   $('#panel-critique').innerHTML = `
   <div class="page-head"><div class="eyebrow">Paper Critique Studio</div><h1>Review a paper, section by section</h1>
-  <p>Work through each part of the paper with the guiding questions, rate it from 1 to 5, then generate a formatted critique you can copy.</p></div>
+  <p>${aau ? 'Complete the official AAU Paper Critique Form: guidance, word limits and weights for every section, evidence search inside the paper, a quality-control check and export to Word.'
+           : 'Work through each part of the paper with the guiding questions, rate it from 1 to 5, then generate a formatted critique you can copy.'}</p></div>
 
   <div class="card">
     <div class="crit-bar">
       <div class="row" style="flex:1;min-width:240px">
         <label class="sr-only" for="critSel">Choose critique</label>
-        <select id="critSel" style="flex:1;max-width:460px">${S.critiques.map(x => `<option value="${x.id}" ${x.id===c.id?'selected':''}>${x.example?'[Example] ':''}${esc(clip(x.citation.title||'Untitled critique',70))}</option>`).join('')}</select>
-        ${exampleBadge(c)}
+        <select id="critSel" style="flex:1;max-width:480px">${S.critiques.map(x => `<option value="${x.id}" ${x.id===c.id?'selected':''}>${critOptLabel(x)}</option>`).join('')}</select>
+        <span class="chip">${aau ? 'AAU form' : 'General'}</span>${exampleBadge(c)}
       </div>
       <div class="row">
-        <button class="btn" data-act="crit-new">${icon('plus')}New critique</button>
+        <button class="btn primary" data-act="crit-new" data-form="aau">${icon('plus')}New AAU critique</button>
+        <button class="btn" data-act="crit-new" data-form="general">${icon('plus')}General</button>
         <button class="btn ghost danger" data-act="crit-del">${icon('trash')}Delete</button>
       </div>
     </div>
-    ${c.example ? `<p class="small muted" style="margin:12px 0 0">This is an <b>example critique</b> of a real, well-known paper so you can see what a complete review looks like. Edit it freely, or start a new one.</p>`:''}
+    ${c.example ? `<p class="small muted" style="margin:12px 0 0">This is an <b>example critique</b> of a real, well-known paper, showing a completed AAU form. Its 10 related references are real papers listed for illustration; their <i>verified</i> boxes are left unticked so you can practise checking each one before relying on it.</p>`:''}
+  </div>
+  ${aau ? aauBody(c) : genBody(c)}`;
+  if (aau){ updateAau(); $$('[data-ab]').forEach(grow); }
+};
+function grow(t){ t.style.height = 'auto'; t.style.height = (t.scrollHeight + 2) + 'px'; }
+const critOptLabel = x => esc(`${x.example?'[Example] ':''}${x.form==='aau'?'AAU · ':''}${clip(critTitle(x)||'Untitled critique',70)}`);
+
+/* --- AAU form --- */
+const pill = t => `<span class="pill">${t}</span>`;
+function guideList(items, warn, open=false){
+  return `<details class="what" ${open?'open':''}><summary>What to address</summary><ol>${items.map(g => `<li>${esc(g)}</li>`).join('')}</ol></details>
+    ${warn ? `<p class="warn">${icon('sparkle')}<span>${esc(warn)}</span></p>` : ''}`;
+}
+function aauBody(c){
+  const units = aauUnits(c);
+  const i = c.info;
+  return `
+  ${paperTools(c)}
+
+  <div class="card sticky-sub" style="margin-top:16px;padding:12px 16px">
+    <div class="row" style="justify-content:space-between;margin-bottom:8px"><b class="small" id="critCount"></b><a class="small" href="#critSummaryCard" data-act="crit-summary">Preview & export ↓</a></div>
+    <div class="progress"><span id="critBar"></span></div>
+    <nav class="jump" style="margin-top:10px" aria-label="Jump to section">${units.map(u => `<a href="#sec-${u.k}" data-act="jump" data-key="${u.k}">${esc(u.l)}</a>`).join('')}<a href="#sec-qc" data-act="jump" data-key="qc">QC</a></nav>
   </div>
 
+  <details class="guide" style="margin-top:16px"><summary>${icon('book')}Writing rules for every section</summary><div class="guide-body"><ul class="tips">${AAU_RULES.map(r => `<li>${esc(r)}</li>`).join('')}</ul></div></details>
+
+  <div class="form-part">Page 2 · Paper information</div>
+  <section class="card sec" id="sec-info">
+    <div class="sec-head"><span class="sec-num">${icon('clip')}</span><h3>Paper Information</h3></div>
+    <p class="small muted" style="margin-top:-4px">Student and ID fields are entered by you and never changed by the app. Leave IDs blank if not assigned — the export shows a labelled placeholder. Copy title and authors exactly from the paper, and do not assume the publication status.</p>
+    <div class="fields-3">${AAU_INFO.map(f => `<div class="field ${f.wide?'wide':''}"><label class="f" for="ai-${f.k}">${f.l}</label>${
+      f.opts ? `<select id="ai-${f.k}" data-ai="${f.k}">${f.opts.map(o => `<option value="${esc(o)}" ${o===(i[f.k]||'')?'selected':''}>${o||'— Choose —'}</option>`).join('')}</select>`
+             : `<input class="input" id="ai-${f.k}" data-ai="${f.k}" type="${f.type||'text'}" value="${esc(i[f.k]||'')}" placeholder="${esc(f.ph||'')}">`}</div>`).join('')}</div>
+  </section>
+
+  <div class="form-part">Part A · Diagnostic evaluation (0%)</div>
+  <section class="card sec" id="sec-partA">
+    <div class="sec-head"><span class="sec-num">A</span><h3>Diagnostic Evaluation</h3>${pill('Weight 0%')}</div>
+    <p class="small muted" style="margin-top:-4px">These ratings do not count toward the grade, but they must reflect your detailed analysis in Part B. Justify each score briefly.</p>
+    ${AAU_A.map(a => { const v = c.partA[a.k] || {}; return `<div class="parta">
+      <div><b>${a.t}</b> <span class="muted small">(1–${a.max})</span><div class="small muted">${esc(a.g)}</div></div>
+      <div class="rating" role="group" aria-label="${esc(a.t)}">${Array.from({length:a.max}, (_,n) => `<button type="button" class="rate" data-act="rate-a" data-k="${a.k}" data-v="${n+1}" aria-pressed="${v.score===n+1}">${n+1}</button>`).join('')}</div>
+      <input class="input" data-an="${a.k}" value="${esc(v.note||'')}" placeholder="Short justification for this score" aria-label="Justification for ${esc(a.t)}"></div>`; }).join('')}
+  </section>
+
+  <div class="form-part">Part B · Structured written critique</div>
+  <div class="stack">${AAU_B.map(s => aauSection(c, s)).join('')}
+
+  <section class="card sec" id="sec-refs">
+    <div class="sec-head"><span class="sec-num">7</span><h3>Referencing – List 10 Related Papers</h3>${pill('Weight 5%')}${pill('Excluded from word limit')}<span class="wc" id="wc-refs"></span></div>
+    <p class="small muted" style="margin-top:-4px">Exactly 10 authentic, related papers (the reviewed paper goes in Paper Information, not here). Tick <b>Verified</b> only after checking the reference against the publisher, DOI or an index. Unverified entries are flagged “[verify]” in the export — never fill gaps with guessed details.</p>
+    ${guideList(AAU_REFS_GUIDE, '')}
+    <div class="refs">${c.refs.map((r,n) => `<div class="ref-row">
+      <span class="ref-n">[${n+1}]</span>
+      <textarea data-ref="${n}" rows="2" placeholder="IEEE style: A. Author, B. Author, “Title,” Venue, vol., no., pp., year, doi: …" aria-label="Reference ${n+1}">${esc(r.text)}</textarea>
+      <div class="ref-tools"><label class="check" style="padding:4px 6px"><input type="checkbox" data-refok="${n}" ${r.ok?'checked':''}><span class="small">Verified</span></label>
+      <button class="btn ghost sm" data-act="ref-look" data-i="${n}" title="Look this reference up in Google Scholar">${icon('search')}Check</button></div></div>`).join('')}</div>
+  </section>
+
+  <section class="card sec" id="sec-eval">
+    <div class="sec-head"><span class="sec-num">8</span><h3>Student’s Critical Evaluation</h3>${pill('Weight 30%')}${pill('Max 500 words combined')}<span class="wc" id="wc-eval"></span></div>
+    <p class="small muted" style="margin-top:-4px">The most heavily weighted section: show independent, balanced, evidence-based judgement. Suggested split — strengths ≈150, weaknesses ≈200, future work ≈150 (a writing recommendation, not a form requirement).</p>
+    ${AAU_8.map(s => { const v = c.b[s.k] || {}; return `<div class="sub" id="sub-${s.k}">
+      <div class="row" style="justify-content:space-between"><h4 style="margin:0">${s.t}</h4><span class="wc" id="wc-${s.k}"></span></div>
+      ${guideList(s.g, s.warn)}
+      <textarea data-ab="${s.k}" style="min-height:150px" aria-label="${esc(s.t)}" placeholder="Write ${esc(s.t.slice(6).toLowerCase())}…">${esc(v.text||'')}</textarea>
+      <label class="check" style="margin-top:6px"><input type="checkbox" data-arev="${s.k}" ${v.rev?'checked':''}><span class="small">I have reviewed and edited this part</span></label></div>`; }).join('')}
+  </section>
+  </div>
+
+  <div class="form-part">Page 8 · Instructor evaluation</div>
+  <section class="card reserved">
+    <div class="sec-head"><span class="sec-num">${icon('pen')}</span><h3>Instructor Evaluation</h3><span class="chip">Reserved for the instructor</span></div>
+    <div class="fields-2"><div class="field"><label class="f">Final Score</label><div class="input ro">______ / 100</div></div>
+    <div class="field"><label class="f">Instructor Comments</label><div class="input ro">Left blank for the instructor’s feedback and priority improvements.</div></div></div>
+  </section>
+
+  <section class="card" id="sec-qc" style="margin-top:16px">
+    <div class="sec-head"><span class="sec-num">${icon('check')}</span><h3>Final quality control</h3><span class="wc" id="qcCount"></span></div>
+    <p class="small muted" style="margin-top:-4px">The first four checks are automatic. Tick the rest yourself after re-reading the whole critique.</p>
+    <div style="margin:0 -10px" id="qcList">${AAU_QC.map((q,n) => n < 4
+      ? `<div class="check qc-auto" data-qca="${n}"><span class="qc-ico"></span><span><b>${esc(q)}</b><br><span class="small muted" data-qcm="${n}"></span></span></div>`
+      : `<label class="check ${c.qc[n]?'on':''}"><input type="checkbox" data-qc="${n}" ${c.qc[n]?'checked':''}><span>${esc(q)}</span></label>`).join('')}</div>
+  </section>
+
+  <section class="card" id="critSummaryCard" style="margin-top:16px">
+    <div class="output-head"><h3 style="margin:0">Completed critique</h3>
+      <span class="row"><button class="btn sm" data-act="crit-summary">${icon('refresh')}Refresh</button>${copyBtn('#critSummary')}<button class="btn primary sm" data-act="aau-docx">${icon('download')}Export to Word</button></span></div>
+    <p class="small muted" style="margin-top:0">In the exact order of the official form, with each section’s weight, word limit, actual word count and evidence.</p>
+    <div class="output" id="critSummary">${esc(aauPlain(c))}</div>
+  </section>`;
+}
+function aauSection(c, s){
+  const v = c.b[s.k] || {};
+  return `<section class="card sec" id="sec-${s.k}">
+    <div class="sec-head"><span class="sec-num">${s.no}</span><h3>${s.t}</h3>${pill(`Weight ${s.w}%`)}${pill(`Max ${s.max} words`)}<span class="wc" id="wc-${s.k}"></span></div>
+    <p style="margin-top:-4px">${esc(s.intro)}</p>
+    ${guideList(s.g, s.warn)}
+    <label class="f" for="ab-${s.k}">Your response</label>
+    <textarea id="ab-${s.k}" data-ab="${s.k}" style="min-height:${Math.round(s.max*0.9)}px" placeholder="Write in your own words…">${esc(v.text||'')}</textarea>
+    <div class="fields-2" style="margin-top:10px;align-items:center">
+      <div><label class="f" for="aev-${s.k}">Supporting evidence</label><input class="input" id="aev-${s.k}" data-aev="${s.k}" value="${esc(v.ev||'')}" placeholder="e.g. p. 5, Sec. III-B, Fig. 2, Table 1, [4]"></div>
+      <label class="check" style="align-self:end"><input type="checkbox" data-arev="${s.k}" ${v.rev?'checked':''}><span class="small">I have reviewed and edited this section</span></label>
+    </div>
+  </section>`;
+}
+function wcLabel(el, n, max, rec){
+  if (!el) return;
+  el.textContent = rec ? `${n} words · aim ≈${rec}` : `${n} / ${max} words`;
+  el.classList.toggle('over', !rec && n > max);
+  el.classList.toggle('ok', !rec && n > 0 && n <= max);
+}
+function aauQcAuto(c){
+  const units = aauUnits(c);
+  const over = AAU_B.filter(s => words(aauText(c, s.k)) > s.max).map(s => s.no);
+  const tot = evalTotal(c); if (tot > 500) over.push('8');
+  const filled = c.refs.filter(r => r.text.trim()).length, ver = c.refs.filter(r => r.text.trim() && r.ok).length;
+  const missing = units.filter(u => !u.ok).map(u => u.l);
+  return [
+    {ok:!missing.length, m:missing.length ? 'Still to complete: ' + missing.join(', ') : 'All sections addressed'},
+    {ok:!over.length, m:over.length ? 'Over the limit: section ' + over.join(', ') : 'Every section is within its limit'},
+    {ok:tot > 0 && tot <= 500, m:`8(a) + 8(b) + 8(c) = ${tot} / 500 words`},
+    {ok:ver === 10, m:`${filled}/10 entered · ${ver}/10 marked verified`}
+  ];
+}
+function updateAau(){
+  const c = activeCrit(); if (!c || c.form !== 'aau' || !$('#critBar')) return;
+  AAU_B.forEach(s => wcLabel($('#wc-'+s.k), words(aauText(c, s.k)), s.max));
+  AAU_8.forEach(s => wcLabel($('#wc-'+s.k), words(aauText(c, s.k)), 0, s.rec));
+  wcLabel($('#wc-eval'), evalTotal(c), 500);
+  const rn = c.refs.filter(r => r.text.trim()).length, rv = c.refs.filter(r => r.text.trim() && r.ok).length;
+  const wr = $('#wc-refs'); wr.textContent = `${rn}/10 entered · ${rv} verified`; wr.classList.toggle('ok', rn === 10 && rv === 10);
+  const units = aauUnits(c), done = units.filter(u => u.ok).length;
+  $('#critBar').style.width = (done/units.length*100) + '%';
+  $('#critCount').textContent = `${done} of ${units.length} parts complete`;
+  units.forEach(u => { $(`.jump a[data-key="${u.k}"]`)?.classList.toggle('done', u.ok); $('#sec-'+u.k)?.classList.toggle('filled', u.ok); });
+  const qa = aauQcAuto(c);
+  qa.forEach((q,n) => { const row = $(`[data-qca="${n}"]`); if (!row) return; row.classList.toggle('pass', q.ok); row.querySelector('.qc-ico').innerHTML = icon(q.ok ? 'check' : 'x'); $(`[data-qcm="${n}"]`).textContent = q.m; });
+  const qn = qa.filter(q => q.ok).length + AAU_QC.slice(4).filter((_,n) => c.qc[n+4]).length;
+  $('#qcCount').textContent = `${qn} / ${AAU_QC.length} passed`; $('#qcCount').classList.toggle('ok', qn === AAU_QC.length);
+  $('.jump a[data-key="qc"]')?.classList.toggle('done', qn === AAU_QC.length);
+}
+
+/* --- Paper PDF: in-browser text extraction + evidence search --- */
+const PDFJS = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/';
+let pdfjsP;
+function loadPdfJs(){
+  return pdfjsP ||= new Promise((res, rej) => {
+    const s = document.createElement('script'); s.src = PDFJS + 'pdf.min.js';
+    s.onload = () => { window.pdfjsLib.GlobalWorkerOptions.workerSrc = PDFJS + 'pdf.worker.min.js'; res(window.pdfjsLib); };
+    s.onerror = () => { pdfjsP = null; rej(new Error('PDF reader could not be loaded — check your internet connection.')); };
+    document.head.appendChild(s);
+  });
+}
+async function extractPdf(file){
+  const lib = await loadPdfJs();
+  const doc = await lib.getDocument({data:await file.arrayBuffer()}).promise;
+  const pages = [];
+  for (let n = 1; n <= doc.numPages; n++){
+    const tc = await (await doc.getPage(n)).getTextContent();
+    pages.push(tc.items.map(it => it.str + (it.hasEOL ? '\n' : ' ')).join('').replace(/[ \t]+/g,' ').replace(/-\n(?=[a-z])/g,'').trim());
+  }
+  return pages;
+}
+function paperTools(c){
+  const p = c.paper;
+  return `<div class="card" style="margin-top:16px" id="paperTools">
+    <div class="sec-head"><span class="sec-num">${icon('book')}</span><h3>The paper</h3></div>
+    <p class="small muted" style="margin-top:-4px">Upload the PDF to search it for evidence with page numbers. The text is extracted inside your browser — the file is not uploaded anywhere.</p>
+    <div class="row">
+      ${p ? `<span class="chip">${icon('clip')}${esc(clip(p.name, 40))} · ${p.pages.length} pages</span><button class="btn ghost sm danger" data-act="pdf-remove">${icon('x')}Remove</button>`
+          : `<label class="btn" for="pdfFile" style="cursor:pointer">${icon('upload')}Upload paper (PDF)</label>`}
+      <input type="file" id="pdfFile" accept="application/pdf,.pdf" hidden>
+      <span class="spacer"></span>
+      <button class="btn" data-act="aau-prompt" title="Copy a prompt with the full form instructions${p?' and the paper text':''}">${icon('copy')}Copy AI-assistant prompt</button>
+    </div>
+    ${p ? `<div style="margin-top:12px"><label class="f" for="evq">Find evidence in the paper</label>
+      <input class="input" id="evq" placeholder="Search a word or phrase, e.g. sample size, Table 2, limitation" autocomplete="off">
+      <div id="evResults" class="ev-results"></div>
+      <p class="small muted" style="margin:6px 0 0">Page numbers are PDF pages; check them against the journal’s printed page numbers before citing.</p></div>` : ''}
+    <p class="small muted" style="margin:10px 0 0">The prompt contains this form’s rules, structure and word limits${p ? ' plus the full paper text' : ' (attach the PDF in your AI assistant)'}. Check your course’s AI-use policy, and verify every claim and reference it produces against the paper before using it.</p>
+  </div>`;
+}
+function evidenceSearch(q){
+  const c = activeCrit(), out = $('#evResults'); if (!out || !c.paper) return;
+  q = q.trim(); if (q.length < 3){ out.innerHTML = ''; return; }
+  const ql = q.toLowerCase(), res = [];
+  c.paper.pages.forEach((txt, pi) => {
+    const low = txt.toLowerCase(); let at = low.indexOf(ql);
+    while (at !== -1 && res.length < 25){
+      const a = Math.max(0, at-90), b = Math.min(txt.length, at+ql.length+90);
+      res.push({p:pi+1, html:(a?'…':'') + esc(txt.slice(a, at)).replace(/\n/g,' ') + '<mark>' + esc(txt.slice(at, at+ql.length)) + '</mark>' + esc(txt.slice(at+ql.length, b)).replace(/\n/g,' ') + (b < txt.length ? '…' : '')});
+      at = low.indexOf(ql, at + ql.length);
+    }
+  });
+  out.innerHTML = res.length ? `<div class="small muted" style="margin:8px 0 4px">${res.length}${res.length===25?'+':''} match${res.length===1?'':'es'}</div>` + res.map(r => `<div class="ev-hit"><b>p. ${r.p}</b><span>${r.html}</span></div>`).join('')
+    : '<p class="small muted" style="margin:8px 0 0">No matches.</p>';
+}
+
+/* --- Plain-text export --- */
+const ph = (v, label) => (v||'').trim() || `[${label} – not provided]`;
+function aauPlain(c){
+  const i = c.info, L = [], rule = '='.repeat(60), sub = '-'.repeat(60);
+  L.push(AAU_NAME.toUpperCase()); if (c.example) L.push('(EXAMPLE CRITIQUE)'); L.push(rule, '');
+  L.push('PAPER INFORMATION', sub);
+  AAU_INFO.forEach(f => L.push(`${f.l}: ${ph(i[f.k], f.l)}`));
+  L.push('', 'PART A – DIAGNOSTIC EVALUATION (0%)', sub);
+  AAU_A.forEach(a => { const v = c.partA[a.k] || {}; L.push(`${a.t} (1–${a.max}): ${v.score ? `${v.score} / ${a.max}` : '[not rated]'}${v.note ? ` — ${v.note}` : ''}`); });
+  L.push('', 'PART B – STRUCTURED WRITTEN CRITIQUE', sub);
+  AAU_B.forEach(s => {
+    const v = c.b[s.k] || {}, n = words(v.text);
+    L.push('', `${s.no}. ${s.t.toUpperCase()}`, `Weight: ${s.w}% | Maximum: ${s.max} words | Word count: ${n}${n > s.max ? '  ⚠ OVER LIMIT' : ''}`);
+    L.push((v.text||'').trim() || '(not yet written)');
+    if ((v.ev||'').trim()) L.push(`Evidence: ${v.ev.trim()}`);
+  });
+  L.push('', '7. REFERENCING – LIST 10 RELATED PAPERS', 'Weight: 5% | References are excluded from the word limit');
+  c.refs.forEach((r,n) => L.push(`[${n+1}] ${r.text.trim() ? r.text.trim() + (r.ok ? '' : ' [verify]') : '(not yet added)'}`));
+  const tot = evalTotal(c);
+  L.push('', '8. STUDENT’S CRITICAL EVALUATION', `Weight: 30% | Maximum: 500 words combined (a + b + c) | Word count: ${tot}${tot > 500 ? '  ⚠ OVER LIMIT' : ''}`);
+  AAU_8.forEach(s => { const t = aauText(c, s.k); L.push('', `${s.t} (${words(t)} words)`, t.trim() || '(not yet written)'); });
+  L.push('', 'INSTRUCTOR EVALUATION', sub, 'Final Score: ______ / 100', 'Instructor Comments: (reserved for the instructor)');
+  return L.join('\n');
+}
+
+/* --- Word (.docx) export: minimal OOXML package, zipped without compression --- */
+const xmlEsc = s => String(s ?? '').replace(/[&<>"]/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[ch])).replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F]/g, '');
+function wR(text, o={}){
+  const pr = (o.serif ? '<w:rFonts w:ascii="Georgia" w:hAnsi="Georgia" w:cs="Georgia"/>' : '') + (o.b ? '<w:b/>' : '') + (o.i ? '<w:i/>' : '') +
+    (o.color ? `<w:color w:val="${o.color}"/>` : '') + (o.sz ? `<w:sz w:val="${o.sz}"/><w:szCs w:val="${o.sz}"/>` : '');
+  return `<w:r>${pr ? `<w:rPr>${pr}</w:rPr>` : ''}<w:t xml:space="preserve">${xmlEsc(text)}</w:t></w:r>`;
+}
+function wP(runs, o={}){
+  const pr = (o.keep ? '<w:keepNext/>' : '') + (o.border ? '<w:pBdr><w:bottom w:val="single" w:sz="6" w:space="4" w:color="1F3A6B"/></w:pBdr>' : '') +
+    `<w:spacing w:before="${o.before ?? 0}" w:after="${o.after ?? 120}"/>` + (o.align ? `<w:jc w:val="${o.align}"/>` : '');
+  return `<w:p><w:pPr>${pr}</w:pPr>${[].concat(runs).join('')}</w:p>`;
+}
+const wParas = (text, empty='(not yet written)') => ((text||'').trim() ? text.trim().split(/\n\s*\n|\n/) : [empty]).map(t => wP(wR(t), {align:'both'})).join('');
+function wTable(rows){
+  const b = ['top','left','bottom','right','insideH','insideV'].map(s => `<w:${s} w:val="single" w:sz="4" w:space="0" w:color="BFBFBF"/>`).join('');
+  const cell = (w, inner, fill) => `<w:tc><w:tcPr><w:tcW w:w="${w}" w:type="dxa"/>${fill ? `<w:shd w:val="clear" w:color="auto" w:fill="${fill}"/>` : ''}</w:tcPr>${inner}</w:tc>`;
+  return `<w:tbl><w:tblPr><w:tblW w:w="9026" w:type="dxa"/><w:tblBorders>${b}</w:tblBorders><w:tblLayout w:type="fixed"/></w:tblPr><w:tblGrid><w:gridCol w:w="2900"/><w:gridCol w:w="6126"/></w:tblGrid>` +
+    rows.map(([k,v]) => `<w:tr>${cell(2900, wP(wR(k,{b:true}),{before:60,after:60}), 'E7EDF7')}${cell(6126, wP(wR(v),{before:60,after:60}))}</w:tr>`).join('') + '</w:tbl>';
+}
+function aauDocxXml(c){
+  const i = c.info, P = [];
+  const H = t => wP(wR(t, {b:true, sz:28, serif:true, color:'1F3A6B'}), {before:320, after:120, keep:true, border:true});
+  const H2 = t => wP(wR(t, {b:true, sz:24, serif:true}), {before:240, after:40, keep:true});
+  const meta = t => wP(wR(t, {i:true, sz:18, color:'5B6476'}), {after:100, keep:true});
+  P.push(wP(wR('Al Ain University', {b:true, sz:24, color:'1F3A6B'}), {align:'center', after:40}));
+  P.push(wP(wR('Advanced Research Methods (0106112)', {sz:22}), {align:'center', after:40}));
+  P.push(wP(wR('Paper Critique Form', {b:true, sz:36, serif:true}), {align:'center', after:240}));
+  if (c.example) P.push(wP(wR('Example critique', {i:true, color:'8A5A12'}), {align:'center'}));
+  P.push(H('Paper Information'), wTable(AAU_INFO.map(f => [f.l, ph(i[f.k], f.l)])));
+  P.push(H('Part A – Diagnostic Evaluation (0%)'), wTable(AAU_A.map(a => { const v = c.partA[a.k] || {}; return [`${a.t} (1–${a.max})`, (v.score ? `${v.score} / ${a.max}` : '[Not rated]') + (v.note ? ` — ${v.note}` : '')]; })));
+  P.push(H('Part B – Structured Written Critique'));
+  AAU_B.forEach(s => {
+    const v = c.b[s.k] || {}, n = words(v.text);
+    P.push(H2(`${s.no}. ${s.t}`), meta(`Weight: ${s.w}% | Maximum: ${s.max} words | Word count: ${n}`), wParas(v.text));
+    if ((v.ev||'').trim()) P.push(wP([wR('Evidence: ', {b:true, sz:18}), wR(v.ev.trim(), {sz:18})]));
+  });
+  P.push(H2('7. Referencing – List 10 Related Papers'), meta('Weight: 5% | References are excluded from the word limit'));
+  c.refs.forEach((r,n) => P.push(wP([wR(`[${n+1}] `), wR(r.text.trim() || '(not yet added)'), ...(r.text.trim() && !r.ok ? [wR(' [verify]', {b:true, color:'A63838'})] : [])], {after:80})));
+  P.push(H2('8. Student’s Critical Evaluation'), meta(`Weight: 30% | Maximum: 500 words combined (a + b + c) | Word count: ${evalTotal(c)}`));
+  AAU_8.forEach(s => { const t = aauText(c, s.k); P.push(wP([wR(s.t, {b:true}), wR(`  (${words(t)} words)`, {i:true, sz:18, color:'5B6476'})], {before:160, after:60, keep:true}), wParas(t)); });
+  P.push(H('Instructor Evaluation'), wTable([['Final Score', '______ / 100'], ['Instructor Comments', '']]));
+  return `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><w:document xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"><w:body>${P.join('')}<w:sectPr><w:pgSz w:w="11906" w:h="16838"/><w:pgMar w:top="1440" w:right="1440" w:bottom="1440" w:left="1440" w:header="708" w:footer="708" w:gutter="0"/></w:sectPr></w:body></w:document>`;
+}
+const CRC_T = (() => { const t = new Uint32Array(256); for (let n = 0; n < 256; n++){ let c = n; for (let k = 0; k < 8; k++) c = c & 1 ? 0xEDB88320 ^ (c >>> 1) : c >>> 1; t[n] = c >>> 0; } return t; })();
+const crc32 = b => { let c = 0xFFFFFFFF; for (let i = 0; i < b.length; i++) c = CRC_T[(c ^ b[i]) & 0xFF] ^ (c >>> 8); return (c ^ 0xFFFFFFFF) >>> 0; };
+function zipStore(files, type){
+  const te = new TextEncoder(), parts = [], central = []; let off = 0;
+  for (const f of files){
+    const name = te.encode(f.name), data = te.encode(f.data), crc = crc32(data);
+    const h = new DataView(new ArrayBuffer(30));
+    h.setUint32(0, 0x04034b50, true); h.setUint16(4, 20, true); h.setUint16(6, 0x0800, true); h.setUint16(12, 0x21, true);
+    h.setUint32(14, crc, true); h.setUint32(18, data.length, true); h.setUint32(22, data.length, true); h.setUint16(26, name.length, true);
+    parts.push(new Uint8Array(h.buffer), name, data);
+    const d = new DataView(new ArrayBuffer(46));
+    d.setUint32(0, 0x02014b50, true); d.setUint16(4, 20, true); d.setUint16(6, 20, true); d.setUint16(8, 0x0800, true); d.setUint16(14, 0x21, true);
+    d.setUint32(16, crc, true); d.setUint32(20, data.length, true); d.setUint32(24, data.length, true); d.setUint16(28, name.length, true); d.setUint32(42, off, true);
+    central.push(new Uint8Array(d.buffer), name);
+    off += 30 + name.length + data.length;
+  }
+  const size = central.reduce((a, b) => a + b.length, 0), e = new DataView(new ArrayBuffer(22));
+  e.setUint32(0, 0x06054b50, true); e.setUint16(8, files.length, true); e.setUint16(10, files.length, true); e.setUint32(12, size, true); e.setUint32(16, off, true);
+  return new Blob([...parts, ...central, new Uint8Array(e.buffer)], {type});
+}
+function aauDocx(c){
+  const W = 'http://schemas.openxmlformats.org/', X = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>';
+  return zipStore([
+    {name:'[Content_Types].xml', data:`${X}<Types xmlns="${W}package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/word/document.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml"/><Override PartName="/word/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.styles+xml"/></Types>`},
+    {name:'_rels/.rels', data:`${X}<Relationships xmlns="${W}package/2006/relationships"><Relationship Id="rId1" Type="${W}officeDocument/2006/relationships/officeDocument" Target="word/document.xml"/></Relationships>`},
+    {name:'word/_rels/document.xml.rels', data:`${X}<Relationships xmlns="${W}package/2006/relationships"><Relationship Id="rId1" Type="${W}officeDocument/2006/relationships/styles" Target="styles.xml"/></Relationships>`},
+    {name:'word/styles.xml', data:`${X}<w:styles xmlns:w="${W}wordprocessingml/2006/main"><w:docDefaults><w:rPrDefault><w:rPr><w:rFonts w:ascii="Calibri" w:hAnsi="Calibri" w:eastAsia="Calibri" w:cs="Calibri"/><w:sz w:val="22"/><w:szCs w:val="22"/><w:lang w:val="en-GB"/></w:rPr></w:rPrDefault><w:pPrDefault><w:pPr><w:spacing w:after="120" w:line="276" w:lineRule="auto"/></w:pPr></w:pPrDefault></w:docDefaults></w:styles>`},
+    {name:'word/document.xml', data:aauDocxXml(c)}
+  ], 'application/vnd.openxmlformats-officedocument.wordprocessingml.document');
+}
+
+/* --- AI-assistant prompt --- */
+function aauPrompt(c){
+  const i = c.info, L = [];
+  L.push(`You are an academic research assistant helping a master’s student critically analyse a research paper and complete the ${AAU_NAME}.`, '');
+  L.push('Read the entire paper (abstract, introduction, literature review, methodology, results, discussion, conclusion, figures, tables and references) before writing.', '');
+  L.push('NON-NEGOTIABLE RULES');
+  [...AAU_RULES, 'Follow the exact order, headings, weights and word limits below. Respect every maximum word count.',
+   'Distinguish clearly between what the authors explicitly report and your own critical evaluation.',
+   'Provide a balanced critique — not a rewritten abstract or conclusion.',
+   'Never assign an instructor score or write instructor comments. Never invent student or ID numbers; leave labelled placeholders.',
+   'If you cannot verify a bibliographic detail or reference, flag it “[verify]” instead of guessing.'].forEach(r => L.push('- ' + r));
+  L.push('', 'PAPER INFORMATION (as entered by the student — do not change student details)');
+  AAU_INFO.forEach(f => L.push(`- ${f.l}: ${(i[f.k]||'').trim() || '[not provided — extract from the paper if bibliographic, otherwise leave placeholder]'}`));
+  L.push('Do not assume the publication status or reading version; state them only if documented.', '');
+  L.push('PART A – DIAGNOSTIC EVALUATION (0%) — give a score and one-sentence justification, consistent with Part B:');
+  AAU_A.forEach(a => L.push(`- ${a.t} (1–${a.max}): ${a.g}`));
+  L.push('', 'PART B – STRUCTURED WRITTEN CRITIQUE');
+  AAU_B.forEach(s => { L.push('', `${s.no}. ${s.t} — Weight ${s.w}% | Maximum ${s.max} words`, s.intro); s.g.forEach((g,n) => L.push(`   ${n+1}. ${g}`)); L.push(`   Note: ${s.warn}`); });
+  L.push('', '7. Referencing – List 10 Related Papers — Weight 5% | excluded from word limit', 'Exactly 10 authentic related papers (not the reviewed paper), IEEE style. Each must be real and accurately described:');
+  AAU_REFS_GUIDE.forEach((g,n) => L.push(`   ${n+1}. ${g}`));
+  L.push('', '8. Student’s Critical Evaluation — Weight 30% | Maximum 500 words combined across 8(a), 8(b) and 8(c) (suggested ≈150 / ≈200 / ≈150)');
+  AAU_8.forEach(s => { L.push(`${s.t}: consider — ${s.g.join('; ')}.`, `   Note: ${s.warn}`); });
+  L.push('', 'INSTRUCTOR EVALUATION — leave “Final Score: ____ / 100” and “Instructor Comments” blank.', '');
+  L.push('FINAL QUALITY CONTROL — before answering, confirm:'); AAU_QC.forEach((q,n) => L.push(`   ${n+1}. ${q}`));
+  L.push('', 'OUTPUT FORMAT — for each section show: the original heading; its weight and maximum word count; the polished response; the actual word count; and supporting page, section, figure, table or reference citations.');
+  if (c.paper){
+    L.push('', '='.repeat(60), `PAPER TEXT (extracted from “${c.paper.name}”; page markers are PDF pages)`, '='.repeat(60));
+    c.paper.pages.forEach((t,n) => L.push('', `[Page ${n+1}]`, t));
+  } else L.push('', 'The paper is attached as a PDF.');
+  return L.join('\n');
+}
+
+/* --- General template (original guided critique) --- */
+function genBody(c){
+  const p = critProgress(c);
+  return `
   <div class="card sticky-sub" style="margin-top:16px;padding:12px 16px">
     <div class="row" style="justify-content:space-between;margin-bottom:8px"><b class="small" id="critCount">${p.n} of ${p.total} sections complete</b><a class="small" href="#critSummaryCard" data-act="crit-summary">Generate summary ↓</a></div>
     <div class="progress"><span id="critBar" style="width:${p.n/p.total*100}%"></span></div>
     <nav class="jump" style="margin-top:10px" aria-label="Jump to section">${CRIT_SECTIONS.map((s,i) => `<a href="#sec-${s.key}" data-act="jump" data-key="${s.key}" class="${critFilled(c,s.key)?'done':''}">${i+1}. ${s.title.split(' ')[0].replace(/[,&]/g,'')}</a>`).join('')}</nav>
   </div>
 
-  <div class="stack" style="margin-top:16px">${CRIT_SECTIONS.map((s,i) => critSection(c, s, i)).join('')}</div>
+  <div class="stack" style="margin-top:16px">${CRIT_SECTIONS.map((s,i) => genSection(c, s, i)).join('')}</div>
 
   <div class="card" id="critSummaryCard" style="margin-top:16px">
     <div class="output-head"><h3 style="margin:0">Critique summary</h3>
       <span class="row"><button class="btn primary sm" data-act="crit-summary">${icon('refresh')}Generate</button>${copyBtn('#critSummary')}</span></div>
-    <div class="output" id="critSummary">${esc(critSummary(c))}</div>
+    <div class="output" id="critSummary">${esc(genSummary(c))}</div>
   </div>`;
-};
-function critSection(c, s, i){
+}
+function genSection(c, s, i){
   const st = c.sections[s.key] || {};
   let fields = '';
   if (s.key === 'citation'){
@@ -853,8 +1378,7 @@ function critSection(c, s, i){
       <select id="ct-rec" data-change="crit-rec">${RECS.map(r => `<option value="${r}" ${r===c.recommendation?'selected':''}>${r||'— Choose —'}</option>`).join('')}</select></div>` : ''}
   </section>`;
 }
-function newCritique(){ return {id:uid(), created:Date.now(), recommendation:'', citation:{authors:'',title:'',year:'',venue:'',doi:''}, sections:{}}; }
-function critSummary(c){
+function genSummary(c){
   const ci = c.citation, avg = critAvg(c);
   const ref = [ci.authors, ci.year && `(${ci.year})`].filter(Boolean).join(' ') + (ci.title ? `. "${ci.title}."` : '') + (ci.venue ? ` ${ci.venue}.` : '') + (ci.doi ? ` ${ci.doi}` : '');
   const L = [];
@@ -974,7 +1498,7 @@ function paperOutline(){
 /* ---------- 5. Presentation Builder ---------- */
 function presSources(){
   return [
-    ...S.critiques.map(c => ({id:'crit:'+c.id, label:`Critique: ${c.example?'[Example] ':''}${clip(c.citation.title||'Untitled',60)}${critDone(c)?' ✓':''}`})),
+    ...S.critiques.map(c => ({id:'crit:'+c.id, label:`Critique: ${c.example?'[Example] ':''}${c.form==='aau'?'AAU · ':''}${clip(critTitle(c)||'Untitled',60)}${critDone(c)?' ✓':''}`})),
     {id:'paper', label:`My paper outline: ${clip(S.writing.title||'Untitled', 60)}`}
   ];
 }
@@ -986,6 +1510,21 @@ function buildSlides(){
   const src = S.pres.source || '';
   if (src.startsWith('crit:')){
     const c = S.critiques.find(x => 'crit:'+x.id === src);
+    if (c && c.form === 'aau'){
+      const t = k => aauText(c, k), i = c.info;
+      const need = l => `[Add your ${l} in the Critique Studio]`;
+      return {
+        title:{h:i.title||'Paper title', b:[[i.authors, i.year].filter(Boolean).join(', ') || 'Authors, year', i.venue || 'Venue', `Critique by: ${i.studentName || '[your name]'}${i.presNo ? ` · Presentation ${i.presNo}` : ''}`]},
+        background:{b:bullets(t('summary'), 2, need('summary'))},
+        problem:{b:[...bullets(t('problem'), 2, need('research problem & objectives')), ...bullets(t('litreview'), 1, need('literature review'))]},
+        method:{b:bullets(t('method'), 3, need('methodology critique'))},
+        findings:{b:bullets(t('results'), 3, need('results & discussion'))},
+        critique:{b:[...bullets(t('strengths'), 2, need('strengths')).map(x => 'Strength: ' + x), ...bullets(t('weaknesses'), 2, need('weaknesses')).map(x => 'Weakness: ' + x)]},
+        conclusion:{b:[...bullets(t('contribution'), 2, need('contribution')), ...bullets(t('future'), 1, need('future work')).map(x => 'Future work: ' + x),
+          ...(AAU_A.some(a => (c.partA[a.k]||{}).score) ? ['Diagnostic ratings: ' + AAU_A.filter(a => (c.partA[a.k]||{}).score).map(a => `${a.t} ${c.partA[a.k].score}/${a.max}`).join(' · ')] : [])]},
+        qa:{b:['Thank you — questions?','Prepare: How far do the findings generalise beyond this setting?','Prepare: Which of the weaknesses matters most, and why?']}
+      };
+    }
     if (c){
       const sec = k => (c.sections[k]||{}).text || '';
       const r = k => (c.sections[k]||{}).rating;
@@ -1099,7 +1638,7 @@ RENDER.progress = () => {
       ${STATUSES.map(s => { const n = S.ideas.filter(i => i.status===s).length; return `<div class="bar-row"><span>${s}</span><span class="bar"><span style="width:${n/maxS*100}%;background:${colors[s]}"></span></span><b>${n}</b></div>`; }).join('')}
     </div>
     <div class="card"><h3>Critiques</h3>
-      ${S.critiques.length ? S.critiques.map(c => { const p = critProgress(c); return `<div class="bar-row" style="grid-template-columns:1fr 90px 44px"><span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${esc(c.citation.title)}">${esc(c.citation.title||'Untitled')}${c.example?' <span class="badge-example">Ex</span>':''}</span><span class="bar"><span style="width:${p.n/p.total*100}%;background:var(--accent)"></span></span><b>${p.n}/${p.total}</b></div>`; }).join('') : '<p class="muted">No critiques yet.</p>'}
+      ${S.critiques.length ? S.critiques.map(c => { const p = critProgress(c); return `<div class="bar-row" style="grid-template-columns:1fr 90px 44px"><span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${esc(critTitle(c))}">${esc(critTitle(c)||'Untitled')}${c.example?' <span class="badge-example">Ex</span>':''}</span><span class="bar"><span style="width:${p.n/p.total*100}%;background:var(--accent)"></span></span><b>${p.n}/${p.total}</b></div>`; }).join('') : '<p class="muted">No critiques yet.</p>'}
     </div>
   </div>
 
@@ -1142,9 +1681,9 @@ const ACTIONS = {
     const p = S.papers.find(x => x.id === el.dataset.id); if (!p || !confirm(`Remove "${p.title}" from your reading list?`)) return;
     S.papers = S.papers.filter(x => x !== p); save(); RENDER.ideas(); toast('Paper removed');
   },
-  'crit-new': () => { const c = newCritique(); S.critiques.unshift(c); S.activeCrit = c.id; save(); RENDER.critique(); toast('New critique started'); $('#ci-title')?.focus(); },
+  'crit-new': el => { const c = el.dataset.form === 'general' ? newCritique() : newAau(); S.critiques.unshift(c); S.activeCrit = c.id; save(); RENDER.critique(); toast(c.form === 'aau' ? 'New AAU critique started' : 'New critique started'); ($('#ai-studentName') || $('#ci-title'))?.focus(); },
   'crit-del': () => {
-    const c = activeCrit(); if (!confirm(`Delete the critique "${c.citation.title || 'Untitled'}"? This cannot be undone.`)) return;
+    const c = activeCrit(); if (!confirm(`Delete the critique "${critTitle(c) || 'Untitled'}"? This cannot be undone.`)) return;
     S.critiques = S.critiques.filter(x => x !== c); S.activeCrit = S.critiques[0]?.id; save(); RENDER.critique(); toast('Critique deleted');
   },
   rate: el => {
@@ -1155,7 +1694,22 @@ const ACTIONS = {
     $(`[data-hint="${k}"]`).textContent = st.rating ? RATING_LABELS[st.rating] : 'Not rated';
     updateCritChrome();
   },
-  'crit-summary': (el, e) => { e.preventDefault(); $('#critSummary').textContent = critSummary(activeCrit()); $('#critSummaryCard').scrollIntoView({behavior:'smooth', block:'start'}); toast('Summary generated'); },
+  'rate-a': el => {
+    const c = activeCrit(), k = el.dataset.k, v = +el.dataset.v, st = c.partA[k] ||= {};
+    st.score = st.score === v ? 0 : v; save();
+    $$(`[data-act="rate-a"][data-k="${k}"]`).forEach(b => b.setAttribute('aria-pressed', +b.dataset.v === st.score));
+    updateAau();
+  },
+  'ref-look': el => { const t = activeCrit().refs[+el.dataset.i].text.trim(); if (!t) return toast('Type the reference first'); window.open('https://scholar.google.com/scholar?q=' + enc(t.replace(/,?\s*doi:.*$/i,'')), '_blank', 'noopener'); },
+  'aau-prompt': () => copyText(aauPrompt(activeCrit()), 'AI-assistant prompt copied'),
+  'aau-docx': () => {
+    const c = activeCrit(), a = document.createElement('a');
+    a.href = URL.createObjectURL(aauDocx(c));
+    a.download = `Paper Critique - ${(critTitle(c) || 'Untitled').replace(/[\\/:*?"<>|]+/g,'').slice(0,60).trim()}.docx`;
+    document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 1500); toast('Word document downloaded');
+  },
+  'pdf-remove': () => { const c = activeCrit(); if (!confirm('Remove the uploaded paper text from this critique?')) return; c.paper = null; save(); RENDER.critique(); },
+  'crit-summary': (el, e) => { e.preventDefault(); const c = activeCrit(); $('#critSummary').textContent = c.form === 'aau' ? aauPlain(c) : genSummary(c); $('#critSummaryCard').scrollIntoView({behavior:'smooth', block:'start'}); toast('Summary generated'); },
   jump: (el, e) => { e.preventDefault(); $('#sec-'+el.dataset.key)?.scrollIntoView({behavior:'smooth', block:'start'}); },
   wstep: el => { S.writing.active = +el.dataset.v; save(); RENDER.write(); $('#stepper')?.scrollIntoView({behavior:'smooth', block:'nearest'}); },
   'pres-min': el => { S.pres.minutes = +el.dataset.v; save(); RENDER.present(); },
@@ -1174,7 +1728,7 @@ const ACTIONS = {
   'add-examples': () => {
     const b = seedState();
     S.ideas.push(...b.ideas.filter(x => !findIdea(x.id))); S.papers.push(...b.papers.filter(x => !S.papers.some(p => p.id === x.id)));
-    if (!S.critiques.some(c => c.id === 'ex-crit-1')) S.critiques.push(exampleCritique());
+    if (!S.critiques.some(c => c.id === 'ex-crit-aau')) S.critiques.push(exampleAau());
     save(); RENDER.progress(); toast('Examples added');
   },
   reset: () => {
@@ -1198,9 +1752,16 @@ document.addEventListener('keydown', e => {
 document.addEventListener('input', e => {
   const t = e.target, c = () => activeCrit();
   if (t.id === 'q' || t.id === 'yr'){ S.ui[t.id] = t.value; save(); }
+  else if (t.dataset.ai){ const cc = c(); cc.info[t.dataset.ai] = t.value; save(); updateAau();
+    if (t.dataset.ai === 'title'){ const o = $('#critSel option:checked'); if (o) o.innerHTML = critOptLabel(cc); } }
+  else if (t.dataset.ab){ (c().b[t.dataset.ab] ||= {}).text = t.value; save(); updateAau(); grow(t); }
+  else if (t.dataset.aev){ (c().b[t.dataset.aev] ||= {}).ev = t.value; save(); }
+  else if (t.dataset.an){ (c().partA[t.dataset.an] ||= {}).note = t.value; save(); }
+  else if (t.dataset.ref){ c().refs[+t.dataset.ref].text = t.value; save(); updateAau(); }
+  else if (t.id === 'evq'){ evidenceSearch(t.value); }
   else if (t.dataset.crit){ const s = c().sections[t.dataset.crit] ||= {}; s.text = t.value; save(); updateCritChrome(); }
   else if (t.dataset.cite){ c().citation[t.dataset.cite] = t.value; save(); updateCritChrome();
-    if (t.dataset.cite === 'title'){ const o = $('#critSel option:checked'); if (o) o.textContent = (c().example?'[Example] ':'') + clip(t.value || 'Untitled critique', 70); } }
+    if (t.dataset.cite === 'title'){ const o = $('#critSel option:checked'); if (o) o.innerHTML = critOptLabel(c()); } }
   else if (t.dataset.wnotes){ stepState(t.dataset.wnotes).notes = t.value; save(); const o = $('#outlineOut'); if (o) o.textContent = paperOutline(); }
   else if (t.id === 'wTitle'){ S.writing.title = t.value; save(); const o = $('#outlineOut'); if (o) o.textContent = paperOutline(); }
 });
@@ -1211,6 +1772,17 @@ document.addEventListener('change', e => {
   else if (t.id === 'paperIdeaSel'){ S.ui.paperIdea = t.value; save(); RENDER.ideas(); }
   else if (t.dataset.change === 'idea-status'){ const i = findIdea(t.dataset.id); if (i){ i.status = t.value; save(); RENDER.ideas(); toast(`Moved to ${t.value}`); } }
   else if (t.id === 'critSel'){ S.activeCrit = t.value; save(); RENDER.critique(); }
+  else if (t.dataset.arev){ (activeCrit().b[t.dataset.arev] ||= {}).rev = t.checked; save(); }
+  else if (t.dataset.refok !== undefined){ activeCrit().refs[+t.dataset.refok].ok = t.checked; save(); updateAau(); }
+  else if (t.dataset.qc !== undefined){ activeCrit().qc[+t.dataset.qc] = t.checked; t.closest('.check').classList.toggle('on', t.checked); save(); updateAau(); }
+  else if (t.id === 'pdfFile' && t.files[0]){
+    const file = t.files[0], c = activeCrit(); t.value = '';
+    toast('Reading the paper…');
+    extractPdf(file).then(pages => {
+      if (!pages.join('').trim()) { alert('No text could be extracted — the PDF may be a scanned image. Try a text-based PDF.'); return; }
+      c.paper = {name:file.name, pages}; save(); RENDER.critique(); toast(`Paper loaded: ${pages.length} pages`); $('#evq')?.focus();
+    }).catch(err => alert('Could not read this PDF. ' + (err && err.message || '')));
+  }
   else if (t.dataset.change === 'crit-rec'){ activeCrit().recommendation = t.value; save(); }
   else if (t.dataset.wcheck !== undefined){
     const st = WRITE_STEPS[S.writing.active|0], ws = stepState(st.key);
@@ -1247,6 +1819,7 @@ window.addEventListener('hashchange', () => showTab(location.hash.slice(1), fals
 
 /* ---------- Boot ---------- */
 $('.brand-mark').innerHTML = icon('cap');
+S.critiques.forEach(fixCrit);
 applyTheme();
 showTab(location.hash.slice(1) || S.ui.tab || 'hub');
 })();
