@@ -1,0 +1,1255 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ScholarPath</title>
+<meta name="description" content="ScholarPath — a research companion for master's students and early researchers: find literature, organise ideas, critique papers, write and present.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,500;8..60,600;8..60,700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f6f5f1; --surface:#ffffff; --surface-2:#f1efe9; --ink:#1a2233; --muted:#5b6476; --line:#e3e0d7;
+  --accent:#1f3a6b; --accent-hover:#16305b; --accent-ink:#ffffff; --accent-soft:#e7edf7;
+  --ok:#2d7650; --ok-soft:#e3f1e8; --warn:#9a640f; --warn-soft:#f7ecd8; --danger:#a63838; --danger-soft:#f7e3e3;
+  --violet:#5b4a9b; --violet-soft:#ece8f7; --example:#8a5a12; --example-soft:#fbf0dc;
+  --shadow:0 1px 2px rgba(20,30,50,.05),0 4px 16px rgba(20,30,50,.05);
+  --radius:14px; --radius-sm:9px;
+  --serif:"Source Serif 4",Georgia,"Times New Roman",serif;
+  --sans:Inter,system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
+  --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#0e131d; --surface:#151c2a; --surface-2:#1b2435; --ink:#e6e9f0; --muted:#9aa3b6; --line:#273145;
+    --accent:#90b0e8; --accent-hover:#a9c3f0; --accent-ink:#0e131d; --accent-soft:#1d2a44;
+    --ok:#7cc79c; --ok-soft:#173226; --warn:#e3b264; --warn-soft:#33281a; --danger:#ec8f8f; --danger-soft:#3a1f22;
+    --violet:#b6a7ec; --violet-soft:#29233f; --example:#e7b76c; --example-soft:#33291a;
+    --shadow:0 1px 2px rgba(0,0,0,.3),0 4px 18px rgba(0,0,0,.25);
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0e131d; --surface:#151c2a; --surface-2:#1b2435; --ink:#e6e9f0; --muted:#9aa3b6; --line:#273145;
+  --accent:#90b0e8; --accent-hover:#a9c3f0; --accent-ink:#0e131d; --accent-soft:#1d2a44;
+  --ok:#7cc79c; --ok-soft:#173226; --warn:#e3b264; --warn-soft:#33281a; --danger:#ec8f8f; --danger-soft:#3a1f22;
+  --violet:#b6a7ec; --violet-soft:#29233f; --example:#e7b76c; --example-soft:#33291a;
+  --shadow:0 1px 2px rgba(0,0,0,.3),0 4px 18px rgba(0,0,0,.25);
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.6 var(--sans);overflow-x:hidden}
+h1,h2,h3,h4{font-family:var(--serif);font-weight:600;line-height:1.25;margin:0 0 .4em;letter-spacing:-.005em}
+h1{font-size:1.9rem} h2{font-size:1.5rem} h3{font-size:1.15rem} h4{font-size:1rem}
+p{margin:0 0 .8em}
+a{color:var(--accent)}
+.muted{color:var(--muted)}
+.small{font-size:.86rem}
+svg.i{width:18px;height:18px;flex:none;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;vertical-align:-3px}
+
+/* Header + tabs */
+header.top{position:sticky;top:0;z-index:20;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:saturate(1.4) blur(10px);-webkit-backdrop-filter:saturate(1.4) blur(10px);border-bottom:1px solid var(--line)}
+.top-inner{max-width:1180px;margin:0 auto;padding:12px 16px 0;display:flex;flex-direction:column;gap:8px}
+.brand-row{display:flex;align-items:center;gap:12px}
+.brand{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--ink)}
+.brand-mark{width:36px;height:36px;border-radius:10px;background:var(--accent);color:var(--accent-ink);display:grid;place-items:center}
+.brand-mark svg{width:20px;height:20px}
+.brand-name{font-family:var(--serif);font-weight:700;font-size:1.3rem;letter-spacing:-.01em}
+.brand-tag{font-size:.8rem;color:var(--muted);display:none}
+@media(min-width:720px){.brand-tag{display:block}}
+.spacer{flex:1}
+nav.tabs{display:flex;gap:2px;overflow-x:auto;scrollbar-width:none;margin:0 -16px;padding:0 16px}
+nav.tabs::-webkit-scrollbar{display:none}
+.tab{appearance:none;border:0;background:none;color:var(--muted);font:500 .92rem var(--sans);padding:10px 12px 12px;display:flex;align-items:center;gap:7px;white-space:nowrap;cursor:pointer;border-bottom:2.5px solid transparent;border-radius:0}
+.tab:hover{color:var(--ink)}
+.tab[aria-selected="true"]{color:var(--accent);border-bottom-color:var(--accent)}
+.tab:focus-visible{outline:2px solid var(--accent);outline-offset:-4px;border-radius:6px}
+
+main{max-width:1180px;margin:0 auto;padding:28px 16px 80px}
+.panel[hidden]{display:none}
+.page-head{margin-bottom:22px}
+.page-head p{color:var(--muted);max-width:68ch;margin:0}
+.eyebrow{font:600 .74rem var(--sans);letter-spacing:.09em;text-transform:uppercase;color:var(--accent);margin-bottom:6px}
+
+/* Surfaces */
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:18px;box-shadow:var(--shadow)}
+.grid{display:grid;gap:14px}
+.g-auto{grid-template-columns:repeat(auto-fill,minmax(min(300px,100%),1fr))}
+.g-2{grid-template-columns:1fr}
+@media(min-width:900px){.g-2{grid-template-columns:1fr 1fr}.g-side{grid-template-columns:1.6fr 1fr}}
+.g-side{grid-template-columns:1fr}
+.stack{display:flex;flex-direction:column;gap:16px}
+.row{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.section-title{display:flex;align-items:center;gap:10px;justify-content:space-between;flex-wrap:wrap;margin:30px 0 14px}
+.section-title h2,.section-title h3{margin:0}
+
+/* Buttons */
+.btn{appearance:none;display:inline-flex;align-items:center;justify-content:center;gap:7px;border:1px solid var(--line);background:var(--surface);color:var(--ink);font:500 .9rem var(--sans);padding:8px 14px;border-radius:var(--radius-sm);cursor:pointer;text-decoration:none;min-height:38px;transition:background .15s,border-color .15s}
+.btn:hover{background:var(--surface-2)}
+.btn:focus-visible,.input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.btn.primary:hover{background:var(--accent-hover)}
+.btn.ghost{background:transparent;border-color:transparent}
+.btn.ghost:hover{background:var(--surface-2)}
+.btn.sm{padding:5px 10px;min-height:32px;font-size:.84rem}
+.btn.icon{padding:6px;min-width:34px;min-height:34px}
+.btn.danger{color:var(--danger)}
+.btn.danger:hover{background:var(--danger-soft)}
+
+/* Forms */
+label.f{display:block;font-weight:500;font-size:.86rem;margin-bottom:5px}
+.input,select,textarea{width:100%;font:inherit;color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:var(--radius-sm);padding:9px 11px;min-height:40px}
+textarea{min-height:110px;resize:vertical;line-height:1.55}
+.input::placeholder,textarea::placeholder{color:var(--muted);opacity:.8}
+.field{margin-bottom:14px}
+.fields-2{display:grid;gap:0 14px;grid-template-columns:1fr}
+@media(min-width:620px){.fields-2{grid-template-columns:1fr 1fr}}
+
+/* Chips & badges */
+.chip{display:inline-flex;align-items:center;gap:5px;font:500 .78rem var(--sans);padding:3px 9px;border-radius:999px;background:var(--surface-2);color:var(--muted);border:1px solid var(--line)}
+.chip.tag{background:var(--accent-soft);color:var(--accent);border-color:transparent}
+.badge-example{display:inline-flex;align-items:center;gap:4px;font:600 .7rem var(--sans);letter-spacing:.06em;text-transform:uppercase;padding:3px 8px;border-radius:999px;background:var(--example-soft);color:var(--example)}
+.status{font:600 .74rem var(--sans);padding:3px 9px;border-radius:999px;white-space:nowrap}
+.st-Idea{background:var(--violet-soft);color:var(--violet)}
+.st-Exploring{background:var(--accent-soft);color:var(--accent)}
+.st-Drafting{background:var(--warn-soft);color:var(--warn)}
+.st-Done{background:var(--ok-soft);color:var(--ok)}
+.filter-chips{display:flex;flex-wrap:wrap;gap:6px}
+.fchip{appearance:none;border:1px solid var(--line);background:var(--surface);color:var(--muted);font:500 .84rem var(--sans);padding:6px 12px;border-radius:999px;cursor:pointer;min-height:34px}
+.fchip[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+
+/* Resource hub */
+.db-card{display:flex;flex-direction:column;gap:8px;text-decoration:none;color:inherit;transition:transform .15s,border-color .15s}
+.db-card:hover{border-color:var(--accent);transform:translateY(-2px)}
+.db-top{display:flex;align-items:center;gap:10px}
+.db-logo{width:38px;height:38px;border-radius:10px;display:grid;place-items:center;font:700 .82rem var(--sans);color:#fff;flex:none;letter-spacing:.02em}
+.db-name{font-family:var(--serif);font-weight:600;font-size:1.05rem;flex:1}
+.db-desc{color:var(--muted);font-size:.9rem;margin:0}
+.db-cta{margin-top:auto;font-size:.82rem;color:var(--accent);display:flex;gap:5px;align-items:center;font-weight:500}
+.search-card{background:linear-gradient(135deg,var(--accent-soft),var(--surface) 70%)}
+.search-grid{display:grid;gap:12px;grid-template-columns:1fr}
+@media(min-width:760px){.search-grid{grid-template-columns:200px 1fr 120px auto;align-items:end}}
+.output{position:relative;background:var(--surface-2);border:1px solid var(--line);border-radius:var(--radius-sm);padding:12px 14px;font:13px/1.6 var(--mono);white-space:pre-wrap;word-break:break-word;color:var(--ink);max-height:520px;overflow:auto}
+.output-head{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:8px;flex-wrap:wrap}
+.tips li{margin-bottom:8px}
+.tips code,.kbd{font:12.5px var(--mono);background:var(--surface-2);border:1px solid var(--line);padding:1px 6px;border-radius:6px;white-space:nowrap}
+
+/* Ideas */
+.idea-card{display:flex;flex-direction:column;gap:10px}
+.idea-head{display:flex;gap:10px;align-items:flex-start;justify-content:space-between}
+.idea-head h3{margin:0;font-size:1.08rem}
+.rq{font-family:var(--serif);font-style:italic;color:var(--ink);border-left:3px solid var(--accent);padding:2px 0 2px 12px;margin:0}
+.kw{font-size:.84rem;color:var(--muted)}
+.card-foot{display:flex;align-items:center;gap:8px;justify-content:space-between;flex-wrap:wrap;border-top:1px solid var(--line);padding-top:10px;margin-top:auto}
+.status-select{width:auto;min-height:32px;padding:4px 8px;font-size:.84rem}
+.paper-list{display:flex;flex-direction:column;gap:10px}
+.paper{display:grid;grid-template-columns:1fr auto;gap:6px 12px;padding:14px 16px}
+.paper-title{font-family:var(--serif);font-weight:600;font-size:1.02rem;margin:0}
+.paper-meta{font-size:.86rem;color:var(--muted)}
+.takeaway{font-size:.92rem;margin:4px 0 0}
+.paper-actions{display:flex;gap:4px;align-items:flex-start}
+.empty{padding:28px;text-align:center;color:var(--muted);border:1.5px dashed var(--line);border-radius:var(--radius);background:transparent}
+
+/* Critique */
+.crit-bar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between}
+.progress{height:8px;background:var(--surface-2);border-radius:999px;overflow:hidden;border:1px solid var(--line)}
+.progress > span{display:block;height:100%;background:var(--accent);border-radius:999px;transition:width .3s}
+.sec{scroll-margin-top:130px}
+.sec-head{display:flex;align-items:center;gap:12px;margin-bottom:10px}
+.sec-num{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;font:600 .82rem var(--sans);background:var(--accent-soft);color:var(--accent);flex:none}
+.sec.filled .sec-num{background:var(--accent);color:var(--accent-ink)}
+.sec-head h3{margin:0;flex:1}
+.prompts{margin:0 0 12px;padding:12px 14px 12px 32px;background:var(--surface-2);border-radius:var(--radius-sm);font-size:.9rem;color:var(--muted)}
+.prompts li{margin-bottom:3px}
+.rating{display:flex;gap:4px;align-items:center;flex-wrap:wrap;margin-top:10px}
+.rating .lbl{font-size:.84rem;color:var(--muted);margin-right:6px}
+.rate{appearance:none;width:36px;height:36px;border-radius:9px;border:1px solid var(--line);background:var(--surface);color:var(--muted);font:600 .9rem var(--sans);cursor:pointer}
+.rate:hover{border-color:var(--accent);color:var(--accent)}
+.rate[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.rate-hint{font-size:.8rem;color:var(--muted);margin-left:6px}
+.jump{display:flex;gap:6px;overflow-x:auto;padding-bottom:4px;scrollbar-width:thin}
+.jump a{flex:none;font-size:.8rem;text-decoration:none;padding:4px 10px;border-radius:999px;background:var(--surface-2);color:var(--muted);border:1px solid var(--line)}
+.jump a.done{background:var(--accent-soft);color:var(--accent);border-color:transparent}
+@media(min-width:760px){.sticky-sub{position:sticky;top:110px;z-index:5}}
+
+/* Writing */
+.write-layout{display:grid;gap:16px;grid-template-columns:1fr}
+@media(min-width:900px){.write-layout{grid-template-columns:290px 1fr;align-items:start}.stepper{position:sticky;top:110px}}
+.stepper{display:flex;flex-direction:column;gap:2px;padding:10px}
+.step-btn{appearance:none;display:flex;align-items:center;gap:10px;width:100%;text-align:left;border:0;background:none;font:500 .9rem var(--sans);color:var(--ink);padding:9px 10px;border-radius:var(--radius-sm);cursor:pointer}
+.step-btn:hover{background:var(--surface-2)}
+.step-btn[aria-current="step"]{background:var(--accent-soft);color:var(--accent)}
+.step-dot{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;font:600 .76rem var(--sans);border:1.5px solid var(--line);color:var(--muted);flex:none;background:var(--surface)}
+.step-btn.done .step-dot{background:var(--ok);border-color:var(--ok);color:#fff}
+.step-btn .step-count{margin-left:auto;font-size:.76rem;color:var(--muted)}
+@media(max-width:899px){.stepper{flex-direction:row;overflow-x:auto;padding:8px}.step-btn{width:auto;flex:none}.step-btn .step-label,.step-btn .step-count{display:none}.step-btn[aria-current="step"] .step-label{display:inline}}
+.check{display:flex;gap:10px;align-items:flex-start;padding:8px 10px;border-radius:var(--radius-sm);cursor:pointer}
+.check:hover{background:var(--surface-2)}
+.check input{width:18px;height:18px;margin:2px 0 0;accent-color:var(--accent);flex:none}
+.check.on span{color:var(--muted);text-decoration:line-through;text-decoration-color:var(--line)}
+.explain{background:var(--accent-soft);border-radius:var(--radius-sm);padding:12px 14px;margin-bottom:14px}
+.explain p:last-child{margin:0}
+.step-nav{display:flex;justify-content:space-between;gap:10px;margin-top:14px}
+details.guide{border:1px solid var(--line);border-radius:var(--radius);background:var(--surface);box-shadow:var(--shadow)}
+details.guide + details.guide{margin-top:12px}
+details.guide summary{list-style:none;cursor:pointer;padding:16px 18px;display:flex;align-items:center;gap:10px;font-family:var(--serif);font-weight:600;font-size:1.08rem}
+details.guide summary::-webkit-details-marker{display:none}
+details.guide summary::after{content:"";margin-left:auto;width:9px;height:9px;border-right:2px solid var(--muted);border-bottom:2px solid var(--muted);transform:rotate(45deg);transition:transform .2s}
+details.guide[open] summary::after{transform:rotate(-135deg)}
+.guide-body{padding:0 18px 18px}
+.ieee-table{width:100%;border-collapse:collapse;font-size:.9rem}
+.ieee-table th,.ieee-table td{text-align:left;padding:9px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+.ieee-table th{font-weight:600;color:var(--muted);font-size:.8rem;text-transform:uppercase;letter-spacing:.04em}
+.table-wrap{overflow-x:auto}
+
+/* Presentation */
+.slides{display:grid;gap:14px;grid-template-columns:1fr}
+@media(min-width:760px){.slides{grid-template-columns:1fr 1fr}}
+.slide{display:flex;flex-direction:column;gap:8px;position:relative;overflow:hidden}
+.slide::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--accent)}
+.slide-head{display:flex;align-items:center;gap:10px}
+.slide-no{font:600 .76rem var(--sans);color:var(--accent);background:var(--accent-soft);padding:3px 9px;border-radius:999px}
+.slide-time{margin-left:auto;font:600 .8rem var(--mono);color:var(--muted)}
+.slide h3{margin:0}
+.slide ul{margin:0;padding-left:20px;font-size:.92rem}
+.notes{font-size:.86rem;color:var(--muted);background:var(--surface-2);border-radius:var(--radius-sm);padding:10px 12px;margin-top:auto}
+.notes b{color:var(--ink);font-weight:600}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:var(--radius-sm);overflow:hidden;background:var(--surface)}
+.seg button{appearance:none;border:0;background:none;font:500 .88rem var(--sans);padding:8px 14px;color:var(--muted);cursor:pointer;min-height:38px}
+.seg button + button{border-left:1px solid var(--line)}
+.seg button[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink)}
+.timeline{display:flex;height:12px;border-radius:999px;overflow:hidden;gap:2px;margin:8px 0 4px}
+.timeline span{background:var(--accent);opacity:.85}
+.timeline span:nth-child(even){opacity:.55}
+
+/* Progress */
+.stats{display:grid;gap:14px;grid-template-columns:repeat(2,1fr)}
+@media(min-width:820px){.stats{grid-template-columns:repeat(4,1fr)}}
+.stat{display:flex;flex-direction:column;gap:4px}
+.stat-ico{width:36px;height:36px;border-radius:10px;background:var(--accent-soft);color:var(--accent);display:grid;place-items:center;margin-bottom:6px}
+.stat-num{font-family:var(--serif);font-size:2.1rem;font-weight:600;line-height:1}
+.stat-lbl{color:var(--muted);font-size:.88rem}
+.bar-row{display:grid;grid-template-columns:90px 1fr 34px;gap:10px;align-items:center;margin-bottom:10px;font-size:.88rem}
+.bar{height:10px;background:var(--surface-2);border-radius:999px;overflow:hidden}
+.bar > span{display:block;height:100%;border-radius:999px}
+.steps-mini{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:8px}
+.step-mini{display:flex;align-items:center;gap:8px;font-size:.88rem;padding:8px 10px;border-radius:var(--radius-sm);background:var(--surface-2)}
+.step-mini .step-dot{width:22px;height:22px;font-size:.7rem}
+.step-mini.done .step-dot{background:var(--ok);border-color:var(--ok);color:#fff}
+
+/* Dialog + toast */
+dialog{border:1px solid var(--line);border-radius:var(--radius);background:var(--surface);color:var(--ink);padding:0;width:min(620px,calc(100vw - 32px));max-height:calc(100vh - 40px);box-shadow:0 20px 60px rgba(0,0,0,.25)}
+dialog::backdrop{background:rgba(10,15,25,.45)}
+.dlg-head{display:flex;align-items:center;justify-content:space-between;padding:16px 18px;border-bottom:1px solid var(--line)}
+.dlg-head h3{margin:0}
+.dlg-body{padding:18px}
+.dlg-foot{display:flex;justify-content:flex-end;gap:10px;padding:14px 18px;border-top:1px solid var(--line)}
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%) translateY(20px);background:var(--ink);color:var(--bg);padding:10px 18px;border-radius:999px;font-weight:500;font-size:.9rem;opacity:0;pointer-events:none;transition:all .25s;z-index:100;display:flex;gap:8px;align-items:center;max-width:calc(100vw - 32px)}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+footer.foot{max-width:1180px;margin:0 auto;padding:0 16px 40px;color:var(--muted);font-size:.84rem;text-align:center}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="top-inner">
+    <div class="brand-row">
+      <a class="brand" href="#hub" data-act="tab" data-tab="hub" aria-label="ScholarPath home">
+        <span class="brand-mark" data-icon="cap"></span>
+        <span><span class="brand-name">ScholarPath</span><span class="brand-tag">Your research companion — read, critique, write</span></span>
+      </a>
+      <span class="spacer"></span>
+      <button class="btn ghost icon" id="themeBtn" data-act="theme" title="Theme" aria-label="Change theme"></button>
+    </div>
+    <nav class="tabs" role="tablist" aria-label="Sections" id="tabs"></nav>
+  </div>
+</header>
+
+<main>
+  <section class="panel" id="panel-hub" role="tabpanel" aria-labelledby="tab-hub"></section>
+  <section class="panel" id="panel-ideas" role="tabpanel" aria-labelledby="tab-ideas" hidden></section>
+  <section class="panel" id="panel-critique" role="tabpanel" aria-labelledby="tab-critique" hidden></section>
+  <section class="panel" id="panel-write" role="tabpanel" aria-labelledby="tab-write" hidden></section>
+  <section class="panel" id="panel-present" role="tabpanel" aria-labelledby="tab-present" hidden></section>
+  <section class="panel" id="panel-progress" role="tabpanel" aria-labelledby="tab-progress" hidden></section>
+</main>
+<footer class="foot">ScholarPath saves everything in this browser only (localStorage). Use <b>My Progress → Back up</b> to keep a copy.</footer>
+
+<dialog id="dlg"><form method="dialog" id="dlgForm"></form></dialog>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<noscript><p style="padding:20px">ScholarPath needs JavaScript enabled.</p></noscript>
+
+<script>
+(() => {
+"use strict";
+
+/* ---------- Icons ---------- */
+const ICONS = {
+  cap:'<path d="M22 10 12 5 2 10l10 5 10-5z"/><path d="M6 12v5c3 2 9 2 12 0v-5"/>',
+  library:'<path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20V3H6.5A2.5 2.5 0 0 0 4 5.5z"/><path d="M4 19.5A2.5 2.5 0 0 0 6.5 22H20v-5"/>',
+  bulb:'<path d="M9 18h6M10 22h4M12 2a7 7 0 0 0-4 12.7c.6.5 1 1.3 1 2.1V17h6v-.2c0-.8.4-1.6 1-2.1A7 7 0 0 0 12 2z"/>',
+  clip:'<rect x="8" y="2" width="8" height="4" rx="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="m9 14 2 2 4-4"/>',
+  pen:'<path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/>',
+  slides:'<path d="M2 3h20M4 3v11a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V3M12 16v5M8 21h8"/>',
+  chart:'<path d="M3 3v18h18"/><path d="M7 15v2M12 10v7M17 6v11"/>',
+  search:'<circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/>',
+  sun:'<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>',
+  moon:'<path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/>',
+  auto:'<rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/>',
+  copy:'<rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>',
+  plus:'<path d="M12 5v14M5 12h14"/>',
+  trash:'<path d="M3 6h18M8 6V4h8v2M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>',
+  ext:'<path d="M15 3h6v6M10 14 21 3M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>',
+  check:'<path d="M20 6 9 17l-5-5"/>',
+  download:'<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/>',
+  upload:'<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"/>',
+  x:'<path d="M18 6 6 18M6 6l12 12"/>',
+  link:'<path d="M10 13a5 5 0 0 0 7.5.5l3-3a5 5 0 0 0-7-7l-1.7 1.7"/><path d="M14 11a5 5 0 0 0-7.5-.5l-3 3a5 5 0 0 0 7 7l1.7-1.7"/>',
+  book:'<path d="M2 4h6a4 4 0 0 1 4 4v13a3 3 0 0 0-3-3H2zM22 4h-6a4 4 0 0 0-4 4v13a3 3 0 0 1 3-3h7z"/>',
+  sparkle:'<path d="M12 3l1.9 5.1L19 10l-5.1 1.9L12 17l-1.9-5.1L5 10l5.1-1.9z"/>',
+  clock:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
+  refresh:'<path d="M21 12a9 9 0 1 1-3-6.7L21 8"/><path d="M21 3v5h-5"/>'
+};
+const icon = (n, cls='') => `<svg class="i ${cls}" viewBox="0 0 24 24" aria-hidden="true">${ICONS[n]||''}</svg>`;
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const uid = () => Math.random().toString(36).slice(2, 9) + Date.now().toString(36).slice(-4);
+const $ = (s, r=document) => r.querySelector(s);
+const $$ = (s, r=document) => [...r.querySelectorAll(s)];
+
+/* ---------- Static content ---------- */
+const TABS = [
+  {id:'hub', label:'Resource Hub', icon:'library'},
+  {id:'ideas', label:'Idea Organizer', icon:'bulb'},
+  {id:'critique', label:'Critique Studio', icon:'clip'},
+  {id:'write', label:'Write Your Paper', icon:'pen'},
+  {id:'present', label:'Presentation Builder', icon:'slides'},
+  {id:'progress', label:'My Progress', icon:'chart'}
+];
+
+const enc = encodeURIComponent;
+const DATABASES = [
+  {id:'ieee', name:'IEEE Xplore', abbr:'IEEE', color:'#00629b', url:'https://ieeexplore.ieee.org/',
+   desc:'Engineering, computing and electronics — the home of IEEE conference papers and journals.',
+   build:(q,y)=>`https://ieeexplore.ieee.org/search/searchresult.jsp?queryText=${enc(q)}${y?`&ranges=${y}_${new Date().getFullYear()}_Year`:''}`},
+  {id:'scholar', name:'Google Scholar', abbr:'GS', color:'#4285f4', url:'https://scholar.google.com/',
+   desc:'Broad first search across every discipline, with "Cited by" counts to trace influence.',
+   build:(q,y)=>`https://scholar.google.com/scholar?q=${enc(q)}${y?`&as_ylo=${y}`:''}`},
+  {id:'scopus', name:'Scopus', abbr:'Sc', color:'#e9711c', url:'https://www.scopus.com/',
+   desc:'Curated abstract & citation database — great for systematic reviews and journal metrics.',
+   build:(q,y)=>`https://www.scopus.com/results/results.uri?src=s&sot=b&sdt=b&s=${enc(`TITLE-ABS-KEY(${q})${y?` AND PUBYEAR > ${y-1}`:''}`)}`},
+  {id:'wos', name:'Web of Science', abbr:'WoS', color:'#5e33bf', url:'https://www.webofscience.com/',
+   desc:'High-quality indexed journals with powerful citation analysis and impact data.',
+   build:()=>`https://www.webofscience.com/wos/woscc/basic-search`, note:'Web of Science does not accept search links — the search page opens and your query is copied so you can paste it.'},
+  {id:'acm', name:'ACM Digital Library', abbr:'ACM', color:'#0085ca', url:'https://dl.acm.org/',
+   desc:'Computer science, HCI and computing education — CHI, FAccT, SIGCSE and more.',
+   build:(q,y)=>`https://dl.acm.org/action/doSearch?AllField=${enc(q)}${y?`&AfterYear=${y}`:''}`},
+  {id:'sd', name:'ScienceDirect', abbr:'SD', color:'#ff6c00', url:'https://www.sciencedirect.com/',
+   desc:'Elsevier journals and books across science, medicine, social science and education.',
+   build:(q,y)=>`https://www.sciencedirect.com/search?qs=${enc(q)}${y?`&years=${range(y)}`:''}`},
+  {id:'springer', name:'SpringerLink', abbr:'SL', color:'#c4302b', url:'https://link.springer.com/',
+   desc:'Springer journals, book chapters and LNCS conference proceedings.',
+   build:(q,y)=>`https://link.springer.com/search?query=${enc(q)}${y?`&date=custom&dateFrom=${y}&dateTo=${new Date().getFullYear()}`:''}`},
+  {id:'arxiv', name:'arXiv', abbr:'arXiv', color:'#b31b1b', url:'https://arxiv.org/',
+   desc:'Free preprints in AI, CS, physics and maths — the newest work, often not yet peer-reviewed.',
+   build:(q)=>`https://arxiv.org/search/?query=${enc(q)}&searchtype=all&order=-announced_date_first`},
+  {id:'s2', name:'Semantic Scholar', abbr:'S2', color:'#1857b6', url:'https://www.semanticscholar.org/',
+   desc:'AI-powered search with TLDR summaries, influential citations and related-paper feeds.',
+   build:(q,y)=>`https://www.semanticscholar.org/search?q=${enc(q)}${y?`&year%5B0%5D=${y}&year%5B1%5D=${new Date().getFullYear()}`:''}`},
+  {id:'rg', name:'ResearchGate', abbr:'RG', color:'#00a98f', url:'https://www.researchgate.net/',
+   desc:'Find full texts shared by authors, follow researchers and ask questions directly.',
+   build:(q)=>`https://www.researchgate.net/search/publication?q=${enc(q)}`}
+];
+function range(y){ const out=[]; for(let i=y;i<=new Date().getFullYear();i++) out.push(i); return out.join(','); }
+
+const STATUSES = ['Idea','Exploring','Drafting','Done'];
+
+const CRIT_SECTIONS = [
+  {key:'citation', title:'Citation details', rated:false, prompts:['Who are the authors and where are they based?','Where was it published — journal or conference? Is the venue peer-reviewed and reputable?','How recent is it, and how often has it been cited?']},
+  {key:'problem', title:'Research problem & gap', prompts:['Is the problem stated clearly and early?','What gap in prior work does the paper claim to fill?','Is the gap supported with evidence from the literature?','Why does the problem matter, and for whom?']},
+  {key:'objectives', title:'Objectives & research questions', prompts:['Are the aims or research questions stated explicitly?','Are they specific, focused and answerable?','Do they follow logically from the gap?','Are hypotheses stated where appropriate?']},
+  {key:'methodology', title:'Methodology', prompts:['Is the research design appropriate for the question?','Could another researcher replicate the study from this description?','Are instruments, variables and procedures clearly defined?','Are methodological choices justified against alternatives?']},
+  {key:'dataset', title:'Dataset & sampling', prompts:['Is the sample size justified (e.g. power analysis, saturation)?','How was the sample selected — is it representative of the target population?','Are inclusion/exclusion criteria stated?','Is the data documented or available for others?']},
+  {key:'results', title:'Results', prompts:['Do the results answer the research question?','Are statistics reported fully (effect sizes, confidence intervals — not only p-values)?','Do tables and figures support the text?','Are unexpected or negative results reported honestly?']},
+  {key:'discussion', title:'Discussion', prompts:['Are findings interpreted in light of prior work?','Do any claims go beyond what the data shows?','Are alternative explanations considered?','Are the practical implications realistic?']},
+  {key:'limitations', title:'Limitations', prompts:['Do the authors acknowledge limitations openly?','Which important limitations did they miss?','How do the limitations affect the validity of the conclusions?','Do they suggest how future work could address them?']},
+  {key:'ethics', title:'Ethical considerations', prompts:['Was ethical approval and informed consent obtained where needed?','Are privacy and data protection addressed?','Could the work harm or disadvantage any group?','Are funding and conflicts of interest disclosed?']},
+  {key:'contribution', title:'Contribution', prompts:['What is genuinely new — theory, method, data or application?','How significant is it for the field?','Is it clearly positioned against the closest prior work?','Would you cite this paper? Why?']},
+  {key:'verdict', title:'Overall verdict', prompts:['Overall, how convincing is the paper?','What are its two or three main strengths?','What are its two or three main weaknesses?','Would you recommend accept, minor revision, major revision or reject?']}
+];
+const RATING_LABELS = ['','Poor','Weak','Adequate','Good','Excellent'];
+const RECS = ['','Accept','Minor revision','Major revision','Reject'];
+
+const WRITE_STEPS = [
+  {key:'topic', title:'Choose your topic', explain:'Start broad, then narrow. A good master\'s topic sits where your interest, your supervisor\'s expertise and accessible data overlap. Aim for something you can finish — not something that would take a whole career.',
+   checks:['It genuinely interests me and I can sustain it for months','It fits my programme and my supervisor\'s expertise','I can access the data, participants or tools it needs','It is narrow enough to finish in the time available']},
+  {key:'gap', title:'Find the gap', explain:'A research gap is what the literature has not yet answered: an untested population, a contradictory finding, an outdated method or a missing context. Look at the "future work" and "limitations" sections of recent papers — they often name gaps directly.',
+   checks:['I have read at least 10–15 recent papers on the topic','I can name what is missing, contested or untested','I can cite papers that point to this gap','I can explain in one sentence why the gap matters']},
+  {key:'question', title:'Write the research question', explain:'Turn the gap into one clear, answerable question (plus sub-questions if needed). Test it with FINER: Feasible, Interesting, Novel, Ethical, Relevant. The question decides your method — not the other way round.',
+   checks:['My question is specific and answerable','It aligns directly with the gap','I know what evidence would answer it','It passes the FINER test']},
+  {key:'litreview', title:'Literature review', explain:'Organise by themes or debates, not paper-by-paper summaries. Compare, contrast and critique sources, then end by showing how the gap leads naturally to your question.',
+   checks:['Organised by themes, not one paper at a time','Compares and critiques sources rather than only describing them','Ends by linking the gap to my research question','Mostly recent, peer-reviewed sources']},
+  {key:'methodology', title:'Methodology', explain:'Describe what you did in enough detail that someone else could repeat it: design, participants or data, instruments, procedure, analysis and ethics. Justify every major choice.',
+   checks:['Design is justified for my question','Sample/data described with a sampling rationale','Procedures detailed enough to replicate','Ethics approval and consent addressed','Analysis method stated (tests, metrics or coding scheme)']},
+  {key:'results', title:'Results', explain:'Report what you found — objectively and without interpretation. Follow the order of your research questions and let well-labelled tables and figures carry the detail.',
+   checks:['Results follow the order of my research questions','Tables and figures are numbered, captioned and cited in the text','Reported without interpretation','Effect sizes or uncertainty included where relevant']},
+  {key:'discussion', title:'Discussion', explain:'Explain what the results mean. Link each finding to the literature, explain surprises, admit limitations, and state the implications for practice and future research.',
+   checks:['Each key finding is interpreted and linked to the literature','Unexpected results are explained','Limitations are discussed honestly','Implications for practice and research are stated']},
+  {key:'conclusion', title:'Conclusion', explain:'Answer your research question directly, summarise your contribution and point to future work. No new data or citations here — keep it short and confident.',
+   checks:['Directly answers the research question','Summarises the contribution without new data','Suggests concrete future work','Kept short (one to three paragraphs)']},
+  {key:'abstract', title:'Abstract', explain:'Write the abstract last. In 150–250 words cover: background, aim, method, key result and conclusion. Many readers only read this — make every sentence count.',
+   checks:['Covers background, aim, method, key result and conclusion','Within the word limit (often 150–250 words)','No citations or undefined abbreviations','Includes 4–6 keywords']},
+  {key:'references', title:'References', explain:'Use a reference manager from day one (Zotero, Mendeley or EndNote). Check that every in-text citation appears in the list and that one style — e.g. IEEE or APA — is applied consistently.',
+   checks:['Every in-text citation is in the reference list (and vice versa)','One citation style applied consistently','DOIs or URLs included where available','Managed with a reference tool']}
+];
+
+const SELF_REVIEW = [
+  ['Clarity','Every paragraph has one clear point; jargon is defined; a non-specialist could follow the argument.'],
+  ['Originality','I can state my contribution in one sentence and show how it differs from the closest prior work.'],
+  ['Alignment','Research question → method → results → conclusion form one consistent chain.'],
+  ['Citation accuracy','Every citation is correct, traceable and supports the claim it is attached to.'],
+  ['Formatting','The paper follows the target template (e.g. IEEE two-column) — headings, figures, tables, equations.'],
+  ['Word / page limits','Abstract, main text and references are within the venue\'s limits.'],
+  ['Plagiarism check','I ran a similarity check (e.g. Turnitin, iThenticate) and paraphrased or quoted properly.'],
+  ['Ethics & disclosure','Ethics approval, data availability, AI-tool use and funding are disclosed as the venue requires.']
+];
+
+const IMRAD = `TITLE — concise, specific, includes key variables / population
+ABSTRACT (150–250 words)
+  Background · Aim · Method · Key results · Conclusion · Keywords (4–6)
+
+1. INTRODUCTION — "Why did I do this?"
+   • Context: the broad area and why it matters
+   • What is known: key prior work (brief)
+   • The gap: what is missing or contested
+   • Aim and research question(s) / hypotheses
+   • Contribution and paper roadmap
+
+2. METHODS — "What did I do?"
+   • Research design and justification
+   • Participants / dataset and sampling
+   • Instruments, materials or tools
+   • Procedure (step by step, replicable)
+   • Data analysis approach
+   • Ethical considerations
+
+3. RESULTS — "What did I find?"
+   • Findings in the order of the research questions
+   • Tables and figures with clear captions
+   • Statistics with effect sizes / uncertainty
+   • No interpretation yet
+
+AND
+
+4. DISCUSSION — "What does it mean?"
+   • Answer to the research question
+   • Comparison with prior studies
+   • Explanation of unexpected findings
+   • Limitations
+   • Implications for practice and research
+
+5. CONCLUSION
+   • Main takeaway and contribution
+   • Future work
+
+REFERENCES · APPENDICES`;
+
+const IEEE_GUIDE = [
+  ['Title','Short, informative, no abbreviations. Usually under 15 words.'],
+  ['Authors & affiliations','Name, department, institution, city, country, email. Blind for double-anonymous review.'],
+  ['Abstract','One paragraph, ~150–250 words, no citations, figures or equations.'],
+  ['Index Terms','4–6 keywords, alphabetical, ideally from the IEEE Taxonomy.'],
+  ['I. Introduction','Context, problem, gap, contribution (often a bullet list) and paper organisation.'],
+  ['II. Related Work','Thematic review of prior work, ending with how your work differs.'],
+  ['III. Methodology / Proposed Approach','System, framework, dataset and experimental setup in replicable detail.'],
+  ['IV. Results','Experiments, metrics, tables and figures (Fig. 1, TABLE I) referenced in the text.'],
+  ['V. Discussion','Interpretation, comparison with baselines, limitations and threats to validity.'],
+  ['VI. Conclusion','Summary of contributions and future work. Not numbered in some templates.'],
+  ['Acknowledgment','Funding and support (note IEEE spelling: "Acknowledgment").'],
+  ['References','Numbered in order of first citation: [1], [2]… e.g. A. Author, "Title," <i>Venue</i>, vol., no., pp., year, doi.']
+];
+const IEEE_TEXT = 'IEEE PAPER STRUCTURE\n' + IEEE_GUIDE.map(([a,b]) => `• ${a}: ${b.replace(/<[^>]+>/g,'')}`).join('\n') +
+  '\n\nFormatting reminders\n• Two-column layout, Times New Roman 10 pt, US Letter or A4 per the call for papers\n• Use the official IEEE template (Word or LaTeX "IEEEtran")\n• Figures: "Fig. 1." captions below; Tables: "TABLE I" captions above\n• Typical conference length: 4–8 pages including references — check the venue';
+
+const SLIDES = [
+  {key:'title', title:'Title', w:.05, tip:'Introduce yourself and the paper in one breath. Say why you chose it — a personal hook earns attention.'},
+  {key:'background', title:'Background', w:.12, tip:'Give just enough context for a non-specialist. One idea per slide; use a visual instead of a wall of text.'},
+  {key:'problem', title:'Problem & research question', w:.12, tip:'State the gap and the question clearly — this is the slide people remember. Pause after reading the question.'},
+  {key:'method', title:'Method', w:.15, tip:'Use a simple diagram of the process (data → method → analysis). Skip details you can answer in Q&A.'},
+  {key:'findings', title:'Key findings', w:.2, tip:'Lead with the single most important result. Highlight the number that matters; explain what it means in plain words.'},
+  {key:'critique', title:'Critique: strengths & weaknesses', w:.16, tip:'Be balanced and specific: two strengths, two weaknesses, each with evidence. Critique the work, not the authors.'},
+  {key:'conclusion', title:'Conclusion & implications', w:.1, tip:'Return to the question and answer it. End with one takeaway sentence the audience can repeat.'},
+  {key:'qa', title:'Questions & answers', w:.1, tip:'Prepare three likely questions in advance. Repeat each question before answering; it is fine to say "that is a great question for future work".'}
+];
+const TALK_GUIDE = {
+  5:'Lightning talk: 6–8 slides. Merge Background into Problem and keep Method to one diagram. Rehearse to 4:30 so you never rush the conclusion.',
+  10:'Standard talk: 8–10 slides, roughly one minute each. This is the most common format for class presentations and conference short papers.',
+  15:'Full talk: 10–14 slides. You can split Findings across two slides and add a slide on Limitations or Future work.'
+};
+
+/* ---------- Example data ---------- */
+function exampleCritique(){
+  return {
+    id:'ex-crit-1', example:true, created:Date.now(), recommendation:'Accept',
+    citation:{authors:'Joy Buolamwini, Timnit Gebru', title:'Gender Shades: Intersectional Accuracy Disparities in Commercial Gender Classification', year:'2018', venue:'Proceedings of the 1st Conference on Fairness, Accountability and Transparency, PMLR 81, pp. 77–91', doi:'https://proceedings.mlr.press/v81/buolamwini18a.html'},
+    sections:{
+      citation:{text:'Highly cited, foundational paper in algorithmic fairness, published at the first FAT* (now ACM FAccT) conference. Peer-reviewed and widely used as a model for audit studies.'},
+      problem:{rating:5,text:'Clear problem: commercial facial-analysis systems were reported with high overall accuracy, but nobody had checked how accuracy varies across intersecting subgroups (gender × skin type). The gap is well motivated by the lack of phenotypically balanced benchmarks.'},
+      objectives:{rating:4,text:'The aim is explicit — measure intersectional accuracy disparities in commercial gender classifiers. Objectives are focused and measurable, though formal research questions or hypotheses are not stated as such.'},
+      methodology:{rating:4,text:'An audit design: three commercial gender-classification APIs (Microsoft, IBM, Face++) are tested on a new benchmark and errors are broken down by subgroup. Simple, transparent and replicable. Using the Fitzpatrick skin-type scale instead of race labels is a thoughtful choice.'},
+      dataset:{rating:3,text:'The Pilot Parliaments Benchmark (1,270 images of parliamentarians from three African and three European countries) is better balanced than existing datasets. However, official portraits are posed, well-lit and high-quality, so they may not represent real-world images, and the sample covers only six countries.'},
+      results:{rating:5,text:'Results directly answer the aim: all systems performed worst on darker-skinned women, with error rates up to 34.7%, versus at most 0.8% for lighter-skinned men. Tables are clear and the subgroup breakdown makes the disparity impossible to miss.'},
+      discussion:{rating:4,text:'Convincingly argues that aggregate accuracy hides subgroup failures and calls for intersectional reporting and more inclusive benchmarks. Could discuss more about why the disparities arise (training data vs. model design).'},
+      limitations:{rating:3,text:'Binary gender labels are a known simplification. Only three systems were tested at one point in time, and commercial APIs change. Skin-type labels were assigned manually, which introduces some subjectivity.'},
+      ethics:{rating:4,text:'Uses publicly available images of public figures, which reduces privacy concerns. Raises important questions about deploying biased systems. Consent of the depicted parliamentarians is not discussed.'},
+      contribution:{rating:5,text:'A new balanced benchmark, an intersectional evaluation method, and strong evidence that influenced industry practice and policy. Highly relevant as a template for auditing AI for under-represented groups — e.g. Arabic speakers.'},
+      verdict:{rating:5,text:'A short, clear and highly influential audit study. Strengths: simple replicable method, striking evidence, real-world impact. Weaknesses: posed-image dataset, binary gender labels, limited number of systems. Strongly recommended reading for anyone working on fairness.'}
+    }
+  };
+}
+function seedState(){
+  const ideaId = 'ex-idea-1';
+  return {
+    v:1,
+    ideas:[{id:ideaId, example:true, created:Date.now(), status:'Exploring',
+      title:'Auditing Arabic-language fairness in generative AI tutors',
+      question:'Do generative AI writing tutors give Arabic-speaking primary learners lower-quality feedback than English-speaking learners on equivalent tasks?',
+      keywords:'generative AI, algorithmic fairness, Arabic NLP, multilingual LLMs, AI in education',
+      tags:['fairness','arabic','education']}],
+    papers:[
+      {id:'ex-paper-1', example:true, ideaId, created:Date.now(), title:'Gender Shades: Intersectional Accuracy Disparities in Commercial Gender Classification', authors:'J. Buolamwini, T. Gebru', year:'2018', venue:'Conf. on Fairness, Accountability and Transparency (PMLR 81)', link:'https://proceedings.mlr.press/v81/buolamwini18a.html', takeaway:'High average accuracy hid error rates up to 34.7% for darker-skinned women — always audit by subgroup, not just on average.'},
+      {id:'ex-paper-2', example:true, ideaId, created:Date.now(), title:'On the Dangers of Stochastic Parrots: Can Language Models Be Too Big?', authors:'E. M. Bender, T. Gebru, A. McMillan-Major, S. Shmitchell', year:'2021', venue:'ACM FAccT 2021', link:'https://doi.org/10.1145/3442188.3445922', takeaway:'Bigger web-scraped training data does not mean more diverse data; under-represented languages and communities need curated, documented datasets.'}
+    ],
+    critiques:[exampleCritique()],
+    activeCrit:'ex-crit-1',
+    writing:{title:'', active:0, steps:{}, review:{}},
+    pres:{source:'crit:ex-crit-1', minutes:10},
+    ui:{tab:'hub', db:'scholar', status:'All', tag:'', paperIdea:''},
+    theme:'auto'
+  };
+}
+
+/* ---------- Storage ---------- */
+const KEY = 'scholarpath.v1';
+let S;
+try { S = JSON.parse(localStorage.getItem(KEY)); } catch { S = null; }
+if (!S || typeof S !== 'object' || !Array.isArray(S.ideas)) S = seedState();
+// fill any missing keys (forward-compatible)
+const base = seedState();
+for (const k of Object.keys(base)) if (S[k] === undefined) S[k] = base[k];
+S.ui = Object.assign({}, base.ui, S.ui);
+S.writing = Object.assign({}, base.writing, S.writing);
+S.pres = Object.assign({}, base.pres, S.pres);
+
+let saveTimer;
+function save(){
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(() => { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch { toast('Could not save — browser storage is full or blocked'); } }, 250);
+}
+window.addEventListener('beforeunload', () => { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch {} });
+
+/* ---------- Helpers ---------- */
+function toast(msg){
+  const t = $('#toast'); t.innerHTML = icon('check') + esc(msg); t.classList.add('show');
+  clearTimeout(toast._t); toast._t = setTimeout(() => t.classList.remove('show'), 2200);
+}
+async function copyText(text, msg='Copied to clipboard'){
+  try { await navigator.clipboard.writeText(text); }
+  catch {
+    const ta = document.createElement('textarea'); ta.value = text; ta.style.position='fixed'; ta.style.opacity='0';
+    document.body.appendChild(ta); ta.select(); try { document.execCommand('copy'); } catch {} ta.remove();
+  }
+  toast(msg);
+}
+const exampleBadge = o => o && o.example ? `<span class="badge-example" title="Example content — edit or delete it any time">${icon('sparkle')}Example</span>` : '';
+const copyBtn = (target, label='Copy') => `<button class="btn sm" data-act="copy" data-target="${target}">${icon('copy')}${label}</button>`;
+const findIdea = id => S.ideas.find(i => i.id === id);
+const activeCrit = () => S.critiques.find(c => c.id === S.activeCrit) || S.critiques[0];
+const sentences = t => (t||'').replace(/\s+/g,' ').trim().split(/(?<=[.!?])\s+(?=[A-Z0-9"“(])/).filter(Boolean);
+const clip = (s, n=150) => s.length > n ? s.slice(0, n-1).replace(/\s+\S*$/,'') + '…' : s;
+
+function critFilled(c, key){
+  if (key === 'citation') return !!(c.citation.title||'').trim();
+  const s = c.sections[key] || {};
+  return !!(s.text||'').trim() && !!s.rating;
+}
+function critProgress(c){ const n = CRIT_SECTIONS.filter(s => critFilled(c, s.key)).length; return {n, total:CRIT_SECTIONS.length}; }
+const critDone = c => { const p = critProgress(c); return p.n === p.total; };
+function critAvg(c){
+  const r = CRIT_SECTIONS.filter(s => s.rated !== false).map(s => (c.sections[s.key]||{}).rating).filter(Boolean);
+  return r.length ? (r.reduce((a,b)=>a+b,0)/r.length) : 0;
+}
+const stepState = k => (S.writing.steps[k] ||= {checks:[], notes:''});
+const stepDone = st => { const ws = stepState(st.key); return st.checks.every((_,i) => ws.checks[i]); };
+const stepCount = st => { const ws = stepState(st.key); return st.checks.filter((_,i) => ws.checks[i]).length; };
+
+/* ---------- Tabs & theme ---------- */
+function renderTabs(){
+  $('#tabs').innerHTML = TABS.map(t => `<button class="tab" role="tab" id="tab-${t.id}" aria-controls="panel-${t.id}" aria-selected="${S.ui.tab===t.id}" tabindex="${S.ui.tab===t.id?0:-1}" data-act="tab" data-tab="${t.id}">${icon(t.icon)}${t.label}</button>`).join('');
+}
+const RENDER = {};
+function showTab(id, push=true){
+  if (!TABS.some(t => t.id === id)) id = 'hub';
+  S.ui.tab = id; save();
+  renderTabs();
+  for (const t of TABS) $('#panel-'+t.id).hidden = t.id !== id;
+  RENDER[id]();
+  if (push && location.hash !== '#'+id) history.replaceState(null, '', '#'+id);
+  const tb = $('#tab-'+id); tb && tb.scrollIntoView({block:'nearest', inline:'nearest'});
+}
+function applyTheme(){
+  const root = document.documentElement;
+  if (S.theme === 'auto') root.removeAttribute('data-theme'); else root.setAttribute('data-theme', S.theme);
+  const label = {auto:'Theme: follows system', light:'Theme: light', dark:'Theme: dark'}[S.theme];
+  $('#themeBtn').innerHTML = icon({auto:'auto', light:'sun', dark:'moon'}[S.theme]);
+  $('#themeBtn').title = label; $('#themeBtn').setAttribute('aria-label', label + ' (click to change)');
+}
+
+/* ---------- 1. Resource Hub ---------- */
+RENDER.hub = () => {
+  const db = DATABASES.find(d => d.id === S.ui.db) || DATABASES[1];
+  $('#panel-hub').innerHTML = `
+  <div class="page-head"><div class="eyebrow">Resource Hub</div><h1>Find the literature</h1>
+  <p>Ten trusted databases in one place. Pick a database, type your keywords, and ScholarPath builds the search link for you.</p></div>
+
+  <div class="card search-card">
+    <h3 style="display:flex;gap:8px;align-items:center">${icon('search')}Search builder</h3>
+    <div class="search-grid">
+      <div><label class="f" for="dbSel">Database</label>
+        <select id="dbSel">${DATABASES.map(d => `<option value="${d.id}" ${d.id===db.id?'selected':''}>${esc(d.name)}</option>`).join('')}</select></div>
+      <div><label class="f" for="q">Keywords</label>
+        <input class="input" id="q" placeholder='e.g. "algorithmic fairness" AND Arabic AND (LLM OR "large language model")' value="${esc(S.ui.q||'')}"></div>
+      <div><label class="f" for="yr">From year</label>
+        <input class="input" id="yr" type="number" inputmode="numeric" min="1900" max="${new Date().getFullYear()}" placeholder="Any" value="${esc(S.ui.yr||'')}"></div>
+      <div><button class="btn primary" data-act="search" style="width:100%">${icon('ext')}Search</button></div>
+    </div>
+    <div id="searchOut" style="margin-top:14px"></div>
+  </div>
+
+  <div class="section-title"><h2>Databases</h2><span class="muted small">Tap a card to open the database</span></div>
+  <div class="grid g-auto">
+    ${DATABASES.map(d => `<a class="card db-card" href="${d.url}" target="_blank" rel="noopener">
+      <div class="db-top"><span class="db-logo" style="background:${d.color}">${d.abbr}</span><span class="db-name">${esc(d.name)}</span></div>
+      <p class="db-desc">${esc(d.desc)}</p>
+      <span class="db-cta">Open ${icon('ext')}</span></a>`).join('')}
+  </div>
+
+  <div class="section-title"><h2>Search tips</h2></div>
+  <div class="grid g-2">
+    <div class="card"><h3>Boolean operators</h3><ul class="tips">
+      <li><code>AND</code> narrows — both terms must appear: <code>fairness AND Arabic</code></li>
+      <li><code>OR</code> widens — either term: <code>LLM OR "large language model"</code></li>
+      <li><code>NOT</code> excludes: <code>bias NOT "selection bias"</code></li>
+      <li><code>( )</code> group terms: <code>(Arabic OR multilingual) AND fairness</code></li>
+      <li><code>*</code> truncation (most databases): <code>educat*</code> → education, educational</li></ul></div>
+    <div class="card"><h3>Phrases, dates & more</h3><ul class="tips">
+      <li><b>Quotation marks</b> find exact phrases: <code>"reading comprehension"</code></li>
+      <li><b>Date filters</b>: use the last 5 years for current debates, but keep seminal older papers.</li>
+      <li><b>Field search</b>: limit to title/abstract (Scopus <code>TITLE-ABS-KEY()</code>) for precision.</li>
+      <li><b>Snowballing</b>: check a key paper's references (backward) and "Cited by" (forward).</li>
+      <li><b>Keep a search log</b>: record database, query, date and number of results — essential for systematic reviews.</li></ul></div>
+  </div>`;
+};
+function buildSearch(){
+  const db = DATABASES.find(d => d.id === $('#dbSel').value);
+  const q = $('#q').value.trim(); const y = parseInt($('#yr').value, 10) || 0;
+  S.ui.db = db.id; S.ui.q = q; S.ui.yr = y || ''; save();
+  if (!q){ $('#searchOut').innerHTML = `<p class="muted small" style="margin:0">Type some keywords first.</p>`; $('#q').focus(); return null; }
+  const url = db.build(q, y);
+  const notes = [];
+  if (db.note) notes.push(db.note);
+  if (y && ['arxiv','rg','wos'].includes(db.id)) notes.push(`${db.name} does not support a year filter in links — apply it on the results page.`);
+  $('#searchOut').innerHTML = `
+    <div class="output-head"><span class="small muted">Search link for <b>${esc(db.name)}</b></span>
+      <span class="row">${copyBtn('#searchUrl','Copy link')}<a class="btn sm primary" href="${esc(url)}" target="_blank" rel="noopener">${icon('ext')}Open</a></span></div>
+    <div class="output" id="searchUrl">${esc(url)}</div>
+    ${notes.map(n => `<p class="small muted" style="margin:8px 0 0">${esc(n)}</p>`).join('')}`;
+  return {db, url, q};
+}
+
+/* ---------- 2. Idea Organizer ---------- */
+RENDER.ideas = () => {
+  const tags = [...new Set(S.ideas.flatMap(i => i.tags||[]))].sort();
+  if (S.ui.tag && !tags.includes(S.ui.tag)) S.ui.tag = '';
+  const ideas = S.ideas.filter(i => (S.ui.status==='All' || i.status===S.ui.status) && (!S.ui.tag || (i.tags||[]).includes(S.ui.tag)));
+  const papers = S.papers.filter(p => !S.ui.paperIdea || (S.ui.paperIdea==='none' ? !findIdea(p.ideaId) : p.ideaId===S.ui.paperIdea));
+  const counts = Object.fromEntries(STATUSES.map(s => [s, S.ideas.filter(i => i.status===s).length]));
+  $('#panel-ideas').innerHTML = `
+  <div class="page-head"><div class="eyebrow">Idea Organizer</div><h1>Shape your research ideas</h1>
+  <p>Capture ideas as cards, move them from <i>Idea</i> to <i>Done</i>, and build a reading list linked to each one.</p></div>
+
+  <div class="section-title"><h2>Ideas</h2><button class="btn primary" data-act="idea-new">${icon('plus')}New idea</button></div>
+  <div class="row" style="margin-bottom:10px">
+    <div class="filter-chips" role="group" aria-label="Filter by status">
+      ${['All',...STATUSES].map(s => `<button class="fchip" data-act="filter-status" data-v="${s}" aria-pressed="${S.ui.status===s}">${s}${s==='All'?` (${S.ideas.length})`:` (${counts[s]})`}</button>`).join('')}
+    </div>
+    ${tags.length ? `<span class="spacer"></span><label class="sr-only" for="tagSel">Filter by tag</label>
+      <select id="tagSel" style="width:auto"><option value="">All tags</option>${tags.map(t => `<option ${t===S.ui.tag?'selected':''}>${esc(t)}</option>`).join('')}</select>` : ''}
+  </div>
+  ${ideas.length ? `<div class="grid g-auto">${ideas.map(ideaCard).join('')}</div>`
+    : `<div class="empty">${S.ideas.length ? 'No ideas match this filter.' : 'No ideas yet — add your first one.'}</div>`}
+
+  <div class="section-title"><h2>Reading list</h2>
+    <div class="row">
+      <label class="sr-only" for="paperIdeaSel">Show papers for</label>
+      <select id="paperIdeaSel" style="width:auto;max-width:260px"><option value="">All papers (${S.papers.length})</option>
+        ${S.ideas.map(i => `<option value="${i.id}" ${S.ui.paperIdea===i.id?'selected':''}>${esc(clip(i.title,40))}</option>`).join('')}
+        <option value="none" ${S.ui.paperIdea==='none'?'selected':''}>Not linked to an idea</option></select>
+      <button class="btn primary" data-act="paper-new">${icon('plus')}Log paper</button>
+    </div></div>
+  ${papers.length ? `<div class="paper-list">${papers.map(paperRow).join('')}</div>` : `<div class="empty">No papers here yet. Log papers as you read them.</div>`}`;
+};
+function ideaCard(i){
+  const n = S.papers.filter(p => p.ideaId === i.id).length;
+  return `<article class="card idea-card">
+    <div class="idea-head"><h3>${esc(i.title)}</h3>${exampleBadge(i)}</div>
+    ${i.question ? `<p class="rq">${esc(i.question)}</p>` : ''}
+    ${i.keywords ? `<div class="kw"><b>Keywords:</b> ${esc(i.keywords)}</div>` : ''}
+    ${(i.tags||[]).length ? `<div class="row" style="gap:6px">${i.tags.map(t => `<span class="chip tag">#${esc(t)}</span>`).join('')}</div>` : ''}
+    <div class="card-foot">
+      <label class="sr-only" for="st-${i.id}">Status</label>
+      <select class="status-select" id="st-${i.id}" data-change="idea-status" data-id="${i.id}">${STATUSES.map(s => `<option ${s===i.status?'selected':''}>${s}</option>`).join('')}</select>
+      <button class="btn ghost sm" data-act="idea-papers" data-id="${i.id}" title="Show linked papers">${icon('book')}${n} paper${n===1?'':'s'}</button>
+      <span class="row" style="gap:2px">
+        <button class="btn ghost icon" data-act="idea-edit" data-id="${i.id}" aria-label="Edit idea">${icon('pen')}</button>
+        <button class="btn ghost icon danger" data-act="idea-del" data-id="${i.id}" aria-label="Delete idea">${icon('trash')}</button>
+      </span>
+    </div></article>`;
+}
+function paperRow(p){
+  const idea = findIdea(p.ideaId);
+  const meta = [p.authors, p.year, p.venue].filter(Boolean).map(esc).join(' · ');
+  return `<article class="card paper">
+    <div>
+      <div class="row" style="gap:8px;margin-bottom:2px"><h3 class="paper-title">${p.link ? `<a href="${esc(safeUrl(p.link))}" target="_blank" rel="noopener">${esc(p.title)}</a>` : esc(p.title)}</h3>${exampleBadge(p)}</div>
+      ${meta ? `<div class="paper-meta">${meta}</div>` : ''}
+      ${p.takeaway ? `<p class="takeaway"><b>Takeaway:</b> ${esc(p.takeaway)}</p>` : ''}
+      ${idea ? `<div style="margin-top:8px"><span class="chip">${icon('link')}${esc(clip(idea.title,60))}</span></div>` : ''}
+    </div>
+    <div class="paper-actions">
+      <button class="btn ghost icon" data-act="paper-edit" data-id="${p.id}" aria-label="Edit paper">${icon('pen')}</button>
+      <button class="btn ghost icon danger" data-act="paper-del" data-id="${p.id}" aria-label="Delete paper">${icon('trash')}</button>
+    </div></article>`;
+}
+const safeUrl = u => /^https?:\/\//i.test(u) ? u : (/^[\w.-]+\.[a-z]{2,}/i.test(u) ? 'https://' + u : '#');
+
+function openDialog(title, body, onSave, saveLabel='Save'){
+  const dlg = $('#dlg'), form = $('#dlgForm');
+  form.innerHTML = `<div class="dlg-head"><h3>${esc(title)}</h3><button type="button" class="btn ghost icon" data-close aria-label="Close">${icon('x')}</button></div>
+    <div class="dlg-body">${body}</div>
+    <div class="dlg-foot"><button type="button" class="btn" data-close>Cancel</button><button type="submit" class="btn primary" value="save">${icon('check')}${esc(saveLabel)}</button></div>`;
+  $$('[data-close]', form).forEach(b => b.onclick = () => dlg.close());
+  form.onsubmit = e => {
+    e.preventDefault();
+    const data = Object.fromEntries(new FormData(form).entries());
+    if (onSave(data) !== false) dlg.close();
+  };
+  dlg.showModal();
+  const first = $('input,textarea,select', form); first && first.focus();
+}
+function ideaDialog(id){
+  const i = id ? findIdea(id) : {title:'',question:'',keywords:'',tags:[],status:'Idea'};
+  openDialog(id ? 'Edit idea' : 'New research idea', `
+    <div class="field"><label class="f" for="d-title">Title *</label><input class="input" id="d-title" name="title" required value="${esc(i.title)}" placeholder="A short working title"></div>
+    <div class="field"><label class="f" for="d-q">Research question</label><textarea id="d-q" name="question" style="min-height:80px" placeholder="What exactly do you want to find out?">${esc(i.question)}</textarea></div>
+    <div class="field"><label class="f" for="d-kw">Keywords</label><input class="input" id="d-kw" name="keywords" value="${esc(i.keywords)}" placeholder="comma-separated, used for database searches"></div>
+    <div class="fields-2">
+      <div class="field"><label class="f" for="d-tags">Tags</label><input class="input" id="d-tags" name="tags" value="${esc((i.tags||[]).join(', '))}" placeholder="e.g. fairness, literacy"></div>
+      <div class="field"><label class="f" for="d-st">Status</label><select id="d-st" name="status">${STATUSES.map(s => `<option ${s===i.status?'selected':''}>${s}</option>`).join('')}</select></div>
+    </div>`, d => {
+      const rec = {title:d.title.trim(), question:d.question.trim(), keywords:d.keywords.trim(), status:d.status,
+        tags:[...new Set(d.tags.split(',').map(t => t.trim().replace(/^#/,'').toLowerCase()).filter(Boolean))]};
+      if (!rec.title) return false;
+      if (id) Object.assign(i, rec); else S.ideas.unshift({id:uid(), created:Date.now(), ...rec});
+      save(); RENDER.ideas(); toast(id ? 'Idea updated' : 'Idea added');
+    });
+}
+function paperDialog(id){
+  const p = id ? S.papers.find(x => x.id === id) : {title:'',authors:'',year:'',venue:'',link:'',takeaway:'',ideaId:S.ui.paperIdea && S.ui.paperIdea!=='none' ? S.ui.paperIdea : ''};
+  openDialog(id ? 'Edit paper' : 'Log a paper', `
+    <div class="field"><label class="f" for="p-title">Title *</label><input class="input" id="p-title" name="title" required value="${esc(p.title)}"></div>
+    <div class="field"><label class="f" for="p-auth">Authors</label><input class="input" id="p-auth" name="authors" value="${esc(p.authors)}" placeholder="e.g. A. Author, B. Author"></div>
+    <div class="fields-2">
+      <div class="field"><label class="f" for="p-year">Year</label><input class="input" id="p-year" name="year" inputmode="numeric" value="${esc(p.year)}"></div>
+      <div class="field"><label class="f" for="p-venue">Venue</label><input class="input" id="p-venue" name="venue" value="${esc(p.venue)}" placeholder="Journal or conference"></div>
+    </div>
+    <div class="field"><label class="f" for="p-link">Link or DOI</label><input class="input" id="p-link" name="link" value="${esc(p.link)}" placeholder="https://doi.org/…"></div>
+    <div class="field"><label class="f" for="p-take">One-line takeaway</label><input class="input" id="p-take" name="takeaway" value="${esc(p.takeaway)}" placeholder="What will you remember from this paper?"></div>
+    <div class="field"><label class="f" for="p-idea">Linked idea</label><select id="p-idea" name="ideaId"><option value="">— None —</option>${S.ideas.map(i => `<option value="${i.id}" ${i.id===p.ideaId?'selected':''}>${esc(i.title)}</option>`).join('')}</select></div>`,
+    d => {
+      const rec = {title:d.title.trim(), authors:d.authors.trim(), year:d.year.trim(), venue:d.venue.trim(), link:d.link.trim(), takeaway:d.takeaway.trim(), ideaId:d.ideaId};
+      if (!rec.title) return false;
+      if (/^10\.\d{4,}\//.test(rec.link)) rec.link = 'https://doi.org/' + rec.link;
+      if (id) Object.assign(p, rec); else S.papers.unshift({id:uid(), created:Date.now(), ...rec});
+      save(); RENDER.ideas(); toast(id ? 'Paper updated' : 'Paper logged');
+    });
+}
+
+/* ---------- 3. Critique Studio ---------- */
+RENDER.critique = () => {
+  if (!S.critiques.length) S.critiques.push(newCritique());
+  const c = activeCrit(); S.activeCrit = c.id;
+  const p = critProgress(c);
+  $('#panel-critique').innerHTML = `
+  <div class="page-head"><div class="eyebrow">Paper Critique Studio</div><h1>Review a paper, section by section</h1>
+  <p>Work through each part of the paper with the guiding questions, rate it from 1 to 5, then generate a formatted critique you can copy.</p></div>
+
+  <div class="card">
+    <div class="crit-bar">
+      <div class="row" style="flex:1;min-width:240px">
+        <label class="sr-only" for="critSel">Choose critique</label>
+        <select id="critSel" style="flex:1;max-width:460px">${S.critiques.map(x => `<option value="${x.id}" ${x.id===c.id?'selected':''}>${x.example?'[Example] ':''}${esc(clip(x.citation.title||'Untitled critique',70))}</option>`).join('')}</select>
+        ${exampleBadge(c)}
+      </div>
+      <div class="row">
+        <button class="btn" data-act="crit-new">${icon('plus')}New critique</button>
+        <button class="btn ghost danger" data-act="crit-del">${icon('trash')}Delete</button>
+      </div>
+    </div>
+    ${c.example ? `<p class="small muted" style="margin:12px 0 0">This is an <b>example critique</b> of a real, well-known paper so you can see what a complete review looks like. Edit it freely, or start a new one.</p>`:''}
+  </div>
+
+  <div class="card sticky-sub" style="margin-top:16px;padding:12px 16px">
+    <div class="row" style="justify-content:space-between;margin-bottom:8px"><b class="small" id="critCount">${p.n} of ${p.total} sections complete</b><a class="small" href="#critSummaryCard" data-act="crit-summary">Generate summary ↓</a></div>
+    <div class="progress"><span id="critBar" style="width:${p.n/p.total*100}%"></span></div>
+    <nav class="jump" style="margin-top:10px" aria-label="Jump to section">${CRIT_SECTIONS.map((s,i) => `<a href="#sec-${s.key}" data-act="jump" data-key="${s.key}" class="${critFilled(c,s.key)?'done':''}">${i+1}. ${s.title.split(' ')[0].replace(/[,&]/g,'')}</a>`).join('')}</nav>
+  </div>
+
+  <div class="stack" style="margin-top:16px">${CRIT_SECTIONS.map((s,i) => critSection(c, s, i)).join('')}</div>
+
+  <div class="card" id="critSummaryCard" style="margin-top:16px">
+    <div class="output-head"><h3 style="margin:0">Critique summary</h3>
+      <span class="row"><button class="btn primary sm" data-act="crit-summary">${icon('refresh')}Generate</button>${copyBtn('#critSummary')}</span></div>
+    <div class="output" id="critSummary">${esc(critSummary(c))}</div>
+  </div>`;
+};
+function critSection(c, s, i){
+  const st = c.sections[s.key] || {};
+  let fields = '';
+  if (s.key === 'citation'){
+    const ci = c.citation;
+    fields = `<div class="fields-2">
+      <div class="field" style="grid-column:1/-1"><label class="f" for="ci-title">Paper title</label><input class="input" id="ci-title" data-cite="title" value="${esc(ci.title)}"></div>
+      <div class="field"><label class="f" for="ci-auth">Authors</label><input class="input" id="ci-auth" data-cite="authors" value="${esc(ci.authors)}"></div>
+      <div class="field"><label class="f" for="ci-year">Year</label><input class="input" id="ci-year" data-cite="year" value="${esc(ci.year)}"></div>
+      <div class="field"><label class="f" for="ci-venue">Journal / conference</label><input class="input" id="ci-venue" data-cite="venue" value="${esc(ci.venue)}"></div>
+      <div class="field"><label class="f" for="ci-doi">DOI or link</label><input class="input" id="ci-doi" data-cite="doi" value="${esc(ci.doi)}"></div>
+    </div>`;
+  }
+  const rated = s.rated !== false;
+  return `<section class="card sec ${critFilled(c,s.key)?'filled':''}" id="sec-${s.key}" data-sec="${s.key}">
+    <div class="sec-head"><span class="sec-num">${i+1}</span><h3>${s.title}</h3></div>
+    <ul class="prompts">${s.prompts.map(q => `<li>${esc(q)}</li>`).join('')}</ul>
+    ${fields}
+    <label class="f" for="ct-${s.key}">${s.key==='citation'?'Notes on the source (optional)':'Your analysis'}</label>
+    <textarea id="ct-${s.key}" data-crit="${s.key}" placeholder="Write your critical notes…">${esc(st.text||'')}</textarea>
+    ${rated ? `<div class="rating" role="group" aria-label="Rating for ${esc(s.title)}"><span class="lbl">Rating</span>
+      ${[1,2,3,4,5].map(n => `<button type="button" class="rate" data-act="rate" data-key="${s.key}" data-v="${n}" aria-pressed="${st.rating===n}" title="${RATING_LABELS[n]}">${n}</button>`).join('')}
+      <span class="rate-hint" data-hint="${s.key}">${st.rating ? RATING_LABELS[st.rating] : 'Not rated'}</span></div>` : ''}
+    ${s.key==='verdict' ? `<div class="field" style="margin:14px 0 0;max-width:320px"><label class="f" for="ct-rec">Recommendation</label>
+      <select id="ct-rec" data-change="crit-rec">${RECS.map(r => `<option value="${r}" ${r===c.recommendation?'selected':''}>${r||'— Choose —'}</option>`).join('')}</select></div>` : ''}
+  </section>`;
+}
+function newCritique(){ return {id:uid(), created:Date.now(), recommendation:'', citation:{authors:'',title:'',year:'',venue:'',doi:''}, sections:{}}; }
+function critSummary(c){
+  const ci = c.citation, avg = critAvg(c);
+  const ref = [ci.authors, ci.year && `(${ci.year})`].filter(Boolean).join(' ') + (ci.title ? `. "${ci.title}."` : '') + (ci.venue ? ` ${ci.venue}.` : '') + (ci.doi ? ` ${ci.doi}` : '');
+  const L = [];
+  L.push('CRITICAL REVIEW' + (c.example ? ' (EXAMPLE)' : ''));
+  L.push('='.repeat(48));
+  L.push(ci.title || 'Untitled paper');
+  if (ref.trim()) L.push(ref.trim());
+  L.push('');
+  L.push(`Overall rating: ${avg ? avg.toFixed(1) + ' / 5' : 'not yet rated'}` + (c.recommendation ? `   |   Recommendation: ${c.recommendation}` : ''));
+  L.push(`Sections completed: ${critProgress(c).n} / ${CRIT_SECTIONS.length}`);
+  for (const s of CRIT_SECTIONS){
+    const st = c.sections[s.key] || {};
+    if (s.key === 'citation' && !(st.text||'').trim()) continue;
+    L.push('');
+    L.push(`${s.title.toUpperCase()}${st.rating ? `  [${st.rating}/5 – ${RATING_LABELS[st.rating]}]` : ''}`);
+    L.push('-'.repeat(Math.min(48, s.title.length + 14)));
+    L.push((st.text||'').trim() || '(not yet written)');
+  }
+  const rated = CRIT_SECTIONS.filter(s => (c.sections[s.key]||{}).rating);
+  if (rated.length >= 2){
+    const sorted = [...rated].sort((a,b) => c.sections[b.key].rating - c.sections[a.key].rating);
+    L.push('');
+    L.push('AT A GLANCE');
+    L.push('-'.repeat(20));
+    const strong = sorted.filter(s => c.sections[s.key].rating >= 4).map(s => s.title);
+    L.push('Strongest: ' + (strong.length ? strong.join(', ') : '—'));
+    const weak = sorted.filter(s => c.sections[s.key].rating <= 3).map(s => s.title);
+    L.push('Needs work: ' + (weak.length ? weak.join(', ') : '—'));
+  }
+  return L.join('\n');
+}
+function updateCritChrome(){
+  const c = activeCrit(), p = critProgress(c);
+  const bar = $('#critBar'); if (!bar) return;
+  bar.style.width = (p.n/p.total*100) + '%';
+  $('#critCount').textContent = `${p.n} of ${p.total} sections complete`;
+  CRIT_SECTIONS.forEach(s => {
+    const f = critFilled(c, s.key);
+    $(`#sec-${s.key}`)?.classList.toggle('filled', f);
+    $(`.jump a[data-key="${s.key}"]`)?.classList.toggle('done', f);
+  });
+}
+
+/* ---------- 4. Write Your Paper ---------- */
+RENDER.write = () => {
+  const a = Math.min(Math.max(S.writing.active|0, 0), WRITE_STEPS.length-1);
+  const st = WRITE_STEPS[a], ws = stepState(st.key);
+  const doneN = WRITE_STEPS.filter(stepDone).length;
+  const revN = SELF_REVIEW.filter((_,i) => S.writing.review[i]).length;
+  $('#panel-write').innerHTML = `
+  <div class="page-head"><div class="eyebrow">Write Your Paper</div><h1>From topic to references, step by step</h1>
+  <p>Ten steps to an original paper. Each step explains what to do, gives you a checklist, and a place for your notes. A step is complete when every box is ticked.</p></div>
+
+  <div class="card" style="margin-bottom:16px">
+    <div class="fields-2" style="align-items:end">
+      <div class="field" style="margin:0"><label class="f" for="wTitle">Working title of your paper</label>
+        <input class="input" id="wTitle" value="${esc(S.writing.title)}" placeholder="e.g. Fairness of AI writing feedback for Arabic-speaking learners"></div>
+      <div><div class="row" style="justify-content:space-between;margin-bottom:6px"><span class="small"><b id="wDoneN">${doneN}</b> of ${WRITE_STEPS.length} steps complete</span></div>
+        <div class="progress"><span id="wBar" style="width:${doneN/WRITE_STEPS.length*100}%"></span></div></div>
+    </div>
+  </div>
+
+  <div class="write-layout">
+    <nav class="card stepper" aria-label="Writing steps" id="stepper">${stepperHTML(a)}</nav>
+    <div class="card">
+      <div class="row" style="justify-content:space-between;margin-bottom:6px"><span class="eyebrow" style="margin:0">Step ${a+1} of ${WRITE_STEPS.length}</span></div>
+      <h2>${st.title}</h2>
+      <div class="explain"><p>${esc(st.explain)}</p></div>
+      <h4>Checklist</h4>
+      <div style="margin:0 -10px 14px">${st.checks.map((ch,i) => `<label class="check ${ws.checks[i]?'on':''}"><input type="checkbox" data-wcheck="${i}" ${ws.checks[i]?'checked':''}><span>${esc(ch)}</span></label>`).join('')}</div>
+      <label class="f" for="wNotes">My notes for this step</label>
+      <textarea id="wNotes" data-wnotes="${st.key}" style="min-height:160px" placeholder="Draft sentences, sources, decisions, questions for your supervisor…">${esc(ws.notes)}</textarea>
+      <div class="step-nav">
+        <button class="btn" data-act="wstep" data-v="${a-1}" ${a===0?'disabled':''}>← Previous</button>
+        <button class="btn primary" data-act="wstep" data-v="${a+1}" ${a===WRITE_STEPS.length-1?'disabled':''}>Next step →</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-title"><h2>Guides & templates</h2></div>
+  <details class="guide"><summary>${icon('book')}IMRaD template</summary><div class="guide-body">
+    <p class="muted">The standard structure for empirical papers: <b>I</b>ntroduction, <b>M</b>ethods, <b>R</b>esults <b>a</b>nd <b>D</b>iscussion. Paste it into your document as a skeleton.</p>
+    <div class="output-head"><span></span>${copyBtn('#imradOut','Copy template')}</div>
+    <div class="output" id="imradOut">${esc(IMRAD)}</div></div></details>
+  <details class="guide"><summary>${icon('library')}IEEE paper structure guide</summary><div class="guide-body">
+    <div class="table-wrap"><table class="ieee-table"><thead><tr><th>Section</th><th>What goes here</th></tr></thead>
+    <tbody>${IEEE_GUIDE.map(([s,d]) => `<tr><td><b>${s}</b></td><td>${d}</td></tr>`).join('')}</tbody></table></div>
+    <p class="small muted" style="margin-top:12px">Formatting: two-column, Times New Roman 10 pt, official IEEE template (Word or LaTeX <span class="kbd">IEEEtran</span>). Figure captions go below ("Fig. 1."), table captions above ("TABLE I"). Always check the venue's call for papers for page limits.</p>
+    <div class="output-head"><span></span>${copyBtn('#ieeeOut','Copy guide')}</div>
+    <div class="output" id="ieeeOut" style="max-height:200px">${esc(IEEE_TEXT)}</div></div></details>
+  <details class="guide"><summary>${icon('clip')}My paper outline (generated from your notes)</summary><div class="guide-body">
+    <p class="muted">A running outline built from your working title and step notes — handy for sharing with a supervisor.</p>
+    <div class="output-head"><span></span>${copyBtn('#outlineOut','Copy outline')}</div>
+    <div class="output" id="outlineOut">${esc(paperOutline())}</div></div></details>
+
+  <div class="section-title"><h2>Self-review before submission</h2><span class="small muted"><b id="revN">${revN}</b> / ${SELF_REVIEW.length} checked</span></div>
+  <div class="card"><div style="margin:0 -10px">
+    ${SELF_REVIEW.map(([t,d],i) => `<label class="check ${S.writing.review[i]?'on':''}"><input type="checkbox" data-review="${i}" ${S.writing.review[i]?'checked':''}><span><b>${t}</b> — ${esc(d)}</span></label>`).join('')}
+  </div>
+  <p class="small muted" id="revMsg" style="margin:10px 0 0">${revN===SELF_REVIEW.length ? '✓ Ready to submit — good luck!' : 'Tick every item before you press submit.'}</p></div>`;
+};
+function stepperHTML(a){
+  return WRITE_STEPS.map((s,i) => `<button class="step-btn ${stepDone(s)?'done':''}" data-act="wstep" data-v="${i}" ${i===a?'aria-current="step"':''} title="${esc(s.title)}">
+    <span class="step-dot">${stepDone(s) ? icon('check') : i+1}</span><span class="step-label">${s.title}</span><span class="step-count">${stepCount(s)}/${s.checks.length}</span></button>`).join('');
+}
+function paperOutline(){
+  const L = [(S.writing.title || 'Untitled paper').toUpperCase(), ''];
+  WRITE_STEPS.forEach((s,i) => {
+    const ws = stepState(s.key);
+    L.push(`${i+1}. ${s.title} ${stepDone(s) ? '✓' : `(${stepCount(s)}/${s.checks.length})`}`);
+    L.push(ws.notes.trim() ? ws.notes.trim().split('\n').map(x => '   ' + x).join('\n') : '   —');
+    L.push('');
+  });
+  return L.join('\n').trim();
+}
+
+/* ---------- 5. Presentation Builder ---------- */
+function presSources(){
+  return [
+    ...S.critiques.map(c => ({id:'crit:'+c.id, label:`Critique: ${c.example?'[Example] ':''}${clip(c.citation.title||'Untitled',60)}${critDone(c)?' ✓':''}`})),
+    {id:'paper', label:`My paper outline: ${clip(S.writing.title||'Untitled', 60)}`}
+  ];
+}
+function bullets(text, n=3, fallback){
+  const s = sentences(text).slice(0, n).map(x => clip(x, 160));
+  return s.length ? s : [fallback];
+}
+function buildSlides(){
+  const src = S.pres.source || '';
+  if (src.startsWith('crit:')){
+    const c = S.critiques.find(x => 'crit:'+x.id === src);
+    if (c){
+      const sec = k => (c.sections[k]||{}).text || '';
+      const r = k => (c.sections[k]||{}).rating;
+      const ph = k => `[Add your ${CRIT_SECTIONS.find(s=>s.key===k).title.toLowerCase()} notes in the Critique Studio]`;
+      const rated = CRIT_SECTIONS.filter(s => r(s.key) && s.key!=='verdict');
+      const strengths = rated.filter(s => r(s.key) >= 4).map(s => `${s.title} (${r(s.key)}/5)`);
+      const weaknesses = rated.filter(s => r(s.key) <= 3).map(s => `${s.title} (${r(s.key)}/5)`);
+      const ci = c.citation;
+      return {
+        title:{h:ci.title||'Paper title', b:[[ci.authors, ci.year].filter(Boolean).join(', ') || 'Authors, year', ci.venue || 'Venue', 'A critical review by: [your name]']},
+        background:{b:bullets(sec('citation') || sec('problem'), 2, ph('problem'))},
+        problem:{b:[...bullets(sec('problem'), 2, ph('problem')), ...bullets(sec('objectives'), 1, ph('objectives'))]},
+        method:{b:[...bullets(sec('methodology'), 2, ph('methodology')), ...bullets(sec('dataset'), 1, ph('dataset'))]},
+        findings:{b:bullets(sec('results'), 3, ph('results'))},
+        critique:{b:[
+          'Strengths: ' + (strengths.join(', ') || 'rate sections 4–5 to list them'),
+          'Weaknesses: ' + (weaknesses.join(', ') || 'rate sections 1–3 to list them'),
+          ...bullets(sec('limitations'), 1, ph('limitations')),
+          ...(sec('ethics') ? bullets(sec('ethics'), 1, '') : [])
+        ]},
+        conclusion:{b:[...bullets(sec('verdict'), 2, ph('verdict')), ...bullets(sec('contribution'), 1, ph('contribution')),
+          ...(c.recommendation ? [`Recommendation: ${c.recommendation}${critAvg(c) ? ` — overall ${critAvg(c).toFixed(1)}/5` : ''}`] : [])]},
+        qa:{b:['Thank you — questions?','Prepare: Would the results hold with a different sample?','Prepare: How could this study be improved or extended?']}
+      };
+    }
+  }
+  const n = k => stepState(k).notes;
+  const ph = k => `[Add notes to "${WRITE_STEPS.find(s=>s.key===k).title}" in Write Your Paper]`;
+  return {
+    title:{h:S.writing.title||'Your paper title', b:['[Your name], [Institution]','[Course / conference], [date]']},
+    background:{b:bullets(n('topic') + ' ' + n('litreview'), 3, ph('litreview'))},
+    problem:{b:[...bullets(n('gap'), 2, ph('gap')), ...bullets(n('question'), 1, ph('question'))]},
+    method:{b:bullets(n('methodology'), 3, ph('methodology'))},
+    findings:{b:bullets(n('results'), 3, ph('results'))},
+    critique:{h:'Strengths & limitations of my study', b:bullets(n('discussion'), 3, ph('discussion'))},
+    conclusion:{b:bullets(n('conclusion') || n('abstract'), 3, ph('conclusion'))},
+    qa:{b:['Thank you — questions?','Contact: [email]','Prepare: What would you do differently with more time?']}
+  };
+}
+const fmtTime = s => `${Math.floor(s/60)}:${String(Math.round(s%60)).padStart(2,'0')}`;
+function slidePlan(){
+  const sl = buildSlides(), total = S.pres.minutes * 60;
+  let cum = 0;
+  return SLIDES.map((d,i) => { const secs = Math.round(total*d.w/5)*5; const start = cum; cum += secs; return {...d, n:i+1, secs, start, h:sl[d.key].h, b:sl[d.key].b.filter(Boolean)}; });
+}
+function presOutline(plan){
+  const src = presSources().find(s => s.id === S.pres.source);
+  const L = [`PRESENTATION OUTLINE — ${S.pres.minutes}-minute talk`, `Source: ${src ? src.label : ''}`, '='.repeat(48), ''];
+  plan.forEach(s => {
+    L.push(`SLIDE ${s.n}: ${s.title}${s.h ? ` — ${s.h}` : ''}   [${fmtTime(s.secs)} · starts at ${fmtTime(s.start)}]`);
+    s.b.forEach(b => L.push(`  • ${b}`));
+    L.push(`  Speaker notes: ${s.tip}`);
+    L.push('');
+  });
+  L.push('Timing tip: ' + TALK_GUIDE[S.pres.minutes]);
+  return L.join('\n');
+}
+RENDER.present = () => {
+  const sources = presSources();
+  if (!sources.some(s => s.id === S.pres.source)) S.pres.source = sources[0].id;
+  const plan = slidePlan();
+  $('#panel-present').innerHTML = `
+  <div class="page-head"><div class="eyebrow">Presentation Builder</div><h1>Turn your work into a talk</h1>
+  <p>Choose a critique or your paper outline, pick a talk length, and get a suggested slide structure with speaker notes and timings.</p></div>
+
+  <div class="card"><div class="fields-2" style="align-items:end">
+    <div class="field" style="margin:0"><label class="f" for="presSrc">Build from</label>
+      <select id="presSrc">${sources.map(s => `<option value="${s.id}" ${s.id===S.pres.source?'selected':''}>${esc(s.label)}</option>`).join('')}</select></div>
+    <div><span class="f" style="display:block;font-weight:500;font-size:.86rem;margin-bottom:5px">Talk length</span>
+      <div class="seg" role="group" aria-label="Talk length">${[5,10,15].map(m => `<button data-act="pres-min" data-v="${m}" aria-pressed="${S.pres.minutes===m}">${m} min</button>`).join('')}</div></div>
+  </div>
+  <p class="small muted" style="margin:14px 0 4px">${icon('clock')} ${esc(TALK_GUIDE[S.pres.minutes])}</p>
+  <div class="timeline" aria-hidden="true">${plan.map(s => `<span style="flex:${s.secs}" title="${esc(s.title)} · ${fmtTime(s.secs)}"></span>`).join('')}</div>
+  </div>
+
+  <div class="section-title"><h2>Suggested slides</h2>${copyBtn('#presOut','Copy outline')}</div>
+  <div class="slides">${plan.map(s => `<article class="card slide">
+    <div class="slide-head"><span class="slide-no">Slide ${s.n}</span><span class="slide-time">${icon('clock')} ${fmtTime(s.secs)}</span></div>
+    <h3>${esc(s.title)}</h3>${s.h ? `<div class="muted small" style="margin-top:-4px">${esc(s.h)}</div>` : ''}
+    <ul>${s.b.map(b => `<li>${esc(b)}</li>`).join('')}</ul>
+    <div class="notes"><b>Speaker notes:</b> ${esc(s.tip)}</div></article>`).join('')}</div>
+
+  <div class="card" style="margin-top:16px"><div class="output-head"><h3 style="margin:0">Full outline (plain text)</h3>${copyBtn('#presOut','Copy outline')}</div>
+  <div class="output" id="presOut">${esc(presOutline(plan))}</div></div>`;
+};
+
+/* ---------- 6. My Progress ---------- */
+RENDER.progress = () => {
+  const done = S.critiques.filter(critDone).length;
+  const stepsDone = WRITE_STEPS.filter(stepDone).length;
+  const revN = SELF_REVIEW.filter((_,i) => S.writing.review[i]).length;
+  const linked = S.papers.filter(p => findIdea(p.ideaId)).length;
+  const colors = {Idea:'var(--violet)', Exploring:'var(--accent)', Drafting:'var(--warn)', Done:'var(--ok)'};
+  const maxS = Math.max(1, ...STATUSES.map(s => S.ideas.filter(i => i.status===s).length));
+  const examples = S.ideas.some(x=>x.example) || S.papers.some(x=>x.example) || S.critiques.some(x=>x.example);
+  const stat = (ic, n, lbl, sub, tab) => `<button class="card stat" data-act="tab" data-tab="${tab}" style="text-align:left;cursor:pointer;font:inherit;color:inherit">
+    <span class="stat-ico">${icon(ic)}</span><span class="stat-num">${n}</span><span class="stat-lbl">${lbl}</span><span class="small muted">${sub}</span></button>`;
+  $('#panel-progress').innerHTML = `
+  <div class="page-head"><div class="eyebrow">My Progress</div><h1>Your research at a glance</h1>
+  <p>Every idea, paper, critique and writing step you complete is counted here. Small steps add up.</p></div>
+
+  <div class="stats">
+    ${stat('bulb', S.ideas.length, 'Research ideas', `${S.ideas.filter(i=>i.status==='Done').length} done`, 'ideas')}
+    ${stat('book', S.papers.length, 'Papers logged', `${linked} linked to an idea`, 'ideas')}
+    ${stat('clip', done, 'Critiques completed', `${S.critiques.length} started`, 'critique')}
+    ${stat('pen', `${stepsDone}<span class="muted" style="font-size:1.1rem">/${WRITE_STEPS.length}</span>`, 'Writing steps done', `Self-review ${revN}/${SELF_REVIEW.length}`, 'write')}
+  </div>
+
+  <div class="grid g-2" style="margin-top:16px">
+    <div class="card"><h3>Ideas by status</h3>
+      ${STATUSES.map(s => { const n = S.ideas.filter(i => i.status===s).length; return `<div class="bar-row"><span>${s}</span><span class="bar"><span style="width:${n/maxS*100}%;background:${colors[s]}"></span></span><b>${n}</b></div>`; }).join('')}
+    </div>
+    <div class="card"><h3>Critiques</h3>
+      ${S.critiques.length ? S.critiques.map(c => { const p = critProgress(c); return `<div class="bar-row" style="grid-template-columns:1fr 90px 44px"><span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${esc(c.citation.title)}">${esc(c.citation.title||'Untitled')}${c.example?' <span class="badge-example">Ex</span>':''}</span><span class="bar"><span style="width:${p.n/p.total*100}%;background:var(--accent)"></span></span><b>${p.n}/${p.total}</b></div>`; }).join('') : '<p class="muted">No critiques yet.</p>'}
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:16px"><h3>Writing path</h3>
+    <div class="steps-mini">${WRITE_STEPS.map((s,i) => `<div class="step-mini ${stepDone(s)?'done':''}"><span class="step-dot">${stepDone(s)?icon('check'):i+1}</span>${s.title}</div>`).join('')}</div>
+  </div>
+
+  <div class="section-title"><h2>Your data</h2></div>
+  <div class="card">
+    <p class="muted" style="margin-top:0">Everything is stored privately in this browser. Download a backup to move your work to another device or keep it safe.</p>
+    <div class="row">
+      <button class="btn primary" data-act="export">${icon('download')}Back up (JSON)</button>
+      <label class="btn" for="importFile" style="cursor:pointer">${icon('upload')}Restore backup</label>
+      <input type="file" id="importFile" accept="application/json,.json" hidden>
+      ${examples ? `<button class="btn" data-act="clear-examples">${icon('x')}Remove examples</button>` : `<button class="btn" data-act="add-examples">${icon('sparkle')}Add examples back</button>`}
+      <button class="btn danger" data-act="reset">${icon('trash')}Reset everything</button>
+    </div>
+  </div>`;
+};
+
+/* ---------- Event handling ---------- */
+const ACTIONS = {
+  tab: el => { showTab(el.dataset.tab); window.scrollTo({top:0}); },
+  theme: () => { S.theme = {auto:'light', light:'dark', dark:'auto'}[S.theme] || 'auto'; applyTheme(); save(); toast({auto:'Theme follows your system', light:'Light mode', dark:'Dark mode'}[S.theme]); },
+  copy: el => { const t = $(el.dataset.target); if (t) copyText(t.textContent); },
+  search: () => { const r = buildSearch(); if (!r) return; window.open(r.url, '_blank', 'noopener'); if (r.db.note) copyText(r.q, 'Query copied — paste it into Web of Science'); },
+  'filter-status': el => { S.ui.status = el.dataset.v; save(); RENDER.ideas(); },
+  'idea-new': () => ideaDialog(),
+  'idea-edit': el => ideaDialog(el.dataset.id),
+  'idea-del': el => {
+    const i = findIdea(el.dataset.id); if (!i || !confirm(`Delete the idea "${i.title}"? Linked papers stay in your reading list.`)) return;
+    S.ideas = S.ideas.filter(x => x !== i); S.papers.forEach(p => { if (p.ideaId === i.id) p.ideaId = ''; });
+    if (S.ui.paperIdea === i.id) S.ui.paperIdea = '';
+    save(); RENDER.ideas(); toast('Idea deleted');
+  },
+  'idea-papers': el => { S.ui.paperIdea = el.dataset.id; save(); RENDER.ideas(); $('#paperIdeaSel')?.scrollIntoView({behavior:'smooth', block:'center'}); },
+  'paper-new': () => paperDialog(),
+  'paper-edit': el => paperDialog(el.dataset.id),
+  'paper-del': el => {
+    const p = S.papers.find(x => x.id === el.dataset.id); if (!p || !confirm(`Remove "${p.title}" from your reading list?`)) return;
+    S.papers = S.papers.filter(x => x !== p); save(); RENDER.ideas(); toast('Paper removed');
+  },
+  'crit-new': () => { const c = newCritique(); S.critiques.unshift(c); S.activeCrit = c.id; save(); RENDER.critique(); toast('New critique started'); $('#ci-title')?.focus(); },
+  'crit-del': () => {
+    const c = activeCrit(); if (!confirm(`Delete the critique "${c.citation.title || 'Untitled'}"? This cannot be undone.`)) return;
+    S.critiques = S.critiques.filter(x => x !== c); S.activeCrit = S.critiques[0]?.id; save(); RENDER.critique(); toast('Critique deleted');
+  },
+  rate: el => {
+    const c = activeCrit(), k = el.dataset.key, v = +el.dataset.v;
+    const st = c.sections[k] ||= {};
+    st.rating = st.rating === v ? 0 : v; save();
+    $$(`.rate[data-key="${k}"]`).forEach(b => b.setAttribute('aria-pressed', +b.dataset.v === st.rating));
+    $(`[data-hint="${k}"]`).textContent = st.rating ? RATING_LABELS[st.rating] : 'Not rated';
+    updateCritChrome();
+  },
+  'crit-summary': (el, e) => { e.preventDefault(); $('#critSummary').textContent = critSummary(activeCrit()); $('#critSummaryCard').scrollIntoView({behavior:'smooth', block:'start'}); toast('Summary generated'); },
+  jump: (el, e) => { e.preventDefault(); $('#sec-'+el.dataset.key)?.scrollIntoView({behavior:'smooth', block:'start'}); },
+  wstep: el => { S.writing.active = +el.dataset.v; save(); RENDER.write(); $('#stepper')?.scrollIntoView({behavior:'smooth', block:'nearest'}); },
+  'pres-min': el => { S.pres.minutes = +el.dataset.v; save(); RENDER.present(); },
+  export: () => {
+    const blob = new Blob([JSON.stringify(S, null, 2)], {type:'application/json'});
+    const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
+    a.download = `scholarpath-backup-${new Date().toISOString().slice(0,10)}.json`; a.click();
+    setTimeout(() => URL.revokeObjectURL(a.href), 1000); toast('Backup downloaded');
+  },
+  'clear-examples': () => {
+    if (!confirm('Remove the example idea, papers and critique? Your own work is kept.')) return;
+    S.ideas = S.ideas.filter(x => !x.example); S.papers = S.papers.filter(x => !x.example); S.critiques = S.critiques.filter(x => !x.example);
+    if (!S.critiques.some(c => c.id === S.activeCrit)) S.activeCrit = S.critiques[0]?.id;
+    save(); RENDER.progress(); toast('Examples removed');
+  },
+  'add-examples': () => {
+    const b = seedState();
+    S.ideas.push(...b.ideas.filter(x => !findIdea(x.id))); S.papers.push(...b.papers.filter(x => !S.papers.some(p => p.id === x.id)));
+    if (!S.critiques.some(c => c.id === 'ex-crit-1')) S.critiques.push(exampleCritique());
+    save(); RENDER.progress(); toast('Examples added');
+  },
+  reset: () => {
+    if (!confirm('Reset ScholarPath? All your ideas, papers, critiques and notes will be deleted from this browser. Consider downloading a backup first.')) return;
+    const theme = S.theme; S = seedState(); S.theme = theme; S.ui.tab = 'progress'; save(); showTab('progress'); toast('ScholarPath reset');
+  }
+};
+document.addEventListener('click', e => {
+  const el = e.target.closest('[data-act]'); if (!el || el.disabled) return;
+  const fn = ACTIONS[el.dataset.act]; if (!fn) return;
+  if (el.tagName === 'A') e.preventDefault();
+  fn(el, e);
+});
+document.addEventListener('keydown', e => {
+  if (e.target.id === 'q' && e.key === 'Enter'){ e.preventDefault(); ACTIONS.search(); }
+  if (e.target.classList.contains('tab') && (e.key === 'ArrowRight' || e.key === 'ArrowLeft')){
+    const i = TABS.findIndex(t => t.id === S.ui.tab), n = TABS[(i + (e.key === 'ArrowRight' ? 1 : -1) + TABS.length) % TABS.length];
+    showTab(n.id); $('#tab-'+n.id).focus();
+  }
+});
+document.addEventListener('input', e => {
+  const t = e.target, c = () => activeCrit();
+  if (t.id === 'q' || t.id === 'yr'){ S.ui[t.id] = t.value; save(); }
+  else if (t.dataset.crit){ const s = c().sections[t.dataset.crit] ||= {}; s.text = t.value; save(); updateCritChrome(); }
+  else if (t.dataset.cite){ c().citation[t.dataset.cite] = t.value; save(); updateCritChrome();
+    if (t.dataset.cite === 'title'){ const o = $('#critSel option:checked'); if (o) o.textContent = (c().example?'[Example] ':'') + clip(t.value || 'Untitled critique', 70); } }
+  else if (t.dataset.wnotes){ stepState(t.dataset.wnotes).notes = t.value; save(); const o = $('#outlineOut'); if (o) o.textContent = paperOutline(); }
+  else if (t.id === 'wTitle'){ S.writing.title = t.value; save(); const o = $('#outlineOut'); if (o) o.textContent = paperOutline(); }
+});
+document.addEventListener('change', e => {
+  const t = e.target;
+  if (t.id === 'dbSel'){ S.ui.db = t.value; save(); if ($('#q').value.trim()) buildSearch(); }
+  else if (t.id === 'tagSel'){ S.ui.tag = t.value; save(); RENDER.ideas(); }
+  else if (t.id === 'paperIdeaSel'){ S.ui.paperIdea = t.value; save(); RENDER.ideas(); }
+  else if (t.dataset.change === 'idea-status'){ const i = findIdea(t.dataset.id); if (i){ i.status = t.value; save(); RENDER.ideas(); toast(`Moved to ${t.value}`); } }
+  else if (t.id === 'critSel'){ S.activeCrit = t.value; save(); RENDER.critique(); }
+  else if (t.dataset.change === 'crit-rec'){ activeCrit().recommendation = t.value; save(); }
+  else if (t.dataset.wcheck !== undefined){
+    const st = WRITE_STEPS[S.writing.active|0], ws = stepState(st.key);
+    ws.checks[+t.dataset.wcheck] = t.checked; save();
+    t.closest('.check').classList.toggle('on', t.checked);
+    $('#stepper').innerHTML = stepperHTML(S.writing.active|0);
+    const d = WRITE_STEPS.filter(stepDone).length; $('#wDoneN').textContent = d; $('#wBar').style.width = (d/WRITE_STEPS.length*100)+'%';
+    $('#outlineOut').textContent = paperOutline();
+    if (stepDone(st) && t.checked) toast(`Step complete: ${st.title}`);
+  }
+  else if (t.dataset.review !== undefined){
+    S.writing.review[+t.dataset.review] = t.checked; save();
+    t.closest('.check').classList.toggle('on', t.checked);
+    const n = SELF_REVIEW.filter((_,i) => S.writing.review[i]).length;
+    $('#revN').textContent = n; $('#revMsg').textContent = n === SELF_REVIEW.length ? '✓ Ready to submit — good luck!' : 'Tick every item before you press submit.';
+  }
+  else if (t.id === 'presSrc'){ S.pres.source = t.value; save(); RENDER.present(); }
+  else if (t.id === 'importFile' && t.files[0]){
+    const r = new FileReader();
+    r.onload = () => {
+      try {
+        const d = JSON.parse(r.result);
+        if (!d || !Array.isArray(d.ideas) || !Array.isArray(d.papers) || !Array.isArray(d.critiques)) throw new Error('bad');
+        if (!confirm('Replace your current ScholarPath data with this backup?')) return;
+        S = Object.assign(seedState(), d); S.ui = Object.assign(seedState().ui, d.ui, {tab:'progress'});
+        S.writing = Object.assign(seedState().writing, d.writing); S.pres = Object.assign(seedState().pres, d.pres);
+        save(); applyTheme(); showTab('progress'); toast('Backup restored');
+      } catch { alert('That file is not a valid ScholarPath backup.'); }
+    };
+    r.readAsText(t.files[0]); t.value = '';
+  }
+});
+window.addEventListener('hashchange', () => showTab(location.hash.slice(1), false));
+
+/* ---------- Boot ---------- */
+$('.brand-mark').innerHTML = icon('cap');
+applyTheme();
+showTab(location.hash.slice(1) || S.ui.tab || 'hub');
+})();
+</script>
+</body>
+</html>
