@@ -345,6 +345,17 @@ svg.mini{width:100%;max-width:220px;height:auto;display:block}
 .fig-shot .small{text-align:left}
 .ai-note{margin:-4px 0 12px;padding:8px 10px;background:var(--accent-soft);border-radius:var(--radius-sm)}
 
+
+/* Read-aloud player */
+.tts-bar{display:flex;flex-direction:column;gap:8px}
+.tts-row{display:flex;flex-wrap:wrap;align-items:center;gap:8px}
+.tts-status{color:var(--accent);font-weight:500}
+.seg.seg-sm button{padding:5px 11px;min-height:32px;font-size:.84rem}
+.voice-more summary{cursor:pointer;color:var(--accent)}
+.voice-more label{display:inline-flex;align-items:center;gap:6px}
+mark.tts-now{background:var(--warn-soft);color:var(--ink);border-radius:3px;padding:0 1px}
+.ar-text{font-size:1.02rem;line-height:1.8;font-family:"Noto Naskh Arabic","Geeza Pro","Segoe UI",Tahoma,var(--sans)}
+
 /* Writing */
 .write-layout{display:grid;gap:16px;grid-template-columns:1fr}
 @media(min-width:900px){.write-layout{grid-template-columns:290px 1fr;align-items:start}.stepper{position:sticky;top:110px}}
@@ -489,6 +500,8 @@ const ICONS = {
   stop:'<rect x="6" y="6" width="12" height="12" rx="1"/>',
   chat:'<path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12z"/>',
   send:'<path d="M22 2 11 13M22 2l-7 20-4-9-9-4z"/>',
+  back:'<path d="M11 6 5 12l6 6M19 6l-6 6 6 6"/>',
+  fwd:'<path d="m13 6 6 6-6 6M5 6l6 6-6 6"/>',
   book:'<path d="M2 4h6a4 4 0 0 1 4 4v13a3 3 0 0 0-3-3H2zM22 4h-6a4 4 0 0 0-4 4v13a3 3 0 0 1 3-3h7z"/>',
   sparkle:'<path d="M12 3l1.9 5.1L19 10l-5.1 1.9L12 17l-1.9-5.1L5 10l5.1-1.9z"/>',
   clock:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
@@ -756,6 +769,15 @@ const TALK_GUIDE = {
   15:'Full talk: 10–14 slides. You can split Findings across two slides and add a slide on Limitations or Future work.'
 };
 
+// Arabic translations of the Paper Reader demo text (needed when the app first seeds its data)
+const DEMO_AR = [
+  'يصف هذا النص التوضيحي دراسةً صغيرة متخيَّلة، كُتبت فقط لإظهار طريقة عمل قارئ الأبحاث. ويفترض أن عشرين طالبًا في المرحلة الثانوية استخدموا مساعدًا للكتابة بالذكاء الاصطناعي (AI writing assistant) مدة أربعة أسابيع، وأن مسوّداتهم ومقابلاتهم حُلِّلت لفهم كيفية استخدامهم للتغذية الراجعة.',
+  'تُعدّ التغذية الراجعة (feedback) من أقوى المؤثرات في التعلّم، لكن وقت المعلمين محدود لتقديم تعليقات مفصّلة على كل مسودة. وتَعِد أدوات الذكاء الاصطناعي بتغذية راجعة فورية، غير أن المعروف قليل عمّا إذا كان الطلاب يعملون بها أم يكتفون بقبول التصحيحات المقترحة.',
+  'في هذا التصميم المتخيَّل، قدّم الطلاب ثلاث مسودات لمقال جدلي. وصُنِّف كل تغيير بين المسودات إما مقبولًا دون تعديل، أو مُعدَّلًا، أو متجاهَلًا، وأُجريت مقابلات مع ثمانية طلاب حول قراراتهم.',
+  'في النتائج المتخيَّلة، قُبلت معظم الاقتراحات المتعلقة بالقواعد دون تعديل، بينما تُجوهلت في الغالب الاقتراحات المتعلقة بالتنظيم والحجة. وقال الطلاب الذين أُجريت معهم مقابلات إن تصحيحات القواعد كانت سهلة التطبيق، أما التعليقات على البنية فكانت صعبة الفهم.',
+  'تشير هذه النتائج المتخيَّلة إلى أن التغذية الراجعة من الذكاء الاصطناعي تساعد على الدقة السطحية (surface accuracy)، لكنها لا تطوّر مهارات الكتابة الأعمق ما لم يساعد المعلمون الطلاب على تفسير التعليقات ذات المستوى الأعلى.',
+  'لأن الدراسة متخيَّلة، ولأن العيّنة ستكون صغيرة ومن مدرسة واحدة، لا يمكن استخلاص استنتاجات حقيقية. وتحتاج دراسة حقيقية إلى عدد أكبر من الطلاب، وعدة مدارس، ومجموعة مقارنة (comparison group).'
+];
 /* ---------- Example data ---------- */
 function exampleAau(){
   const b = (text, ev='') => ({text, ev, rev:false});
@@ -841,7 +863,8 @@ for (const k of Object.keys(base)) if (S[k] === undefined) S[k] = base[k];
 S.ui = Object.assign({}, base.ui, S.ui);
 S.writing = Object.assign({}, base.writing, S.writing);
 S.pres = Object.assign({}, base.pres, S.pres);
-S.reader = Object.assign({papers:[], active:'', view:'paras', ttsMode:'both', rate:1, voice:''}, S.reader);
+S.reader = Object.assign({papers:[], active:'', view:'paras', rate:1, gender:'f', voiceEn:'', voiceAr:'', marks:{}}, S.reader);
+S.reader.ttsParts = Object.assign({orig:true, idea:true, ar:false}, S.reader.ttsParts);
 S.figlab = Object.assign({}, base.figlab, S.figlab); S.figlab.build = Object.assign({}, base.figlab.build, S.figlab.build);
 
 let saveTimer;
@@ -893,7 +916,7 @@ function renderTabs(){
 const RENDER = {};
 function showTab(id, push=true){
   if (!TABS.some(t => t.id === id)) id = 'hub';
-  if (id !== 'reader' && TTS.playing) ttsStop();
+  if (id !== 'reader' && TTS.playing) ttsPause();          // keeps the place for Continue
   S.ui.tab = id; save();
   renderTabs();
   for (const t of TABS) $('#panel-'+t.id).hidden = t.id !== id;
@@ -1608,7 +1631,7 @@ function demoReaderPaper(){
         'AI feedback helps with small errors, but students need a teacher to understand the bigger comments.',[{term:'surface accuracy',meaning:'spelling and grammar, not ideas'}],'AI + teacher together','p4','explains'),
       P('p6','Limitations',4,'Because the study is imaginary and the sample would be small and from one school, no real conclusions can be drawn. A real study would need more students, several schools and a comparison group.',
         'Small sample from one school, no comparison group — so results can’t be generalised.',[{term:'comparison group',meaning:'students who did not use the tool, to compare with'}],'Weakness = small + one school','p5','contrasts')
-    ],
+    ].map((p, i) => ({...p, ar:DEMO_AR[i], arSrc:'demo'})),
     questions:{
       overview:'A demo text about an imaginary study of 20 students who used an AI writing helper. Students copied grammar fixes but ignored harder advice about structure. The text suggests teachers are still needed to explain the bigger comments.',
       audience:[{q:'Have you ever accepted an AI correction without understanding why it was correct?', why:'Connects the finding to the audience’s own experience.'},{q:'Which is more useful for learning: instant AI feedback or slower teacher feedback?', why:'Opens a debate about the main implication.'}],
@@ -1852,78 +1875,202 @@ function starterQuestions(paper){
   };
 }
 
-/* --- Read aloud (the browser's own speech voices: free, offline, no account) --- */
-const TTS = {ok:typeof window.speechSynthesis !== 'undefined' && typeof window.SpeechSynthesisUtterance !== 'undefined', queue:[], cur:null, playing:false, paused:false, gen:0};
+/* --- Read aloud (the browser's own speech voices: free, offline, no account) ---
+   Plays a list of segments (a paragraph's original text, simple version or Arabic translation), one
+   sentence at a time. Pausing keeps the exact position (word-level where the voice reports it,
+   otherwise the start of the sentence), and a per-paper bookmark survives leaving the tab or reloading. */
+const TTS = {ok:typeof window.speechSynthesis !== 'undefined' && typeof window.SpeechSynthesisUtterance !== 'undefined',
+  list:[], i:0, char:0, playing:false, gen:0, ctx:null, note:''};
 const isArabic = t => /[؀-ۿ]/.test(t || '');
-function ttsVoices(){ try { return TTS.ok ? speechSynthesis.getVoices().filter(v => /^(en|ar)/i.test(v.lang)) : []; } catch { return []; } }
-function ttsChunks(text){
-  const out = []; let cur = '';
-  (text || '').replace(/\s+/g, ' ').trim().split(/(?<=[.!?؟;:])\s+/).forEach(s => {
-    while (s.length > 220){ const cut = s.lastIndexOf(' ', 200) > 60 ? s.lastIndexOf(' ', 200) : 200; out.push((cur + ' ' + s.slice(0, cut)).trim()); cur = ''; s = s.slice(cut).trim(); }
-    if ((cur + ' ' + s).length > 220){ out.push(cur.trim()); cur = s; } else cur = (cur + ' ' + s).trim();
-  });
-  if (cur.trim()) out.push(cur.trim());
+const FEMALE_RE = /female|woman|\b(zira|hazel|susan|samantha|victoria|karen|moira|tessa|fiona|veena|serena|kate|allison|ava|nicky|joanna|kendra|kimberly|salli|ivy|emma|amy|aria|jenny|libby|sonia|natasha|clara|michelle|sara|catherine|heera|hoda|salma|zariyah|laila|layla|mariam|amira|nora|noura|hala|lana|rana|mona|fatima|yasmin|iman|reem|amany|sana|eva|linda|heather|julie|shelley|sandy|flo|grandma|martha|ellie|joanna)\b/i;
+const MALE_RE = /\bmale\b|\bman\b|\b(david|mark|george|james|daniel|alex|fred|arthur|oliver|rishi|aaron|tom|guy|ryan|thomas|matthew|joey|justin|brian|eric|christopher|roger|steffan|liam|william|naayf|maged|majed|tarik|tariq|hamed|shakir|omar|bassel|hamdan|fahed|moaz|ali|zayed|taim|jamal|rami|kareem|karim|ahmed|mohammed|reed|rocko|ralph|eddy|grandpa|junior|albert|bruce)\b/i;
+const voiceGender = v => FEMALE_RE.test(v.name) ? 'f' : MALE_RE.test(v.name) ? 'm' : /google us english|google (العربية|arabic)/i.test(v.name) ? 'f' : '';
+const voiceQuality = v => /natural|neural|online|premium|enhanced|siri/i.test(v.name) ? 2 : v.localService ? 1 : 0;
+function ttsVoices(lang){ try { return TTS.ok ? speechSynthesis.getVoices().filter(v => (lang ? new RegExp('^' + lang, 'i') : /^(en|ar)/i).test(v.lang)) : []; } catch { return []; } }
+function pickVoice(lang){
+  const all = ttsVoices(lang), want = S.reader.gender || 'f', chosen = lang === 'ar' ? S.reader.voiceAr : S.reader.voiceEn;
+  const exact = all.find(v => v.voiceURI === chosen);
+  if (exact) return {v:exact, pitch:1};
+  const rank = v => (voiceGender(v) === want ? 10 : 0) + voiceQuality(v) * 2 + (v.default ? 1 : 0) + (/^en-(gb|us)/i.test(v.lang) ? 0.5 : 0);
+  const best = all.slice().sort((a, b) => rank(b) - rank(a))[0];
+  if (!best) return {v:null, pitch:want === 'm' ? 0.8 : 1.12};
+  return {v:best, pitch:voiceGender(best) === want ? 1 : want === 'm' ? 0.8 : 1.12};    // no voice of that kind: adjust the pitch instead
+}
+function ttsChunks(text){                                    // sentences (long ones split at a space), with their offsets
+  const out = [], re = /[^.!?؟]+(?:[.!?؟]+["”’)]*|$)\s*/g; let m;
+  while ((m = re.exec(text || '')) && m[0]){
+    let s = m[0], start = m.index;
+    while (s.trim().length > 230){ const cut = s.lastIndexOf(' ', 210) > 60 ? s.lastIndexOf(' ', 210) : 210; out.push({start, text:s.slice(0, cut)}); start += cut; s = s.slice(cut); }
+    if (s.trim()) out.push({start, text:s});
+  }
   return out;
 }
-function ttsMark(it){
-  $$('.speaking').forEach(e => e.classList.remove('speaking'));
-  $$('.speaking-part').forEach(e => e.classList.remove('speaking-part'));
-  if (!it || !it.pid) return;
-  const card = $('#para-' + it.pid); if (!card) return;
-  card.classList.add('speaking');
-  const part = it.part === 'orig' ? $('#po-' + it.pid) : it.part === 'idea' ? $('#ri-' + it.pid) : null;
-  if (part) part.classList.add('speaking-part');
-  if (it.first && it.follow) card.scrollIntoView({behavior:'smooth', block:'center'});
+const PART_LABEL = {orig:'Original', idea:'Simple', ar:'Arabic'};
+function ttsSegs(paper, opts){                                // opts: {from, only, parts}
+  const parts = opts.parts || S.reader.ttsParts || {orig:true, idea:true};
+  const list = paper.paras.filter(p => p.kind !== 'front'), start = opts.from ? Math.max(0, list.findIndex(p => p.id === opts.from)) : 0;
+  const ps = opts.only ? list.filter(p => p.id === opts.only) : list.slice(start);
+  return ps.flatMap(p => [
+    parts.orig && p.text && {pid:p.id, part:'orig', text:p.text, lang:'en'},
+    parts.idea && ideaOf(p) && {pid:p.id, part:'idea', text:'In simple words: ' + ideaOf(p), lang:'en'},
+    parts.ar && (p.ar || '').trim() && {pid:p.id, part:'ar', text:p.ar.trim(), lang:'ar'}
+  ].filter(Boolean));
 }
-function ttsPlay(items, follow){
+function ttsLoad(segs, ctx){
+  TTS.list = segs.flatMap((s, si) => ttsChunks(s.text).map(c => ({...s, si, segStart:c.start, text:c.text})));
+  TTS.ctx = ctx; TTS.i = 0; TTS.char = 0;
+}
+function ttsStart(segs, ctx, at){
   if (!TTS.ok) return toast('Your browser cannot read aloud');
-  TTS.gen++; try { speechSynthesis.cancel(); } catch {}
-  TTS.queue = items.flatMap(it => ttsChunks(it.text).map((t, i) => ({...it, text:t, first:i === 0, follow})));
-  if (!TTS.queue.length) return toast('Nothing to read yet');
-  TTS.playing = true; TTS.paused = false; ttsNext(); renderTtsBar();
+  ttsHalt();
+  ttsLoad(segs, ctx);
+  if (!TTS.list.length) return toast('Nothing to read yet — the selected parts are empty');
+  if (at) ttsSeek(at);
+  ttsSpeak(true);
 }
-function ttsNext(){
-  const it = TTS.queue.shift();
-  if (!it){ ttsStop(); return; }
-  const gen = TTS.gen, u = new SpeechSynthesisUtterance(it.text);
-  const voices = ttsVoices(), ar = isArabic(it.text);
-  const v = ar ? voices.find(x => /^ar/i.test(x.lang)) : voices.find(x => x.voiceURI === S.reader.voice) || voices.find(x => /^en/i.test(x.lang) && x.default) || voices.find(x => /^en/i.test(x.lang));
-  if (v){ u.voice = v; u.lang = v.lang; } else u.lang = ar ? 'ar' : 'en-US';
-  u.rate = S.reader.rate || 1;
-  u.onend = () => { if (gen === TTS.gen && TTS.playing) ttsNext(); };
-  u.onerror = e => { if (gen === TTS.gen && TTS.playing && !/interrupted|canceled/.test(e.error || '')) ttsNext(); };
-  TTS.cur = it; ttsMark(it); speechSynthesis.speak(u);
+function ttsSeek(at){                                         // at: {pid, part, offset} → chunk index + char inside it
+  const idx = TTS.list.findIndex((c, k) => c.pid === at.pid && c.part === at.part && (k === TTS.list.length - 1 || TTS.list[k + 1].pid !== at.pid || TTS.list[k + 1].part !== at.part || TTS.list[k + 1].segStart > at.offset));
+  if (idx < 0) return;
+  TTS.i = idx; TTS.char = Math.max(0, Math.min(at.offset - TTS.list[idx].segStart, TTS.list[idx].text.length - 1));
 }
-function ttsStop(){
-  TTS.gen++; TTS.playing = false; TTS.paused = false; TTS.queue = []; TTS.cur = null;
-  try { if (TTS.ok) speechSynthesis.cancel(); } catch {}
-  ttsMark(null); renderTtsBar();
-}
-function ttsPause(){
-  if (!TTS.playing) return;
-  if (TTS.paused){ speechSynthesis.resume(); TTS.paused = false; } else { speechSynthesis.pause(); TTS.paused = true; }
+function ttsSpeak(scroll){
+  const c = TTS.list[TTS.i];
+  if (!c){ ttsFinish(); return; }
+  let from = TTS.char;
+  if (from > 0){ const sp = c.text.lastIndexOf(' ', from); from = sp > 0 ? sp + 1 : 0; }     // back to the start of the word
+  const say = c.text.slice(from);
+  const gen = ++TTS.gen, u = new SpeechSynthesisUtterance(say), lang = c.lang === 'ar' || isArabic(say) ? 'ar' : 'en';
+  const {v, pitch} = pickVoice(lang);
+  if (v){ u.voice = v; u.lang = v.lang; } else u.lang = lang === 'ar' ? 'ar-SA' : 'en-GB';
+  TTS.note = !v && lang === 'ar' ? 'No Arabic voice was found on this device — add one in your system’s language or speech settings.' : v && pitch !== 1 ? `No ${S.reader.gender === 'm' ? 'male' : 'female'} ${lang === 'ar' ? 'Arabic' : 'English'} voice on this device, so the pitch of “${v.name}” is adjusted instead.` : '';
+  u.pitch = pitch; u.rate = S.reader.rate || 1;
+  u.onboundary = e => { if (gen === TTS.gen && typeof e.charIndex === 'number') TTS.char = from + e.charIndex; };
+  u.onend = () => { if (gen !== TTS.gen || !TTS.playing) return; TTS.i++; TTS.char = 0; ttsSpeak(false); };
+  u.onerror = e => { if (gen !== TTS.gen || !TTS.playing || /interrupted|canceled/.test(e.error || '')) return; TTS.i++; TTS.char = 0; ttsSpeak(false); };
+  TTS.playing = true; TTS.char = from;
+  ttsMark(c, scroll || (c.segStart === 0 && from === 0 && TTS.ctx && TTS.ctx.follow));
+  try { speechSynthesis.cancel(); } catch {}
+  speechSynthesis.speak(u);
   renderTtsBar();
 }
-const ttsPart = (p, part) => part === 'orig' ? {pid:p.id, part:'orig', text:p.text} : {pid:p.id, part:'idea', text:ideaOf(p) ? 'In simple words: ' + ideaOf(p) : ''};
-function ttsItems(paper, fromId, mode){
-  const list = paper.paras.filter(p => p.kind !== 'front'), start = Math.max(0, list.findIndex(p => p.id === fromId));
-  return list.slice(start).flatMap(p => mode === 'orig' ? [ttsPart(p, 'orig')] : mode === 'idea' ? [ttsPart(p, 'idea')] : [ttsPart(p, 'orig'), ttsPart(p, 'idea')]).filter(x => x.text);
+function ttsHalt(){ TTS.gen++; TTS.playing = false; try { if (TTS.ok) speechSynthesis.cancel(); } catch {} }
+function ttsPos(){ const c = TTS.list[TTS.i]; return c ? {pid:c.pid, part:c.part, offset:c.segStart + TTS.char} : null; }
+function ttsSaveMark(){
+  const pos = ttsPos(), ctx = TTS.ctx;
+  if (pos && ctx && ctx.paperId){ (S.reader.marks ||= {})[ctx.paperId] = {...pos, from:ctx.from || null, only:ctx.only || null, parts:ctx.parts, at:Date.now()}; save(); }
+}
+function ttsPause(){ if (!TTS.playing) return; ttsHalt(); ttsSaveMark(); renderTtsBar(); }   // stop here, remember the exact place
+function ttsContinue(){
+  if (!TTS.ok) return;
+  const paper = rPaper(), mark = paper && (S.reader.marks || {})[paper.id];
+  if (TTS.list.length && TTS.ctx && TTS.ctx.paperId === (paper && paper.id) && TTS.list[TTS.i]){ ttsSpeak(true); return; }   // still in memory
+  if (!mark) return ttsPlayAll();
+  const ctx = {paperId:paper.id, from:mark.from, only:mark.only, parts:mark.parts, follow:true};
+  ttsStart(ttsSegs(paper, ctx), ctx, mark);
+}
+function ttsSkip(dir){
+  if (!TTS.list.length) return;
+  if (dir < 0 && TTS.char > 12) TTS.char = 0;                                  // back: first to the start of this sentence
+  else { TTS.i = Math.max(0, Math.min(TTS.list.length - 1, TTS.i + dir)); TTS.char = 0; }
+  const was = TTS.playing; ttsHalt();
+  if (was) ttsSpeak(true); else { ttsSaveMark(); ttsMark(TTS.list[TTS.i], true); renderTtsBar(); }
+}
+function ttsFinish(){
+  ttsHalt();
+  const ctx = TTS.ctx; if (ctx && ctx.paperId && S.reader.marks) { delete S.reader.marks[ctx.paperId]; save(); }
+  TTS.list = []; TTS.i = 0; TTS.char = 0; ttsMark(null); renderTtsBar();
+}
+function ttsStop(){ ttsFinish(); }                               // stop and forget the place
+function ttsPlayAll(from){
+  const paper = rPaper(); if (!paper) return;
+  const ctx = {paperId:paper.id, from:from || null, parts:{...(S.reader.ttsParts || {orig:true, idea:true})}, follow:true};
+  ttsStart(ttsSegs(paper, ctx), ctx);
+}
+function ttsMark(c, scroll){
+  $$('.speaking').forEach(e => e.classList.remove('speaking'));
+  $$('.speaking-part').forEach(e => e.classList.remove('speaking-part'));
+  $$('.orig-full[data-marked]').forEach(e => { e.textContent = e.dataset.marked; delete e.dataset.marked; });
+  if (!c || !c.pid) return;
+  const card = $('#para-' + c.pid); if (!card) return;
+  card.classList.add('speaking');
+  const part = c.part === 'orig' ? $('#po-' + c.pid) : c.part === 'idea' ? $('#ri-' + c.pid) : $('#ra-' + c.pid);
+  if (part){
+    part.classList.add('speaking-part');
+    if (c.part === 'orig'){                                  // follow along: highlight the sentence being read
+      const t = part.textContent, a = c.segStart, b = a + c.text.length;
+      part.dataset.marked = t; part.innerHTML = esc(t.slice(0, a)) + '<mark class="tts-now">' + esc(t.slice(a, b)) + '</mark>' + esc(t.slice(b));
+    }
+  }
+  if (scroll) (part || card).scrollIntoView({behavior:'smooth', block:'center'});
 }
 function ttsBarHTML(){
   if (!TTS.ok) return '<p class="small muted" style="margin:10px 0 0">Read-aloud is not supported in this browser.</p>';
-  const voices = ttsVoices().filter(v => /^en/i.test(v.lang));
+  const paper = rPaper(), mark = paper && (S.reader.marks || {})[paper.id], c = TTS.list[TTS.i];
+  const parts = S.reader.ttsParts || {orig:true, idea:true}, g = S.reader.gender || 'f';
+  const paused = !TTS.playing && (mark || (TTS.list.length && TTS.ctx && paper && TTS.ctx.paperId === paper.id));
+  const where = TTS.playing && c ? c : paused && mark ? mark : null;
+  const whereTxt = where && paper ? `¶${paraNo(paper, where.pid)} · ${PART_LABEL[where.part]}` : '';
+  const en = ttsVoices('en'), ar = ttsVoices('ar');
+  const vOpt = (list, sel) => `<option value="">Automatic (${g === 'm' ? 'man' : 'woman'})</option>` + list.map(v => `<option value="${esc(v.voiceURI)}" ${sel === v.voiceURI ? 'selected' : ''}>${{f:'♀ ', m:'♂ '}[voiceGender(v)] || ''}${esc(clip(v.name, 34))} (${esc(v.lang)})</option>`).join('');
   return `<div class="tts-bar" role="group" aria-label="Read aloud">
-    <span class="small"><b>${icon('volume')}Read aloud</b></span>
-    <button class="btn sm ${TTS.playing ? '' : 'primary'}" data-act="tts-all">${icon('play')}${TTS.playing ? 'Restart' : 'Play all'}</button>
-    <button class="btn sm" data-act="tts-pause" ${TTS.playing ? '' : 'disabled'}>${TTS.paused ? icon('play') + 'Resume' : icon('pause') + 'Pause'}</button>
-    <button class="btn sm" data-act="tts-stop" ${TTS.playing ? '' : 'disabled'}>${icon('stop')}Stop</button>
-    <select id="ttsMode" aria-label="What to read" style="width:auto"><option value="both" ${S.reader.ttsMode==='both'?'selected':''}>Original + simple</option><option value="orig" ${S.reader.ttsMode==='orig'?'selected':''}>Original only</option><option value="idea" ${S.reader.ttsMode==='idea'?'selected':''}>Simple only</option></select>
-    <select id="ttsRate" aria-label="Speed" style="width:auto">${[0.75,0.9,1,1.15,1.3,1.5].map(r => `<option value="${r}" ${(S.reader.rate||1)==r?'selected':''}>${r}×</option>`).join('')}</select>
-    ${voices.length ? `<select id="ttsVoice" aria-label="Voice" style="width:auto;max-width:200px"><option value="">Default voice</option>${voices.map(v => `<option value="${esc(v.voiceURI)}" ${S.reader.voice===v.voiceURI?'selected':''}>${esc(clip(v.name, 32))} (${esc(v.lang)})</option>`).join('')}</select>` : ''}
+    <div class="tts-row">
+      <span class="small"><b>${icon('volume')}Read aloud</b></span>
+      ${TTS.playing ? `<button class="btn sm primary" data-act="tts-pause">${icon('pause')}Pause</button>`
+        : paused ? `<button class="btn sm primary" data-act="tts-continue">${icon('play')}Continue</button>` : `<button class="btn sm primary" data-act="tts-all">${icon('play')}Play all</button>`}
+      <button class="btn sm icon" data-act="tts-skip" data-v="-1" title="Back one sentence" aria-label="Back one sentence" ${TTS.list.length ? '' : 'disabled'}>${icon('back')}</button>
+      <button class="btn sm icon" data-act="tts-skip" data-v="1" title="Forward one sentence" aria-label="Forward one sentence" ${TTS.list.length ? '' : 'disabled'}>${icon('fwd')}</button>
+      <button class="btn sm" data-act="tts-stop" ${TTS.playing || paused ? '' : 'disabled'} title="Stop and forget the place">${icon('stop')}Stop</button>
+      ${paused && !TTS.playing ? `<button class="btn sm ghost" data-act="tts-restart" title="Start again from the beginning">${icon('refresh')}From the start</button>` : ''}
+      <span class="tts-status small" aria-live="polite">${TTS.playing ? `Reading ${whereTxt}` : paused ? `Paused at ${whereTxt}${mark && mark.at ? ` · ${new Date(mark.at).toLocaleString([], {dateStyle:'short', timeStyle:'short'})}` : ''}` : ''}</span>
+    </div>
+    <div class="tts-row">
+      <span class="small muted">Read:</span>
+      <span class="filter-chips">${['orig','idea','ar'].map(k => `<button class="fchip sm-chip" data-act="tts-part" data-v="${k}" aria-pressed="${!!parts[k]}">${PART_LABEL[k]}${k === 'ar' ? ' translation' : ''}</button>`).join('')}</span>
+      <span class="small muted" style="margin-left:6px">Voice:</span>
+      <span class="seg seg-sm" role="group" aria-label="Voice">${[['f','♀ Woman'],['m','♂ Man']].map(([v,l]) => `<button data-act="tts-gender" data-v="${v}" aria-pressed="${g === v}">${l}</button>`).join('')}</span>
+      <select id="ttsRate" aria-label="Speed" style="width:auto">${[0.75,0.9,1,1.15,1.3,1.5].map(r => `<option value="${r}" ${(S.reader.rate||1)==r?'selected':''}>${r}×</option>`).join('')}</select>
+      <details class="voice-more"><summary class="small">Choose exact voices</summary><div class="row" style="margin-top:6px">
+        <label class="small">English <select id="ttsVoiceEn" style="width:auto;max-width:230px">${vOpt(en, S.reader.voiceEn)}</select></label>
+        <label class="small">Arabic <select id="ttsVoiceAr" style="width:auto;max-width:230px">${ar.length ? vOpt(ar, S.reader.voiceAr) : '<option value="">No Arabic voice on this device</option>'}</select></label></div></details>
+    </div>
+    ${TTS.note ? `<p class="small muted" style="margin:6px 0 0">${esc(TTS.note)}</p>` : ''}
+    ${parts.ar && paper && !paper.paras.some(p => (p.ar || '').trim()) ? `<p class="small muted" style="margin:6px 0 0">No Arabic translations yet — ${aiReady() ? 'use “Translate all to Arabic” above, or' : ''} add one under a paragraph.</p>` : ''}
   </div>`;
 }
 function renderTtsBar(){ const el = $('#ttsBar'); if (el) el.innerHTML = ttsBarHTML(); }
 if (TTS.ok) try { speechSynthesis.onvoiceschanged = () => renderTtsBar(); } catch {}
+
+/* --- Arabic translation of paragraphs (Claude on the published page; otherwise typed or pasted) --- */
+let arOpen = new Set();
+async function translateParas(paper, list){
+  if (!aiReady() || aiRun || !list.length) return;
+  const ctl = new AbortController(); aiRun = {ctl, label:'Translating into Arabic', done:0, total:list.length}; renderAiBar();
+  const batches = []; let cur = [], size = 0;
+  for (const p of list){ if (cur.length && (cur.length >= 6 || size + p.text.length > 7000)){ batches.push(cur); cur = []; size = 0; } cur.push(p); size += p.text.length; }
+  if (cur.length) batches.push(cur);
+  try {
+    for (const b of batches){
+      if (ctl.signal.aborted) break;
+      const items = await AI.json(`Translate each paragraph of this research paper into clear, accurate Modern Standard Arabic for a master's student.
+Rules: translate faithfully — do not add, remove or explain anything. Keep numbers, names, citations such as [3] and abbreviations. The first time a technical term appears, give the English term in brackets after the Arabic, e.g. "التعلم الآلي (machine learning)".
+Paper: "${paper.title}"
+
+${b.map(p => `[${p.id}]\n${p.text.slice(0, 4000)}`).join('\n\n')}
+
+Reply with only a JSON array, one object per paragraph in the same order: [{"id":"p3","ar":"..."}]`, {signal:ctl.signal, modelTier:'default'});
+      for (const it of Array.isArray(items) ? items : []){ const p = paper.paras.find(x => x.id === String(it && it.id)); if (p && typeof it.ar === 'string' && it.ar.trim()){ p.ar = it.ar.trim(); p.arSrc = 'ai'; } }
+      save(); aiRun.done += b.length; renderAiBar(); refreshCards(b);
+    }
+    toast('Arabic translation ready');
+  } catch (e){ if (e && e.code !== 'cancelled') alert(aiError(e)); }
+  finally { aiRun = null; renderAiBar(); RENDER.reader(); }
+}
+function arBlock(p){
+  const has = (p.ar || '').trim(), open = has || arOpen.has(p.id);
+  if (!open) return '';
+  return `<label class="f idea-lbl" for="ra-${p.id}" style="margin-top:12px">${icon('book')}Arabic translation <span class="chip">${p.arSrc === 'me' ? 'mine' : p.arSrc === 'demo' ? 'demo' : has ? 'by Claude — check it' : 'type or paste'}</span></label>
+    <textarea id="ra-${p.id}" data-rp="ar" data-id="${p.id}" dir="rtl" lang="ar" rows="3" class="ar-text" placeholder="اكتب أو الصق الترجمة العربية هنا">${esc(p.ar || '')}</textarea>`;
+}
 
 /* --- Ask Claude: a chat per paragraph, and one about the whole paper --- */
 let chatOpen = null, chatRun = null;
@@ -2031,6 +2178,7 @@ RENDER.reader = () => {
   ${paper ? readerBody(paper, view) : ''}`;
   renderAiBar();
   $$('#panel-reader textarea[data-rp]').forEach(grow);
+  if (TTS.playing) ttsMark(TTS.list[TTS.i], false);
 };
 function readerBody(paper, view){
   const text = paper.paras.filter(p => p.kind !== 'front');
@@ -2045,6 +2193,7 @@ function readerBody(paper, view){
     </div>
     <div class="row" style="justify-content:space-between;margin:10px 0 6px"><span class="small"><b id="rpDone">${done}</b> of ${text.length} paragraphs have a main idea</span>
       <span class="row">${aiReady() && todo.length ? `<button class="btn sm primary" data-act="rp-sum-all" data-ai-btn>${icon('sparkle')}Summarize ${done ? 'the rest' : 'all'} with Claude</button>` : ''}
+      ${aiReady() && text.some(p => !(p.ar || '').trim()) ? `<button class="btn sm" data-act="rp-ar-all" data-ai-btn>${icon('sparkle')}Translate ${text.some(p => (p.ar || '').trim()) ? 'the rest' : 'all'} to Arabic</button>` : ''}
       ${copyBtn('#rpNotes','Copy reading notes')}<button class="btn sm" data-act="rp-to-crit">${icon('clip')}Use in Critique</button></span></div>
     <div class="progress"><span style="width:${text.length ? done/text.length*100 : 0}%"></span></div>
     <div id="aiBar"></div>
@@ -2077,12 +2226,14 @@ function paraCard(paper, p){
     <textarea id="ri-${p.id}" data-rp="idea" data-id="${p.id}" rows="2" placeholder="What is this paragraph saying? Write it simply, in 1–2 sentences.">${esc(p.idea)}</textarea>
     ${p.aiIdea ? `<div class="ai-alt"><span class="small"><b>Claude’s version:</b> ${esc(p.aiIdea)}</span><button class="btn sm" data-act="rp-use-ai" data-id="${p.id}">Use this</button></div>` : ''}
     ${(p.terms||[]).length ? `<div class="terms">${p.terms.map(t => `<span class="term"><b>${esc(t.term)}</b> — ${esc(t.meaning)}</span>`).join('')}</div>` : ''}
+    ${arBlock(p)}
     <div class="para-tools">
       ${TTS.ok ? `<span class="listen" role="group" aria-label="Listen to ¶${n}"><span class="small muted">${icon('volume')}Listen:</span>
         <button class="btn sm" data-act="tts-one" data-id="${p.id}" data-part="orig">Original</button>
         <button class="btn sm" data-act="tts-one" data-id="${p.id}" data-part="idea" ${ideaOf(p) ? '' : 'disabled'}>Simple</button>
-        <button class="btn sm" data-act="tts-one" data-id="${p.id}" data-part="both">Both</button>
-        <button class="btn sm ghost" data-act="tts-one" data-id="${p.id}" data-part="from" title="Read from here to the end">${icon('play')}From here</button></span>` : ''}
+        ${(p.ar || '').trim() ? `<button class="btn sm" data-act="tts-one" data-id="${p.id}" data-part="ar">Arabic</button>` : ''}
+        <button class="btn sm ghost" data-act="tts-one" data-id="${p.id}" data-part="from" title="Read from here to the end, using the parts chosen in the Read aloud bar">${icon('play')}From here</button></span>` : ''}
+      ${(p.ar || '').trim() || arOpen.has(p.id) ? '' : aiReady() ? `<button class="btn sm ghost" data-act="rp-ar-one" data-id="${p.id}" data-ai-btn>${icon('sparkle')}Translate to Arabic</button>` : `<button class="btn sm ghost" data-act="rp-ar-open" data-id="${p.id}">${icon('plus')}Add Arabic translation</button>`}
       <span class="spacer"></span>
       ${aiReady() ? `<button class="btn sm ${chatOpen === p.id ? '' : 'primary'}" data-act="chat-toggle" data-scope="${p.id}">${icon('chat')}${chatOpen === p.id ? 'Hide chat' : 'Ask Claude'}${(p.chat||[]).length && chatOpen !== p.id ? ` (${p.chat.filter(m => m.role === 'user').length})` : ''}</button>` : ''}
     </div>
@@ -3176,14 +3327,23 @@ const ACTIONS = {
   'fl-goal': el => { S.figlab.build.goal = el.dataset.v; save(); RENDER.figlab(); },
   'fl-ctype': el => { S.figlab.build.chart.type = el.dataset.v; save(); $$('[data-act="fl-ctype"]').forEach(b => b.setAttribute('aria-pressed', b.dataset.v === el.dataset.v));
     const lbl = $('label[for="cb-cats"]'); if (lbl) lbl.textContent = el.dataset.v === 'scatter' ? 'X values (numbers, comma-separated)' : 'Category labels (comma-separated)'; updateBuild(); },
-  'tts-all': () => ttsPlay(ttsItems(rPaper(), null, S.reader.ttsMode || 'both'), true),
+  'tts-all': () => ttsPlayAll(),
   'tts-pause': () => ttsPause(),
+  'tts-continue': () => ttsContinue(),
+  'tts-restart': () => { ttsStop(); ttsPlayAll(); },
   'tts-stop': () => ttsStop(),
+  'tts-skip': el => ttsSkip(+el.dataset.v),
+  'tts-part': el => { const parts = S.reader.ttsParts, k = el.dataset.v; parts[k] = !parts[k]; if (!parts.orig && !parts.idea && !parts.ar) parts[k] = true; save(); renderTtsBar(); },
+  'tts-gender': el => { S.reader.gender = el.dataset.v; S.reader.voiceEn = ''; S.reader.voiceAr = ''; save(); if (TTS.playing){ ttsHalt(); ttsSpeak(false); } else renderTtsBar(); },
   'tts-one': el => {
     const paper = rPaper(), p = paper.paras.find(x => x.id === el.dataset.id), part = el.dataset.part;
-    if (part === 'from') return ttsPlay(ttsItems(paper, p.id, S.reader.ttsMode || 'both'), true);
-    ttsPlay((part === 'both' ? [ttsPart(p, 'orig'), ttsPart(p, 'idea')] : [ttsPart(p, part)]).filter(x => x.text), false);
+    if (part === 'from') return ttsPlayAll(p.id);
+    const ctx = {paperId:paper.id, only:p.id, parts:{[part]:true}};
+    ttsStart(ttsSegs(paper, ctx), ctx);
   },
+  'rp-ar-one': el => { const paper = rPaper(); translateParas(paper, paper.paras.filter(x => x.id === el.dataset.id)); },
+  'rp-ar-all': () => { const paper = rPaper(); translateParas(paper, paper.paras.filter(x => x.kind !== 'front' && !(x.ar || '').trim())); },
+  'rp-ar-open': el => { const id = el.dataset.id, paper = rPaper(), card = $('#para-' + id); arOpen.add(id); if (card) card.outerHTML = paraCard(paper, paper.paras.find(x => x.id === id)); $('#ra-' + id)?.focus(); },
   'chat-toggle': el => {
     const sc = el.dataset.scope; chatOpen = chatOpen === sc ? null : sc;
     if (sc === 'paper') RENDER.reader(); else { const paper = rPaper(); const card = $('#para-' + sc); if (card) card.outerHTML = paraCard(paper, paper.paras.find(x => x.id === sc)); $$('#panel-reader textarea[data-rp]').forEach(grow); }
@@ -3193,7 +3353,7 @@ const ACTIONS = {
   'chat-stop': () => chatRun && chatRun.ctl.abort(),
   'chat-suggest': el => chatSend(el.dataset.scope, el.dataset.q),
   'chat-clear': el => { if (!confirm('Clear this chat?')) return; const paper = rPaper(); chatOf(paper, el.dataset.scope).length = 0; save(); rerenderChat(paper, el.dataset.scope); },
-  'chat-listen': el => { const m = chatOf(rPaper(), el.dataset.scope)[+el.dataset.i]; if (m) ttsPlay([{text:m.content.replace(/\*\*/g, '').replace(/^\s*[-•*]\s+/gm, '')}], false); },
+  'chat-listen': el => { const m = chatOf(rPaper(), el.dataset.scope)[+el.dataset.i]; if (m){ const text = m.content.replace(/\*\*/g, '').replace(/^\s*[-•*]\s+/gm, ''); ttsStart([{text, lang:isArabic(text) ? 'ar' : 'en'}], {}); } },
   'chat-copy': el => { const m = chatOf(rPaper(), el.dataset.scope)[+el.dataset.i]; if (m) copyText(m.content); },
   'rp-view': el => { S.reader.view = el.dataset.v; chatOpen = null; save(); RENDER.reader(); },
   'rp-paste': () => openDialog('Paste the paper text', `
@@ -3312,6 +3472,7 @@ document.addEventListener('input', e => {
   if (t.dataset.fb){ S.figlab.build.chart[t.dataset.fb] = t.value; save(); updateBuild(); return; }
   if (t.dataset.fbs){ S.figlab.build.chart.series[+t.dataset.fbs][t.dataset.field] = t.value; save(); updateBuild(); return; }
   if (t.dataset.fcap){ S.figlab.build.cap[t.dataset.fcap] = t.value; save(); updateBuild(); return; }
+  if (t.dataset.rp === 'ar'){ const para = rPaper().paras.find(x => x.id === t.dataset.id); if (para){ para.ar = t.value; para.arSrc = 'me'; save(); grow(t); } return; }
   if (t.dataset.rp === 'idea' || t.dataset.rp === 'mine'){
     const para = rPaper().paras.find(x => x.id === t.dataset.id); if (!para) return;
     if (t.dataset.rp === 'idea'){ para.idea = t.value; para.src = t.value.trim() ? 'me' : ''; grow(t); } else para.mine = t.value;
@@ -3357,10 +3518,9 @@ document.addEventListener('change', e => {
     if (t.dataset.rp === 'to' && !t.value) para.link.rel = '';
     save(); refreshCards([para]); return;
   }
-  if (t.id === 'rpSel'){ ttsStop(); chatOpen = null; S.reader.active = t.value; save(); RENDER.reader(); return; }
-  if (t.id === 'ttsMode'){ S.reader.ttsMode = t.value; save(); return; }
-  if (t.id === 'ttsRate'){ S.reader.rate = +t.value; save(); return; }
-  if (t.id === 'ttsVoice'){ S.reader.voice = t.value; save(); return; }
+  if (t.id === 'rpSel'){ if (TTS.playing) ttsPause(); chatOpen = null; S.reader.active = t.value; save(); RENDER.reader(); return; }
+  if (t.id === 'ttsRate'){ S.reader.rate = +t.value; save(); if (TTS.playing){ ttsHalt(); ttsSpeak(false); } return; }
+  if (t.id === 'ttsVoiceEn' || t.id === 'ttsVoiceAr'){ S.reader[t.id === 'ttsVoiceEn' ? 'voiceEn' : 'voiceAr'] = t.value; save(); if (TTS.playing){ ttsHalt(); ttsSpeak(false); } else renderTtsBar(); return; }
   if (t.id === 'rpFile' && t.files[0]){
     const file = t.files[0]; t.value = ''; toast('Reading the paper…');
     pdfToParagraphs(file).then(res => {
