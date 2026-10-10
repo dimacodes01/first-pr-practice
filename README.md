@@ -15,6 +15,8 @@ Nothing yet — it's a sandbox for practicing git and GitHub.
 
 ## ScholarPath
 
+**Full project specification: [`docs/SCHOLARPATH_SPEC.md`](docs/SCHOLARPATH_SPEC.md)** — requirements, rules, design, architecture, limitations and change log. Notes for Claude sessions: [`CLAUDE.md`](CLAUDE.md). Live page: https://claude.ai/artifact/RQWX4dnGb7W68zTghnoLvz
+
 `index.html` is **ScholarPath**, a single-page research companion for master's students and early researchers.
 Open the file in any modern browser. It needs no install, build step or login, and all work is saved in the browser's localStorage.
 
