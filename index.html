@@ -299,6 +299,37 @@ svg.mini{width:100%;max-width:220px;height:auto;display:block}
 .chart-frame svg{width:100%;height:auto;display:block}
 .chart-frame path:hover,.chart-frame g:hover{opacity:.8}
 
+
+/* Paper Reader: audio + chat */
+@media(max-width:520px){.hide-sm{display:none}}
+.part-lbl{display:flex;align-items:center;gap:6px;font-weight:500;font-size:.86rem;margin:2px 0 6px;color:var(--muted)}
+.orig-full{margin-bottom:14px}
+.para.speaking{box-shadow:0 0 0 2px var(--accent)}
+.speaking-part{outline:3px solid var(--accent-soft);outline-offset:2px;background:var(--accent-soft)!important}
+.para-tools{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-top:12px;padding-top:10px;border-top:1px dashed var(--line)}
+.listen{display:flex;flex-wrap:wrap;align-items:center;gap:6px}
+.listen .small{display:inline-flex;align-items:center;gap:4px}
+.tts-bar{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-top:10px;padding-top:10px;border-top:1px solid var(--line)}
+.tts-bar b{display:inline-flex;align-items:center;gap:5px}
+.tts-bar select{min-height:32px;padding:4px 8px;font-size:.84rem}
+.ask-card{margin-bottom:16px;border-left:3px solid var(--accent)}
+.ask-card h3{display:flex;align-items:center;gap:8px}
+.chat{margin-top:12px;border:1px solid var(--line);border-radius:var(--radius);background:var(--surface-2);padding:12px}
+.chat-msgs{display:flex;flex-direction:column;gap:10px;max-height:420px;overflow:auto;margin-bottom:10px}
+.chat-msgs:empty{display:none}
+.msg{padding:10px 14px;border-radius:14px;max-width:92%;font-size:.94rem;line-height:1.55}
+.msg p{margin:0 0 6px}.msg p:last-child{margin:0}
+.msg ul,.msg ol{margin:4px 0 6px;padding-left:20px}
+.msg.user{align-self:flex-end;background:var(--accent);color:var(--accent-ink);border-bottom-right-radius:4px}
+.msg.assistant{align-self:flex-start;background:var(--surface);border:1px solid var(--line);border-bottom-left-radius:4px}
+.msg.pending[hidden]{display:none}
+.msg-tools{display:flex;gap:4px;margin:6px -8px -6px}
+.chips-row{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
+.fchip.sm-chip{font-size:.8rem;padding:4px 10px;min-height:30px}
+.chat-input{display:flex;gap:8px;align-items:flex-end}
+.chat-input textarea{min-height:42px;max-height:160px;resize:none}
+.chat-input .btn{min-width:44px;min-height:42px}
+
 /* Writing */
 .write-layout{display:grid;gap:16px;grid-template-columns:1fr}
 @media(min-width:900px){.write-layout{grid-template-columns:290px 1fr;align-items:start}.stepper{position:sticky;top:110px}}
@@ -437,6 +468,12 @@ const ICONS = {
   x:'<path d="M18 6 6 18M6 6l12 12"/>',
   link:'<path d="M10 13a5 5 0 0 0 7.5.5l3-3a5 5 0 0 0-7-7l-1.7 1.7"/><path d="M14 11a5 5 0 0 0-7.5-.5l-3 3a5 5 0 0 0 7 7l1.7-1.7"/>',
   image:'<rect x="3" y="3" width="18" height="18" rx="2"/><path d="M7 16l4-5 3 3 2-2 3 4"/><circle cx="8.5" cy="8.5" r="1.5"/>',
+  volume:'<path d="M11 5 6 9H2v6h4l5 4z"/><path d="M15.5 8.5a5 5 0 0 1 0 7M19 5a10 10 0 0 1 0 14"/>',
+  play:'<path d="M7 4l13 8-13 8z"/>',
+  pause:'<path d="M8 5v14M16 5v14"/>',
+  stop:'<rect x="6" y="6" width="12" height="12" rx="1"/>',
+  chat:'<path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12z"/>',
+  send:'<path d="M22 2 11 13M22 2l-7 20-4-9-9-4z"/>',
   book:'<path d="M2 4h6a4 4 0 0 1 4 4v13a3 3 0 0 0-3-3H2zM22 4h-6a4 4 0 0 0-4 4v13a3 3 0 0 1 3-3h7z"/>',
   sparkle:'<path d="M12 3l1.9 5.1L19 10l-5.1 1.9L12 17l-1.9-5.1L5 10l5.1-1.9z"/>',
   clock:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
@@ -789,7 +826,7 @@ for (const k of Object.keys(base)) if (S[k] === undefined) S[k] = base[k];
 S.ui = Object.assign({}, base.ui, S.ui);
 S.writing = Object.assign({}, base.writing, S.writing);
 S.pres = Object.assign({}, base.pres, S.pres);
-S.reader = Object.assign({papers:[], active:'', view:'paras'}, S.reader);
+S.reader = Object.assign({papers:[], active:'', view:'paras', ttsMode:'both', rate:1, voice:''}, S.reader);
 S.figlab = Object.assign({}, base.figlab, S.figlab); S.figlab.build = Object.assign({}, base.figlab.build, S.figlab.build);
 
 let saveTimer;
@@ -841,6 +878,7 @@ function renderTabs(){
 const RENDER = {};
 function showTab(id, push=true){
   if (!TABS.some(t => t.id === id)) id = 'hub';
+  if (id !== 'reader' && TTS.playing) ttsStop();
   S.ui.tab = id; save();
   renderTabs();
   for (const t of TABS) $('#panel-'+t.id).hidden = t.id !== id;
@@ -1795,6 +1833,156 @@ function starterQuestions(paper){
   };
 }
 
+/* --- Read aloud (the browser's own speech voices: free, offline, no account) --- */
+const TTS = {ok:typeof window.speechSynthesis !== 'undefined' && typeof window.SpeechSynthesisUtterance !== 'undefined', queue:[], cur:null, playing:false, paused:false, gen:0};
+const isArabic = t => /[؀-ۿ]/.test(t || '');
+function ttsVoices(){ try { return TTS.ok ? speechSynthesis.getVoices().filter(v => /^(en|ar)/i.test(v.lang)) : []; } catch { return []; } }
+function ttsChunks(text){
+  const out = []; let cur = '';
+  (text || '').replace(/\s+/g, ' ').trim().split(/(?<=[.!?؟;:])\s+/).forEach(s => {
+    while (s.length > 220){ const cut = s.lastIndexOf(' ', 200) > 60 ? s.lastIndexOf(' ', 200) : 200; out.push((cur + ' ' + s.slice(0, cut)).trim()); cur = ''; s = s.slice(cut).trim(); }
+    if ((cur + ' ' + s).length > 220){ out.push(cur.trim()); cur = s; } else cur = (cur + ' ' + s).trim();
+  });
+  if (cur.trim()) out.push(cur.trim());
+  return out;
+}
+function ttsMark(it){
+  $$('.speaking').forEach(e => e.classList.remove('speaking'));
+  $$('.speaking-part').forEach(e => e.classList.remove('speaking-part'));
+  if (!it || !it.pid) return;
+  const card = $('#para-' + it.pid); if (!card) return;
+  card.classList.add('speaking');
+  const part = it.part === 'orig' ? $('#po-' + it.pid) : it.part === 'idea' ? $('#ri-' + it.pid) : null;
+  if (part) part.classList.add('speaking-part');
+  if (it.first && it.follow) card.scrollIntoView({behavior:'smooth', block:'center'});
+}
+function ttsPlay(items, follow){
+  if (!TTS.ok) return toast('Your browser cannot read aloud');
+  TTS.gen++; try { speechSynthesis.cancel(); } catch {}
+  TTS.queue = items.flatMap(it => ttsChunks(it.text).map((t, i) => ({...it, text:t, first:i === 0, follow})));
+  if (!TTS.queue.length) return toast('Nothing to read yet');
+  TTS.playing = true; TTS.paused = false; ttsNext(); renderTtsBar();
+}
+function ttsNext(){
+  const it = TTS.queue.shift();
+  if (!it){ ttsStop(); return; }
+  const gen = TTS.gen, u = new SpeechSynthesisUtterance(it.text);
+  const voices = ttsVoices(), ar = isArabic(it.text);
+  const v = ar ? voices.find(x => /^ar/i.test(x.lang)) : voices.find(x => x.voiceURI === S.reader.voice) || voices.find(x => /^en/i.test(x.lang) && x.default) || voices.find(x => /^en/i.test(x.lang));
+  if (v){ u.voice = v; u.lang = v.lang; } else u.lang = ar ? 'ar' : 'en-US';
+  u.rate = S.reader.rate || 1;
+  u.onend = () => { if (gen === TTS.gen && TTS.playing) ttsNext(); };
+  u.onerror = e => { if (gen === TTS.gen && TTS.playing && !/interrupted|canceled/.test(e.error || '')) ttsNext(); };
+  TTS.cur = it; ttsMark(it); speechSynthesis.speak(u);
+}
+function ttsStop(){
+  TTS.gen++; TTS.playing = false; TTS.paused = false; TTS.queue = []; TTS.cur = null;
+  try { if (TTS.ok) speechSynthesis.cancel(); } catch {}
+  ttsMark(null); renderTtsBar();
+}
+function ttsPause(){
+  if (!TTS.playing) return;
+  if (TTS.paused){ speechSynthesis.resume(); TTS.paused = false; } else { speechSynthesis.pause(); TTS.paused = true; }
+  renderTtsBar();
+}
+const ttsPart = (p, part) => part === 'orig' ? {pid:p.id, part:'orig', text:p.text} : {pid:p.id, part:'idea', text:ideaOf(p) ? 'In simple words: ' + ideaOf(p) : ''};
+function ttsItems(paper, fromId, mode){
+  const list = paper.paras.filter(p => p.kind !== 'front'), start = Math.max(0, list.findIndex(p => p.id === fromId));
+  return list.slice(start).flatMap(p => mode === 'orig' ? [ttsPart(p, 'orig')] : mode === 'idea' ? [ttsPart(p, 'idea')] : [ttsPart(p, 'orig'), ttsPart(p, 'idea')]).filter(x => x.text);
+}
+function ttsBarHTML(){
+  if (!TTS.ok) return '<p class="small muted" style="margin:10px 0 0">Read-aloud is not supported in this browser.</p>';
+  const voices = ttsVoices().filter(v => /^en/i.test(v.lang));
+  return `<div class="tts-bar" role="group" aria-label="Read aloud">
+    <span class="small"><b>${icon('volume')}Read aloud</b></span>
+    <button class="btn sm ${TTS.playing ? '' : 'primary'}" data-act="tts-all">${icon('play')}${TTS.playing ? 'Restart' : 'Play all'}</button>
+    <button class="btn sm" data-act="tts-pause" ${TTS.playing ? '' : 'disabled'}>${TTS.paused ? icon('play') + 'Resume' : icon('pause') + 'Pause'}</button>
+    <button class="btn sm" data-act="tts-stop" ${TTS.playing ? '' : 'disabled'}>${icon('stop')}Stop</button>
+    <select id="ttsMode" aria-label="What to read" style="width:auto"><option value="both" ${S.reader.ttsMode==='both'?'selected':''}>Original + simple</option><option value="orig" ${S.reader.ttsMode==='orig'?'selected':''}>Original only</option><option value="idea" ${S.reader.ttsMode==='idea'?'selected':''}>Simple only</option></select>
+    <select id="ttsRate" aria-label="Speed" style="width:auto">${[0.75,0.9,1,1.15,1.3,1.5].map(r => `<option value="${r}" ${(S.reader.rate||1)==r?'selected':''}>${r}×</option>`).join('')}</select>
+    ${voices.length ? `<select id="ttsVoice" aria-label="Voice" style="width:auto;max-width:200px"><option value="">Default voice</option>${voices.map(v => `<option value="${esc(v.voiceURI)}" ${S.reader.voice===v.voiceURI?'selected':''}>${esc(clip(v.name, 32))} (${esc(v.lang)})</option>`).join('')}</select>` : ''}
+  </div>`;
+}
+function renderTtsBar(){ const el = $('#ttsBar'); if (el) el.innerHTML = ttsBarHTML(); }
+if (TTS.ok) try { speechSynthesis.onvoiceschanged = () => renderTtsBar(); } catch {}
+
+/* --- Ask Claude: a chat per paragraph, and one about the whole paper --- */
+let chatOpen = null, chatRun = null;
+const PARA_SUGGEST = ['Explain this more simply', 'Give me an everyday example', 'What do the technical terms mean?', 'Why does this paragraph matter for the paper?', 'اشرح هذه الفقرة بالعربية'];
+const PAPER_SUGGEST = ['What is the main contribution?', 'Explain the method step by step', 'What are the main weaknesses?', 'What might my professor ask me?', 'لخّص البحث بالعربية'];
+const chatOf = (paper, scope) => scope === 'paper' ? (paper.chat ||= []) : ((paper.paras.find(p => p.id === scope) || {}).chat ||= []);
+function mdLite(t){
+  const lines = esc(t).replace(/\*\*(.+?)\*\*/g, '<b>$1</b>').split('\n');
+  let html = '', list = null;
+  for (const l of lines){
+    const m = l.match(/^\s*(?:[-•*]|\d+[.)])\s+(.*)/);
+    if (m){ if (!list){ list = /^\s*\d/.test(l) ? 'ol' : 'ul'; html += `<${list}>`; } html += `<li>${m[1]}</li>`; continue; }
+    if (list){ html += `</${list}>`; list = null; }
+    if (l.trim()) html += `<p>${l}</p>`;
+  }
+  if (list) html += `</${list}>`;
+  return html;
+}
+function chatPanel(paper, scope){
+  const msgs = chatOf(paper, scope), sugg = scope === 'paper' ? PAPER_SUGGEST : PARA_SUGGEST;
+  return `<div class="chat" id="chat-${scope}">
+    <div class="chat-msgs">${msgs.map((m,i) => `<div class="msg ${m.role}" dir="auto">${m.role === 'assistant' ? mdLite(m.content) + `<div class="msg-tools"><button class="btn ghost sm" data-act="chat-listen" data-scope="${scope}" data-i="${i}">${icon('volume')}Listen</button><button class="btn ghost sm" data-act="chat-copy" data-scope="${scope}" data-i="${i}">${icon('copy')}Copy</button></div>` : `<p>${esc(m.content)}</p>`}</div>`).join('')}
+      <div class="msg assistant pending" id="chat-live-${scope}" hidden dir="auto"></div></div>
+    <div class="chips-row">${sugg.map(q => `<button class="fchip sm-chip" data-act="chat-suggest" data-scope="${scope}" data-q="${esc(q)}" dir="auto">${esc(q)}</button>`).join('')}</div>
+    <div class="chat-input"><label class="sr-only" for="chat-in-${scope}">Your question</label>
+      <textarea id="chat-in-${scope}" data-chat-in="${scope}" rows="1" dir="auto" placeholder="Ask a question… (Enter to send)"></textarea>
+      <button class="btn primary" data-act="chat-send" data-scope="${scope}" aria-label="Send">${icon('send')}</button></div>
+    <div class="row" style="justify-content:space-between;margin-top:6px"><span class="small muted">Answers come from Claude using this paper — check them against the text.</span>
+      ${msgs.length ? `<button class="btn ghost sm" data-act="chat-clear" data-scope="${scope}">${icon('trash')}Clear chat</button>` : ''}</div>
+  </div>`;
+}
+function chatContext(paper, scope){
+  const rules = `You are a patient tutor helping a master's student understand a research paper. Answer in clear, simple English (or in Arabic if the student writes in Arabic or asks for Arabic). Keep answers short — under 150 words, using short paragraphs or bullet points — unless the student asks for more.
+Base your answers on the paper content below. If the paper does not say something, say so plainly, and clearly separate general background knowledge ("In general, …") from what this paper says. Never invent results, numbers, quotes or citations.`;
+  if (scope === 'paper'){
+    const body = paper.paras.filter(p => p.kind !== 'front').map(p => `[¶${paraNo(paper, p.id)} · ${p.section}${p.page ? `, p. ${p.page}` : ''}] ${p.text}`).join('\n').slice(0, 150000);
+    return `${rules}\n\nPaper: "${paper.title}"\n\nPaper content (paragraph number, section, page):\n${body}`;
+  }
+  const p = paper.paras.find(x => x.id === scope), n = paraNo(paper, scope), i = n - 1;
+  const near = paper.paras.slice(Math.max(0, i - 2), i + 3).filter(x => x !== p && x.kind !== 'front').map(x => `¶${paraNo(paper, x.id)}: ${ideaOf(x) || clip(x.text, 300)}`).join('\n');
+  return `${rules}\n\nPaper: "${paper.title}"\nThe student is asking about ¶${n} (section: ${p.section}${p.page ? `, page ${p.page}` : ''}).\n\nOriginal paragraph:\n${p.text}\n\n${ideaOf(p) ? `Simple summary: ${ideaOf(p)}\n\n` : ''}Nearby paragraphs, for context:\n${near || '(none)'}`;
+}
+async function chatSend(scope, text){
+  const paper = rPaper(); text = (text || '').trim();
+  if (!paper || !text || chatRun) return;
+  if (!aiReady()) return toast('Asking Claude works on the published ScholarPath page on claude.ai');
+  const msgs = chatOf(paper, scope);
+  msgs.push({role:'user', content:text}); save();
+  rerenderChat(paper, scope);
+  const live = $('#chat-live-' + scope); if (live){ live.hidden = false; live.innerHTML = '<p class="muted"><span class="spin" aria-hidden="true"></span> Thinking…</p>'; live.scrollIntoView({block:'nearest'}); }
+  const ctl = new AbortController(); chatRun = {ctl, scope};
+  setChatBusy(scope, true);
+  const turns = [{role:'user', content:chatContext(paper, scope)}, ...msgs.slice(-12)];
+  try {
+    const {text:answer, truncated} = await AI(turns, {signal:ctl.signal, cache:false, onText:({text}) => { const el = $('#chat-live-' + scope); if (el){ el.hidden = false; el.innerHTML = mdLite(text); } }});
+    msgs.push({role:'assistant', content:answer + (truncated ? '\n\n(Answer cut short — ask for a shorter answer or a specific part.)' : '')});
+  } catch (e){
+    if (e && e.text) msgs.push({role:'assistant', content:e.text + '\n\n(Interrupted.)'});
+    else if (!e || e.code !== 'cancelled') msgs.push({role:'assistant', content:'⚠ ' + aiError(e)});
+    else msgs.pop();
+  } finally {
+    chatRun = null; save(); rerenderChat(paper, scope); setChatBusy(scope, false);
+    $('#chat-in-' + scope)?.focus();
+  }
+}
+function rerenderChat(paper, scope){ const el = $('#chat-' + scope); if (el) el.outerHTML = chatPanel(paper, scope); const box = $('#chat-' + scope + ' .chat-msgs'); if (box) box.scrollTop = box.scrollHeight; }
+function setChatBusy(scope, busy){
+  const b = $(`[data-act="chat-send"][data-scope="${scope}"]`);
+  if (b){ b.dataset.act = busy ? 'chat-stop' : 'chat-send'; b.innerHTML = busy ? icon('stop') : icon('send'); b.setAttribute('aria-label', busy ? 'Stop' : 'Send'); b.dataset.scope = scope; }
+}
+function paperChatCard(paper){
+  const open = chatOpen === 'paper', n = (paper.chat || []).filter(m => m.role === 'user').length;
+  return `<div class="card ask-card"><div class="row" style="justify-content:space-between">
+    <div><h3 style="margin:0">${icon('chat')} Ask Claude about this paper</h3><p class="small muted" style="margin:4px 0 0">Questions about the whole paper — the method, the results, what your professor might ask${n ? ` · ${n} question${n===1?'':'s'} so far` : ''}.</p></div>
+    ${aiReady() ? `<button class="btn ${open ? '' : 'primary'}" data-act="chat-toggle" data-scope="paper">${open ? 'Hide chat' : icon('chat') + 'Ask'}</button>` : '<span class="chip">Available on the published page</span>'}</div>
+    ${open && aiReady() ? chatPanel(paper, 'paper') : ''}</div>`;
+}
+
 /* --- Rendering --- */
 RENDER.reader = () => {
   const papers = S.reader.papers;
@@ -1841,13 +2029,14 @@ function readerBody(paper, view){
       ${copyBtn('#rpNotes','Copy reading notes')}<button class="btn sm" data-act="rp-to-crit">${icon('clip')}Use in Critique</button></span></div>
     <div class="progress"><span style="width:${text.length ? done/text.length*100 : 0}%"></span></div>
     <div id="aiBar"></div>
+    <div id="ttsBar">${ttsBarHTML()}</div>
   </div>
   <div id="rpView" style="margin-top:16px">${view === 'flow' ? flowView(paper) : view === 'questions' ? questionsView(paper) : parasView(paper)}</div>
   <pre class="sr-only" id="rpNotes" aria-hidden="true">${esc(readingNotes(paper))}</pre>`;
 }
 function parasView(paper){
   let last = null;
-  return paper.paras.map(p => { const h = p.section !== last ? `<div class="form-part">${esc(p.section)}</div>` : ''; last = p.section; return h + paraCard(paper, p); }).join('') ||
+  return paperChatCard(paper) + paper.paras.map(p => { const h = p.section !== last ? `<div class="form-part">${esc(p.section)}</div>` : ''; last = p.section; return h + paraCard(paper, p); }).join('') ||
     '<div class="empty">No paragraphs were found. If this is a scanned PDF, try <b>Paste text</b> instead.</div>';
 }
 function paraCard(paper, p){
@@ -1860,14 +2049,25 @@ function paraCard(paper, p){
   return `<article class="card para ${ideaOf(p)?'has-idea':''}" id="para-${p.id}" data-pid="${p.id}">
     <div class="para-head"><span class="para-no">¶${n}</span><span class="small muted">${p.page ? `p. ${p.page} · ` : ''}${esc(p.section)}${p.kind === 'caption' ? ' · figure/table' : p.kind === 'front' ? ' · title & authors' : ''}</span>
       <span class="spacer"></span>
-      ${aiReady() ? `<button class="btn ghost sm" data-act="rp-sum-one" data-id="${p.id}" data-ai-btn title="Ask Claude to simplify this paragraph">${icon('sparkle')}Simplify</button>` : ''}
+      ${aiReady() ? `<button class="btn ghost sm" data-act="rp-sum-one" data-id="${p.id}" data-ai-btn title="Ask Claude to simplify this paragraph" aria-label="Simplify with Claude">${icon('sparkle')}<span class="hide-sm">Simplify</span></button>` : ''}
       <button class="btn ghost icon" data-act="rp-merge" data-id="${p.id}" title="Merge with next paragraph" aria-label="Merge with next paragraph">${icon('link')}</button>
       <button class="btn ghost icon danger" data-act="rp-drop" data-id="${p.id}" title="Remove this paragraph" aria-label="Remove paragraph">${icon('trash')}</button></div>
-    <details class="orig"><summary><span class="orig-text">${esc(p.text)}</span></summary><div class="orig-full">${esc(p.text)}</div></details>
+    <div class="part-lbl">${icon('book')}Original text</div>
+    <div class="orig-full" id="po-${p.id}" dir="auto">${esc(p.text)}</div>
     <label class="f idea-lbl" for="ri-${p.id}">${icon('bulb')}Main idea in simple words ${p.src === 'ai' ? '<span class="chip">by Claude — check it</span>' : p.src === 'me' ? '<span class="chip tag">mine</span>' : ''}</label>
     <textarea id="ri-${p.id}" data-rp="idea" data-id="${p.id}" rows="2" placeholder="What is this paragraph saying? Write it simply, in 1–2 sentences.">${esc(p.idea)}</textarea>
     ${p.aiIdea ? `<div class="ai-alt"><span class="small"><b>Claude’s version:</b> ${esc(p.aiIdea)}</span><button class="btn sm" data-act="rp-use-ai" data-id="${p.id}">Use this</button></div>` : ''}
     ${(p.terms||[]).length ? `<div class="terms">${p.terms.map(t => `<span class="term"><b>${esc(t.term)}</b> — ${esc(t.meaning)}</span>`).join('')}</div>` : ''}
+    <div class="para-tools">
+      ${TTS.ok ? `<span class="listen" role="group" aria-label="Listen to ¶${n}"><span class="small muted">${icon('volume')}Listen:</span>
+        <button class="btn sm" data-act="tts-one" data-id="${p.id}" data-part="orig">Original</button>
+        <button class="btn sm" data-act="tts-one" data-id="${p.id}" data-part="idea" ${ideaOf(p) ? '' : 'disabled'}>Simple</button>
+        <button class="btn sm" data-act="tts-one" data-id="${p.id}" data-part="both">Both</button>
+        <button class="btn sm ghost" data-act="tts-one" data-id="${p.id}" data-part="from" title="Read from here to the end">${icon('play')}From here</button></span>` : ''}
+      <span class="spacer"></span>
+      ${aiReady() ? `<button class="btn sm ${chatOpen === p.id ? '' : 'primary'}" data-act="chat-toggle" data-scope="${p.id}">${icon('chat')}${chatOpen === p.id ? 'Hide chat' : 'Ask Claude'}${(p.chat||[]).length && chatOpen !== p.id ? ` (${p.chat.filter(m => m.role === 'user').length})` : ''}</button>` : ''}
+    </div>
+    ${chatOpen === p.id && aiReady() ? chatPanel(paper, p.id) : ''}
     <div class="para-foot">
       <div><label class="f" for="rm-${p.id}">My memory hook</label><input class="input" id="rm-${p.id}" data-rp="mine" data-id="${p.id}" value="${esc(p.mine)}" placeholder="A keyword, example or picture that helps you remember"></div>
       <div><span class="f">Connects to</span><div class="row" style="gap:6px;flex-wrap:nowrap">
@@ -2650,7 +2850,26 @@ const ACTIONS = {
   'fl-goal': el => { S.figlab.build.goal = el.dataset.v; save(); RENDER.figlab(); },
   'fl-ctype': el => { S.figlab.build.chart.type = el.dataset.v; save(); $$('[data-act="fl-ctype"]').forEach(b => b.setAttribute('aria-pressed', b.dataset.v === el.dataset.v));
     const lbl = $('label[for="cb-cats"]'); if (lbl) lbl.textContent = el.dataset.v === 'scatter' ? 'X values (numbers, comma-separated)' : 'Category labels (comma-separated)'; updateBuild(); },
-  'rp-view': el => { S.reader.view = el.dataset.v; save(); RENDER.reader(); },
+  'tts-all': () => ttsPlay(ttsItems(rPaper(), null, S.reader.ttsMode || 'both'), true),
+  'tts-pause': () => ttsPause(),
+  'tts-stop': () => ttsStop(),
+  'tts-one': el => {
+    const paper = rPaper(), p = paper.paras.find(x => x.id === el.dataset.id), part = el.dataset.part;
+    if (part === 'from') return ttsPlay(ttsItems(paper, p.id, S.reader.ttsMode || 'both'), true);
+    ttsPlay((part === 'both' ? [ttsPart(p, 'orig'), ttsPart(p, 'idea')] : [ttsPart(p, part)]).filter(x => x.text), false);
+  },
+  'chat-toggle': el => {
+    const sc = el.dataset.scope; chatOpen = chatOpen === sc ? null : sc;
+    if (sc === 'paper') RENDER.reader(); else { const paper = rPaper(); const card = $('#para-' + sc); if (card) card.outerHTML = paraCard(paper, paper.paras.find(x => x.id === sc)); $$('#panel-reader textarea[data-rp]').forEach(grow); }
+    if (chatOpen) setTimeout(() => { const box = $('#chat-' + sc + ' .chat-msgs'); if (box) box.scrollTop = box.scrollHeight; $('#chat-in-' + sc)?.focus(); }, 30);
+  },
+  'chat-send': el => { const inp = $('#chat-in-' + el.dataset.scope); const q = inp.value; inp.value = ''; chatSend(el.dataset.scope, q); },
+  'chat-stop': () => chatRun && chatRun.ctl.abort(),
+  'chat-suggest': el => chatSend(el.dataset.scope, el.dataset.q),
+  'chat-clear': el => { if (!confirm('Clear this chat?')) return; const paper = rPaper(); chatOf(paper, el.dataset.scope).length = 0; save(); rerenderChat(paper, el.dataset.scope); },
+  'chat-listen': el => { const m = chatOf(rPaper(), el.dataset.scope)[+el.dataset.i]; if (m) ttsPlay([{text:m.content.replace(/\*\*/g, '').replace(/^\s*[-•*]\s+/gm, '')}], false); },
+  'chat-copy': el => { const m = chatOf(rPaper(), el.dataset.scope)[+el.dataset.i]; if (m) copyText(m.content); },
+  'rp-view': el => { S.reader.view = el.dataset.v; chatOpen = null; save(); RENDER.reader(); },
   'rp-paste': () => openDialog('Paste the paper text', `
     <div class="field"><label class="f" for="pt-title">Paper title</label><input class="input" id="pt-title" name="title" required></div>
     <div class="field"><label class="f" for="pt-text">Paper text</label><textarea id="pt-text" name="text" required style="min-height:260px" placeholder="Paste the text. Leave an empty line between paragraphs; headings such as Introduction or 2. Method are detected."></textarea></div>`,
@@ -2754,6 +2973,7 @@ document.addEventListener('click', e => {
 });
 document.addEventListener('keydown', e => {
   if (e.target.id === 'q' && e.key === 'Enter'){ e.preventDefault(); ACTIONS.search(); }
+  if (e.target.dataset.chatIn && e.key === 'Enter' && !e.shiftKey && !e.isComposing){ e.preventDefault(); const sc = e.target.dataset.chatIn; const q = e.target.value; e.target.value = ''; chatSend(sc, q); }
   if (e.target.classList.contains('tab') && (e.key === 'ArrowRight' || e.key === 'ArrowLeft')){
     const i = TABS.findIndex(t => t.id === S.ui.tab), n = TABS[(i + (e.key === 'ArrowRight' ? 1 : -1) + TABS.length) % TABS.length];
     showTab(n.id); $('#tab-'+n.id).focus();
@@ -2761,6 +2981,7 @@ document.addEventListener('keydown', e => {
 });
 document.addEventListener('input', e => {
   const t = e.target, c = () => activeCrit();
+  if (t.dataset.chatIn){ t.style.height = 'auto'; t.style.height = Math.min(t.scrollHeight + 2, 160) + 'px'; return; }
   if (t.dataset.fl){ const r = activeFig(); r[t.dataset.fl] = t.value; save(); updateExplain(); return; }
   if (t.dataset.fb){ S.figlab.build.chart[t.dataset.fb] = t.value; save(); updateBuild(); return; }
   if (t.dataset.fbs){ S.figlab.build.chart.series[+t.dataset.fbs][t.dataset.field] = t.value; save(); updateBuild(); return; }
@@ -2798,7 +3019,10 @@ document.addEventListener('change', e => {
     if (t.dataset.rp === 'to' && !t.value) para.link.rel = '';
     save(); refreshCards([para]); return;
   }
-  if (t.id === 'rpSel'){ S.reader.active = t.value; save(); RENDER.reader(); return; }
+  if (t.id === 'rpSel'){ ttsStop(); chatOpen = null; S.reader.active = t.value; save(); RENDER.reader(); return; }
+  if (t.id === 'ttsMode'){ S.reader.ttsMode = t.value; save(); return; }
+  if (t.id === 'ttsRate'){ S.reader.rate = +t.value; save(); return; }
+  if (t.id === 'ttsVoice'){ S.reader.voice = t.value; save(); return; }
   if (t.id === 'rpFile' && t.files[0]){
     const file = t.files[0]; t.value = ''; toast('Reading the paper…');
     pdfToParagraphs(file).then(res => {
