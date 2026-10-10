@@ -330,6 +330,21 @@ svg.mini{width:100%;max-width:220px;height:auto;display:block}
 .chat-input textarea{min-height:42px;max-height:160px;resize:none}
 .chat-input .btn{min-width:44px;min-height:42px}
 
+
+/* Figure Lab: paper scan */
+.scan-card{border-left:3px solid var(--accent)}
+.scan-head{margin-top:14px;padding-top:12px;border-top:1px solid var(--line)}
+.scan-list{display:flex;flex-direction:column;gap:2px;margin-top:8px;max-height:340px;overflow:auto}
+.scan-item{display:grid;grid-template-columns:auto auto 1fr auto auto;gap:10px;align-items:center;padding:8px;border-radius:var(--radius-sm);cursor:pointer;font-size:.9rem}
+.scan-item:hover{background:var(--surface-2)}
+.scan-item input{width:18px;height:18px;accent-color:var(--accent)}
+.scan-cap{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+@media(max-width:620px){.scan-item{grid-template-columns:auto auto 1fr}.scan-item .scan-cap{grid-column:2/-1;white-space:normal}}
+.fig-shot{margin:4px 0 14px;background:#fff;border:1px solid var(--line);border-radius:var(--radius-sm);padding:8px;text-align:center}
+.fig-shot img{max-width:100%;max-height:420px;display:block;margin:0 auto 6px}
+.fig-shot .small{text-align:left}
+.ai-note{margin:-4px 0 12px;padding:8px 10px;background:var(--accent-soft);border-radius:var(--radius-sm)}
+
 /* Writing */
 .write-layout{display:grid;gap:16px;grid-template-columns:1fr}
 @media(min-width:900px){.write-layout{grid-template-columns:290px 1fr;align-items:start}.stepper{position:sticky;top:110px}}
@@ -1607,31 +1622,35 @@ function rPaper(){ return (S.reader.papers || []).find(p => p.id === S.reader.ac
 const paraNo = (paper, id) => paper.paras.findIndex(p => p.id === id) + 1;
 
 /* --- PDF → paragraphs (uses item positions to find breaks, headings and repeated headers) --- */
+// One page of a PDF as text lines with positions (PDF units, y grows upwards)
+async function pdfPageLines(page){
+  const tc = await page.getTextContent(), ph = (page.view && page.view[3]) || 842, pw = (page.view && page.view[2]) || 595;
+  const lines = []; let cur = null;
+  for (const it of tc.items){
+    if (!('str' in it)) continue;
+    const x = it.transform[4], y = it.transform[5], h = Math.abs(it.transform[3]) || it.height || 10;
+    if (cur && Math.abs(y - cur.y) < h * 0.6 && x >= cur.xEnd - h * 0.5 && x - cur.xEnd < h * 1.2){   // same line, same column
+      const gap = x - cur.xEnd;
+      if (gap > h * 0.15 && !/\s$/.test(cur.text) && !/^\s/.test(it.str)) cur.text += ' ';
+      cur.text += it.str; cur.xEnd = Math.max(cur.xEnd, x + (it.width || 0));
+    } else if (it.str.trim()){
+      if (cur) lines.push(cur);
+      cur = {text:it.str, x, y, h, xEnd:x + (it.width || 0)};
+    }
+    if (it.hasEOL && cur){ lines.push(cur); cur = null; }
+  }
+  if (cur) lines.push(cur);
+  lines.forEach(l => { l.text = l.text.replace(/\s+/g, ' ').trim(); l.w = l.xEnd - l.x; });
+  const byY = lines.filter(l => l.text).sort((a,b) => b.y - a.y);      // only the outermost lines can be headers / footers
+  [...byY.slice(0, 2), ...byY.slice(-2)].forEach(l => { l.edge = l.y > ph * 0.9 || l.y < ph * 0.1; });
+  return {lines:lines.filter(l => l.text), W:pw, H:ph};
+}
 async function pdfToParagraphs(file){
   const lib = await loadPdfJs();
   const doc = await lib.getDocument({data:await file.arrayBuffer()}).promise;
   const pages = [], pageLines = [];
   for (let n = 1; n <= doc.numPages; n++){
-    const page = await doc.getPage(n), tc = await page.getTextContent(), ph = (page.view && page.view[3]) || 842;
-    const lines = []; let cur = null;
-    for (const it of tc.items){
-      if (!('str' in it)) continue;
-      const x = it.transform[4], y = it.transform[5], h = Math.abs(it.transform[3]) || it.height || 10;
-      if (cur && Math.abs(y - cur.y) < h * 0.6 && x >= cur.xEnd - h * 0.5 && x - cur.xEnd < h * 1.2){   // same line, same column
-        const gap = x - cur.xEnd;
-        if (gap > h * 0.15 && !/\s$/.test(cur.text) && !/^\s/.test(it.str)) cur.text += ' ';
-        cur.text += it.str; cur.xEnd = Math.max(cur.xEnd, x + (it.width || 0));
-      } else if (it.str.trim()){
-        if (cur) lines.push(cur);
-        cur = {text:it.str, x, y, h, xEnd:x + (it.width || 0)};
-      }
-      if (it.hasEOL && cur){ lines.push(cur); cur = null; }
-    }
-    if (cur) lines.push(cur);
-    lines.forEach(l => { l.text = l.text.replace(/\s+/g, ' ').trim(); l.w = l.xEnd - l.x; });
-    const byY = lines.filter(l => l.text).sort((a,b) => b.y - a.y);      // only the outermost lines can be headers / footers
-    [...byY.slice(0, 2), ...byY.slice(-2)].forEach(l => { l.edge = l.y > ph * 0.9 || l.y < ph * 0.1; });
-    const keep = lines.filter(l => l.text);
+    const {lines:keep} = await pdfPageLines(await doc.getPage(n));
     pageLines.push(keep);
     pages.push(keep.map(l => l.text).join('\n'));
   }
@@ -1707,7 +1726,7 @@ function addReaderPaper(name, title, res){
 /* --- Claude (sample capability), only where the viewer provides it --- */
 const capUse = n => (window.claude && typeof window.claude.use === 'function') ? Promise.resolve(window.claude.use(n)).catch(() => null) : Promise.resolve(null);
 let AI = null, aiOff = false, aiRun = null;
-capUse('sample').then(fn => { AI = fn; if (fn && S.ui.tab === 'reader') RENDER.reader(); });
+capUse('sample').then(fn => { AI = fn; if (fn && S.ui.tab === 'reader') RENDER.reader(); if (fn && S.ui.tab === 'figlab') RENDER.figlab(); });
 const aiReady = () => !!AI && !aiOff;
 function aiError(e){
   const code = e && e.code;
@@ -2263,12 +2282,17 @@ function exampleFigure(){
     pattern:'all three tools are more accurate on English essays than on Arabic essays, with the largest gap for Tool A',
     claim:'current AI feedback tools serve Arabic-speaking learners less well', support:'partial',
     supportWhy:'It shows a consistent gap, but without error bars or sample sizes it is unclear whether the gap is statistically meaningful.',
+    importance:'It is the main visual evidence for the paper’s central argument that AI feedback quality differs by language.',
+    effect:'Because no uncertainty is shown, the conclusion that the gap is real rests on the reader trusting point estimates alone.',
+    relation:'It answers the second research question directly and builds on the accuracy measure defined in the method section.',
+    strengths:'compares the same three tools across both languages side by side\nkeeps one colour per language, so the gap is easy to see',
+    weaknesses:'does not say how many essays each bar is based on\nimplies the tools are worse for Arabic learners without testing whether the difference is significant',
     checks:{axes:true, legend:true, n:false, err:false, scale:true, bw:false, cb:true, ref:true, cap:true, deco:true}, flags:{},
     ratings:{clarity:4, accuracy:3, relevance:5}};
 }
 function newFigure(){
   const f = S.figlab.filter && S.critiques.some(c => c.id === S.figlab.filter) ? S.figlab.filter : '';
-  return {id:uid(), created:Date.now(), critId:f, figNo:'', caption:'', type:'', x:'', y:'', single:'', pattern:'', claim:'', support:'', supportWhy:'', checks:{}, flags:{}, ratings:{}};
+  return {id:uid(), created:Date.now(), critId:f, figNo:'', caption:'', type:'', x:'', y:'', single:'', pattern:'', claim:'', support:'', supportWhy:'', importance:'', effect:'', relation:'', strengths:'', weaknesses:'', checks:{}, flags:{}, ratings:{}};
 }
 const activeFig = () => S.figlab.reviews.find(r => r.id === S.figlab.active) || S.figlab.reviews[0];
 const figDone = r => !!(r.type && r.pattern.trim() && r.support);
@@ -2278,7 +2302,15 @@ const lcFirst = s => s && /^(the|this|these|that|those|a|an|all|both|each|every|
 const trimDot = s => (s || '').trim().replace(/[.;\s]+$/, '');
 const listJoin = a => a.length < 2 ? a.join('') : a.slice(0,-1).join(', ') + ' and ' + a[a.length-1];
 const figWord = no => { const t = (no || '').trim(); return /^fig\.?\s*/i.test(t) ? t.replace(/^fig\.?\s*/i, 'Figure ') : t || 'This figure'; };
+// "Reports error rates…" / "The figure reports…" → "reports error rates…" (keeps names such as "Model B")
+function phraseList(text, noun){
+  return (text || '').split('\n').map(l => trimDot(l.replace(/^[-•*]\s*/, '').replace(new RegExp(`^(the (${noun}|figure|table)|it)\\s+`, 'i'), '')))
+    .filter(Boolean).map(l => /^[A-Z][a-z]+\b/.test(l) && !/^[A-Z][a-z]+\s+[A-Z0-9]/.test(l) ? l.charAt(0).toLowerCase() + l.slice(1) : l);
+}
+// The checklist only feeds weaknesses once someone has used it (a new review has nothing ticked yet)
+const checklistUsed = r => !!(r.ai || r.example || Object.entries(r.checks || {}).some(([k, v]) => k !== 'ref' && v !== undefined));
 function figParagraph(r){
+  fixFig(r);
   const t = figType(r.type), L = [], label = figWord(r.figNo);
   const tn = t ? t.name : 'figure';
   L.push(`${label} is ${/^[aeiou]/i.test(tn) ? 'an' : 'a'} ${tn}${r.caption.trim() ? ` captioned “${trimDot(r.caption)}”` : ''}.`);
@@ -2291,9 +2323,12 @@ function figParagraph(r){
   if (r.support && claim) L.push({full:`This fully supports the authors’ claim that ${lcFirst(claim)}.`, partial:`This partially supports the authors’ claim that ${lcFirst(claim)}.`, none:`However, it does not support the authors’ claim that ${lcFirst(claim)}.`}[r.support]);
   else if (r.support) L.push({full:'It fully supports the related claim in the text.', partial:'It only partially supports the related claim in the text.', none:'It does not support the related claim in the text.'}[r.support]);
   if (r.supportWhy.trim()) L.push(trimDot(r.supportWhy) + '.');
-  const weak = FIG_CHECKS.filter(([k]) => r.checks[k] === false || r.checks[k] === undefined).filter(([k]) => r.checks[k] !== 'na').map(c => c[2]);
-  const flags = t ? t.flags.filter((_,i) => r.flags[i]).map(f => f[1]) : [];
+  ['relation', 'importance', 'effect'].forEach(k => { if ((r[k] || '').trim()) L.push(trimDot(r[k]) + '.'); });
   const noun = t && t.k === 'table' ? 'table' : 'figure';
+  const strengths = phraseList(r.strengths, noun);
+  if (strengths.length) L.push(`On the positive side, the ${noun} ${listJoin(strengths)}.`);
+  const weak = [...phraseList(r.weaknesses, noun), ...(checklistUsed(r) ? FIG_CHECKS.filter(([k]) => r.checks[k] === false || r.checks[k] === undefined).map(c => c[2]) : [])];
+  const flags = t ? t.flags.filter((_,i) => r.flags[i]).map(f => f[1]) : [];
   if (weak.length) L.push(`${r.support === 'none' ? 'In addition' : 'However'}, the ${noun} ${listJoin(weak)}.`);
   if (flags.length) L.push(`${weak.length ? 'Moreover' : 'However'}, ${listJoin(flags)}.`);
   if (!weak.length && !flags.length && r.type) L.push(`The ${noun} meets all the quality checks applied in this review.`);
@@ -2469,9 +2504,276 @@ function figAlt(cap, c){
   return bits.join(' ');
 }
 
+/* --- Figure Lab: find, crop and analyse the figures in an uploaded paper --- */
+// Figure pictures live in IndexedDB (too large for localStorage); reviews keep only a flag
+const IDB = (() => {
+  let p;
+  const open = () => p ||= new Promise((res, rej) => {
+    try { const r = indexedDB.open('scholarpath', 1); r.onupgradeneeded = () => r.result.createObjectStore('img'); r.onsuccess = () => res(r.result); r.onerror = () => rej(r.error); }
+    catch (e){ rej(e); }
+  });
+  const run = (mode, fn) => open().then(db => new Promise((res, rej) => {
+    const t = db.transaction('img', mode), q = fn(t.objectStore('img'));
+    t.oncomplete = () => res(q && q.result); t.onerror = () => rej(t.error);
+  }));
+  return {get:k => run('readonly', s => s.get(k)).catch(() => null), put:(k, v) => run('readwrite', s => s.put(v, k)).catch(() => null), del:k => run('readwrite', s => s.delete(k)).catch(() => null)};
+})();
+let figScan = null, figRun = null, figShotURL = null;
+const FIG_CAP_RE = /^(?:Fig\.?|FIG\.?|Figure|FIGURE)\s*(\d{1,2})\s*(?:\([a-z]\))?\s*[.:|—–]\s*(.*)$/;
+const TAB_UP_RE = /^TABLE\s+([IVXL]{1,5}|\d{1,2})\b\.?\s*(.*)$/;
+const TAB_MIX_RE = /^Table\s+([IVXL]{1,5}|\d{1,2})\s*[.:|—–]\s*(.*)$/;
+const normFig = s => (s || '').toLowerCase().replace(/^figure/, 'fig').replace(/[^a-z0-9]/g, '');
+const VISUAL_CHECKS = ['axes','legend','err','scale','bw','cb','deco'];
+const proseLine = l => { const w = l.text.split(/\s+/).filter(x => /[a-z]{2}/i.test(x)).length; return w >= 7 && (l.text.match(/\d/g) || []).length / l.text.length < 0.15; };
+
+function figRegion(capLines, lines, W, H, kind){
+  const capX = Math.min(...capLines.map(l => l.x)), capR = Math.max(...capLines.map(l => l.x + l.w));
+  const full = capR - capX > W * 0.55 || (capX < W * 0.3 && capR > W * 0.62);
+  const left = capX < W / 2;
+  const x0 = full || left ? W * 0.04 : W / 2 - 6, x1 = full || !left ? W * 0.96 : W / 2 + 6, colW = x1 - x0;
+  const capTop = Math.max(...capLines.map(l => l.y + l.h)), capBot = Math.min(...capLines.map(l => l.y)) - 0.35 * capLines[0].h;
+  const overlap = l => Math.max(0, Math.min(x1, l.x + l.w) - Math.max(x0, l.x));
+  const body = lines.filter(l => !capLines.includes(l) && ((l.x >= x0 - 8 && l.x + l.w <= x1 + 8 && l.w > colW * 0.6 && proseLine(l)) || (!full && l.w > colW * 1.15 && overlap(l) > colW * 0.3)));
+  let top, bottom;
+  if (kind === 'fig'){                                   // the figure sits above its caption
+    const above = body.filter(l => l.y > capTop + 2).sort((a,b) => a.y - b.y)[0];
+    top = above ? above.y - 0.3 * above.h : H * 0.96; bottom = capBot;
+    if (top - capTop < 40) top = Math.min(H * 0.96, capTop + H * 0.35);
+  } else {                                               // a table sits below its caption
+    const below = body.filter(l => l.y < capBot - 2).sort((a,b) => b.y - a.y)[0];
+    top = capTop + 2; bottom = below ? below.y + below.h + 2 : H * 0.04;
+    if (capBot - bottom < 40) bottom = Math.max(H * 0.04, capBot - H * 0.35);
+  }
+  return {x0, x1, top:Math.min(top, H), bottom:Math.max(bottom, 0)};
+}
+function figMentions(pageTexts, item){
+  const n = item.num.replace(/[.*+?^${}()|[\]\\]/g, '');
+  const re = item.kind === 'fig' ? new RegExp(`\\b(?:Figs?\\.?|Figures?)\\s*${n}(?![0-9])`, 'gi') : new RegExp(`\\bTables?\\s+${n}(?![0-9IVXL])`, 'gi');
+  const capStart = item.caption.slice(0, 40), out = [];
+  pageTexts.forEach((t, pi) => {
+    let m; re.lastIndex = 0;
+    while ((m = re.exec(t)) && out.length < 5){
+      const a = Math.max(0, t.lastIndexOf('. ', m.index - 1) + 2, m.index - 260), b = Math.min(t.length, (t.indexOf('. ', m.index + 10) + 1 || t.length), m.index + 320);
+      const snip = t.slice(a, b).trim();
+      if (capStart && snip.includes(capStart)) continue;
+      if (!out.some(o => o.text === snip)) out.push({page:pi + 1, text:snip});
+    }
+  });
+  return out;
+}
+async function scanFigures(file){
+  const lib = await loadPdfJs();
+  const doc = await lib.getDocument({data:await file.arrayBuffer()}).promise;
+  const items = [], seen = new Set(), pageTexts = []; let title = '', context = '';
+  for (let n = 1; n <= doc.numPages; n++){
+    const {lines, W, H} = await pdfPageLines(await doc.getPage(n));
+    pageTexts.push(lines.map(l => l.text).join(' ').replace(/([a-z])- ([a-z])/g, '$1$2'));
+    if (n === 1){
+      const topHalf = lines.filter(l => l.y > H * 0.45 && l.text.length > 3), hMax = Math.max(0, ...topHalf.map(l => l.h));
+      title = topHalf.filter(l => l.h >= hMax - 0.5).map(l => l.text).join(' ').slice(0, 220);
+    }
+    lines.forEach((l, i) => {
+      let m, kind;
+      if ((m = l.text.match(FIG_CAP_RE))) kind = 'fig';
+      else if ((m = l.text.match(TAB_UP_RE) || l.text.match(TAB_MIX_RE))) kind = 'table';
+      else return;
+      const label = kind === 'fig' ? `Fig. ${m[1]}` : `Table ${m[1]}`;
+      if (seen.has(normFig(label))) return;
+      const capLines = [l]; let text = m[2] || '';
+      for (let j = i + 1; j < lines.length && capLines.length < 7 && text.length < 600; j++){
+        const prev = capLines[capLines.length - 1], nx = lines[j];
+        if (prev.y - nx.y > Math.max(prev.h, nx.h) * 1.7 || nx.y >= prev.y || Math.abs(nx.x - l.x) > W * 0.3) break;
+        if (Math.abs(nx.h - l.h) > 0.6) break;                                                       // body text uses a different font size
+        if (/[.]$/.test(prev.text) && prev.y - nx.y > Math.max(prev.h, nx.h) * 1.35) break;               // a full stop followed by a gap
+        capLines.push(nx); text += (text && !/-$/.test(text) ? ' ' : '') + nx.text;
+        if (kind === 'table' && !m[2] && capLines.length >= 2 && /[a-z]/i.test(text)) break;   // IEEE: "TABLE II" + one title line
+      }
+      seen.add(normFig(label));
+      const it = {label, kind, num:m[1], page:n, caption:text.replace(/\s+/g, ' ').trim(), region:figRegion(capLines, lines, W, H, kind), sel:true};
+      items.push(it);
+    });
+  }
+  const all = pageTexts.join(' '), ab = all.search(/\babstract\b/i);
+  context = (ab >= 0 ? all.slice(ab, ab + 2600) : all.slice(0, 2600)).trim();
+  items.forEach(it => { it.mentions = figMentions(pageTexts, it); });
+  items.sort((a, b) => a.kind === b.kind ? 0 : a.kind === 'fig' ? -1 : 1);
+  return {name:file.name, doc, title:title || file.name.replace(/\.pdf$/i, ''), context, items};
+}
+async function renderRegion(doc, pageNo, reg){
+  const page = await doc.getPage(pageNo), base = page.getViewport({scale:1});
+  const vp = page.getViewport({scale:Math.min(3, 1800 / base.width)});
+  const c = document.createElement('canvas'); c.width = Math.ceil(vp.width); c.height = Math.ceil(vp.height);
+  const ctx = c.getContext('2d'); ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, c.width, c.height);
+  await page.render({canvasContext:ctx, viewport:vp}).promise;
+  const [ax, ay] = vp.convertToViewportPoint(reg.x0, reg.top), [bx, by] = vp.convertToViewportPoint(reg.x1, reg.bottom);
+  const sx = Math.max(0, Math.min(ax, bx)), sy = Math.max(0, Math.min(ay, by)), sw = Math.min(c.width - sx, Math.abs(bx - ax)), sh = Math.min(c.height - sy, Math.abs(by - ay));
+  const crop = document.createElement('canvas'); crop.width = Math.max(1, Math.round(sw)); crop.height = Math.max(1, Math.round(sh));
+  crop.getContext('2d').drawImage(c, sx, sy, sw, sh, 0, 0, crop.width, crop.height);
+  const pg = document.createElement('canvas'), k = Math.min(1, 1300 / c.width); pg.width = Math.round(c.width * k); pg.height = Math.round(c.height * k);
+  pg.getContext('2d').drawImage(c, 0, 0, pg.width, pg.height);
+  const blob = cv => new Promise(r => cv.toBlob(r, 'image/jpeg', 0.86));
+  return {crop:await blob(crop), page:await blob(pg)};
+}
+function fixFig(r){
+  ['strengths','weaknesses','importance','effect','relation','caption','x','y','single','pattern','claim','supportWhy','figNo','support','type'].forEach(k => { if (typeof r[k] !== 'string') r[k] = r[k] == null ? '' : String(r[k]); });
+  r.checks ||= {}; r.flags ||= {}; r.ratings ||= {};
+  return r;
+}
+function upsertReview(it, critId){
+  let r = S.figlab.reviews.find(x => x.critId === critId && normFig(x.figNo) === normFig(it.label));
+  if (!r){ r = newFigure(); r.critId = critId; S.figlab.reviews.unshift(r); }
+  fixFig(r);
+  Object.assign(r, {figNo:it.label, caption:it.caption, page:it.page, mentions:it.mentions, context:figScan.context, paperTitle:figScan.title});
+  if (it.kind === 'table' && !r.type) r.type = 'table';
+  if (r.checks.ref === undefined) r.checks.ref = it.mentions.length > 0;
+  return r;
+}
+function figPrompt(r, nImg){
+  const kind = r.type === 'table' || /^table/i.test(r.figNo) ? 'table' : 'figure';
+  const refs = (r.mentions || []).map(m => `- "${clip(m.text, 520)}" (p. ${m.page})`).join('\n');
+  return `You are helping a master's student write a critical review of one ${kind} in a research paper.
+${nImg ? `Image 1 is the ${kind} cropped automatically from page ${r.page || '?'}${nImg > 1 ? '; image 2 is the whole page, for context' : ''}. If the crop shows the wrong area, use the whole page and the caption to find the right ${kind}.`
+       : `You cannot see the ${kind}. Base the analysis only on the caption and the text, and answer "na" for the checks that need to see it (axes, legend, err, scale, bw, cb, deco).`}
+
+Paper: "${r.paperTitle || 'Unknown title'}"
+Study context (abstract / introduction excerpt):
+${clip(r.context || '(not available)', 2600)}
+
+${r.figNo}${r.page ? ` (page ${r.page})` : ''} — caption: "${r.caption}"
+Where the paper's text refers to ${r.figNo}:
+${refs || '(no references to it were found in the text)'}
+
+Rules: base everything on what is visible and on the paper's text. If a value, label or detail cannot be read or is not reported, say so — never guess numbers. Write in clear academic English a master's student understands, and keep each field concise.
+Write each strength and weakness as a short verb phrase that completes "The ${kind} …", e.g. "reports error rates separately for each subgroup" or "does not show confidence intervals". Weaknesses should go beyond the quality checks: interpretation, missing comparisons, over-claiming, unclear design choices.
+Check keys: axes = axes labelled with units; legend = legend clear; n = sample size stated; err = error bars or confidence intervals shown where needed; scale = scale not misleading; bw = readable in black and white; cb = colour-blind friendly; ref = referenced in the text; cap = caption understandable on its own; deco = no unnecessary 3D or decoration. Use true (met), false (not met) or "na" (not applicable).
+
+Reply with only JSON in this shape:
+{"type":"one of bar, line, scatter, histogram, box, pie, table, heatmap, flowchart, architecture",
+ "x":"what the x-axis (or the rows) shows, with units — empty if not applicable",
+ "y":"what the y-axis (or the columns) shows, with units — empty if not applicable",
+ "single":"for a pie, table, flowchart or architecture: what it shows — otherwise empty",
+ "pattern":"the main pattern or result, in one sentence",
+ "claim":"the claim in the text that this ${kind} is used to support (paraphrased)",
+ "support":"full | partial | none",
+ "supportWhy":"one sentence explaining that support level",
+ "importance":"why this ${kind} is important to the study (1–2 sentences)",
+ "effect":"how it affects the study's conclusions — what it strengthens, or what it leaves weaker or uncertain (1–2 sentences)",
+ "relation":"how it relates to the research question, the method and the other figures or tables (1–2 sentences)",
+ "strengths":["2–4 verb phrases"],
+ "weaknesses":["2–4 verb phrases"],
+ "checks":{"axes":true,"legend":true,"n":false,"err":false,"scale":true,"bw":true,"cb":true,"ref":true,"cap":true,"deco":true},
+ "ratings":{"clarity":4,"accuracy":3,"relevance":5}}`;
+}
+function applyFigAnalysis(r, res, sawImage){
+  if (!res || typeof res !== 'object') throw {code:'invalid_json'};
+  const str = v => typeof v === 'string' ? v.trim() : '';
+  const list = v => (Array.isArray(v) ? v : str(v).split('\n')).map(x => String(x).trim().replace(/^[-•*]\s*/, '')).filter(Boolean).join('\n');
+  if (FIG_TYPES.some(t => t.k === res.type)) r.type = res.type;
+  ['x','y','single','pattern','claim','supportWhy','importance','effect','relation'].forEach(k => { r[k] = str(res[k]); });
+  if (['full','partial','none'].includes(res.support)) r.support = res.support;
+  r.strengths = list(res.strengths); r.weaknesses = list(res.weaknesses);
+  const ch = res.checks || {};
+  FIG_CHECKS.forEach(([k]) => {
+    const v = ch[k];
+    r.checks[k] = !sawImage && VISUAL_CHECKS.includes(k) ? 'na' : v === true || v === 'true' ? true : /^n\/?a$/i.test(String(v)) ? 'na' : false;
+  });
+  FIG_RATINGS.forEach(([k]) => { const n = Math.round(Number((res.ratings || {})[k])); if (n >= 1 && n <= 5) r.ratings[k] = n; });
+  r.flags = {}; r.ai = {at:Date.now(), image:sawImage};
+}
+async function analyseOne(r, blobs, signal){
+  let lim = null; try { lim = AI.limits ? await AI.limits() : null; } catch {}
+  const max = lim && lim.images ? lim.images.maxCount : 0;
+  const imgs = max ? blobs.filter(Boolean).slice(0, max) : [];
+  const opts = {signal, modelTier:'default'};
+  if (imgs.length) opts.images = imgs;
+  let res;
+  try { res = await AI.json(figPrompt(r, imgs.length), opts); }
+  catch (e){
+    if (e && (e.code === 'images_unavailable' || e.code === 'image_rejected') && imgs.length){ delete opts.images; res = await AI.json(figPrompt(r, 0), opts); applyFigAnalysis(r, res, false); return; }
+    throw e;
+  }
+  applyFigAnalysis(r, res, imgs.length > 0);
+}
+async function figRunItems(selected, analyse){
+  const critId = S.figlab.scanCrit || '', ctl = new AbortController(), done = [];
+  figRun = {ctl, i:0, n:selected.length, label:''}; renderFigRun();
+  try {
+    for (const it of selected){
+      if (ctl.signal.aborted) break;
+      figRun.i++; figRun.label = it.label; renderFigRun();
+      const r = upsertReview(it, critId);
+      let blobs = [];
+      try { const b = await renderRegion(figScan.doc, it.page, it.region); blobs = [b.crop, b.page]; await IDB.put(r.id + ':crop', b.crop); await IDB.put(r.id + ':page', b.page); r.img = true; } catch { r.img = false; }
+      save();
+      if (analyse){
+        try { await analyseOne(r, blobs, ctl.signal); }
+        catch (e){ if (e && e.code === 'cancelled') break; toast(`${it.label}: ${aiError(e)}`); if (aiOff) break; }
+      }
+      done.push(r); save(); renderFigList();
+    }
+  } finally {
+    figRun = null;
+    if (done.length){ S.figlab.active = done[0].id; save(); }
+    RENDER.figlab();
+    if (done.length) toast(analyse ? `${done.length} ${done.length === 1 ? 'figure' : 'figures'} analysed — check each against the paper` : `${done.length} figure reviews created`);
+  }
+}
+function renderFigRun(){
+  const el = $('#flRun'); if (!el) return;
+  el.innerHTML = figRun ? `<div class="ai-run"><span class="spin" aria-hidden="true"></span><span>${figRun.label ? `Working on <b>${esc(figRun.label)}</b> — ` : ''}${figRun.i} of ${figRun.n} <span class="muted small">(Claude can take up to a minute per figure)</span></span><button class="btn sm" data-act="fl-scan-stop">${icon('x')}Stop</button></div>` : '';
+  $$('[data-fl-run]').forEach(b => b.disabled = !!figRun);
+}
+function renderFigList(){ const a = $('.fl-list'); if (a && S.figlab.mode !== 'build'){ const tmp = document.createElement('div'); tmp.innerHTML = explainView(); const n = tmp.querySelector('.fl-list'); if (n) a.replaceWith(n); } }
+function scanCard(){
+  const has = !!figScan, n = has ? figScan.items.filter(i => i.sel).length : 0;
+  const reviewed = it => S.figlab.reviews.some(r => r.critId === (S.figlab.scanCrit || '') && normFig(r.figNo) === normFig(it.label));
+  return `<section class="card scan-card" style="margin-bottom:16px">
+    <div class="sec-head"><span class="sec-num">${icon('upload')}</span><h3>Analyse the figures in a paper</h3><span class="spacer"></span>${aiReady() ? `<span class="chip ok-chip">${icon('sparkle')}Claude on</span>` : `<span class="chip">AI off — reviews are created for you to fill in</span>`}</div>
+    <p class="small muted" style="margin-top:-4px">Upload the paper as a PDF. ScholarPath finds each figure and table by its caption, crops it from the page and collects the sentences that refer to it.
+      ${aiReady() ? 'Claude then explains and critiques each one: what it shows, its strengths and weaknesses, why it matters to the study, how it affects the conclusions and how it relates to the research question.' : 'A review is created for each one with its caption, page and picture, ready for you to fill in. On the published ScholarPath page, Claude can analyse them for you.'}</p>
+    <div class="row">
+      <label class="btn ${has ? '' : 'primary'}" for="flPdf" style="cursor:pointer">${icon('upload')}${has ? 'Upload another paper' : 'Upload paper (PDF)'}</label><input type="file" id="flPdf" accept="application/pdf,.pdf" hidden>
+      <label class="small muted" for="flScanCrit" style="margin-left:4px">Save reviews under</label>
+      <select id="flScanCrit" style="width:auto;max-width:300px">${critOptions(S.figlab.scanCrit || '')}</select>
+    </div>
+    ${has ? `<div class="scan-head"><b>${esc(clip(figScan.title, 90))}</b><span class="small muted"> · ${esc(figScan.name)} · ${figScan.items.length} found</span></div>
+      ${figScan.items.length ? `<div class="scan-list">${figScan.items.map((it, i) => `<label class="scan-item"><input type="checkbox" data-fsel="${i}" ${it.sel ? 'checked' : ''}>
+          <span class="para-no">${esc(it.label)}</span><span class="scan-cap">${esc(clip(it.caption || '(no caption text)', 120))}</span>
+          <span class="small muted">p. ${it.page}${it.mentions.length ? ` · cited ${it.mentions.length}×` : ''}</span>${reviewed(it) ? '<span class="chip">reviewed</span>' : ''}</label>`).join('')}</div>
+        <div class="row" style="margin-top:10px">
+          <button class="btn sm ghost" data-act="fl-scan-all" data-v="1" data-fl-run>Select all</button><button class="btn sm ghost" data-act="fl-scan-all" data-v="0" data-fl-run>Select none</button><span class="spacer"></span>
+          ${aiReady() ? `<button class="btn primary" data-act="fl-scan-go" data-v="ai" data-fl-run ${n ? '' : 'disabled'}>${icon('sparkle')}Analyse ${n} with Claude</button>` : ''}
+          <button class="btn ${aiReady() ? '' : 'primary'}" data-act="fl-scan-go" data-v="draft" data-fl-run ${n ? '' : 'disabled'}>${icon('plus')}${aiReady() ? 'Only create reviews' : `Create ${n} review${n === 1 ? '' : 's'}`}</button></div>`
+      : '<p class="small muted" style="margin:10px 0 0">No figure or table captions were found. Captions need to start with “Fig. 1.”, “Figure 1:” or “TABLE I”. If the PDF is a scan (an image of pages), try another copy — you can still add reviews by hand with <b>New</b>.</p>'}` : ''}
+    <div id="flRun"></div>
+  </section>`;
+}
+async function loadFigShot(r){
+  const box = $('#figShot'); if (!box) return;
+  if (figShotURL){ URL.revokeObjectURL(figShotURL); figShotURL = null; }
+  if (!r.img){ box.hidden = true; return; }
+  const blob = await IDB.get(r.id + ':crop');
+  if (!blob || activeFig() !== r){ box.hidden = true; return; }
+  figShotURL = URL.createObjectURL(blob);
+  box.innerHTML = `<img src="${figShotURL}" alt="${esc(r.figNo)} as cropped from page ${r.page || ''} of the paper"><div class="small muted">Cropped automatically from page ${r.page || '?'} — if it shows the wrong area, check the paper.</div>`;
+  box.hidden = false;
+}
+async function reanalyse(r){
+  if (!aiReady() || figRun) return;
+  if ((r.pattern || r.strengths || r.weaknesses) && !confirm(`Ask Claude to analyse ${r.figNo || 'this figure'} again? This replaces the current answers.`)) return;
+  const ctl = new AbortController(); figRun = {ctl, i:1, n:1, label:r.figNo}; renderFigRun();
+  const btn = $('[data-act="fl-ai-one"]'); if (btn){ btn.disabled = true; btn.innerHTML = '<span class="spin" aria-hidden="true"></span> Analysing…'; }
+  try {
+    const blobs = r.img ? [await IDB.get(r.id + ':crop'), await IDB.get(r.id + ':page')] : [];
+    await analyseOne(r, blobs, ctl.signal); save(); toast('Analysis ready — check it against the paper');
+  } catch (e){ if (!e || e.code !== 'cancelled') alert(aiError(e)); }
+  finally { figRun = null; RENDER.figlab(); }
+}
+
 /* --- Rendering --- */
 RENDER.figlab = () => {
   const mode = S.figlab.mode || 'explain';
+  S.figlab.reviews.forEach(fixFig);
   $('#panel-figlab').innerHTML = `
   <div class="page-head"><div class="eyebrow">Figure Lab</div><h1>Read figures critically, build them clearly</h1>
   <p>Explain and judge a figure in a paper you are critiquing — or plan, draw and caption the figures for your own paper.</p></div>
@@ -2479,7 +2781,7 @@ RENDER.figlab = () => {
     <button data-act="fl-mode" data-v="explain" aria-pressed="${mode==='explain'}">${icon('search')}Explain a figure</button>
     <button data-act="fl-mode" data-v="build" aria-pressed="${mode==='build'}">${icon('chart')}Build a figure</button></div>
   <div style="margin-top:18px">${mode === 'build' ? buildView() : explainView()}</div>`;
-  if (mode === 'build') updateBuild(); else updateExplain();
+  if (mode === 'build') updateBuild(); else { updateExplain(); loadFigShot(activeFig()); renderFigRun(); }
 };
 function critOptions(sel){
   return `<option value="">— Not linked to a critique —</option>` + S.critiques.map(c => `<option value="${c.id}" ${c.id===sel?'selected':''}>${esc((c.example?'[Example] ':'') + (c.form==='aau'?'AAU · ':'') + clip(critTitle(c) || 'Untitled critique', 60))}</option>`).join('');
@@ -2492,7 +2794,7 @@ function explainView(){
   const groups = {};
   list.forEach(x => (groups[x.critId] ||= []).push(x));
   const nameOf = id => { const c = S.critiques.find(c => c.id === id); return c ? clip(critTitle(c) || 'Untitled critique', 50) : 'Not linked to a critique'; };
-  return `<div class="fl-layout">
+  return `${scanCard()}<div class="fl-layout">
   <aside class="card fl-list">
     <div class="row" style="justify-content:space-between;margin-bottom:10px"><h3 style="margin:0">Figure reviews</h3><button class="btn sm primary" data-act="fl-new">${icon('plus')}New</button></div>
     <label class="sr-only" for="flFilter">Show reviews for</label>
@@ -2504,6 +2806,10 @@ function explainView(){
     <section class="card">
       <div class="sec-head"><span class="sec-num">1</span><h3>Figure details</h3>${exampleBadge(r)}<span class="spacer"></span><button class="btn ghost sm danger" data-act="fl-del">${icon('trash')}Delete</button></div>
       ${r.example ? '<p class="small muted" style="margin-top:-4px">An <b>example</b> review of an illustrative figure (not from a real paper). Edit it, or press <b>New</b> to review a figure from your own paper.</p>' : ''}
+      <div class="fig-shot" id="figShot" hidden></div>
+      ${r.ai || r.page || (aiReady() && (r.img || r.caption)) ? `<div class="row ai-note">
+        <span class="small muted">${r.page ? `Page ${r.page}${r.paperTitle ? ` of “${esc(clip(r.paperTitle, 60))}”` : ''}. ` : ''}${r.ai ? `Analysed by Claude ${r.ai.image ? 'from the picture and the paper’s text' : 'from the caption and text only (it could not see the picture)'} — check every point against the paper.` : ''}</span>
+        <span class="spacer"></span>${aiReady() && (r.img || r.caption) ? `<button class="btn sm ${r.ai ? '' : 'primary'}" data-act="fl-ai-one" data-fl-run>${icon('sparkle')}${r.ai ? 'Analyse again' : 'Analyse with Claude'}</button>` : ''}</div>` : ''}
       <div class="fields-2">
         <div class="field"><label class="f" for="fl-no">Figure number</label><input class="input" id="fl-no" data-fl="figNo" value="${esc(r.figNo)}" placeholder="e.g. Fig. 3 or Table II"></div>
         <div class="field"><label class="f" for="fl-crit">Belongs to critique</label><select id="fl-crit" data-fl="critId">${critOptions(r.critId)}</select></div>
@@ -2525,19 +2831,34 @@ function explainView(){
       <div class="field" style="margin:0"><label class="f" for="fl-why">Why? (optional)</label><input class="input" id="fl-why" data-fl="supportWhy" value="${esc(r.supportWhy)}" placeholder="e.g. it shows the trend, but only for one dataset"></div>
     </section>
     <section class="card">
-      <div class="sec-head"><span class="sec-num">5</span><h3>Quality checklist</h3><span class="wc" id="flCheckN"></span></div>
+      <div class="sec-head"><span class="sec-num">5</span><h3>Importance &amp; relation to the study</h3></div>
+      <div class="field"><label class="f" for="fl-imp">Why is it important to the study?</label><textarea id="fl-imp" data-fl="importance" rows="2" style="min-height:64px" placeholder="e.g. It is the main evidence for the paper’s central claim about…">${esc(r.importance)}</textarea></div>
+      <div class="field"><label class="f" for="fl-eff">How does it affect the study’s conclusions?</label><textarea id="fl-eff" data-fl="effect" rows="2" style="min-height:64px" placeholder="e.g. Without it the claim about… would rest only on…; its missing error bars weaken…">${esc(r.effect)}</textarea></div>
+      <div class="field" style="margin:0"><label class="f" for="fl-rel">How does it relate to the research question and the rest of the study?</label><textarea id="fl-rel" data-fl="relation" rows="2" style="min-height:64px" placeholder="e.g. It answers RQ2 and builds on the method shown in Fig. 1…">${esc(r.relation)}</textarea></div>
+    </section>
+    <section class="card">
+      <div class="sec-head"><span class="sec-num">6</span><h3>Strengths &amp; weaknesses</h3></div>
+      <p class="small muted" style="margin-top:-4px">One per line, each finishing the sentence “The ${t && t.k === 'table' ? 'table' : 'figure'} …”. Unticked quality checks below are added to the weaknesses automatically.</p>
+      <div class="fields-2">
+        <div class="field" style="margin:0"><label class="f" for="fl-str">${icon('check')} Strengths</label><textarea id="fl-str" data-fl="strengths" rows="4" placeholder="reports results separately for each group&#10;uses a clear, consistent colour scheme">${esc(r.strengths)}</textarea></div>
+        <div class="field" style="margin:0"><label class="f" for="fl-wk">${icon('x')} Weaknesses</label><textarea id="fl-wk" data-fl="weaknesses" rows="4" placeholder="does not compare against a baseline&#10;suggests a causal effect the design cannot show">${esc(r.weaknesses)}</textarea></div>
+      </div>
+    </section>
+    <section class="card">
+      <div class="sec-head"><span class="sec-num">7</span><h3>Quality checklist</h3><span class="wc" id="flCheckN"></span></div>
       <p class="small muted" style="margin-top:-4px">Tick what the figure does well. Anything left unticked becomes a weakness in the explanation — mark it <b>N/A</b> if it does not apply.</p>
       <div class="checks-2">${FIG_CHECKS.map(([k,l]) => { const v = r.checks[k]; return `<div class="check-na ${v==='na'?'is-na':''}"><label class="check ${v===true?'on':''}"><input type="checkbox" data-flc="${k}" ${v===true?'checked':''} ${v==='na'?'disabled':''}><span>${l}</span></label><button class="na-btn" data-act="fl-na" data-k="${k}" aria-pressed="${v==='na'}" title="Not applicable to this figure">N/A</button></div>`; }).join('')}</div>
     </section>
     <section class="card">
-      <div class="sec-head"><span class="sec-num">6</span><h3>Ratings</h3></div>
+      <div class="sec-head"><span class="sec-num">8</span><h3>Ratings</h3></div>
       ${FIG_RATINGS.map(([k,l]) => `<div class="parta"><div><b>${l}</b> <span class="muted small">(1–5)</span></div><div class="rating" role="group" aria-label="${l}">${[1,2,3,4,5].map(n => `<button type="button" class="rate" data-act="fl-rate" data-k="${k}" data-v="${n}" aria-pressed="${r.ratings[k]===n}">${n}</button>`).join('')}</div><span class="rate-hint">${r.ratings[k] ? RATING_LABELS[r.ratings[k]] : 'Not rated'}</span></div>`).join('')}
     </section>
     <section class="card">
-      <div class="output-head"><div class="sec-head" style="margin:0"><span class="sec-num">7</span><h3>Figure explanation</h3></div>
+      <div class="output-head"><div class="sec-head" style="margin:0"><span class="sec-num">9</span><h3>Figure explanation</h3></div>
         <span class="row">${copyBtn('#figPara')}<button class="btn sm primary" data-act="fl-add">${icon('plus')}Add to critique</button></span></div>
       <p class="small muted" style="margin-top:0">Built from your answers — edit it after pasting so it reads in your own voice. <b>Add to critique</b> appends it to the Results section of the linked critique.</p>
       <div class="output prose" id="figPara">${esc(figParagraph(r))}</div>
+      <p class="small muted" id="figHint" style="margin:8px 0 0"></p>
     </section>
   </div></div>`;
 }
@@ -2558,6 +2879,7 @@ function axesFields(r, t){
 function updateExplain(){
   const r = activeFig(); if (!r || !$('#figPara')) return;
   $('#figPara').textContent = figParagraph(r);
+  const hint = $('#figHint'); if (hint) hint.textContent = checklistUsed(r) ? '' : 'Tick the quality checklist (section 7): items you leave unticked will then be added here as weaknesses.';
   const n = FIG_CHECKS.filter(([k]) => r.checks[k] === true).length, na = FIG_CHECKS.filter(([k]) => r.checks[k] === 'na').length;
   $('#flCheckN').textContent = `${n} / ${FIG_CHECKS.length - na} met`;
 }
@@ -2825,10 +3147,14 @@ const ACTIONS = {
   theme: () => { S.theme = {auto:'light', light:'dark', dark:'auto'}[S.theme] || 'auto'; applyTheme(); save(); toast({auto:'Theme follows your system', light:'Light mode', dark:'Dark mode'}[S.theme]); },
   copy: el => { const t = $(el.dataset.target); if (t) copyText(t.textContent); },
   search: () => { const r = buildSearch(); if (!r) return; window.open(r.url, '_blank', 'noopener'); if (r.db.note) copyText(r.q, 'Query copied — paste it into Web of Science'); },
+  'fl-scan-all': el => { if (!figScan) return; figScan.items.forEach(i => i.sel = el.dataset.v === '1'); RENDER.figlab(); },
+  'fl-scan-go': el => { if (!figScan || figRun) return; const sel = figScan.items.filter(i => i.sel); if (sel.length) figRunItems(sel, el.dataset.v === 'ai'); },
+  'fl-scan-stop': () => figRun && figRun.ctl.abort(),
+  'fl-ai-one': () => reanalyse(activeFig()),
   'fl-mode': el => { S.figlab.mode = el.dataset.v; save(); RENDER.figlab(); },
   'fl-new': () => { const r = newFigure(); S.figlab.reviews.unshift(r); S.figlab.active = r.id; save(); RENDER.figlab(); $('#fl-no')?.focus(); },
   'fl-open': el => { S.figlab.active = el.dataset.id; save(); RENDER.figlab(); if (innerWidth < 900) $('#fl-no')?.scrollIntoView({behavior:'smooth', block:'center'}); },
-  'fl-del': () => { const r = activeFig(); if (!confirm(`Delete the review of ${r.figNo || 'this figure'}?`)) return; S.figlab.reviews = S.figlab.reviews.filter(x => x !== r); S.figlab.active = S.figlab.reviews[0]?.id || ''; save(); RENDER.figlab(); },
+  'fl-del': () => { const r = activeFig(); if (!confirm(`Delete the review of ${r.figNo || 'this figure'}?`)) return; S.figlab.reviews = S.figlab.reviews.filter(x => x !== r); IDB.del(r.id + ':crop'); IDB.del(r.id + ':page'); S.figlab.active = S.figlab.reviews[0]?.id || ''; save(); RENDER.figlab(); },
   'fl-type': el => { const r = activeFig(); if (r.type !== el.dataset.v) r.flags = {}; r.type = el.dataset.v; save();
     $$('[data-act="fl-type"]').forEach(b => b.setAttribute('aria-pressed', b.dataset.v === r.type));
     $('#flHow').innerHTML = howToRead(r, figType(r.type)); $('#flAxes').innerHTML = axesFields(r, figType(r.type)); updateExplain(); },
@@ -3009,6 +3335,18 @@ document.addEventListener('input', e => {
 document.addEventListener('change', e => {
   const t = e.target;
   if (t.dataset.fl === 'critId'){ RENDER.figlab(); return; }
+  if (t.id === 'flScanCrit'){ S.figlab.scanCrit = t.value; save(); RENDER.figlab(); return; }
+  if (t.dataset.fsel !== undefined){ figScan.items[+t.dataset.fsel].sel = t.checked; const n = figScan.items.filter(i => i.sel).length;
+    $$('[data-act="fl-scan-go"]').forEach(b => { b.disabled = !n; b.innerHTML = b.dataset.v === 'ai' ? `${icon('sparkle')}Analyse ${n} with Claude` : `${icon('plus')}${aiReady() ? 'Only create reviews' : `Create ${n} review${n === 1 ? '' : 's'}`}`; }); return; }
+  if (t.id === 'flPdf' && t.files[0]){
+    const file = t.files[0]; t.value = ''; toast('Looking for figures and tables…');
+    scanFigures(file).then(sc => {
+      figScan = sc;
+      figScan.items.forEach(it => { it.sel = !S.figlab.reviews.some(r => r.critId === (S.figlab.scanCrit || '') && normFig(r.figNo) === normFig(it.label) && r.ai); });
+      RENDER.figlab(); toast(`${sc.items.length} figure${sc.items.length === 1 ? '' : 's'} and table${sc.items.length === 1 ? '' : 's'} found`);
+    }).catch(err => alert('Could not read this PDF. ' + (err && err.message || '')));
+    return;
+  }
   if (t.id === 'flFilter'){ S.figlab.filter = t.value; const vis = S.figlab.reviews.filter(r => !t.value || r.critId === t.value); if (vis.length && !vis.includes(activeFig())) S.figlab.active = vis[0].id; save(); RENDER.figlab(); return; }
   if (t.dataset.flc){ const r = activeFig(); r.checks[t.dataset.flc] = t.checked; t.closest('.check').classList.toggle('on', t.checked); save(); updateExplain(); return; }
   if (t.dataset.flr !== undefined){ const r = activeFig(); r.flags[+t.dataset.flr] = t.checked; t.closest('.check').classList.toggle('on-flag', t.checked); save(); updateExplain(); return; }
