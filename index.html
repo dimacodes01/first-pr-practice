@@ -356,6 +356,14 @@ svg.mini{width:100%;max-width:220px;height:auto;display:block}
 mark.tts-now{background:var(--warn-soft);color:var(--ink);border-radius:3px;padding:0 1px}
 .ar-text{font-size:1.02rem;line-height:1.8;font-family:"Noto Naskh Arabic","Geeza Pro","Segoe UI",Tahoma,var(--sans)}
 
+
+/* Simple version of a paragraph */
+.simple-lbl{color:var(--ok)}
+.simple-box{width:100%;margin-bottom:14px}
+textarea.simple-box{min-height:80px;font-size:.98rem;line-height:1.65;border-color:color-mix(in srgb,var(--ok) 35%,var(--line));background:color-mix(in srgb,var(--ok-soft) 45%,var(--surface))}
+.simple-empty,.simple-busy{display:flex;flex-wrap:wrap;align-items:center;gap:10px;padding:12px 14px;border:1.5px dashed var(--line);border-radius:var(--radius-sm)}
+.simple-busy{color:var(--accent);font-size:.92rem;border-style:solid;background:var(--accent-soft)}
+
 /* Writing */
 .write-layout{display:grid;gap:16px;grid-template-columns:1fr}
 @media(min-width:900px){.write-layout{grid-template-columns:290px 1fr;align-items:start}.stepper{position:sticky;top:110px}}
@@ -769,6 +777,15 @@ const TALK_GUIDE = {
   15:'Full talk: 10–14 slides. You can split Findings across two slides and add a slide on Limitations or Future work.'
 };
 
+// Simple-English versions of the Paper Reader demo text
+const DEMO_SIMPLE = [
+  'This is a made-up example study. It was written only to show how the Paper Reader works. In the story, twenty secondary-school students used an AI writing helper (a computer tool that comments on writing) for four weeks. The researchers then looked at the students’ drafts and interviews to understand how they used the feedback.',
+  'Feedback (comments that help you improve) is one of the strongest things that helps learning. But teachers do not have enough time to write detailed comments on every draft. AI tools say they can give feedback straight away. However, we know very little about whether students really use this feedback, or just accept the suggested corrections.',
+  'In this made-up study, students wrote three drafts of an argument essay. Every change between the drafts was put into one of three groups: accepted without change, changed by the student, or ignored. Eight students were also interviewed about why they made these choices.',
+  'In the made-up results, students accepted most grammar suggestions without changing them. But they usually ignored suggestions about organisation and argument. In the interviews, students said grammar corrections were easy to use, but comments about structure were hard to understand.',
+  'These made-up results would suggest that AI feedback helps students fix small surface errors (like spelling and grammar). But it does not build deeper writing skills unless teachers help students understand the bigger comments.',
+  'The study is imaginary, and the sample would be small and from only one school. So we cannot draw any real conclusions. A real study would need more students, several schools, and a comparison group (students who did not use the tool).'
+];
 // Arabic translations of the Paper Reader demo text (needed when the app first seeds its data)
 const DEMO_AR = [
   'يصف هذا النص التوضيحي دراسةً صغيرة متخيَّلة، كُتبت فقط لإظهار طريقة عمل قارئ الأبحاث. ويفترض أن عشرين طالبًا في المرحلة الثانوية استخدموا مساعدًا للكتابة بالذكاء الاصطناعي (AI writing assistant) مدة أربعة أسابيع، وأن مسوّداتهم ومقابلاتهم حُلِّلت لفهم كيفية استخدامهم للتغذية الراجعة.',
@@ -1631,7 +1648,7 @@ function demoReaderPaper(){
         'AI feedback helps with small errors, but students need a teacher to understand the bigger comments.',[{term:'surface accuracy',meaning:'spelling and grammar, not ideas'}],'AI + teacher together','p4','explains'),
       P('p6','Limitations',4,'Because the study is imaginary and the sample would be small and from one school, no real conclusions can be drawn. A real study would need more students, several schools and a comparison group.',
         'Small sample from one school, no comparison group — so results can’t be generalised.',[{term:'comparison group',meaning:'students who did not use the tool, to compare with'}],'Weakness = small + one school','p5','contrasts')
-    ].map((p, i) => ({...p, ar:DEMO_AR[i], arSrc:'demo'})),
+    ].map((p, i) => ({...p, simple:DEMO_SIMPLE[i], simpleSrc:'demo', ar:DEMO_AR[i], arSrc:'demo'})),
     questions:{
       overview:'A demo text about an imaginary study of 20 students who used an AI writing helper. Students copied grammar fixes but ignored harder advice about structure. The text suggests teachers are still needed to explain the bigger comments.',
       audience:[{q:'Have you ever accepted an AI correction without understanding why it was correct?', why:'Connects the finding to the audience’s own experience.'},{q:'Which is more useful for learning: instant AI feedback or slower teacher feedback?', why:'Opens a debate about the main implication.'}],
@@ -1757,14 +1774,16 @@ function aiError(e){
   return ({rate_limited:'Claude is busy or your usage limit was reached — try again a little later.', session_expired:'Please sign in to Claude again.', refused:'Claude declined this request.', prompt_too_large:'This paper is too long to send in one go.', invalid_json:'Claude’s answer could not be read — try again.', cancelled:'Stopped.'}[code]) || 'Something went wrong talking to Claude — try again.';
 }
 const ideaOf = p => (p.idea || '').trim();
+const simpleOf = p => (p.simple || '').trim();
 function summarizePrompt(paper, batch){
   const before = paper.paras.slice(0, paper.paras.indexOf(batch[0])).filter(ideaOf).slice(-30)
     .map(p => `[${p.id}] ${clip(ideaOf(p), 160)}`).join('\n');
   return `You are helping a master's student read a research paper. For EACH paragraph below:
-1. "idea": the main idea in simple, clear English a non-expert understands (1–2 short sentences, under 40 words). Keep the meaning exact. Do NOT add facts, numbers or claims that are not in the paragraph.
-2. "terms": up to 3 difficult or technical terms from the paragraph, each with a plain meaning (under 12 words). Empty array if none.
-3. "linkTo": the id of ONE earlier paragraph this paragraph most clearly builds on (from "Earlier paragraphs" or earlier in this batch), or null if there is no clear link.
-4. "relation": how it relates to that paragraph — one of "supports", "explains", "example", "contrasts", "leads-to", "result", "defines" — or null.
+1. "simple": the SAME paragraph rewritten in simple, clear English (around B1–B2 level) for a student who finds academic English hard. Keep every point, number and example, in the same order. Use short sentences and everyday words; if a technical term must stay, explain it briefly in brackets. Do NOT add facts, opinions or conclusions that are not in the paragraph, and do not leave content out.
+2. "idea": the main idea in 1–2 short sentences (under 40 words). Keep the meaning exact.
+3. "terms": up to 3 difficult or technical terms from the paragraph, each with a plain meaning (under 12 words). Empty array if none.
+4. "linkTo": the id of ONE earlier paragraph this paragraph most clearly builds on (from "Earlier paragraphs" or earlier in this batch), or null if there is no clear link.
+5. "relation": how it relates to that paragraph — one of "supports", "explains", "example", "contrasts", "leads-to", "result", "defines" — or null.
 
 Paper: "${paper.title}"
 Earlier paragraphs (id: main idea):
@@ -1773,42 +1792,66 @@ ${before || '(none yet)'}
 Paragraphs to summarise:
 ${batch.map(p => `[${p.id}] (section: ${p.section}${p.page ? `, page ${p.page}` : ''}${p.kind === 'caption' ? ', figure/table caption' : ''})\n${p.text.slice(0, 4000)}`).join('\n\n')}
 
-Reply with only a JSON array with one object per paragraph, in the same order, for example:
-[{"id":"p4","idea":"...","terms":[{"term":"...","meaning":"..."}],"linkTo":"p2","relation":"explains"}]`;
+Reply with only a JSON array with one object per paragraph, in the same order — an array even when there is only one paragraph — for example:
+[{"id":"p4","simple":"...","idea":"...","terms":[{"term":"...","meaning":"..."}],"linkTo":"p2","relation":"explains"}]`;
 }
-function applySummary(paper, items){
+// Claude may answer with an array, {paragraphs:[…]} or a single object: accept all of them
+function asItems(res, batch){
+  if (Array.isArray(res)) return res;
+  if (res && typeof res === 'object'){
+    const arr = Object.values(res).find(Array.isArray);
+    if (arr && arr.length && typeof arr[0] === 'object' && !Array.isArray(arr[0])) return arr;
+    if (res.simple || res.idea) return [{...res, id:res.id || (batch.length === 1 ? batch[0].id : '')}];
+  }
+  return [];
+}
+function applySummary(paper, items, batch){
   const ids = new Set(paper.paras.map(p => p.id));
-  for (const it of Array.isArray(items) ? items : []){
-    const p = paper.paras.find(x => x.id === String(it && it.id)); if (!p) continue;
-    const idea = String(it.idea || '').trim(); if (!idea) continue;
-    if (p.src === 'me' && ideaOf(p)) p.aiIdea = idea; else { p.idea = idea; p.src = 'ai'; p.aiIdea = ''; }
+  let n = 0;
+  for (const raw of asItems(items, batch || [])){
+    const it = raw || {};
+    const p = paper.paras.find(x => x.id === String(it.id)) || (batch && batch.length === 1 ? batch[0] : null); if (!p) continue;
+    const simple = String(it.simple || '').trim(), idea = String(it.idea || '').trim();
+    if (!simple && !idea) continue;
+    n++;
+    if (simple){ if (p.simpleSrc === 'me' && (p.simple || '').trim()) p.aiSimple = simple; else { p.simple = simple; p.simpleSrc = 'ai'; p.aiSimple = ''; } }
+    if (idea){ if (p.src === 'me' && ideaOf(p)) p.aiIdea = idea; else { p.idea = idea; p.src = 'ai'; p.aiIdea = ''; } }
     if (Array.isArray(it.terms)) p.terms = it.terms.filter(t => t && t.term).slice(0,3).map(t => ({term:String(t.term), meaning:String(t.meaning || '')}));
     const to = it.linkTo ? String(it.linkTo) : '';
     if (!p.link.to && to && ids.has(to) && paper.paras.findIndex(x => x.id === to) < paper.paras.indexOf(p))
       p.link = {to, rel:RELS.some(r => r[0] === it.relation) ? it.relation : 'supports'};
   }
+  return n;
 }
+let simBusy = new Set(), simOpen = new Set();
 async function summarizeParas(paper, list, label){
-  if (!aiReady() || aiRun) return;
+  if (!aiReady()){ toast('Simple versions are written by Claude on the published ScholarPath page — you can also write your own'); return false; }
+  if (aiRun){ toast('Claude is still working — please wait or press Stop'); return false; }
+  if (!list.length) return false;
   const ctl = new AbortController(); aiRun = {ctl, label, done:0, total:list.length};
   renderAiBar();
-  const batches = []; let cur = [], size = 0;
-  for (const p of list){ if (cur.length && (cur.length >= 8 || size + p.text.length > 9000)){ batches.push(cur); cur = []; size = 0; } cur.push(p); size += p.text.length; }
+  const batches = []; let cur = [], size = 0, got = 0;
+  for (const p of list){ if (cur.length && (cur.length >= 5 || size + p.text.length > 6000)){ batches.push(cur); cur = []; size = 0; } cur.push(p); size += p.text.length; }
   if (cur.length) batches.push(cur);
   try {
     for (const b of batches){
       if (ctl.signal.aborted) break;
-      const items = await AI.json(summarizePrompt(paper, b), {signal:ctl.signal, modelTier:'default'});
-      applySummary(paper, items); save();
+      b.forEach(p => simBusy.add(p.id)); refreshCards(b);
+      try {
+        const items = await AI.json(summarizePrompt(paper, b), {signal:ctl.signal, modelTier:'default'});
+        got += applySummary(paper, items, b); save();
+      } finally { b.forEach(p => simBusy.delete(p.id)); }
       aiRun.done += b.length; renderAiBar(); refreshCards(b);
     }
-    toast('Summaries ready');
+    if (got) toast(list.length === 1 ? 'Simple version ready' : 'Simple versions ready');
+    else if (!ctl.signal.aborted) alert('Claude answered, but no simple version could be read from the answer. Please try again.');
   } catch (e){ if (e && e.code !== 'cancelled') alert(aiError(e)); }
   finally {
-    aiRun = null; renderAiBar();
+    aiRun = null; renderAiBar(); refreshCards(list);
     const typing = document.activeElement && $('#panel-reader').contains(document.activeElement) && /INPUT|TEXTAREA|SELECT/.test(document.activeElement.tagName);
     if (S.ui.tab === 'reader' && !typing) RENDER.reader();
   }
+  return got > 0;
 }
 async function generateQuestions(paper){
   if (!aiReady() || aiRun) return;
@@ -1912,7 +1955,7 @@ function ttsSegs(paper, opts){                                // opts: {from, on
   const ps = opts.only ? list.filter(p => p.id === opts.only) : list.slice(start);
   return ps.flatMap(p => [
     parts.orig && p.text && {pid:p.id, part:'orig', text:p.text, lang:'en'},
-    parts.idea && ideaOf(p) && {pid:p.id, part:'idea', text:'In simple words: ' + ideaOf(p), lang:'en'},
+    parts.idea && (simpleOf(p) || ideaOf(p)) && {pid:p.id, part:'idea', text:simpleOf(p) ? 'In simple words: ' + simpleOf(p) : 'Main idea: ' + ideaOf(p), lang:'en'},
     parts.ar && (p.ar || '').trim() && {pid:p.id, part:'ar', text:p.ar.trim(), lang:'ar'}
   ].filter(Boolean));
 }
@@ -1993,7 +2036,7 @@ function ttsMark(c, scroll){
   if (!c || !c.pid) return;
   const card = $('#para-' + c.pid); if (!card) return;
   card.classList.add('speaking');
-  const part = c.part === 'orig' ? $('#po-' + c.pid) : c.part === 'idea' ? $('#ri-' + c.pid) : $('#ra-' + c.pid);
+  const part = c.part === 'orig' ? $('#po-' + c.pid) : c.part === 'idea' ? ($('#rs-' + c.pid) || $('#ri-' + c.pid)) : $('#ra-' + c.pid);
   if (part){
     part.classList.add('speaking-part');
     if (c.part === 'orig'){                                  // follow along: highlight the sentence being read
@@ -2034,6 +2077,7 @@ function ttsBarHTML(){
         <label class="small">Arabic <select id="ttsVoiceAr" style="width:auto;max-width:230px">${ar.length ? vOpt(ar, S.reader.voiceAr) : '<option value="">No Arabic voice on this device</option>'}</select></label></div></details>
     </div>
     ${TTS.note ? `<p class="small muted" style="margin:6px 0 0">${esc(TTS.note)}</p>` : ''}
+    ${parts.idea && paper && aiReady() && paper.paras.some(p => p.kind !== 'front' && !simpleOf(p)) ? `<p class="small muted" style="margin:6px 0 0">${paper.paras.filter(p => p.kind !== 'front' && !simpleOf(p)).length} paragraph(s) have no simple version yet, so “Simple” reads their main idea instead. <button class="btn sm ghost" data-act="rp-sum-all" data-ai-btn>${icon('sparkle')}Write them with Claude</button></p>` : ''}
     ${parts.ar && paper && !paper.paras.some(p => (p.ar || '').trim()) ? `<p class="small muted" style="margin:6px 0 0">No Arabic translations yet — ${aiReady() ? 'use “Translate all to Arabic” above, or' : ''} add one under a paragraph.</p>` : ''}
   </div>`;
 }
@@ -2111,7 +2155,7 @@ Base your answers on the paper content below. If the paper does not say somethin
   }
   const p = paper.paras.find(x => x.id === scope), n = paraNo(paper, scope), i = n - 1;
   const near = paper.paras.slice(Math.max(0, i - 2), i + 3).filter(x => x !== p && x.kind !== 'front').map(x => `¶${paraNo(paper, x.id)}: ${ideaOf(x) || clip(x.text, 300)}`).join('\n');
-  return `${rules}\n\nPaper: "${paper.title}"\nThe student is asking about ¶${n} (section: ${p.section}${p.page ? `, page ${p.page}` : ''}).\n\nOriginal paragraph:\n${p.text}\n\n${ideaOf(p) ? `Simple summary: ${ideaOf(p)}\n\n` : ''}Nearby paragraphs, for context:\n${near || '(none)'}`;
+  return `${rules}\n\nPaper: "${paper.title}"\nThe student is asking about ¶${n} (section: ${p.section}${p.page ? `, page ${p.page}` : ''}).\n\nOriginal paragraph:\n${p.text}\n\n${simpleOf(p) ? `Simple version: ${simpleOf(p)}\n\n` : ''}${ideaOf(p) ? `Main idea: ${ideaOf(p)}\n\n` : ''}Nearby paragraphs, for context:\n${near || '(none)'}`;
 }
 async function chatSend(scope, text){
   const paper = rPaper(); text = (text || '').trim();
@@ -2182,8 +2226,8 @@ RENDER.reader = () => {
 };
 function readerBody(paper, view){
   const text = paper.paras.filter(p => p.kind !== 'front');
-  const done = text.filter(ideaOf).length;
-  const todo = paper.paras.filter(p => !ideaOf(p) && p.kind !== 'front');
+  const done = text.filter(simpleOf).length;
+  const todo = text.filter(p => !simpleOf(p) || !ideaOf(p));
   return `
   <div class="card sticky-sub" style="margin-top:16px;padding:12px 16px">
     <div class="row" style="justify-content:space-between;gap:12px">
@@ -2191,8 +2235,8 @@ function readerBody(paper, view){
         <input class="input title-input" id="rpTitle" value="${esc(paper.title)}" placeholder="Paper title"></div>
       <div class="seg" role="group" aria-label="View">${[['paras','Paragraphs'],['flow','Idea flow'],['questions','Questions']].map(([k,l]) => `<button data-act="rp-view" data-v="${k}" aria-pressed="${view===k}">${l}</button>`).join('')}</div>
     </div>
-    <div class="row" style="justify-content:space-between;margin:10px 0 6px"><span class="small"><b id="rpDone">${done}</b> of ${text.length} paragraphs have a main idea</span>
-      <span class="row">${aiReady() && todo.length ? `<button class="btn sm primary" data-act="rp-sum-all" data-ai-btn>${icon('sparkle')}Summarize ${done ? 'the rest' : 'all'} with Claude</button>` : ''}
+    <div class="row" style="justify-content:space-between;margin:10px 0 6px"><span class="small"><b id="rpDone">${done}</b> of ${text.length} paragraphs have a simple version</span>
+      <span class="row">${aiReady() && todo.length ? `<button class="btn sm primary" data-act="rp-sum-all" data-ai-btn>${icon('sparkle')}Simplify ${done ? 'the rest' : 'all'} with Claude</button>` : ''}
       ${aiReady() && text.some(p => !(p.ar || '').trim()) ? `<button class="btn sm" data-act="rp-ar-all" data-ai-btn>${icon('sparkle')}Translate ${text.some(p => (p.ar || '').trim()) ? 'the rest' : 'all'} to Arabic</button>` : ''}
       ${copyBtn('#rpNotes','Copy reading notes')}<button class="btn sm" data-act="rp-to-crit">${icon('clip')}Use in Critique</button></span></div>
     <div class="progress"><span style="width:${text.length ? done/text.length*100 : 0}%"></span></div>
@@ -2207,6 +2251,16 @@ function parasView(paper){
   return paperChatCard(paper) + paper.paras.map(p => { const h = p.section !== last ? `<div class="form-part">${esc(p.section)}</div>` : ''; last = p.section; return h + paraCard(paper, p); }).join('') ||
     '<div class="empty">No paragraphs were found. If this is a scanned PDF, try <b>Paste text</b> instead.</div>';
 }
+function simpleBlock(p){
+  const has = simpleOf(p), chip = p.simpleSrc === 'me' ? '<span class="chip tag">mine</span>' : p.simpleSrc === 'demo' ? '<span class="chip">demo</span>' : has ? '<span class="chip">by Claude — check it</span>' : '';
+  const head = `<label class="part-lbl simple-lbl" for="rs-${p.id}">${icon('sparkle')}Simple version — the same paragraph in clear English ${chip}</label>`;
+  if (simBusy.has(p.id)) return head + `<div class="simple-box simple-busy" id="rs-${p.id}"><span class="spin" aria-hidden="true"></span> Claude is rewriting this paragraph in simple English…</div>`;
+  if (has || simOpen.has(p.id)) return head + `<textarea id="rs-${p.id}" data-rp="simple" data-id="${p.id}" class="simple-box" rows="3" placeholder="Rewrite the paragraph in your own simple words…">${esc(p.simple || '')}</textarea>
+    ${p.aiSimple ? `<div class="ai-alt"><span class="small"><b>Claude’s version:</b> ${esc(p.aiSimple)}</span><button class="btn sm" data-act="rp-use-ai-simple" data-id="${p.id}">Use this</button></div>` : ''}`;
+  return head + `<div class="simple-box simple-empty"><span class="small muted">No simple version yet.</span>
+    ${aiReady() ? `<button class="btn sm primary" data-act="rp-sum-one" data-id="${p.id}" data-ai-btn>${icon('sparkle')}Write it with Claude</button>` : ''}
+    <button class="btn sm" data-act="rp-simple-open" data-id="${p.id}">${icon('pen')}Write my own</button></div>`;
+}
 function paraCard(paper, p){
   const n = paraNo(paper, p.id), earlier = paper.paras.slice(0, n - 1);
   if (p.kind === 'front') return `<article class="card para front" id="para-${p.id}"><div class="para-head"><span class="para-no">¶${n}</span><span class="small muted">Title, authors and affiliations — not summarised</span><span class="spacer"></span>
@@ -2217,12 +2271,13 @@ function paraCard(paper, p){
   return `<article class="card para ${ideaOf(p)?'has-idea':''}" id="para-${p.id}" data-pid="${p.id}">
     <div class="para-head"><span class="para-no">¶${n}</span><span class="small muted">${p.page ? `p. ${p.page} · ` : ''}${esc(p.section)}${p.kind === 'caption' ? ' · figure/table' : p.kind === 'front' ? ' · title & authors' : ''}</span>
       <span class="spacer"></span>
-      ${aiReady() ? `<button class="btn ghost sm" data-act="rp-sum-one" data-id="${p.id}" data-ai-btn title="Ask Claude to simplify this paragraph" aria-label="Simplify with Claude">${icon('sparkle')}<span class="hide-sm">Simplify</span></button>` : ''}
+      ${aiReady() ? `<button class="btn ghost sm" data-act="rp-sum-one" data-id="${p.id}" data-ai-btn title="Ask Claude to rewrite this paragraph in simple English" aria-label="Simplify with Claude">${icon('sparkle')}<span class="hide-sm">${simpleOf(p) ? 'Simplify again' : 'Simplify'}</span></button>` : ''}
       <button class="btn ghost icon" data-act="rp-merge" data-id="${p.id}" title="Merge with next paragraph" aria-label="Merge with next paragraph">${icon('link')}</button>
       <button class="btn ghost icon danger" data-act="rp-drop" data-id="${p.id}" title="Remove this paragraph" aria-label="Remove paragraph">${icon('trash')}</button></div>
     <div class="part-lbl">${icon('book')}Original text</div>
     <div class="orig-full" id="po-${p.id}" dir="auto">${esc(p.text)}</div>
-    <label class="f idea-lbl" for="ri-${p.id}">${icon('bulb')}Main idea in simple words ${p.src === 'ai' ? '<span class="chip">by Claude — check it</span>' : p.src === 'me' ? '<span class="chip tag">mine</span>' : ''}</label>
+    ${simpleBlock(p)}
+    <label class="f idea-lbl" for="ri-${p.id}">${icon('bulb')}Main idea in one or two sentences ${p.src === 'ai' ? '<span class="chip">by Claude — check it</span>' : p.src === 'me' ? '<span class="chip tag">mine</span>' : ''}</label>
     <textarea id="ri-${p.id}" data-rp="idea" data-id="${p.id}" rows="2" placeholder="What is this paragraph saying? Write it simply, in 1–2 sentences.">${esc(p.idea)}</textarea>
     ${p.aiIdea ? `<div class="ai-alt"><span class="small"><b>Claude’s version:</b> ${esc(p.aiIdea)}</span><button class="btn sm" data-act="rp-use-ai" data-id="${p.id}">Use this</button></div>` : ''}
     ${(p.terms||[]).length ? `<div class="terms">${p.terms.map(t => `<span class="term"><b>${esc(t.term)}</b> — ${esc(t.meaning)}</span>`).join('')}</div>` : ''}
@@ -2230,7 +2285,7 @@ function paraCard(paper, p){
     <div class="para-tools">
       ${TTS.ok ? `<span class="listen" role="group" aria-label="Listen to ¶${n}"><span class="small muted">${icon('volume')}Listen:</span>
         <button class="btn sm" data-act="tts-one" data-id="${p.id}" data-part="orig">Original</button>
-        <button class="btn sm" data-act="tts-one" data-id="${p.id}" data-part="idea" ${ideaOf(p) ? '' : 'disabled'}>Simple</button>
+        <button class="btn sm" data-act="tts-one" data-id="${p.id}" data-part="idea" title="${simpleOf(p) ? 'Listen to the simple version' : 'Write the simple version, then listen'}">Simple</button>
         ${(p.ar || '').trim() ? `<button class="btn sm" data-act="tts-one" data-id="${p.id}" data-part="ar">Arabic</button>` : ''}
         <button class="btn sm ghost" data-act="tts-one" data-id="${p.id}" data-part="from" title="Read from here to the end, using the parts chosen in the Read aloud bar">${icon('play')}From here</button></span>` : ''}
       ${(p.ar || '').trim() || arOpen.has(p.id) ? '' : aiReady() ? `<button class="btn sm ghost" data-act="rp-ar-one" data-id="${p.id}" data-ai-btn>${icon('sparkle')}Translate to Arabic</button>` : `<button class="btn sm ghost" data-act="rp-ar-open" data-id="${p.id}">${icon('plus')}Add Arabic translation</button>`}
@@ -2249,9 +2304,17 @@ function paraCard(paper, p){
 }
 function refreshCards(list){
   const paper = rPaper(); if (!paper || S.ui.tab !== 'reader' || (S.reader.view || 'paras') !== 'paras') return;
-  list.forEach(p => { const el = $('#para-' + p.id); if (!el || el.contains(document.activeElement)) return; el.outerHTML = paraCard(paper, p); });
+  list.forEach(p => {
+    const el = $('#para-' + p.id); if (!el) return;
+    const f = document.activeElement;
+    if (el.contains(f) && /INPUT|TEXTAREA|SELECT/.test(f.tagName)){                 // someone is typing here: update the other boxes only
+      [['#rs-', 'simple'], ['#ri-', 'idea']].forEach(([sel, k]) => { const box = $(sel + p.id); if (box && box !== f) box.value = p[k] || ''; });
+      return;
+    }
+    el.outerHTML = paraCard(paper, p);
+  });
   $$('#panel-reader textarea[data-rp]').forEach(grow);
-  const text = paper.paras.filter(x => x.kind !== 'front'), done = text.filter(ideaOf).length;
+  const text = paper.paras.filter(x => x.kind !== 'front'), done = text.filter(simpleOf).length;
   const pr = $('#panel-reader .sticky-sub .progress span'); if (pr) pr.style.width = (done/text.length*100) + '%';
   const cnt = $('#rpDone'); if (cnt) cnt.textContent = done;
   const notes = $('#rpNotes'); if (notes) notes.textContent = readingNotes(paper);
@@ -3335,9 +3398,14 @@ const ACTIONS = {
   'tts-skip': el => ttsSkip(+el.dataset.v),
   'tts-part': el => { const parts = S.reader.ttsParts, k = el.dataset.v; parts[k] = !parts[k]; if (!parts.orig && !parts.idea && !parts.ar) parts[k] = true; save(); renderTtsBar(); },
   'tts-gender': el => { S.reader.gender = el.dataset.v; S.reader.voiceEn = ''; S.reader.voiceAr = ''; save(); if (TTS.playing){ ttsHalt(); ttsSpeak(false); } else renderTtsBar(); },
-  'tts-one': el => {
+  'tts-one': async el => {
     const paper = rPaper(), p = paper.paras.find(x => x.id === el.dataset.id), part = el.dataset.part;
     if (part === 'from') return ttsPlayAll(p.id);
+    if (part === 'idea' && !simpleOf(p)){                                   // no simple version yet: make one first
+      if (aiReady()){ ttsHalt(); renderTtsBar(); if (!(await summarizeParas(paper, [p], 'Simplifying'))) return; }
+      else { const card = $('#para-' + p.id); simOpen.add(p.id); if (card) card.outerHTML = paraCard(paper, p); $('#rs-' + p.id)?.focus();
+        if (!ideaOf(p)) return toast('No simple version yet — Claude writes them on the published page, or type your own here'); }
+    }
     const ctx = {paperId:paper.id, only:p.id, parts:{[part]:true}};
     ttsStart(ttsSegs(paper, ctx), ctx);
   },
@@ -3361,8 +3429,10 @@ const ACTIONS = {
     <div class="field"><label class="f" for="pt-text">Paper text</label><textarea id="pt-text" name="text" required style="min-height:260px" placeholder="Paste the text. Leave an empty line between paragraphs; headings such as Introduction or 2. Method are detected."></textarea></div>`,
     d => { const res = textToParagraphs(d.text); if (!res.paras.length) return false; addReaderPaper(d.title.trim(), d.title.trim(), res); }, 'Add paper'),
   'rp-del': () => { const p = rPaper(); if (!p || !confirm(`Delete "${p.title || p.name}" and all your notes on it?`)) return; S.reader.papers = S.reader.papers.filter(x => x !== p); S.reader.active = S.reader.papers[0]?.id || ''; save(); RENDER.reader(); },
-  'rp-sum-all': () => { const p = rPaper(); summarizeParas(p, p.paras.filter(x => !ideaOf(x) && x.kind !== 'front'), 'Summarizing'); },
-  'rp-sum-one': el => { const p = rPaper(), para = p.paras.find(x => x.id === el.dataset.id); if (para){ if (ideaOf(para)) para.src = para.src || 'me'; summarizeParas(p, [para], 'Simplifying'); } },
+  'rp-sum-all': () => { const p = rPaper(); summarizeParas(p, p.paras.filter(x => x.kind !== 'front' && (!simpleOf(x) || !ideaOf(x))), 'Writing simple versions'); },
+  'rp-sum-one': el => { const p = rPaper(), para = p.paras.find(x => x.id === el.dataset.id); if (para){ if (ideaOf(para)) para.src = para.src || 'me'; if (simpleOf(para)) para.simpleSrc = para.simpleSrc || 'me'; summarizeParas(p, [para], 'Simplifying'); } },
+  'rp-simple-open': el => { const id = el.dataset.id, paper = rPaper(), card = $('#para-' + id); simOpen.add(id); if (card) card.outerHTML = paraCard(paper, paper.paras.find(x => x.id === id)); $('#rs-' + id)?.focus(); },
+  'rp-use-ai-simple': el => { const p = rPaper().paras.find(x => x.id === el.dataset.id); p.simple = p.aiSimple; p.aiSimple = ''; p.simpleSrc = 'ai'; save(); refreshCards([p]); },
   'rp-questions': () => generateQuestions(rPaper()),
   'ai-stop': () => aiRun && aiRun.ctl.abort(),
   'rp-use-ai': el => { const p = rPaper().paras.find(x => x.id === el.dataset.id); p.idea = p.aiIdea; p.aiIdea = ''; p.src = 'ai'; save(); refreshCards([p]); },
@@ -3472,6 +3542,7 @@ document.addEventListener('input', e => {
   if (t.dataset.fb){ S.figlab.build.chart[t.dataset.fb] = t.value; save(); updateBuild(); return; }
   if (t.dataset.fbs){ S.figlab.build.chart.series[+t.dataset.fbs][t.dataset.field] = t.value; save(); updateBuild(); return; }
   if (t.dataset.fcap){ S.figlab.build.cap[t.dataset.fcap] = t.value; save(); updateBuild(); return; }
+  if (t.dataset.rp === 'simple'){ const para = rPaper().paras.find(x => x.id === t.dataset.id); if (para){ para.simple = t.value; para.simpleSrc = t.value.trim() ? 'me' : ''; save(); grow(t); const d = $('#rpDone'); if (d) d.textContent = rPaper().paras.filter(x => x.kind !== 'front' && simpleOf(x)).length; } return; }
   if (t.dataset.rp === 'ar'){ const para = rPaper().paras.find(x => x.id === t.dataset.id); if (para){ para.ar = t.value; para.arSrc = 'me'; save(); grow(t); } return; }
   if (t.dataset.rp === 'idea' || t.dataset.rp === 'mine'){
     const para = rPaper().paras.find(x => x.id === t.dataset.id); if (!para) return;
