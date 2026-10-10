@@ -1717,65 +1717,106 @@ async function pdfToParagraphs(file){
   }
   // running headers / footers / page numbers: identical short lines on 3+ pages
   const freq = {};
-  pageLines.forEach(ls => new Set(ls.map(l => l.text.replace(/\d+/g,'#'))).forEach(t => freq[t] = (freq[t]||0) + 1));
+  pageLines.forEach(ls => new Set(ls.filter(l => l.edge).map(l => l.text.replace(/\d+/g,'#'))).forEach(t => freq[t] = (freq[t]||0) + 1));   // count only lines at a page edge
   const noise = l => /^\d{1,4}$/.test(l.text) || (pageLines.length >= 2 && l.edge && l.text.length < 120 && freq[l.text.replace(/\d+/g,'#')] >= Math.min(3, pageLines.length));
+
+  // Per page: where each column's text starts (to tell a first-line indent from a continuation) and the body font size
+  const pageInfo = pageLines.map(ls => {
+    const widths = ls.map(l => l.w).filter(w => w > 0).sort((a,b) => a-b);
+    const typical = widths[Math.floor(widths.length * 0.75)] || 300;
+    const longX = ls.filter(l => l.w > typical * 0.8).map(l => l.x);
+    const bodyH = bodyFontH(ls), gaps = [];
+    for (let i = 1; i < ls.length; i++){ const a = ls[i - 1], c = ls[i], dy = a.y - c.y; if (Math.abs(a.h - bodyH) < 0.6 && Math.abs(c.h - bodyH) < 0.6 && Math.abs(a.x - c.x) < 40 && dy > bodyH * 0.8 && dy < bodyH * 2.5) gaps.push(dy); }
+    gaps.sort((a, b) => a - b);
+    const pitch = gaps.length ? gaps[Math.floor(gaps.length / 2)] : bodyH * 1.2;      // normal distance between two lines of a paragraph
+    const textLines = ls.filter(l => bodyLike(l, bodyH));
+    return {typical, bodyH, pitch, textLines, colLeft:l => { const c = longX.filter(x => Math.abs(x - l.x) < 40); return c.length ? Math.min(...c) : l.x; }};
+  });
+  // words that occur in the paper, to tell a line-break hyphen ("evalu-ation") from a real one ("twelve-week")
+  const known = new Set(pageLines.flatMap(ls => ls.flatMap(l => l.text.toLowerCase().match(/[a-z]+/g) || [])));
+  const joinLine = (a, b) => { const m = a.match(/([A-Za-z]+)-$/), n = b.match(/^([a-z]+)/);
+    if (m && n) return known.has((m[1] + n[1]).toLowerCase()) ? a.slice(0, -1) + b : a + b;      // keep the hyphen unless the joined word is known
+    return a ? a + ' ' + b : b; };
+  const endsSentence = t => /[.?!:"”’)]$/.test(t);
+  const indented = (l, info) => { const c = info.colLeft(l); return l.x > c + l.h * 0.8 && l.x < c + l.h * 5; };
+  let indentVotes = 0;                                        // does this paper start paragraphs with a first-line indent?
+  pageLines.forEach((ls, pi) => ls.forEach((l, i) => { if (i && indented(l, pageInfo[pi]) && endsSentence(ls[i - 1].text)) indentVotes++; }));
+  const indentStyle = indentVotes >= 3;
+  // ordinary body text is never cut out with a figure, even if it falls inside the figure's area
+  const isBodyText = (l, info) => bodyLike(l, info.bodyH) || (Math.abs(l.h - info.bodyH) < 0.6 && /[A-Za-z\u0600-\u06FF]{2,}/.test(l.text)
+    && info.textLines.some(m => m !== l && Math.abs(m.x - l.x) < 60 && Math.abs(m.y - l.y) <= info.pitch * 1.3));   // e.g. a short last line of a paragraph
 
   const paras = [], figs = []; let section = 'Title & authors', buf = [], bufPage = 1, inRefs = false, seq = 0, pending = [];
   const pushPending = () => { pending.forEach(f => paras.push(f)); pending = []; };
   const flush = (kind) => {
     if (!buf.length){ pushPending(); return; }
     let text = '';
-    buf.forEach(t => { text = /[a-z]-$/.test(text) && /^[a-z]/.test(t) ? text.slice(0,-1) + t : (text ? text + ' ' + t : t); });
+    buf.forEach(t => { text = joinLine(text, t); });
     text = text.replace(/\s+/g,' ').trim();
-    if (text) paras.push({id:'p' + (++seq), section, page:bufPage, kind:kind || (/^(fig\.?|figure|table)\s*[\dIVX]+/i.test(text) ? 'caption' : section === 'Title & authors' ? 'front' : 'text'), text, idea:'', src:'', terms:[], mine:'', link:{to:'', rel:''}});
+    let k = kind || (/^(fig\.?|figure|table)\s*[\dIVX]+/i.test(text) ? 'caption' : section === 'Title & authors' ? 'front' : 'text');
+    if (k === 'front' && words(text) > 50) k = 'text';         // a long opening block is the abstract, not the title block
+    if (text) paras.push({id:'p' + (++seq), section:k === 'text' && section === 'Title & authors' ? 'Abstract' : section, page:bufPage, kind:k, text, idea:'', src:'', terms:[], mine:'', link:{to:'', rel:''}});
     buf = [];
-    pushPending();                                            // a figure met inside this paragraph goes right after it
+    pushPending();                                            // a figure met inside a paragraph is placed after the WHOLE paragraph
   };
-  let prev = null;
+  let prev = null, prevInfo = null, afterFig = false;
   pageLines.forEach((ls, pi) => {
-    const widths = ls.map(l => l.w).filter(w => w > 0).sort((a,b) => a-b);
-    const typical = widths[Math.floor(widths.length * 0.75)] || 300;
+    const info = pageInfo[pi];
     let newPage = true;
     for (const l of ls){
       if (inRefs) break;
       if (noise(l)) continue;
-      const fig = pageFigs[pi].find(f => inRegion(l, f.region));
-      if (fig){                                               // text inside a figure or table (labels, cells, caption) is not read
+      const fig = pageFigs[pi].find(f => inRegion(l, f.region) && (f.capLines.includes(l) || !isBodyText(l, info)));
+      if (fig){                                               // a figure's caption and its own labels / cells are not read
         if (!fig.added){
           fig.added = true;
           const item = {id:'p' + (++seq), kind:'figure', label:fig.label, figKind:fig.kind, section, page:pi + 1, caption:fig.caption, text:fig.caption, mentions:figMentions(pageTexts, fig), img:false, link:{to:'', rel:''}};
           figs.push({item, fig}); pending.push(item);
         }
+        afterFig = true;
         continue;
       }
       const t = l.text;
       const shortLine = t.length < 80 && !/[.,;]$/.test(t);
-      if (REF_RE.test(t)){ flush(); inRefs = true; break; }
+      if (REF_RE.test(t) && (!prev || endsSentence(prev.text))){ flush(); inRefs = true; break; }
       const abs = t.match(/^abstract\s*[—–:\-.]\s*(.+)$/i);
-      if (abs){ flush(); section = 'Abstract'; buf = [abs[1]]; bufPage = pi + 1; prev = l; continue; }
-      if (shortLine && (HEAD_RE.test(t) && t.split(' ').length <= 8 || NUM_HEAD_RE.test(t) && t.split(' ').length <= 10)){
+      if (abs){ flush(); section = 'Abstract'; buf = [abs[1]]; bufPage = pi + 1; prev = l; afterFig = false; continue; }
+      const dyPrev = prev ? prev.y - l.y : 0;
+      const standsAlone = !prev || newPage || afterFig || endsSentence(prev.text) || dyPrev > Math.max(prev.h, l.h) * 1.3 || dyPrev < -l.h;
+      if (shortLine && /^[A-Z0-9]/.test(t) && standsAlone && (HEAD_RE.test(t) && t.split(' ').length <= 8 || NUM_HEAD_RE.test(t) && t.split(' ').length <= 10)){
         flush(); section = t.replace(/^(?:(?:\d+(?:\.\d+)*|[IVX]+)\.?\s+)/, '').replace(/\s+/g,' ');
         section = section.charAt(0).toUpperCase() + section.slice(1).toLowerCase();
-        prev = null; continue;
+        prev = null; afterFig = false; continue;
       }
       let brk = !prev;
       if (prev){
-        const dy = prev.y - l.y, sentenceEnd = /[.?!:"”]$/.test(prev.text);
-        if (newPage || dy < -l.h) brk = sentenceEnd && !/^[a-z]/.test(t);                     // new page or column: keep a running sentence together
-        else if (dy > Math.max(prev.h, l.h) * 1.8) brk = true;                               // big vertical gap
-        else if (l.x > prev.x + l.h * 0.8 && /[.?!:"”]$/.test(prev.text)) brk = true;        // first-line indent
-        else if (prev.w < typical * 0.7 && /[.?!:"”]$/.test(prev.text)) brk = true;          // short last line of a paragraph
+        const dy = prev.y - l.y, se = endsSentence(prev.text);
+        const prevShort = prev.w < (prevInfo || info).typical * 0.85;                          // a paragraph's last line is usually short
+        if (newPage || afterFig || dy < -l.h)                 // new page, new column, or text resuming after a figure:
+          brk = se && (indentStyle ? indented(l, info) : prevShort && !/^[a-z]/.test(t));   // only a real paragraph start breaks it
+        else if (dy > info.pitch * 1.3) brk = true;                                            // more space than between two lines
+        else if (l.x > prev.x + l.h * 0.8 && se) brk = true;                                   // first-line indent
+        else if (prev.w < info.typical * 0.7 && se) brk = true;                                // short last line of a paragraph
       }
       if (brk && buf.length) flush();
       if (!buf.length) bufPage = pi + 1;
-      buf.push(t); prev = l; newPage = false;
+      buf.push(t); prev = l; prevInfo = info; newPage = false; afterFig = false;
     }
   });
   flush(); pushPending();
-  // merge fragments (< 25 words) into the next paragraph of the same section
-  for (let i = paras.length - 2; i >= 0; i--){
-    const a = paras[i], b = paras[i+1];
-    if (a.kind === 'text' && b.kind === 'text' && a.section === b.section && words(a.text) < 25){ b.text = a.text + ' ' + b.text; b.page = a.page; paras.splice(i, 1); }
+  // Short fragments (< 25 words) belong to a neighbour: to the paragraph before when it continues it (no full stop,
+  // starts in lower case, or a figure sits in between), otherwise to the paragraph after. No words are dropped.
+  const joinText = (a, b) => joinLine(a, b);
+  for (let i = paras.length - 1; i >= 0; i--){
+    const a = paras[i];
+    if (a.kind !== 'text' || words(a.text) >= 25) continue;
+    let j = i - 1; while (j >= 0 && paras[j].kind === 'figure') j--;
+    const before = paras[j], after = paras[i + 1];
+    if (before && before.kind === 'text' && before.section === a.section && (!endsSentence(before.text) || /^[a-z(]/.test(a.text) || j < i - 1)){
+      before.text = joinText(before.text, a.text); paras.splice(i, 1);
+    } else if (after && after.kind === 'text' && after.section === a.section){
+      after.text = joinText(a.text, after.text); after.page = a.page; paras.splice(i, 1);
+    }
   }
   // pictures of each figure / table, cropped from the rendered page
   const blobs = {};
@@ -2829,6 +2870,8 @@ const normFig = s => (s || '').toLowerCase().replace(/^figure/, 'fig').replace(/
 const VISUAL_CHECKS = ['axes','legend','err','scale','bw','cb','deco'];
 const proseLine = l => { const w = l.text.split(/\s+/).filter(x => /[a-z]{2}/i.test(x)).length; return w >= 7 && (l.text.match(/\d/g) || []).length / l.text.length < 0.15; };
 
+// a line set in the paper's normal text size with at least three real words is body text, never part of a figure
+const bodyLike = (l, bodyH) => !!bodyH && Math.abs(l.h - bodyH) < 0.6 && (l.text.match(/[A-Za-z\u0600-\u06FF]{2,}/g) || []).length >= 3;
 function bodyFontH(lines){                                   // the most common font size on a page, weighted by text length
   const w = {}; lines.forEach(l => { const k = Math.round(l.h * 2) / 2; w[k] = (w[k] || 0) + l.text.length; });
   return +Object.entries(w).sort((a, b) => b[1] - a[1])[0]?.[0] || 0;
@@ -2842,7 +2885,7 @@ function figRegion(capLines, lines, W, H, kind, bodyH){
   const overlap = l => Math.max(0, Math.min(x1, l.x + l.w) - Math.max(x0, l.x));
   const sentenceEnd = l => bodyH && Math.abs(l.h - bodyH) < 0.6 && /[.?!:]["”)]?$/.test(l.text) && l.text.split(/\s+/).length >= 3;
   const inCol = l => l.x >= x0 - 8 && l.x + l.w <= x1 + 8;
-  const body = lines.filter(l => !capLines.includes(l) && ((inCol(l) && ((l.w > colW * 0.6 && proseLine(l)) || sentenceEnd(l))) || (!full && l.w > colW * 1.15 && overlap(l) > colW * 0.3)));
+  const body = lines.filter(l => !capLines.includes(l) && ((inCol(l) && ((l.w > colW * 0.6 && proseLine(l)) || sentenceEnd(l) || bodyLike(l, bodyH))) || (!full && l.w > colW * 1.15 && overlap(l) > colW * 0.3)));
   let top, bottom, ex;
   if (kind === 'fig'){                                   // the figure sits above its caption
     const above = body.filter(l => l.y > capTop + 2).sort((a,b) => a.y - b.y)[0];
@@ -2879,7 +2922,7 @@ function findFiguresOnPage(lines, W, H, pageNo, seen){
       if (kind === 'table' && !m[2] && capLines.length >= 2 && /[a-z]/i.test(text)) break;   // IEEE: "TABLE II" + one title line
     }
     seen.add(normFig(label));
-    items.push({label, kind, num:m[1], page:pageNo, caption:text.replace(/\s+/g, ' ').trim(), region:figRegion(capLines, lines, W, H, kind, bodyH), sel:true});
+    items.push({label, kind, num:m[1], page:pageNo, caption:text.replace(/\s+/g, ' ').trim(), region:figRegion(capLines, lines, W, H, kind, bodyH), capLines, sel:true});
   });
   return items;
 }
