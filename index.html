@@ -340,7 +340,7 @@ svg.mini{width:100%;max-width:220px;height:auto;display:block}
 .scan-item input{width:18px;height:18px;accent-color:var(--accent)}
 .scan-cap{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 @media(max-width:620px){.scan-item{grid-template-columns:auto auto 1fr}.scan-item .scan-cap{grid-column:2/-1;white-space:normal}}
-.fig-shot{margin:4px 0 14px;background:#fff;border:1px solid var(--line);border-radius:var(--radius-sm);padding:8px;text-align:center}
+.fig-shot{scroll-margin-top:120px;margin:4px 0 14px;background:#fff;border:1px solid var(--line);border-radius:var(--radius-sm);padding:8px;text-align:center}
 .fig-shot img{max-width:100%;max-height:420px;display:block;margin:0 auto 6px}
 .fig-shot .small{text-align:left}
 .ai-note{margin:-4px 0 12px;padding:8px 10px;background:var(--accent-soft);border-radius:var(--radius-sm)}
@@ -363,6 +363,19 @@ mark.tts-now{background:var(--warn-soft);color:var(--ink);border-radius:3px;padd
 textarea.simple-box{min-height:80px;font-size:.98rem;line-height:1.65;border-color:color-mix(in srgb,var(--ok) 35%,var(--line));background:color-mix(in srgb,var(--ok-soft) 45%,var(--surface))}
 .simple-empty,.simple-busy{display:flex;flex-wrap:wrap;align-items:center;gap:10px;padding:12px 14px;border:1.5px dashed var(--line);border-radius:var(--radius-sm)}
 .simple-busy{color:var(--accent);font-size:.92rem;border-style:solid;background:var(--accent-soft)}
+
+
+/* Figures inside the Paper Reader */
+.figure-card{scroll-margin-top:150px;border-left:3px solid var(--violet);background:color-mix(in srgb,var(--violet-soft) 35%,var(--surface))}
+.figure-card .para-no{display:inline-flex;align-items:center;gap:5px;background:var(--violet-soft);color:var(--violet)}
+.figure-card .para-no svg{width:14px;height:14px}
+.figure-card .fig-shot{margin:8px 0 10px}
+.fig-cap{font-family:var(--serif);font-size:.95rem;margin:0 0 10px}
+.fig-done{display:flex;gap:6px;align-items:flex-start;color:var(--ok);margin:0 0 10px}
+.fig-done span{color:var(--ink)}
+.demo-fig .mini{margin:0 auto 6px}
+.flow-fig .para-no{background:var(--violet-soft);color:var(--violet)}
+.flow-fig .para-no svg{width:13px;height:13px}
 
 /* Writing */
 .write-layout{display:grid;gap:16px;grid-template-columns:1fr}
@@ -1634,7 +1647,7 @@ function demoReaderPaper(){
   const P = (id, section, page, text, idea, terms, mine, to, rel) => ({id, section, page, kind:'text', text, idea, src:'', terms, mine, link:{to, rel}});
   return {
     id:'ex-reader-1', example:true, created:Date.now(), name:'Demo text — written for ScholarPath (not a real study)',
-    title:'Demo: How students use AI feedback on their writing', pages:[], seq:7,
+    title:'Demo: How students use AI feedback on their writing', pages:[], seq:8,
     paras:[
       P('p1','Abstract',1,'This demonstration text describes an imaginary small study, written only to show how the Paper Reader works. It imagines that twenty secondary-school students used an AI writing assistant for four weeks and that their drafts and interviews were analysed to understand how they used the feedback.',
         'An imaginary study: 20 students used an AI writing helper for 4 weeks, and the researchers looked at their drafts and interviews.',[{term:'AI writing assistant',meaning:'a computer tool that gives comments on your writing'}],'4 weeks · 20 students · drafts + interviews','',''),
@@ -1648,7 +1661,10 @@ function demoReaderPaper(){
         'AI feedback helps with small errors, but students need a teacher to understand the bigger comments.',[{term:'surface accuracy',meaning:'spelling and grammar, not ideas'}],'AI + teacher together','p4','explains'),
       P('p6','Limitations',4,'Because the study is imaginary and the sample would be small and from one school, no real conclusions can be drawn. A real study would need more students, several schools and a comparison group.',
         'Small sample from one school, no comparison group — so results can’t be generalised.',[{term:'comparison group',meaning:'students who did not use the tool, to compare with'}],'Weakness = small + one school','p5','contrasts')
-    ].map((p, i) => ({...p, simple:DEMO_SIMPLE[i], simpleSrc:'demo', ar:DEMO_AR[i], arSrc:'demo'})),
+    ].map((p, i) => ({...p, simple:DEMO_SIMPLE[i], simpleSrc:'demo', ar:DEMO_AR[i], arSrc:'demo'}))
+     .flatMap(p => p.id !== 'p4' ? [p] : [p, {id:'p7', kind:'figure', label:'Fig. 1', figKind:'fig', demo:true, section:'Results', page:3, img:false,
+        caption:'Share of AI suggestions that students accepted, adapted or ignored, by type of suggestion (illustrative).', text:'Share of AI suggestions that students accepted, adapted or ignored, by type of suggestion (illustrative).',
+        mentions:[{page:3, text:'In the imagined results, most suggestions about grammar were accepted unchanged, while suggestions about organisation and argument were usually ignored.'}], link:{to:'', rel:''}}]),
     questions:{
       overview:'A demo text about an imaginary study of 20 students who used an AI writing helper. Students copied grammar fixes but ignored harder advice about structure. The text suggests teachers are still needed to explain the bigger comments.',
       audience:[{q:'Have you ever accepted an AI correction without understanding why it was correct?', why:'Connects the finding to the audience’s own experience.'},{q:'Which is more useful for learning: instant AI feedback or slower teacher feedback?', why:'Opens a debate about the main implication.'}],
@@ -1659,7 +1675,9 @@ function demoReaderPaper(){
 }
 
 function rPaper(){ return (S.reader.papers || []).find(p => p.id === S.reader.active) || S.reader.papers[0]; }
-const paraNo = (paper, id) => paper.paras.findIndex(p => p.id === id) + 1;
+const isFigure = p => p.kind === 'figure' || p.kind === 'caption';        // figures and tables are not part of the reading
+const isReadable = p => p.kind !== 'front' && !isFigure(p);
+const paraNo = (paper, id) => paper.paras.filter(p => !isFigure(p)).findIndex(p => p.id === id) + 1;
 
 /* --- PDF → paragraphs (uses item positions to find breaks, headings and repeated headers) --- */
 // One page of a PDF as text lines with positions (PDF units, y grows upwards)
@@ -1688,25 +1706,30 @@ async function pdfPageLines(page){
 async function pdfToParagraphs(file){
   const lib = await loadPdfJs();
   const doc = await lib.getDocument({data:await file.arrayBuffer()}).promise;
-  const pages = [], pageLines = [];
+  const pages = [], pageLines = [], pageFigs = [], seen = new Set(), pageTexts = []; let title = '';
   for (let n = 1; n <= doc.numPages; n++){
-    const {lines:keep} = await pdfPageLines(await doc.getPage(n));
+    const {lines:keep, W, H} = await pdfPageLines(await doc.getPage(n));
     pageLines.push(keep);
     pages.push(keep.map(l => l.text).join('\n'));
+    pageTexts.push(keep.map(l => l.text).join(' ').replace(/([a-z])- ([a-z])/g, '$1$2'));
+    if (n === 1) title = paperTitleGuess(keep, H);
+    pageFigs.push(findFiguresOnPage(keep, W, H, n, seen));
   }
   // running headers / footers / page numbers: identical short lines on 3+ pages
   const freq = {};
   pageLines.forEach(ls => new Set(ls.map(l => l.text.replace(/\d+/g,'#'))).forEach(t => freq[t] = (freq[t]||0) + 1));
   const noise = l => /^\d{1,4}$/.test(l.text) || (pageLines.length >= 2 && l.edge && l.text.length < 120 && freq[l.text.replace(/\d+/g,'#')] >= Math.min(3, pageLines.length));
 
-  const paras = []; let section = 'Title & authors', buf = [], bufPage = 1, inRefs = false, seq = 0;
+  const paras = [], figs = []; let section = 'Title & authors', buf = [], bufPage = 1, inRefs = false, seq = 0, pending = [];
+  const pushPending = () => { pending.forEach(f => paras.push(f)); pending = []; };
   const flush = (kind) => {
-    if (!buf.length) return;
+    if (!buf.length){ pushPending(); return; }
     let text = '';
     buf.forEach(t => { text = /[a-z]-$/.test(text) && /^[a-z]/.test(t) ? text.slice(0,-1) + t : (text ? text + ' ' + t : t); });
     text = text.replace(/\s+/g,' ').trim();
     if (text) paras.push({id:'p' + (++seq), section, page:bufPage, kind:kind || (/^(fig\.?|figure|table)\s*[\dIVX]+/i.test(text) ? 'caption' : section === 'Title & authors' ? 'front' : 'text'), text, idea:'', src:'', terms:[], mine:'', link:{to:'', rel:''}});
     buf = [];
+    pushPending();                                            // a figure met inside this paragraph goes right after it
   };
   let prev = null;
   pageLines.forEach((ls, pi) => {
@@ -1716,6 +1739,15 @@ async function pdfToParagraphs(file){
     for (const l of ls){
       if (inRefs) break;
       if (noise(l)) continue;
+      const fig = pageFigs[pi].find(f => inRegion(l, f.region));
+      if (fig){                                               // text inside a figure or table (labels, cells, caption) is not read
+        if (!fig.added){
+          fig.added = true;
+          const item = {id:'p' + (++seq), kind:'figure', label:fig.label, figKind:fig.kind, section, page:pi + 1, caption:fig.caption, text:fig.caption, mentions:figMentions(pageTexts, fig), img:false, link:{to:'', rel:''}};
+          figs.push({item, fig}); pending.push(item);
+        }
+        continue;
+      }
       const t = l.text;
       const shortLine = t.length < 80 && !/[.,;]$/.test(t);
       if (REF_RE.test(t)){ flush(); inRefs = true; break; }
@@ -1739,13 +1771,16 @@ async function pdfToParagraphs(file){
       buf.push(t); prev = l; newPage = false;
     }
   });
-  flush();
+  flush(); pushPending();
   // merge fragments (< 25 words) into the next paragraph of the same section
   for (let i = paras.length - 2; i >= 0; i--){
     const a = paras[i], b = paras[i+1];
     if (a.kind === 'text' && b.kind === 'text' && a.section === b.section && words(a.text) < 25){ b.text = a.text + ' ' + b.text; b.page = a.page; paras.splice(i, 1); }
   }
-  return {pages, paras, seq};
+  // pictures of each figure / table, cropped from the rendered page
+  const blobs = {};
+  for (const {item, fig} of figs){ try { blobs[item.id] = await renderRegion(doc, fig.page, fig.region); item.img = true; } catch {} }
+  return {pages, paras, seq, blobs, context:paperContext(pageTexts), title};
 }
 function textToParagraphs(raw){
   let section = 'Text', seq = 0; const paras = [];
@@ -1753,14 +1788,18 @@ function textToParagraphs(raw){
     if (REF_RE.test(b)) { section = '__refs'; return; }
     if (section === '__refs') return;
     if (b.length < 80 && !/[.,;]$/.test(b) && (HEAD_RE.test(b) || NUM_HEAD_RE.test(b))){ section = b.replace(/^(?:(?:\d+(?:\.\d+)*|[IVX]+)\.?\s+)/, ''); return; }
+    const cm = b.match(FIG_CAP_RE) || b.match(TAB_UP_RE) || b.match(TAB_MIX_RE);
+    if (cm){ const fig = /^fig/i.test(b); paras.push({id:'p' + (++seq), kind:'figure', label:fig ? `Fig. ${cm[1]}` : `Table ${cm[1]}`, figKind:fig ? 'fig' : 'table', section, page:'', caption:(cm[2] || '').trim(), text:(cm[2] || '').trim(), mentions:[], img:false, link:{to:'', rel:''}}); return; }
     paras.push({id:'p' + (++seq), section, page:'', kind:/^(fig\.?|figure|table)\s*[\dIVX]+/i.test(b) ? 'caption' : 'text', text:b, idea:'', src:'', terms:[], mine:'', link:{to:'', rel:''}});
   });
   return {pages:[], paras, seq};
 }
-function addReaderPaper(name, title, res){
-  const paper = {id:uid(), created:Date.now(), name, title, pages:res.pages, paras:res.paras, seq:res.seq, questions:null};
+async function addReaderPaper(name, title, res){
+  const paper = {id:uid(), created:Date.now(), name, title:res.title && res.title.length > 8 ? res.title : title, pages:res.pages, paras:res.paras, seq:res.seq, questions:null, context:res.context || ''};
+  for (const [fid, b] of Object.entries(res.blobs || {})){ await IDB.put(`${paper.id}:${fid}:crop`, b.crop); await IDB.put(`${paper.id}:${fid}:page`, b.page); }
   S.reader.papers.unshift(paper); S.reader.active = paper.id; S.reader.view = 'paras'; save();
-  RENDER.reader(); toast(`${res.paras.length} paragraphs ready`);
+  const nf = res.paras.filter(isFigure).length, np = res.paras.filter(isReadable).length;
+  RENDER.reader(); toast(`${np} paragraphs ready${nf ? ` · ${nf} figure${nf === 1 ? '' : 's'}/table${nf === 1 ? '' : 's'} set aside for Figure Lab` : ''}`);
 }
 
 /* --- Claude (sample capability), only where the viewer provides it --- */
@@ -1856,7 +1895,7 @@ async function summarizeParas(paper, list, label){
 async function generateQuestions(paper){
   if (!aiReady() || aiRun) return;
   const ctl = new AbortController(); aiRun = {ctl, label:'Writing questions', done:0, total:0}; renderAiBar();
-  const body = paper.paras.filter(p => p.kind !== 'front').map(p => `[${p.id}] (${p.section}${p.page ? `, p. ${p.page}` : ''}) ${ideaOf(p) || clip(p.text, 900)}`).join('\n');
+  const body = paper.paras.filter(p => p.kind !== 'front').map(p => isFigure(p) ? `[${p.label || 'Figure'}${p.page ? `, p. ${p.page}` : ''}] (a figure/table — caption: ${clip(p.caption || p.text, 300)})` : `[${p.id}] (${p.section}${p.page ? `, p. ${p.page}` : ''}) ${ideaOf(p) || clip(p.text, 900)}`).join('\n');
   const prompt = `A master's student will PRESENT this research paper to their professor and classmates. Using only the paper content below, write:
 - "overview": the whole paper in 3–4 simple sentences.
 - "audience": 5 discussion questions the PRESENTER can ask the professor and colleagues to start a good discussion, each with "why" (what it achieves, under 15 words).
@@ -1951,7 +1990,7 @@ function ttsChunks(text){                                    // sentences (long 
 const PART_LABEL = {orig:'Original', idea:'Simple', ar:'Arabic'};
 function ttsSegs(paper, opts){                                // opts: {from, only, parts}
   const parts = opts.parts || S.reader.ttsParts || {orig:true, idea:true};
-  const list = paper.paras.filter(p => p.kind !== 'front'), start = opts.from ? Math.max(0, list.findIndex(p => p.id === opts.from)) : 0;
+  const list = paper.paras.filter(isReadable), start = opts.from ? Math.max(0, list.findIndex(p => p.id === opts.from)) : 0;
   const ps = opts.only ? list.filter(p => p.id === opts.only) : list.slice(start);
   return ps.flatMap(p => [
     parts.orig && p.text && {pid:p.id, part:'orig', text:p.text, lang:'en'},
@@ -2077,7 +2116,7 @@ function ttsBarHTML(){
         <label class="small">Arabic <select id="ttsVoiceAr" style="width:auto;max-width:230px">${ar.length ? vOpt(ar, S.reader.voiceAr) : '<option value="">No Arabic voice on this device</option>'}</select></label></div></details>
     </div>
     ${TTS.note ? `<p class="small muted" style="margin:6px 0 0">${esc(TTS.note)}</p>` : ''}
-    ${parts.idea && paper && aiReady() && paper.paras.some(p => p.kind !== 'front' && !simpleOf(p)) ? `<p class="small muted" style="margin:6px 0 0">${paper.paras.filter(p => p.kind !== 'front' && !simpleOf(p)).length} paragraph(s) have no simple version yet, so “Simple” reads their main idea instead. <button class="btn sm ghost" data-act="rp-sum-all" data-ai-btn>${icon('sparkle')}Write them with Claude</button></p>` : ''}
+    ${parts.idea && paper && aiReady() && paper.paras.some(p => isReadable(p) && !simpleOf(p)) ? `<p class="small muted" style="margin:6px 0 0">${paper.paras.filter(p => isReadable(p) && !simpleOf(p)).length} paragraph(s) have no simple version yet, so “Simple” reads their main idea instead. <button class="btn sm ghost" data-act="rp-sum-all" data-ai-btn>${icon('sparkle')}Write them with Claude</button></p>` : ''}
     ${parts.ar && paper && !paper.paras.some(p => (p.ar || '').trim()) ? `<p class="small muted" style="margin:6px 0 0">No Arabic translations yet — ${aiReady() ? 'use “Translate all to Arabic” above, or' : ''} add one under a paragraph.</p>` : ''}
   </div>`;
 }
@@ -2150,11 +2189,11 @@ function chatContext(paper, scope){
   const rules = `You are a patient tutor helping a master's student understand a research paper. Answer in clear, simple English (or in Arabic if the student writes in Arabic or asks for Arabic). Keep answers short — under 150 words, using short paragraphs or bullet points — unless the student asks for more.
 Base your answers on the paper content below. If the paper does not say something, say so plainly, and clearly separate general background knowledge ("In general, …") from what this paper says. Never invent results, numbers, quotes or citations.`;
   if (scope === 'paper'){
-    const body = paper.paras.filter(p => p.kind !== 'front').map(p => `[¶${paraNo(paper, p.id)} · ${p.section}${p.page ? `, p. ${p.page}` : ''}] ${p.text}`).join('\n').slice(0, 150000);
+    const body = paper.paras.filter(p => p.kind !== 'front').map(p => isFigure(p) ? `[${p.label || 'Figure'}${p.page ? `, p. ${p.page}` : ''} — figure/table caption] ${p.caption || p.text}` : `[¶${paraNo(paper, p.id)} · ${p.section}${p.page ? `, p. ${p.page}` : ''}] ${p.text}`).join('\n').slice(0, 150000);
     return `${rules}\n\nPaper: "${paper.title}"\n\nPaper content (paragraph number, section, page):\n${body}`;
   }
   const p = paper.paras.find(x => x.id === scope), n = paraNo(paper, scope), i = n - 1;
-  const near = paper.paras.slice(Math.max(0, i - 2), i + 3).filter(x => x !== p && x.kind !== 'front').map(x => `¶${paraNo(paper, x.id)}: ${ideaOf(x) || clip(x.text, 300)}`).join('\n');
+  const near = paper.paras.slice(Math.max(0, i - 2), i + 3).filter(x => x !== p && isReadable(x)).map(x => `¶${paraNo(paper, x.id)}: ${ideaOf(x) || clip(x.text, 300)}`).join('\n');
   return `${rules}\n\nPaper: "${paper.title}"\nThe student is asking about ¶${n} (section: ${p.section}${p.page ? `, page ${p.page}` : ''}).\n\nOriginal paragraph:\n${p.text}\n\n${simpleOf(p) ? `Simple version: ${simpleOf(p)}\n\n` : ''}${ideaOf(p) ? `Main idea: ${ideaOf(p)}\n\n` : ''}Nearby paragraphs, for context:\n${near || '(none)'}`;
 }
 async function chatSend(scope, text){
@@ -2223,9 +2262,10 @@ RENDER.reader = () => {
   renderAiBar();
   $$('#panel-reader textarea[data-rp]').forEach(grow);
   if (TTS.playing) ttsMark(TTS.list[TTS.i], false);
+  loadReaderFigs();
 };
 function readerBody(paper, view){
-  const text = paper.paras.filter(p => p.kind !== 'front');
+  const text = paper.paras.filter(isReadable);
   const done = text.filter(simpleOf).length;
   const todo = text.filter(p => !simpleOf(p) || !ideaOf(p));
   return `
@@ -2261,8 +2301,54 @@ function simpleBlock(p){
     ${aiReady() ? `<button class="btn sm primary" data-act="rp-sum-one" data-id="${p.id}" data-ai-btn>${icon('sparkle')}Write it with Claude</button>` : ''}
     <button class="btn sm" data-act="rp-simple-open" data-id="${p.id}">${icon('pen')}Write my own</button></div>`;
 }
+let readerFigURLs = [];
+const figReviewOf = (paper, f) => S.figlab.reviews.find(r => r.srcKey === paper.id + ':' + f.id);
+function figureCard(paper, f){
+  if (!f.label){ const m = (f.text || '').match(/^(fig(?:ure)?\.?|table)\s*([\dIVX]+)[.:]?\s*/i); if (m){ f.label = /^t/i.test(m[1]) ? `Table ${m[2]}` : `Fig. ${m[2]}`; f.caption = f.text.slice(m[0].length); } else f.caption = f.text; }
+  const r = figReviewOf(paper, f), table = f.figKind === 'table' || /^table/i.test(f.label || '');
+  return `<article class="card para figure-card" id="para-${f.id}">
+    <div class="para-head"><span class="para-no">${icon('image')}${esc(f.label || 'Figure')}</span>
+      <span class="small muted">${f.page ? `p. ${f.page} · ` : ''}${table ? 'table' : 'figure'} — not part of the reading; explained in Figure Lab</span><span class="spacer"></span>
+      <button class="btn ghost icon danger" data-act="rp-drop" data-id="${f.id}" title="Remove this marker" aria-label="Remove figure marker">${icon('trash')}</button></div>
+    ${f.img ? `<div class="fig-shot"><img data-figkey="${paper.id}:${f.id}" alt="${esc(f.label || 'Figure')} from page ${f.page || ''} of the paper"></div>`
+      : f.demo ? `<div class="fig-shot demo-fig">${miniPreview('stacked')}<div class="small muted">Demo figure (illustration)</div></div>`
+      : `<p class="small muted">${table ? 'Table' : 'Figure'} here${f.page ? ` (page ${f.page})` : ''} — no picture is available${paper.pages.length ? '' : ' for pasted text'}.</p>`}
+    ${f.caption ? `<p class="fig-cap"><b>${esc(f.label || '')}.</b> ${esc(f.caption)}</p>` : ''}
+    ${r && (r.pattern || r.importance) ? `<p class="small fig-done">${icon('check')}<span><b>Explained in Figure Lab:</b> ${esc(clip(r.pattern || r.importance, 160))}</span></p>` : ''}
+    <div class="row"><button class="btn sm primary" data-act="rp-fig-open" data-id="${f.id}">${icon('image')}${r && (r.ai || r.pattern) ? 'Open its explanation in Figure Lab' : 'Explain it in Figure Lab'}</button></div>
+  </article>`;
+}
+async function loadReaderFigs(){
+  readerFigURLs.forEach(u => URL.revokeObjectURL(u)); readerFigURLs = [];
+  for (const img of $$('#panel-reader img[data-figkey]')){
+    const blob = await IDB.get(img.dataset.figkey + ':crop');
+    if (blob && img.isConnected){ const u = URL.createObjectURL(blob); readerFigURLs.push(u); img.src = u; }
+    else img.closest('.fig-shot').innerHTML = '<p class="small muted">The picture is stored in the browser where the paper was uploaded — upload the PDF again to see it here.</p>';
+  }
+}
+// Open a figure from the reading in Figure Lab, with its picture, caption and the sentences that cite it
+async function openFigureInLab(paper, f){
+  const critId = S.figlab.scanCrit || '';
+  let r = figReviewOf(paper, f) || S.figlab.reviews.find(x => x.critId === critId && normFig(x.figNo) === normFig(f.label) && x.paperTitle === paper.title);
+  const isNew = !r;
+  if (!r){ r = newFigure(); r.critId = critId; S.figlab.reviews.unshift(r); }
+  fixFig(r);
+  Object.assign(r, {figNo:f.label || r.figNo, caption:f.caption || r.caption, page:f.page || r.page, mentions:f.mentions || [], context:paper.context || '', paperTitle:paper.title, srcKey:paper.id + ':' + f.id});
+  if ((f.figKind === 'table' || /^table/i.test(f.label || '')) && !r.type) r.type = 'table';
+  if (r.checks.ref === undefined && (f.mentions || []).length) r.checks.ref = true;
+  const crop = await IDB.get(`${paper.id}:${f.id}:crop`), pg = await IDB.get(`${paper.id}:${f.id}:page`);
+  if (crop){ await IDB.put(r.id + ':crop', crop); if (pg) await IDB.put(r.id + ':page', pg); r.img = true; }
+  S.figlab.active = r.id; S.figlab.mode = 'explain'; save();
+  if (TTS.playing) ttsPause();
+  showTab('figlab');
+  setTimeout(() => $('#figShot')?.closest('section')?.scrollIntoView({behavior:'smooth', block:'start'}), 60);
+  const toTop = () => setTimeout(() => $('#figShot')?.closest('section')?.scrollIntoView({behavior:'smooth', block:'start'}), 60);
+  if (aiReady() && !r.ai && !r.pattern){ await reanalyse(r); toTop(); }
+  else if (isNew && !aiReady()) toast('Figure added to Figure Lab — answer the guided questions to explain it');
+}
 function paraCard(paper, p){
-  const n = paraNo(paper, p.id), earlier = paper.paras.slice(0, n - 1);
+  if (isFigure(p)) return figureCard(paper, p);
+  const n = paraNo(paper, p.id), earlier = paper.paras.slice(0, paper.paras.indexOf(p)).filter(x => !isFigure(x));
   if (p.kind === 'front') return `<article class="card para front" id="para-${p.id}"><div class="para-head"><span class="para-no">¶${n}</span><span class="small muted">Title, authors and affiliations — not summarised</span><span class="spacer"></span>
     <button class="btn ghost icon" data-act="rp-merge" data-id="${p.id}" title="Merge with next paragraph" aria-label="Merge with next paragraph">${icon('link')}</button>
     <button class="btn ghost icon danger" data-act="rp-drop" data-id="${p.id}" title="Remove" aria-label="Remove paragraph">${icon('trash')}</button></div>
@@ -2297,7 +2383,7 @@ function paraCard(paper, p){
       <div><label class="f" for="rm-${p.id}">My memory hook</label><input class="input" id="rm-${p.id}" data-rp="mine" data-id="${p.id}" value="${esc(p.mine)}" placeholder="A keyword, example or picture that helps you remember"></div>
       <div><span class="f">Connects to</span><div class="row" style="gap:6px;flex-wrap:nowrap">
         <select data-rp="rel" data-id="${p.id}" aria-label="Relation" style="width:auto">${RELS.map(([v,l]) => `<option value="${v}" ${v===p.link.rel?'selected':''}>${l}</option>`).join('')}</select>
-        <select data-rp="to" data-id="${p.id}" aria-label="Earlier paragraph" style="min-width:0">${['<option value="">no link</option>', ...earlier.map((e,i) => `<option value="${e.id}" ${e.id===p.link.to?'selected':''}>¶${i+1} ${esc(clip(ideaOf(e) || e.text, 42))}</option>`)].join('')}</select></div>
+        <select data-rp="to" data-id="${p.id}" aria-label="Earlier paragraph" style="min-width:0">${['<option value="">no link</option>', ...earlier.map(e => `<option value="${e.id}" ${e.id===p.link.to?'selected':''}>¶${paraNo(paper, e.id)} ${esc(clip(ideaOf(e) || e.text, 42))}</option>`)].join('')}</select></div>
         ${linked ? `<a href="#para-${linked.id}" class="small link-line" data-act="rp-jump" data-id="${linked.id}">↳ ${esc(relLabel(p.link.rel) || 'linked to')} ¶${paraNo(paper, linked.id)}: ${esc(clip(ideaOf(linked) || linked.text, 70))}</a>` : ''}</div>
     </div>
   </article>`;
@@ -2313,14 +2399,15 @@ function refreshCards(list){
     }
     el.outerHTML = paraCard(paper, p);
   });
+  if (list.some(isFigure)) loadReaderFigs();
   $$('#panel-reader textarea[data-rp]').forEach(grow);
-  const text = paper.paras.filter(x => x.kind !== 'front'), done = text.filter(simpleOf).length;
+  const text = paper.paras.filter(isReadable), done = text.filter(simpleOf).length;
   const pr = $('#panel-reader .sticky-sub .progress span'); if (pr) pr.style.width = (done/text.length*100) + '%';
   const cnt = $('#rpDone'); if (cnt) cnt.textContent = done;
   const notes = $('#rpNotes'); if (notes) notes.textContent = readingNotes(paper);
 }
 function flowView(paper){
-  const items = paper.paras.filter(p => p.kind !== 'front');
+  const items = paper.paras.filter(p => isReadable(p) || isFigure(p));
   if (!items.some(ideaOf)) return '<div class="empty">Write or generate main ideas first — the idea flow is built from them.</div>';
   const ov = paper.questions && paper.questions.overview;
   let last = null;
@@ -2329,6 +2416,7 @@ function flowView(paper){
   <ol class="flow">${items.map(p => {
     const n = paraNo(paper, p.id), to = p.link.to && paper.paras.find(x => x.id === p.link.to);
     const sec = p.section !== last ? `<li class="flow-sec">${esc(p.section)}</li>` : ''; last = p.section;
+    if (isFigure(p)) return sec + `<li class="flow-item flow-fig"><span class="para-no">${icon('image')}</span><div><a href="#" data-act="rp-fig-open" data-id="${p.id}">${esc(p.label || 'Figure')}</a> <span class="small muted">— ${esc(clip(p.caption || p.text, 90))} · explained in Figure Lab</span></div></li>`;
     return sec + `<li class="flow-item ${ideaOf(p)?'':'empty-idea'}"><span class="para-no">¶${n}</span><div>
       <div>${esc(ideaOf(p) || '(no main idea yet)')}</div>
       ${p.mine ? `<div class="small muted">🔑 ${esc(p.mine)}</div>` : ''}
@@ -2360,6 +2448,7 @@ function readingNotes(paper){
   let last = null;
   paper.paras.filter(p => p.kind !== 'front').forEach(p => {
     if (p.section !== last){ L.push('', p.section.toUpperCase()); last = p.section; }
+    if (isFigure(p)){ L.push(`[${p.label || 'Figure'}${p.page ? ` (p. ${p.page})` : ''}: ${clip(p.caption || p.text, 120)} — explained in Figure Lab]`); return; }
     const to = p.link.to && paper.paras.find(x => x.id === p.link.to);
     L.push(`¶${paraNo(paper, p.id)}${p.page ? ` (p. ${p.page})` : ''}: ${ideaOf(p) || '—'}${to ? `  [${relLabel(p.link.rel) || 'linked to'} ¶${paraNo(paper, to.id)}]` : ''}`);
     if (p.mine) L.push(`   Memory hook: ${p.mine}`);
@@ -2740,26 +2829,63 @@ const normFig = s => (s || '').toLowerCase().replace(/^figure/, 'fig').replace(/
 const VISUAL_CHECKS = ['axes','legend','err','scale','bw','cb','deco'];
 const proseLine = l => { const w = l.text.split(/\s+/).filter(x => /[a-z]{2}/i.test(x)).length; return w >= 7 && (l.text.match(/\d/g) || []).length / l.text.length < 0.15; };
 
-function figRegion(capLines, lines, W, H, kind){
+function bodyFontH(lines){                                   // the most common font size on a page, weighted by text length
+  const w = {}; lines.forEach(l => { const k = Math.round(l.h * 2) / 2; w[k] = (w[k] || 0) + l.text.length; });
+  return +Object.entries(w).sort((a, b) => b[1] - a[1])[0]?.[0] || 0;
+}
+function figRegion(capLines, lines, W, H, kind, bodyH){
   const capX = Math.min(...capLines.map(l => l.x)), capR = Math.max(...capLines.map(l => l.x + l.w));
   const full = capR - capX > W * 0.55 || (capX < W * 0.3 && capR > W * 0.62);
   const left = capX < W / 2;
   const x0 = full || left ? W * 0.04 : W / 2 - 6, x1 = full || !left ? W * 0.96 : W / 2 + 6, colW = x1 - x0;
   const capTop = Math.max(...capLines.map(l => l.y + l.h)), capBot = Math.min(...capLines.map(l => l.y)) - 0.35 * capLines[0].h;
   const overlap = l => Math.max(0, Math.min(x1, l.x + l.w) - Math.max(x0, l.x));
-  const body = lines.filter(l => !capLines.includes(l) && ((l.x >= x0 - 8 && l.x + l.w <= x1 + 8 && l.w > colW * 0.6 && proseLine(l)) || (!full && l.w > colW * 1.15 && overlap(l) > colW * 0.3)));
-  let top, bottom;
+  const sentenceEnd = l => bodyH && Math.abs(l.h - bodyH) < 0.6 && /[.?!:]["”)]?$/.test(l.text) && l.text.split(/\s+/).length >= 3;
+  const inCol = l => l.x >= x0 - 8 && l.x + l.w <= x1 + 8;
+  const body = lines.filter(l => !capLines.includes(l) && ((inCol(l) && ((l.w > colW * 0.6 && proseLine(l)) || sentenceEnd(l))) || (!full && l.w > colW * 1.15 && overlap(l) > colW * 0.3)));
+  let top, bottom, ex;
   if (kind === 'fig'){                                   // the figure sits above its caption
     const above = body.filter(l => l.y > capTop + 2).sort((a,b) => a.y - b.y)[0];
+    // nothing above in this column: stop at the top of the page's main text (not the title and author block)
+    const textTop = Math.max(0, ...lines.filter(l => !capLines.includes(l) && proseLine(l) && l.w > colW * 0.6 && (!bodyH || Math.abs(l.h - bodyH) < 0.6)).map(l => l.y + l.h));
     top = above ? above.y - 0.3 * above.h : H * 0.96; bottom = capBot;
-    if (top - capTop < 40) top = Math.min(H * 0.96, capTop + H * 0.35);
+    if (textTop > capTop + 40) top = Math.min(top, textTop + 0.5 * (bodyH || 10));
+    ex = {top, bottom};                                      // strict area: the text to leave out of the reading
+    if (top - capTop < 40) top = Math.min(H * 0.96, capTop + H * 0.35);   // the picture may show a little more
   } else {                                               // a table sits below its caption
     const below = body.filter(l => l.y < capBot - 2).sort((a,b) => b.y - a.y)[0];
     top = capTop + 2; bottom = below ? below.y + below.h + 2 : H * 0.04;
+    ex = {top, bottom};
     if (capBot - bottom < 40) bottom = Math.max(H * 0.04, capBot - H * 0.35);
   }
-  return {x0, x1, top:Math.min(top, H), bottom:Math.max(bottom, 0)};
+  return {x0, x1, top:Math.min(top, H), bottom:Math.max(bottom, 0), ex};
 }
+function findFiguresOnPage(lines, W, H, pageNo, seen){
+  const items = [], bodyH = bodyFontH(lines);
+  lines.forEach((l, i) => {
+    let m, kind;
+    if ((m = l.text.match(FIG_CAP_RE))) kind = 'fig';
+    else if ((m = l.text.match(TAB_UP_RE) || l.text.match(TAB_MIX_RE))) kind = 'table';
+    else return;
+    const label = kind === 'fig' ? `Fig. ${m[1]}` : `Table ${m[1]}`;
+    if (seen.has(normFig(label))) return;
+    const capLines = [l]; let text = m[2] || '';
+    for (let j = i + 1; j < lines.length && capLines.length < 7 && text.length < 600; j++){
+      const prev = capLines[capLines.length - 1], nx = lines[j];
+      if (prev.y - nx.y > Math.max(prev.h, nx.h) * 1.7 || nx.y >= prev.y || Math.abs(nx.x - l.x) > W * 0.3) break;
+      if (Math.abs(nx.h - l.h) > 0.6) break;                                                       // body text uses a different font size
+      if (/[.]$/.test(prev.text) && prev.y - nx.y > Math.max(prev.h, nx.h) * 1.35) break;               // a full stop followed by a gap
+      capLines.push(nx); text += (text && !/-$/.test(text) ? ' ' : '') + nx.text;
+      if (kind === 'table' && !m[2] && capLines.length >= 2 && /[a-z]/i.test(text)) break;   // IEEE: "TABLE II" + one title line
+    }
+    seen.add(normFig(label));
+    items.push({label, kind, num:m[1], page:pageNo, caption:text.replace(/\s+/g, ' ').trim(), region:figRegion(capLines, lines, W, H, kind, bodyH), sel:true});
+  });
+  return items;
+}
+const inRegion = (l, r) => { const v = r.ex || r, cx = l.x + l.w / 2, cy = l.y + l.h / 2; return cx >= r.x0 && cx <= r.x1 && cy >= v.bottom && cy <= v.top; };
+function paperContext(pageTexts){ const all = pageTexts.join(' '), ab = all.search(/\babstract\b/i); return (ab >= 0 ? all.slice(ab, ab + 2600) : all.slice(0, 2600)).trim(); }
+function paperTitleGuess(lines, H){ const top = lines.filter(l => l.y > H * 0.45 && l.text.length > 3), hMax = Math.max(0, ...top.map(l => l.h)); return top.filter(l => l.h >= hMax - 0.5).map(l => l.text).join(' ').slice(0, 220); }
 function figMentions(pageTexts, item){
   const n = item.num.replace(/[.*+?^${}()|[\]\\]/g, '');
   const re = item.kind === 'fig' ? new RegExp(`\\b(?:Figs?\\.?|Figures?)\\s*${n}(?![0-9])`, 'gi') : new RegExp(`\\bTables?\\s+${n}(?![0-9IVXL])`, 'gi');
@@ -2778,40 +2904,16 @@ function figMentions(pageTexts, item){
 async function scanFigures(file){
   const lib = await loadPdfJs();
   const doc = await lib.getDocument({data:await file.arrayBuffer()}).promise;
-  const items = [], seen = new Set(), pageTexts = []; let title = '', context = '';
+  const items = [], seen = new Set(), pageTexts = []; let title = '';
   for (let n = 1; n <= doc.numPages; n++){
     const {lines, W, H} = await pdfPageLines(await doc.getPage(n));
     pageTexts.push(lines.map(l => l.text).join(' ').replace(/([a-z])- ([a-z])/g, '$1$2'));
-    if (n === 1){
-      const topHalf = lines.filter(l => l.y > H * 0.45 && l.text.length > 3), hMax = Math.max(0, ...topHalf.map(l => l.h));
-      title = topHalf.filter(l => l.h >= hMax - 0.5).map(l => l.text).join(' ').slice(0, 220);
-    }
-    lines.forEach((l, i) => {
-      let m, kind;
-      if ((m = l.text.match(FIG_CAP_RE))) kind = 'fig';
-      else if ((m = l.text.match(TAB_UP_RE) || l.text.match(TAB_MIX_RE))) kind = 'table';
-      else return;
-      const label = kind === 'fig' ? `Fig. ${m[1]}` : `Table ${m[1]}`;
-      if (seen.has(normFig(label))) return;
-      const capLines = [l]; let text = m[2] || '';
-      for (let j = i + 1; j < lines.length && capLines.length < 7 && text.length < 600; j++){
-        const prev = capLines[capLines.length - 1], nx = lines[j];
-        if (prev.y - nx.y > Math.max(prev.h, nx.h) * 1.7 || nx.y >= prev.y || Math.abs(nx.x - l.x) > W * 0.3) break;
-        if (Math.abs(nx.h - l.h) > 0.6) break;                                                       // body text uses a different font size
-        if (/[.]$/.test(prev.text) && prev.y - nx.y > Math.max(prev.h, nx.h) * 1.35) break;               // a full stop followed by a gap
-        capLines.push(nx); text += (text && !/-$/.test(text) ? ' ' : '') + nx.text;
-        if (kind === 'table' && !m[2] && capLines.length >= 2 && /[a-z]/i.test(text)) break;   // IEEE: "TABLE II" + one title line
-      }
-      seen.add(normFig(label));
-      const it = {label, kind, num:m[1], page:n, caption:text.replace(/\s+/g, ' ').trim(), region:figRegion(capLines, lines, W, H, kind), sel:true};
-      items.push(it);
-    });
+    if (n === 1) title = paperTitleGuess(lines, H);
+    items.push(...findFiguresOnPage(lines, W, H, n, seen));
   }
-  const all = pageTexts.join(' '), ab = all.search(/\babstract\b/i);
-  context = (ab >= 0 ? all.slice(ab, ab + 2600) : all.slice(0, 2600)).trim();
   items.forEach(it => { it.mentions = figMentions(pageTexts, it); });
   items.sort((a, b) => a.kind === b.kind ? 0 : a.kind === 'fig' ? -1 : 1);
-  return {name:file.name, doc, title:title || file.name.replace(/\.pdf$/i, ''), context, items};
+  return {name:file.name, doc, title:title || file.name.replace(/\.pdf$/i, ''), context:paperContext(pageTexts), items};
 }
 async function renderRegion(doc, pageNo, reg){
   const page = await doc.getPage(pageNo), base = page.getViewport({scale:1});
@@ -3021,6 +3123,7 @@ function explainView(){
       <div class="sec-head"><span class="sec-num">1</span><h3>Figure details</h3>${exampleBadge(r)}<span class="spacer"></span><button class="btn ghost sm danger" data-act="fl-del">${icon('trash')}Delete</button></div>
       ${r.example ? '<p class="small muted" style="margin-top:-4px">An <b>example</b> review of an illustrative figure (not from a real paper). Edit it, or press <b>New</b> to review a figure from your own paper.</p>' : ''}
       <div class="fig-shot" id="figShot" hidden></div>
+      ${r.srcKey && S.reader.papers.some(pp => pp.id === r.srcKey.split(':')[0]) ? `<p style="margin:-6px 0 12px"><button class="btn sm ghost" data-act="fl-back-reader">${icon('back')}Back to this ${/^table/i.test(r.figNo) ? 'table' : 'figure'} in the Paper Reader</button></p>` : ''}
       ${r.ai || r.page || (aiReady() && (r.img || r.caption)) ? `<div class="row ai-note">
         <span class="small muted">${r.page ? `Page ${r.page}${r.paperTitle ? ` of “${esc(clip(r.paperTitle, 60))}”` : ''}. ` : ''}${r.ai ? `Analysed by Claude ${r.ai.image ? 'from the picture and the paper’s text' : 'from the caption and text only (it could not see the picture)'} — check every point against the paper.` : ''}</span>
         <span class="spacer"></span>${aiReady() && (r.img || r.caption) ? `<button class="btn sm ${r.ai ? '' : 'primary'}" data-act="fl-ai-one" data-fl-run>${icon('sparkle')}${r.ai ? 'Analyse again' : 'Analyse with Claude'}</button>` : ''}</div>` : ''}
@@ -3339,7 +3442,7 @@ RENDER.progress = () => {
   </div>
 
   <div class="card" style="margin-top:16px"><h3>Paper Reader</h3>
-    ${S.reader.papers.length ? S.reader.papers.map(p => { const t = p.paras.filter(x => x.kind !== 'front'), d = t.filter(x => (x.idea||'').trim()).length; return `<div class="bar-row" style="grid-template-columns:1fr 90px 60px"><span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(p.title || p.name)}${p.example?' <span class="badge-example">Demo</span>':''}</span><span class="bar"><span style="width:${t.length ? d/t.length*100 : 0}%;background:var(--ok)"></span></span><b>${d}/${t.length} ¶</b></div>`; }).join('') : '<p class="muted">No papers read yet.</p>'}
+    ${S.reader.papers.length ? S.reader.papers.map(p => { const t = p.paras.filter(isReadable), d = t.filter(x => (x.idea||'').trim() || (x.simple||'').trim()).length; return `<div class="bar-row" style="grid-template-columns:1fr 90px 60px"><span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(p.title || p.name)}${p.example?' <span class="badge-example">Demo</span>':''}</span><span class="bar"><span style="width:${t.length ? d/t.length*100 : 0}%;background:var(--ok)"></span></span><b>${d}/${t.length} ¶</b></div>`; }).join('') : '<p class="muted">No papers read yet.</p>'}
   </div>
 
   <div class="section-title"><h2>Your data</h2></div>
@@ -3410,7 +3513,7 @@ const ACTIONS = {
     ttsStart(ttsSegs(paper, ctx), ctx);
   },
   'rp-ar-one': el => { const paper = rPaper(); translateParas(paper, paper.paras.filter(x => x.id === el.dataset.id)); },
-  'rp-ar-all': () => { const paper = rPaper(); translateParas(paper, paper.paras.filter(x => x.kind !== 'front' && !(x.ar || '').trim())); },
+  'rp-ar-all': () => { const paper = rPaper(); translateParas(paper, paper.paras.filter(x => isReadable(x) && !(x.ar || '').trim())); },
   'rp-ar-open': el => { const id = el.dataset.id, paper = rPaper(), card = $('#para-' + id); arOpen.add(id); if (card) card.outerHTML = paraCard(paper, paper.paras.find(x => x.id === id)); $('#ra-' + id)?.focus(); },
   'chat-toggle': el => {
     const sc = el.dataset.scope; chatOpen = chatOpen === sc ? null : sc;
@@ -3423,13 +3526,16 @@ const ACTIONS = {
   'chat-clear': el => { if (!confirm('Clear this chat?')) return; const paper = rPaper(); chatOf(paper, el.dataset.scope).length = 0; save(); rerenderChat(paper, el.dataset.scope); },
   'chat-listen': el => { const m = chatOf(rPaper(), el.dataset.scope)[+el.dataset.i]; if (m){ const text = m.content.replace(/\*\*/g, '').replace(/^\s*[-•*]\s+/gm, ''); ttsStart([{text, lang:isArabic(text) ? 'ar' : 'en'}], {}); } },
   'chat-copy': el => { const m = chatOf(rPaper(), el.dataset.scope)[+el.dataset.i]; if (m) copyText(m.content); },
+  'rp-fig-open': (el, e) => { e.preventDefault(); const paper = rPaper(), f = paper.paras.find(x => x.id === el.dataset.id); if (f) openFigureInLab(paper, f); },
+  'fl-back-reader': () => { const r = activeFig(), [pid, fid] = (r.srcKey || '').split(':'); if (!S.reader.papers.some(p => p.id === pid)) return toast('That paper is no longer in the Paper Reader');
+    S.reader.active = pid; S.reader.view = 'paras'; save(); showTab('reader'); setTimeout(() => { const c = $('#para-' + fid); if (c){ c.scrollIntoView({behavior:'smooth', block:'center'}); c.classList.add('flash'); setTimeout(() => c.classList.remove('flash'), 1400); } }, 60); },
   'rp-view': el => { S.reader.view = el.dataset.v; chatOpen = null; save(); RENDER.reader(); },
   'rp-paste': () => openDialog('Paste the paper text', `
     <div class="field"><label class="f" for="pt-title">Paper title</label><input class="input" id="pt-title" name="title" required></div>
     <div class="field"><label class="f" for="pt-text">Paper text</label><textarea id="pt-text" name="text" required style="min-height:260px" placeholder="Paste the text. Leave an empty line between paragraphs; headings such as Introduction or 2. Method are detected."></textarea></div>`,
     d => { const res = textToParagraphs(d.text); if (!res.paras.length) return false; addReaderPaper(d.title.trim(), d.title.trim(), res); }, 'Add paper'),
-  'rp-del': () => { const p = rPaper(); if (!p || !confirm(`Delete "${p.title || p.name}" and all your notes on it?`)) return; S.reader.papers = S.reader.papers.filter(x => x !== p); S.reader.active = S.reader.papers[0]?.id || ''; save(); RENDER.reader(); },
-  'rp-sum-all': () => { const p = rPaper(); summarizeParas(p, p.paras.filter(x => x.kind !== 'front' && (!simpleOf(x) || !ideaOf(x))), 'Writing simple versions'); },
+  'rp-del': () => { const p = rPaper(); if (!p || !confirm(`Delete "${p.title || p.name}" and all your notes on it?`)) return; p.paras.filter(isFigure).forEach(f => { IDB.del(`${p.id}:${f.id}:crop`); IDB.del(`${p.id}:${f.id}:page`); }); S.reader.papers = S.reader.papers.filter(x => x !== p); S.reader.active = S.reader.papers[0]?.id || ''; save(); RENDER.reader(); },
+  'rp-sum-all': () => { const p = rPaper(); summarizeParas(p, p.paras.filter(x => isReadable(x) && (!simpleOf(x) || !ideaOf(x))), 'Writing simple versions'); },
   'rp-sum-one': el => { const p = rPaper(), para = p.paras.find(x => x.id === el.dataset.id); if (para){ if (ideaOf(para)) para.src = para.src || 'me'; if (simpleOf(para)) para.simpleSrc = para.simpleSrc || 'me'; summarizeParas(p, [para], 'Simplifying'); } },
   'rp-simple-open': el => { const id = el.dataset.id, paper = rPaper(), card = $('#para-' + id); simOpen.add(id); if (card) card.outerHTML = paraCard(paper, paper.paras.find(x => x.id === id)); $('#rs-' + id)?.focus(); },
   'rp-use-ai-simple': el => { const p = rPaper().paras.find(x => x.id === el.dataset.id); p.simple = p.aiSimple; p.aiSimple = ''; p.simpleSrc = 'ai'; save(); refreshCards([p]); },
@@ -3542,7 +3648,7 @@ document.addEventListener('input', e => {
   if (t.dataset.fb){ S.figlab.build.chart[t.dataset.fb] = t.value; save(); updateBuild(); return; }
   if (t.dataset.fbs){ S.figlab.build.chart.series[+t.dataset.fbs][t.dataset.field] = t.value; save(); updateBuild(); return; }
   if (t.dataset.fcap){ S.figlab.build.cap[t.dataset.fcap] = t.value; save(); updateBuild(); return; }
-  if (t.dataset.rp === 'simple'){ const para = rPaper().paras.find(x => x.id === t.dataset.id); if (para){ para.simple = t.value; para.simpleSrc = t.value.trim() ? 'me' : ''; save(); grow(t); const d = $('#rpDone'); if (d) d.textContent = rPaper().paras.filter(x => x.kind !== 'front' && simpleOf(x)).length; } return; }
+  if (t.dataset.rp === 'simple'){ const para = rPaper().paras.find(x => x.id === t.dataset.id); if (para){ para.simple = t.value; para.simpleSrc = t.value.trim() ? 'me' : ''; save(); grow(t); const d = $('#rpDone'); if (d) d.textContent = rPaper().paras.filter(x => isReadable(x) && simpleOf(x)).length; } return; }
   if (t.dataset.rp === 'ar'){ const para = rPaper().paras.find(x => x.id === t.dataset.id); if (para){ para.ar = t.value; para.arSrc = 'me'; save(); grow(t); } return; }
   if (t.dataset.rp === 'idea' || t.dataset.rp === 'mine'){
     const para = rPaper().paras.find(x => x.id === t.dataset.id); if (!para) return;
