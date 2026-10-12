@@ -465,12 +465,12 @@ ol.part-steps{list-style:none;margin:0;padding:0;display:flex;flex-direction:col
 .v-step-no{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;background:var(--surface-2);color:var(--muted);font-weight:600}
 .v-step.done{border-color:color-mix(in srgb,var(--ok) 40%,var(--line))}
 .v-step.done .v-step-no{background:var(--ok);color:var(--surface)}
-.v-step.part .v-step-no{background:var(--warn-soft);color:var(--warn)}
+.v-step.doing .v-step-no{background:var(--warn-soft);color:var(--warn)}
 .v-step-top{display:flex;gap:8px;justify-content:space-between;align-items:flex-start;flex-wrap:wrap}
 .v-step p{margin:4px 0 8px}
 .v-step .row{gap:6px}
 .v-pill-done{background:var(--ok-soft);color:var(--ok);border-color:transparent}
-.v-pill-part{background:var(--warn-soft);color:var(--warn);border-color:transparent}
+.v-pill-doing{background:var(--warn-soft);color:var(--warn);border-color:transparent}
 .v-rules{margin:6px 0 0;padding-left:22px;display:flex;flex-direction:column;gap:4px}
 .v-runs{list-style:none;margin:0;padding:0}
 .v-runs li{border-top:1px solid var(--line);padding:8px 0}
@@ -559,6 +559,73 @@ ol.part-steps{list-style:none;margin:0;padding:0;display:flex;flex-direction:col
 .v-pre{white-space:pre-wrap;margin:0 0 8px;overflow-wrap:anywhere}
 .v-verdict-box{display:flex;gap:8px;align-items:flex-start;padding:10px 12px;border-radius:var(--radius-sm);background:var(--warn-soft);color:var(--warn);margin:10px 0}
 .v-verdict-box.ok{background:var(--ok-soft);color:var(--ok)}
+
+/* Part 4.2 · Professor questions & defense */
+#dRun:empty{display:none}
+#dRun{margin-bottom:12px}
+.d-q{border:1px solid var(--line);border-left:4px solid var(--warn);border-radius:var(--radius-sm);background:var(--surface);margin-top:10px}
+.d-q.pr-high{border-left-color:var(--danger)}
+.d-q.pr-extra{border-left-color:var(--ok)}
+.d-q > summary{list-style:none;cursor:pointer;display:grid;grid-template-columns:22px minmax(0,1fr);gap:4px 8px;padding:10px 12px;align-items:start}
+.d-q > summary::-webkit-details-marker{display:none}
+.d-q[open] > summary{border-bottom:1px solid var(--line)}
+.d-prio{font-size:.95rem;line-height:1.5}
+.d-qt{font:500 1rem/1.5 var(--serif);overflow-wrap:anywhere}
+.d-n{color:var(--muted);font-family:var(--sans);font-size:.85rem}
+.d-qmeta{grid-column:2;display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.d-prep{font:600 .76rem var(--sans);padding:2px 8px;border-radius:999px;background:var(--surface-2);color:var(--muted);white-space:nowrap}
+.d-prep.st-practising{background:var(--warn-soft);color:var(--warn)}
+.d-prep.st-prepared{background:var(--ok-soft);color:var(--ok)}
+.d-qbody{padding:4px 12px 12px}
+.d-qbody .v-dl{margin-top:4px}
+.d-qbody .row{gap:6px}
+.d-listen{min-height:26px;padding:2px 8px;margin-left:6px;text-transform:none;letter-spacing:0;vertical-align:middle}
+.d-oral{font:15px/1.6 var(--serif);background:var(--accent-soft);border-radius:8px;padding:8px 12px;margin:4px 0 8px}
+.d-by{margin:8px 0}
+.d-ul{margin:4px 0 0;padding-left:18px}
+.d-ul li{margin:2px 0}
+.d-ul.warn li::marker{color:var(--warn)}
+.d-ul.bad li::marker{color:var(--danger)}
+.d-secinfo{display:grid;gap:10px;grid-template-columns:1fr;margin:10px 0 4px;font-size:.92rem}
+@media(min-width:900px){.d-secinfo{grid-template-columns:repeat(auto-fit,minmax(220px,1fr))}}
+.d-sec,.d-target,.d-slide{margin-bottom:14px}
+.d-thead{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:8px}
+.d-point{margin:0 0 8px;font:15px/1.55 var(--serif);border-left:3px solid var(--accent);padding:2px 0 2px 12px}
+.d-sup-ok{background:var(--ok-soft);color:var(--ok);border-color:transparent}
+.d-sup-warn{background:var(--warn-soft);color:var(--warn);border-color:transparent}
+.d-sup-bad{background:var(--danger-soft);color:var(--danger);border-color:transparent}
+.d-ana dd .d-ul{margin-top:0}
+.d-types{list-style:none;margin:6px 0 0;padding:0;display:flex;flex-direction:column;gap:6px}
+.d-procs h4{margin:14px 0 6px;font-size:.95rem}
+.d-proc{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:4px;font-size:.9rem}
+.d-proc li{display:flex;gap:8px;align-items:flex-start;color:var(--muted)}
+.d-proc li.ok{color:var(--ink)}
+.d-proc li.ok svg{color:var(--ok)}
+.d-dot{flex:none;width:14px;height:14px;margin:4px 2px 0;border:1.5px solid var(--line);border-radius:4px}
+.d-preview dd{color:var(--muted);font-style:italic}
+.d-filters{gap:8px;margin:4px 0 10px}
+.d-filters label{display:flex;gap:6px;align-items:center;max-width:100%;min-width:0}
+.d-filters select{min-width:0;max-width:100%;flex:1 1 auto}
+.d-table td .btn{margin-top:4px}
+.d-mock-top{display:flex;flex-wrap:wrap;gap:8px;justify-content:space-between;align-items:center;margin-bottom:10px}
+.d-prof{display:grid;grid-template-columns:40px minmax(0,1fr);gap:10px;align-items:start;background:var(--surface-2);border-radius:var(--radius);padding:12px;margin-bottom:12px}
+.d-prof-av{width:40px;height:40px;border-radius:50%;display:grid;place-items:center;background:var(--accent);color:var(--accent-ink)}
+.d-prof-q{font:500 1.08rem/1.5 var(--serif);margin:4px 0 6px}
+.d-prof-follow{margin-top:14px}
+.d-yours{white-space:pre-wrap;background:var(--surface-2);border-radius:8px;padding:8px 12px;margin:4px 0 10px}
+.d-fb{border:1px solid var(--line);border-radius:var(--radius-sm);padding:10px 12px;margin-top:6px}
+.d-fb.d-v-ready{border-color:color-mix(in srgb,var(--ok) 50%,var(--line))}
+.d-fb-head{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:6px}
+.d-v-ready{background:var(--ok-soft);color:var(--ok);border-color:transparent}
+.d-v-almost{background:var(--warn-soft);color:var(--warn);border-color:transparent}
+.d-v-notyet{background:var(--danger-soft);color:var(--danger);border-color:transparent}
+.d-v-skipped{background:var(--surface-2);color:var(--muted)}
+.d-fb.d-v-ready,.d-fb.d-v-almost,.d-fb.d-v-notyet{background:transparent;color:inherit}
+.d-self{border:1px solid var(--line);border-radius:var(--radius-sm);padding:8px 12px;margin:10px 0}
+.d-mode{border:0;padding:0;margin:4px 0 14px;display:flex;flex-direction:column;gap:6px}
+.d-log{list-style:none;margin:0;padding:0}
+.d-log li{border-top:1px solid var(--line);padding:7px 0}
+[data-act="d-mic"].on{background:var(--danger-soft);color:var(--danger);border-color:var(--danger)}
 
 /* Writing */
 .write-layout{display:grid;gap:16px;grid-template-columns:1fr}
@@ -666,6 +733,7 @@ footer.foot{max-width:1180px;margin:0 auto;padding:0 16px 40px;color:var(--muted
   <section class="panel" id="panel-figlab" role="tabpanel" aria-labelledby="tab-figlab" hidden></section>
   <section class="panel" id="panel-present" role="tabpanel" aria-labelledby="tab-present" hidden></section>
   <section class="panel" id="panel-verify" role="tabpanel" hidden></section>
+  <section class="panel" id="panel-defend" role="tabpanel" hidden></section>
   <section class="panel" id="panel-progress" role="tabpanel" aria-labelledby="tab-progress" hidden></section>
 </main>
 <nav class="step-foot" id="stepFoot" aria-label="Previous and next step"></nav>
@@ -713,7 +781,8 @@ const ICONS = {
   book:'<path d="M2 4h6a4 4 0 0 1 4 4v13a3 3 0 0 0-3-3H2zM22 4h-6a4 4 0 0 0-4 4v13a3 3 0 0 1 3-3h7z"/>',
   sparkle:'<path d="M12 3l1.9 5.1L19 10l-5.1 1.9L12 17l-1.9-5.1L5 10l5.1-1.9z"/>',
   clock:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
-  refresh:'<path d="M21 12a9 9 0 1 1-3-6.7L21 8"/><path d="M21 3v5h-5"/>'
+  refresh:'<path d="M21 12a9 9 0 1 1-3-6.7L21 8"/><path d="M21 3v5h-5"/>',
+  mic:'<path d="M12 3a3 3 0 0 0-3 3v6a3 3 0 0 0 6 0V6a3 3 0 0 0-3-3z"/><path d="M19 11a7 7 0 0 1-14 0M12 18v3"/>'
 };
 const icon = (n, cls='') => `<svg class="i ${cls}" viewBox="0 0 24 24" aria-hidden="true">${ICONS[n]||''}</svg>`;
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -737,9 +806,10 @@ const PARTS = [
     {tab:'critique', label:'Write the critique', desc:'The AAU 0106112 Paper Critique Form, with word limits and Word export'}]},
   {id:'presenting', no:3, label:'Present', short:'Present', icon:'slides', blurb:'Turn your critique or paper into a timed slide outline and prepare for questions.', steps:[
     {tab:'present', label:'Build the slides', desc:'Slide structure, speaker notes and timing for 5, 10 or 15 minutes'},
-    {tab:'reader', view:'questions', label:'Prepare for questions', desc:'What to ask the class, and what your professor and colleagues may ask you'}]},
-  {id:'verifying', no:4, label:'Verify', short:'Verify', icon:'check', blurb:'Check the critique and the slides against the original paper: accuracy, contradictions, language and citations, then a final QA report.', steps:[
-    {tab:'verify', label:'Final verification & consistency', desc:'Checklist, consistency matrix, contradictions, corrections and the quality-assurance report'}]},
+    {tab:'reader', view:'questions', label:'Questions about the paper', desc:'Discussion questions for the class, and quick questions about the paper'}]},
+  {id:'verifying', no:4, label:'Verify & defend', short:'Verify', icon:'check', blurb:'Check the critique and the slides against the original paper, then prepare to defend them: the questions your professor may ask, with a mock professor.', steps:[
+    {tab:'verify', label:'Final verification & consistency', desc:'Checklist, consistency matrix, contradictions, corrections and the quality-assurance report'},
+    {tab:'defend', label:'Professor questions & defense', desc:'Questions written from your own paper, critique and slides, suggested answers and a mock professor'}]},
   {id:'progress', label:'My Progress', icon:'chart', steps:[{tab:'progress', label:'My Progress'}]}
 ];
 const TABS = [
@@ -752,6 +822,7 @@ const TABS = [
   {id:'figlab', label:'Figure Lab', icon:'image'},
   {id:'present', label:'Presentation Builder', icon:'slides'},
   {id:'verify', label:'Verify', icon:'check'},
+  {id:'defend', label:'Professor questions', icon:'chat'},
   {id:'progress', label:'My Progress', icon:'chart'}
 ];
 
@@ -1251,7 +1322,7 @@ RENDER.start = () => {
   const status = {
     'writing/0':`${stepsDone} of ${WRITE_STEPS.length} steps done`, 'writing/1':`${DATABASES.length} databases`, 'writing/2':`${pl(S.ideas.length, 'idea')} · ${pl(S.papers.length, 'paper')}`, 'writing/3':'Chart and caption builder',
     'critiquing/0':`${pl(S.reader.papers.length, 'paper')} in the reader`, 'critiquing/1':`${pl(S.figlab.reviews.filter(figDone).length, 'figure')} explained`, 'critiquing/2':`${S.critiques.filter(critDone).length} of ${pl(S.critiques.length, 'critique')} complete`,
-    'presenting/0':`from your ${pl(S.critiques.length, 'critique')}`, 'verifying/0':vStartStatus(), 'presenting/1':`${pl(S.reader.papers.filter(p => p.questions && (p.questions.audience || []).length).length, 'paper')} with questions`
+    'presenting/0':`from your ${pl(S.critiques.length, 'critique')}`, 'verifying/0':vStartStatus(), 'verifying/1':dStartStatus(), 'presenting/1':`${pl(S.reader.papers.filter(p => p.questions && (p.questions.audience || []).length).length, 'paper')} with questions`
   };
   $('#panel-start').innerHTML = `
   <div class="page-head"><div class="eyebrow">ScholarPath</div><h1>Your research journey, in four parts</h1>
@@ -2150,7 +2221,7 @@ async function addReaderPaper(name, title, res){
 /* --- Claude (sample capability), only where the viewer provides it --- */
 const capUse = n => (window.claude && typeof window.claude.use === 'function') ? Promise.resolve(window.claude.use(n)).catch(() => null) : Promise.resolve(null);
 let AI = null, aiOff = false, aiRun = null;
-capUse('sample').then(fn => { AI = fn; if (fn && S.ui.tab === 'reader') RENDER.reader(); if (fn && S.ui.tab === 'figlab') RENDER.figlab(); if (fn && S.ui.tab === 'verify') RENDER.verify(); });
+capUse('sample').then(fn => { AI = fn; if (fn && S.ui.tab === 'reader') RENDER.reader(); if (fn && S.ui.tab === 'figlab') RENDER.figlab(); if (fn && S.ui.tab === 'verify') RENDER.verify(); if (fn && S.ui.tab === 'defend') RENDER.defend(); });
 const aiReady = () => !!AI && !aiOff;
 function aiError(e){
   const code = e && e.code;
@@ -2782,6 +2853,7 @@ function questionsView(paper){
     <div><h3 style="margin:0">Presentation questions</h3><p class="small muted" style="margin:4px 0 0">${useAi ? 'Written by Claude from this paper — check each against the text before you rely on it.' : have ? 'Example questions for this demo text.' : aiReady() ? 'These are starter questions. Generate questions specific to this paper with Claude.' : 'Starter questions that fit most papers. Edit them for your paper; on the published ScholarPath page, Claude can write paper-specific ones.'}</p></div>
     ${aiReady() ? `<button class="btn primary" data-act="rp-questions" data-ai-btn>${icon('sparkle')}${have ? 'Regenerate' : 'Generate'} with Claude</button>` : ''}</div></div>
   <div class="grid" style="gap:16px">
+    <p class="small cross-link" style="margin:0">${icon('link')} For questions about <b>your own critique and slides</b>, with suggested answers and a mock professor, open <a href="#verifying/2" data-act="goto" data-part="verifying" data-i="1">4.2 Professor questions &amp; defense</a>.</p>
     ${qGroup('qAud', 'You ask the class', 'Questions to ask your professor and colleagues to start a discussion', src.audience, 'audience', paper)}
     ${qGroup('qProf', 'The professor may ask you', 'Prepare an answer for each — the tip shows where to look', src.professor, 'professor', paper)}
     ${qGroup('qCol', 'Colleagues may ask you', 'Clarifying questions from classmates', src.colleagues, 'colleagues', paper)}
@@ -4059,8 +4131,8 @@ const vFound = (set, doc, quote) => !!doc && vUnits(set, doc).some(u => vLocate(
 
 /* --- the prompts: one per stage, all carrying the mandatory rules --- */
 const V_CAP = {paper:140000, critique:40000, pres:30000};
-function vDocsBlock(set){
-  let caps = {...V_CAP}, out = '', cut = [];
+function vDocsBlock(set, base=V_CAP){
+  let caps = {...base}, out = '', cut = [];
   for (let tries = 0; tries < 5; tries++){
     const parts = []; cut = [];
     for (const d of V_DOCS){
@@ -4222,7 +4294,7 @@ function vParseReply(text){
 let vRun = null;
 async function vRunStages(set, stages){
   if (!aiReady()) return toast('Claude runs these checks on the published ScholarPath page — you can copy the prompt, or check every item yourself');
-  if (vRun || aiRun) return toast('Claude is still working — please wait or press Stop');
+  if (vRun || dRun || aiRun) return toast('Claude is still working — please wait or press Stop');
   if (!set.docs.paper) return alert('Add the original research paper first — it is the source of truth for every check.');
   if (!set.docs.critique && !set.docs.pres) return alert('Add your written critique or your presentation, so there is something to compare with the paper.');
   const ctl = new AbortController(), before = vSnapshot(set), errors = [];
@@ -4347,7 +4419,7 @@ async function vCorrectedCopy(set, doc, use){
     set.docs[doc] = {src:'upload', name, kind:d.kind, units:isP ? await pptxUnits(await readZip(nb)) : await docxUnits(await readZip(nb)), at:Date.now(), from:d.name};
     await IDB.put(`v:${set.id}:${doc}`, nb);
   }
-  save(); RENDER.verify();
+  save(); vRefresh();
   if (!use) await saveFile(name, blob, `Saved ${name}`);
   if (missed.length) alert(`${done.length} correction${done.length === 1 ? '' : 's'} made. ${missed.length} could not be found word for word in the file (the text may be split across a line break or a text box) — make ${missed.length === 1 ? 'it' : 'them'} by hand; ${missed.length === 1 ? 'it is' : 'they are'} marked “Do this by hand”.`);
   else if (use) toast('Now checking the corrected copy — re-run the verification (step 7)');
@@ -4474,24 +4546,27 @@ RENDER.verify = () => {
   const VV = vVers(set), R = vReadiness(set, VV), view = V_VIEWS.some(v => v[0] === V.view) ? V.view : 'flow';
   if (!set.auto || set.auto.ver !== vVerKey(set)) vAuto(set);
   const E = vAllEdits(set), counts = {check:`${R.cur}/${V_ITEMS.length}`, matrix:`${R.rowsCur}/${V_MATRIX.length}`, contra:R.open || '', fix:E.filter(e => !e.state).length || ''};
-  const part = partOf('verifying');
-  $('#panel-verify').innerHTML = `
-  <div class="page-head"><div class="eyebrow">Part ${part.no} · ${part.label} — Step ${part.no}.1: ${esc(part.steps[0].label)}</div><h1>Final Academic Verification &amp; Consistency Checklist</h1>
-  <p>Check your <b>written critique</b> and your <b>presentation</b> against the <b>original research paper</b>, which is the source of truth. Use it whenever you upload, revise or finalise a document. Each check remembers which version of the documents it was made on, and asks for a re-check when one of them changes.</p></div>
-  <div class="card v-setbar">
-    <label class="f" for="vSetSel">Verification</label>
-    <select id="vSetSel">${V.sets.map(s => `<option value="${s.id}" ${s.id === set.id ? 'selected' : ''}>${s.example ? '[Demo] ' : ''}${esc(clip(s.name || 'Untitled verification', 80))}</option>`).join('')}</select>
-    ${exampleBadge(set)}
-    <span class="row v-setbtns"><button class="btn sm" data-act="v-new">${icon('plus')}New</button><button class="btn sm" data-act="v-rename">${icon('pen')}Rename</button><button class="btn sm ghost danger" data-act="v-del">${icon('trash')}Delete</button></span>
-  </div>
-  ${set.example ? `<p class="ai-note small">${icon('sparkle')} <b>Demo:</b> the ScholarPath demo text, with a short critique and five slides that contain <b>deliberate errors</b>, so you can see how the checks work. None of it is a real study. Press <b>New</b> to check your own documents.</p>` : ''}
-  <div class="v-docs">${V_DOCS.map(d => vDocCard(set, d, VV)).join('')}</div>
+  $('#panel-verify').innerHTML = vHead(set, VV, 0, 'Final Academic Verification &amp; Consistency Checklist',
+    `<p>Check your <b>written critique</b> and your <b>presentation</b> against the <b>original research paper</b>, which is the source of truth. Use it whenever you upload, revise or finalise a document. Each check remembers which version of the documents it was made on, and asks for a re-check when one of them changes.</p>`) + `
   ${vScoreHTML(R)}
   <div class="v-views" role="tablist" aria-label="Verification views">${V_VIEWS.map(([k, l]) => `<button role="tab" class="v-view ${k === view ? 'on' : ''}" aria-selected="${k === view}" data-act="v-view" data-view="${k}">${l}${counts[k] ? ` <span class="v-count">${counts[k]}</span>` : ''}</button>`).join('')}</div>
   <div id="vRun"></div>
   <div class="v-body">${V_VIEW[view](set, VV, R)}</div>`;
   vRenderRun();
 };
+function vHead(set, VV, k, title, intro){                        // the top of steps 4.1 and 4.2: one set of three documents for both
+  const V = S.verify, part = partOf('verifying');
+  return `<div class="page-head"><div class="eyebrow">Part ${part.no} · ${part.label} — Step ${part.no}.${k + 1}: ${esc(part.steps[k].label)}</div><h1>${title}</h1>${intro}</div>
+  <div class="card v-setbar">
+    <label class="f" for="vSetSel">Documents</label>
+    <select id="vSetSel">${V.sets.map(s => `<option value="${s.id}" ${s.id === set.id ? 'selected' : ''}>${s.example ? '[Demo] ' : ''}${esc(clip(s.name || 'Untitled', 80))}</option>`).join('')}</select>
+    ${exampleBadge(set)}
+    <span class="row v-setbtns"><button class="btn sm" data-act="v-new">${icon('plus')}New</button><button class="btn sm" data-act="v-rename">${icon('pen')}Rename</button><button class="btn sm ghost danger" data-act="v-del">${icon('trash')}Delete</button></span>
+  </div>
+  ${set.example ? `<p class="ai-note small">${icon('sparkle')} <b>Demo:</b> the ScholarPath demo text, with a short critique and five slides that contain <b>deliberate errors</b>, so you can see how this works. None of it is a real study. Press <b>New</b> to use your own documents.</p>` : ''}
+  <div class="v-docs">${V_DOCS.map(d => vDocCard(set, d, VV)).join('')}</div>`;
+}
+const vRefresh = () => (S.ui.tab === 'defend' ? RENDER.defend : RENDER.verify)();
 function vDocCard(set, d, VV){
   const doc = set.docs[d.k], U = doc ? vUnits(set, d.k) : [];
   const src = !doc ? '' : {reader:'from Paper Reader', app:'from Critique Studio — follows your edits', builder:'from Presentation Builder — follows your critique', paste:'pasted text', upload:`uploaded ${String(doc.kind || '').toUpperCase()}`}[doc.src] || '';
@@ -4527,7 +4602,7 @@ const V_VIEW = {
   flow:(set, VV, R) => {
     const sec = ks => { const it = V_ITEMS.filter(x => ks.includes(x.sec.k)); return [it.filter(x => vCur(set, x.key, VV)).length, it.length]; };
     const E = vAllEdits(set), waiting = E.filter(e => !e.state).length, open = R.open;
-    const st = (done, some) => done ? 'done' : some ? 'part' : 'todo', lbl = {done:'Done', part:'In progress', todo:'Not started'};
+    const st = (done, some) => done ? 'done' : some ? 'doing' : 'todo', lbl = {done:'Done', doing:'In progress', todo:'Not started'};
     const [a2, b2] = sec(['s2']), [a3, b3] = sec(['s3']), [a4, b4] = sec(['s1', 's4', 's5', 's6']);
     const paperN = set.docs.paper ? vUnits(set, 'paper').length : 0, ranOnce = Object.keys(set.stages).length > 0;
     const steps = [
@@ -4667,7 +4742,7 @@ function vStartStatus(){
 
 /* --- events --- */
 function vRerender(sel){                          // keep the place on the page when a control re-draws it
-  const y = scrollY; RENDER.verify(); scrollTo(0, y); if (sel) $(sel)?.focus();
+  const y = scrollY; vRefresh(); scrollTo(0, y); if (sel) $(sel)?.focus();
 }
 function vPasteDialog(which){
   const set = vSet(), d = V_DOCS.find(x => x.k === which);
@@ -4678,7 +4753,7 @@ function vPasteDialog(which){
       const units = textUnits(f.text, which === 'pres'); if (!units.length) return false;
       set.docs[which] = {src:'paste', kind:'paste', name:f.name.trim() || `Pasted ${d.t.toLowerCase()}`, units, at:Date.now()};
       if (which === 'paper' && !set.name) set.name = f.name.trim();
-      save(); RENDER.verify(); toast(`${d.t}: ${pl(units.length, which === 'pres' ? 'slide' : 'part')} added`);
+      save(); vRefresh(); toast(`${d.t}: ${pl(units.length, which === 'pres' ? 'slide' : 'part')} added`);
     }, 'Use this text');
 }
 function vNameDialog(set, isNew){
@@ -4686,7 +4761,7 @@ function vNameDialog(set, isNew){
     ${isNew ? '<p class="small muted">Each verification keeps its own three documents, checklist, matrix and report, so you can check more than one critique.</p>' : ''}`, f => {
       const name = f.name.trim(); if (!name) return false;
       if (isNew){ const s = Object.assign(newVerifySet(), {name}); S.verify.sets.unshift(s); S.verify.active = s.id; S.verify.view = 'flow'; } else set.name = name;
-      save(); RENDER.verify(); toast(isNew ? 'New verification ready — add the three documents' : 'Renamed');
+      save(); vRefresh(); toast(isNew ? 'New document set ready — add the three documents' : 'Renamed');
     }, isNew ? 'Create' : 'Save');
 }
 const V_ACTIONS = {
@@ -4694,9 +4769,9 @@ const V_ACTIONS = {
   'v-new': () => vNameDialog(null, true),
   'v-rename': () => vNameDialog(vSet(), false),
   'v-del': () => { const set = vSet(); if (!confirm(`Delete “${set.name || 'this verification'}” and all its checks? The documents themselves stay in ScholarPath.`)) return;
-    S.verify.sets = S.verify.sets.filter(s => s !== set); ['critique', 'pres'].forEach(k => IDB.del(`v:${set.id}:${k}`)); S.verify.active = (S.verify.sets[0] || {}).id || ''; save(); RENDER.verify(); toast('Verification deleted'); },
+    S.verify.sets = S.verify.sets.filter(s => s !== set); ['critique', 'pres'].forEach(k => IDB.del(`v:${set.id}:${k}`)); S.verify.active = (S.verify.sets[0] || {}).id || ''; save(); vRefresh(); toast('Verification deleted'); },
   'v-paste': el => vPasteDialog(el.dataset.doc),
-  'v-doc-clear': el => { const set = vSet(), k = el.dataset.doc; if (!confirm(`Remove the ${vDocT(k).toLowerCase()} from this verification? Its checks will need a re-check.`)) return; set.docs[k] = null; IDB.del(`v:${set.id}:${k}`); save(); RENDER.verify(); },
+  'v-doc-clear': el => { const set = vSet(), k = el.dataset.doc; if (!confirm(`Remove the ${vDocT(k).toLowerCase()} from this verification? Its checks will need a re-check.`)) return; set.docs[k] = null; IDB.del(`v:${set.id}:${k}`); save(); vRefresh(); },
   'v-open-reader': () => { const set = vSet(); S.reader.active = set.docs.paper.ref; S.reader.view = 'paras'; goStep('critiquing', 0); scrollTo({top:0}); },
   'v-run': el => vRunStages(vSet(), el.dataset.stages.split(',')),
   'v-stop': () => vRun && vRun.ctl.abort(),
@@ -4748,14 +4823,14 @@ const V_ACTIONS = {
   'v-rep-docx': () => { const set = vSet(); saveFile(vFileName(`Verification report - ${set.name || 'ScholarPath'}`) + '.docx', vReportDocx(set), 'Report saved as a Word document'); }
 };
 function vChange(t){
-  if (t.id === 'vSetSel'){ S.verify.active = t.value; save(); RENDER.verify(); return true; }
+  if (t.id === 'vSetSel'){ S.verify.active = t.value; save(); vRefresh(); return true; }
   if (t.dataset.vsrc){ if (!t.value) return true;
     const set = vSet(), [src, ref] = t.value.split(':'); set.docs[t.dataset.vsrc] = {src, ref, at:Date.now()};
     if (t.dataset.vsrc === 'paper' && !set.name){ const p = S.reader.papers.find(x => x.id === ref); set.name = p ? p.title || p.name : ''; }
-    save(); RENDER.verify(); toast(`${vDocT(t.dataset.vsrc)} added`); return true; }
+    save(); vRefresh(); toast(`${vDocT(t.dataset.vsrc)} added`); return true; }
   if (t.dataset.vfile && t.files[0]){
     const set = vSet(), which = t.dataset.vfile, file = t.files[0]; t.value = ''; toast(`Reading ${file.name}…`);
-    vLoadFile(set, which, file).then(n => { if (which === 'paper' && !set.name) set.name = file.name.replace(/\.\w+$/, ''); save(); RENDER.verify(); toast(`${vDocT(which)}: ${vUnitWord(set, which)} read`); })
+    vLoadFile(set, which, file).then(n => { if (which === 'paper' && !set.name) set.name = file.name.replace(/\.\w+$/, ''); save(); vRefresh(); toast(`${vDocT(which)}: ${vUnitWord(set, which)} read`); })
       .catch(err => alert('Could not read this file. ' + (err && err.message || '')));
     return true; }
   if (t.dataset.vcheck){ const set = vSet(), key = t.dataset.vcheck, prev = set.checks[key] || {};
@@ -4772,6 +4847,635 @@ function vInput(t){
   if (t.dataset.vmine){ const set = vSet(), k = t.dataset.vmine; (set.checks[k] ||= {}).mine = t.value; save(); return true; }
   if (t.dataset.voverall !== undefined){ const set = vSet(); set.overall = {text:t.value, by:'me', ver:vVerOf(vVers(set), V_ALL), at:Date.now()}; save(); return true; }
   return false;
+}
+
+
+/* ---------- Part 4.2 · Potential Professor Questions & Critical Discussion Preparation ----------
+   Uses the same three documents as 4.1. Every question is written from their actual content (never from a fixed bank),
+   remembers the document versions it was made on, and counts as prepared only after the student has answered it. */
+const D_RULES = [                                                // §9, word for word
+  'Reanalyze the documents whenever the research topic or critique changes.',
+  'Regenerate the questions based on the updated content.',
+  'Do not use a universal or fixed question bank.',
+  'Do not assume specific methodologies, statistical tests, algorithms, or theoretical frameworks.',
+  'Include technical questions only when relevant to the study.',
+  "Adjust the number and difficulty of questions according to each section's complexity.",
+  'Prioritize critical thinking and academic reasoning over memorization.',
+  'Ensure that all suggested answers align with the original research.',
+  'Never invent evidence, citations, results, or methodological details.',
+  'Maintain consistency between the original paper, written critique, presentation, and suggested answers.'
+];
+const D_TYPES = [                                                // §3
+  ['Comprehension', 'Do I understand the research and its key concepts?'],
+  ['Critical Analysis', "Can I evaluate the authors' decisions and arguments?"],
+  ['Methodological Defense', 'Can I explain and assess the methods used?'],
+  ['Evidence Evaluation', 'Can I justify claims using the research findings?'],
+  ['Interpretation', 'Can I explain the meaning and implications of the results?'],
+  ['Alternative Perspectives', 'Can I consider other interpretations or approaches?'],
+  ['Limitations', 'Can I explain the weaknesses and their consequences?'],
+  ['Recommendations', 'Can I justify my proposed improvements?'],
+  ['Practical Application', 'Can I connect the research to relevant real-world contexts?'],
+  ['Ethical Considerations', 'Can I discuss relevant ethical concerns when applicable?'],
+  ['Technical Understanding', 'Can I explain the technical concepts actually used in the study?'],
+  ['Academic Defense', 'Can I defend my critique against reasonable objections?']
+];
+const D_PRIO = {high:['🔴', 'High'], medium:['🟡', 'Medium'], extra:['🟢', 'Additional Practice']};
+const D_PREP = {'':['☐', 'Not practised'], practising:['◐', 'Practising'], prepared:['☑', 'Prepared']};
+const D_STAGES = [
+  {k:'analyse', label:'Analyse the paper, critique and slides', short:'1 · Analysis', tier:'complex'},
+  {k:'sections', label:'Questions for each critique section', short:'2 · Section questions', tier:'complex'},
+  {k:'challenge', label:'Challenge my evaluation', short:'3 · Challenges', tier:'complex'},
+  {k:'slides', label:'Questions for each slide', short:'4 · Slide questions', tier:'default'}
+];
+const D_PROCESS = [                                              // the owner's checklists in §1, §2, §5 and §7, ticked only when the work was done on these versions
+  {t:'Analyse the research before generating questions', items:[
+    ['Read and understand the original research paper.', 'analyse', 'paper'], ['Identify the specific research topic, discipline, and objectives.', 'analyse'],
+    ['Examine the actual structure and headings of my written critique.', 'analyse', 'critique'], ['Identify the research methods, analytical techniques, and theoretical concepts used.', 'analyse'],
+    ['Determine the most important findings, arguments, limitations, and contributions.', 'analyse'], ['Review the corresponding PowerPoint presentation.', 'analyse', 'pres'],
+    ['Identify areas that require deeper explanation, justification, or critical reasoning.', 'analyse']]},
+  {t:'Generate questions for each actual critique section', items:[
+    ['Identify its main purpose and arguments.', 'analyse', 'critique'], ["Generate 5–8 relevant potential professor questions, adjusting the number according to the section's importance and complexity.", 'sections'],
+    ['Include questions that test understanding of the original research.', 'sections'], ['Include questions that challenge my interpretation and critical evaluation.', 'sections'],
+    ['Include questions requiring evidence-based justification.', 'sections'], ['Include questions about relevant methodological or theoretical decisions.', 'sections'],
+    ['Identify weaknesses or assumptions that the professor might challenge.', 'analyse', 'critique'], ['Generate realistic follow-up questions.', 'sections'],
+    ['Connect questions to the corresponding presentation slides.', 'sections', 'pres']]},
+  {t:'Critically challenge my evaluation', items:[
+    ['The evidence supporting my evaluation.', 'challenge'], ['The reasoning behind my conclusions.', 'challenge'], ['The significance of the limitations I identified.', 'challenge'],
+    ['The practicality of my recommendations.', 'challenge'], ['Alternative explanations or interpretations.', 'challenge'], ['Potential weaknesses in my own arguments.', 'challenge'],
+    ['Whether my criticism is fair and academically justified.', 'challenge']]},
+  {t:'Presentation-specific questions (for every slide)', items:[
+    ['Identify its main argument.', 'slides', 'pres'], ['Connect it to the corresponding critique section.', 'slides', 'pres'], ["Generate 2–3 realistic questions based on the slide's actual content.", 'slides', 'pres'],
+    ['Identify claims the professor may challenge.', 'slides', 'pres'], ['Prepare short, evidence-based oral answers.', 'slides', 'pres'], ['Identify any concepts requiring additional explanation.', 'slides', 'pres']]}
+];
+const dState = set => (set.def ||= {analysis:null, qs:[], slides:[], targets:[], stages:{}, log:[], mock:null});
+const dSecs = set => ((dState(set).analysis || {}).sections || []);
+const dSlideLocs = set => vUnits(set, 'pres').filter(u => /^Slide \d+$/.test(u.loc)).map(u => u.loc);
+const dCurVer = set => vVerKey(set);
+function dStageCur(set, k, ver=dCurVer(set)){
+  const D = dState(set), a = D.analysis, cur = !!a && a.ver === ver;
+  if (k === 'analyse') return cur;
+  if (k === 'sections') return cur && dSecs(set).length > 0 && dSecs(set).every(s => D.qs.some(q => q.kind === 'section' && q.section === s.heading && q.ver === ver));
+  if (k === 'challenge') return !!D.stages.challenge && D.stages.challenge.ver === ver;
+  if (k === 'slides'){ const L = dSlideLocs(set); return cur && L.length > 0 && L.every(l => D.slides.some(s => s.loc === l && s.ver === ver)); }
+  return false;
+}
+const dType = t => { const s = vStr(t, 60), m = D_TYPES.find(x => x[0].toLowerCase() === s.toLowerCase()) || D_TYPES.find(x => s.toLowerCase().includes(x[0].toLowerCase().split(' ')[0])); return m ? m[0] : s || 'Critical Analysis'; };
+const dPrio = p => { p = String(p || '').toLowerCase(); return /high|🔴/.test(p) ? 'high' : /extra|additional|low|🟢/.test(p) ? 'extra' : 'medium'; };
+
+/* --- prompts --- */
+const D_Q_SPEC = `{"q":"the professor's question — realistic, academically challenging and specific to THIS paper and critique","type":"one of the relevant question types","priority":"high | medium | extra","means":"what the professor means: what the question tests, in one simple sentence","answer":"detailed suggested answer, accurate and evidence-based (60–120 words)","oral":"short oral answer the student can say confidently (2–3 natural sentences)","evidence":{"paper":"page / section / table / figure in the original paper","critique":"the section of the critique"},"slide":"Slide N, or \\"\\"","follow":"a deeper follow-up question that challenges the first answer","followAnswer":"concise, academically defensible answer (under 50 words)"}`;
+function dHead(set, caps){
+  const D = vDocsBlock(set, caps);
+  return `You are an experienced professor and examiner in the field of the paper below. A master's student (Al Ain University, Advanced Research Methods 0106112) will present a critique of this paper and must be ready to DEFEND it. Everything you write must come from the ACTUAL content of these documents — never from a template or a general question bank.
+
+ADAPTATION RULES
+${D_RULES.map((r, i) => `${i + 1}. ${r}`).join('\n')}
+The original research paper is the source of truth. Do not automatically agree with the student's critique: if a point is weak or not supported by the paper, the questions should expose it and the suggested answer should say honestly how to respond. Use clear academic English that a non-native speaker can say aloud.
+
+Each document is split into pieces that start with a location tag in square brackets ([p. 4], [Section 4 · …], [Slide 6]). Use these tags for evidence references.${D.cut.length ? ` The end of the ${D.cut.join(' and the ')} was cut to fit: do not guess about the missing part.` : ''}
+
+${D.text}
+
+`;
+}
+function dAnalysisText(a){
+  const j = x => (x || []).join('; ') || '—';
+  return `ANALYSIS OF THESE DOCUMENTS (from step 1)
+Topic: ${a.topic} | Discipline: ${a.discipline} | Approach: ${a.approach}
+Objectives: ${j(a.objectives)}
+Methods and techniques actually used: ${j(a.methods)}
+Key concepts: ${j(a.concepts)}
+Key findings: ${j(a.findings)}
+Limitations: ${j(a.limitations)}
+Contributions: ${j(a.contributions)}
+Relevant question types: ${a.types.map(t => t.type).join(', ') || 'choose from the list'}
+Question types that are NOT relevant here (do not use them): ${a.excluded.map(t => t.type).join(', ') || 'none'}
+`;
+}
+function dPrompt(set, stage, arg){
+  const a = dState(set).analysis;
+  if (stage === 'analyse') return dHead(set) + `YOUR TASK (step 1 — analyse the research before any question is written). Read the paper; then the critique, using its ACTUAL structure and headings; then the slides.
+Reply with only JSON:
+{"topic":"…","discipline":"…","objectives":["…"],"approach":"the research approach the paper actually uses, in a few words",
+ "methods":["each research method, analytical technique, instrument, statistical test or algorithm ACTUALLY used, with its page"],
+ "concepts":["theoretical or technical concepts actually used"],"findings":["the most important findings, with page"],"arguments":["the authors' main arguments"],"limitations":["…"],"contributions":["…"],
+ "sections":[{"heading":"the critique's own heading, exactly as written","purpose":"its main purpose","arguments":["the student's main arguments in it"],"importance":"high | medium | low","complexity":"high | medium | low","count":6,"vulnerable":["weaknesses or assumptions a professor might challenge"],"slides":["Slide 4"]}],
+ "slides":[{"loc":"Slide 3","argument":"the slide's main argument","section":"the matching critique heading, or \\"\\""}],
+ "types":[{"type":"…","why":"why it is relevant to THIS study"}],"excluded":[{"type":"…","why":"why it is not relevant here"}],
+ "depth":["areas of the critique or slides that need deeper explanation, justification or critical reasoning"],
+ "gaps":[{"concept":"a concept or argument the student may need to study further","why":"…","where":"paper page / critique section"}]}
+"sections": every part of the critique that holds the student's academic content, in order, with the critique's own headings (skip administrative fields such as names, IDs and dates; if the critique has no headings, name each part by its first words). "count": 5 to 8 questions, more for important and complex sections.
+"types": choose only from ${D_TYPES.map(t => t[0]).join(', ')}; put every type you do not choose in "excluded". Choose methodological and technical types that fit the approach the paper actually uses — never assume methods it does not use.
+"slides": every slide, in order (none if there is no presentation).`;
+  if (stage === 'sections') return dHead(set) + dAnalysisText(a) + `
+YOUR TASK (steps 2–4): write the professor's questions for these sections of the critique:
+${arg.map(s => `- "${s.heading}" — ${s.count} questions. Purpose: ${s.purpose || '—'}. The student's arguments: ${(s.arguments || []).join('; ') || '—'}. May be challenged on: ${(s.vulnerable || []).join('; ') || '—'}. Slides: ${(s.slides || []).join(', ') || 'none'}.`).join('\n')}
+For each section, mix questions that test understanding of the original research; challenge the student's interpretation and critical evaluation; require evidence-based justification; probe the methodological or theoretical decisions that matter for THIS study; and target the weaknesses or assumptions listed. Use only the relevant question types. Link a question to its slide where one exists.
+Reply with only JSON: {"questions":[{"section":"the heading exactly as above", …}]} where each question is ${D_Q_SPEC}
+Priority: "high" = academically significant or aimed at a vulnerable argument; "medium" = important; "extra" = additional practice.`;
+  if (stage === 'challenge') return dHead(set) + dAnalysisText(a) + `
+YOUR TASK (step 5 — critically challenge the student's evaluation). Find every major strength, weakness, criticism and recommendation in the critique. For each, judge honestly how well the original paper supports it, and write 1–2 questions that challenge: the evidence supporting it; the reasoning behind the conclusion; the significance of a limitation; the practicality of a recommendation; alternative explanations or interpretations; weaknesses in the student's own argument; whether the criticism is fair and academically justified.
+Reply with only JSON: {"targets":[{"kind":"strength | weakness | criticism | recommendation","point":"the student's point, quoted or closely paraphrased","section":"the critique heading","support":"well supported | partly supported | weakly supported","why":"why, with evidence from the paper (page)","questions":[…]}]} where each question is ${D_Q_SPEC.replace('{', '{"challenges":"evidence | reasoning | significance | practicality | alternatives | own argument | fairness",')}
+Up to 12 targets, the most important first. Priority "high" for the questions that challenge the student's strongest criticisms, conclusions and recommendations.`;
+  if (stage === 'slides') return dHead(set) + dAnalysisText(a) + `
+YOUR TASK (presentation questions) for these slides: ${arg.join(', ')}.
+For each slide: identify its main argument; connect it to the critique section; write 2–3 realistic questions about what the slide ACTUALLY says (do not repeat questions across slides unless the topic needs it); list the claims a professor may challenge and the concepts that need more explanation.
+Reply with only JSON: {"slides":[{"loc":"Slide 3","argument":"…","section":"the critique heading, or \\"\\"","challenge":["claims a professor may challenge"],"concepts":["concepts that need more explanation"],"questions":[…]}]} where each question is ${D_Q_SPEC.replace('"answer":"detailed suggested answer, accurate and evidence-based (60–120 words)",', '').replace('"slide":"Slide N, or \\"\\"",', '')}`;
+  return '';
+}
+
+/* --- reading Claude's answers --- */
+function dQ(raw, extra, ver, by){
+  const ev = raw.evidence && typeof raw.evidence === 'object' ? raw.evidence : {paper:raw.evidence};
+  return {id:uid(), ver, by, at:Date.now(), status:'', q:vStr(raw.q || raw.question, 600), type:dType(raw.type), priority:dPrio(raw.priority), means:vStr(raw.means, 400), answer:vStr(raw.answer, 1500), oral:vStr(raw.oral, 800),
+    evidence:{paper:vStr(ev.paper, 300), critique:vStr(ev.critique, 300)}, slide:vStr(raw.slide, 40), follow:vStr(raw.follow || raw.followUp, 500), followAnswer:vStr(raw.followAnswer, 800), challenges:vStr(raw.challenges, 40), ...extra};
+}
+function dApply(set, stage, res, arg, by='claude'){
+  res = res && typeof res === 'object' && !Array.isArray(res) ? res : {};
+  const D = dState(set), ver = dCurVer(set), L = x => vArr(x).map(y => vStr(typeof y === 'string' ? y : y && (y.text || y.point || y.name), 400)).filter(Boolean);
+  if (stage === 'analyse'){
+    const types = vArr(res.types).filter(t => t && t.type).map(t => ({type:dType(t.type), why:vStr(t.why, 300)}));
+    D.analysis = {ver, by, at:Date.now(), topic:vStr(res.topic, 300), discipline:vStr(res.discipline, 200), approach:vStr(res.approach, 200), objectives:L(res.objectives), methods:L(res.methods), concepts:L(res.concepts),
+      findings:L(res.findings), arguments:L(res.arguments), limitations:L(res.limitations), contributions:L(res.contributions), depth:L(res.depth), types,
+      excluded:vArr(res.excluded).filter(t => t && t.type && !types.some(x => x.type === dType(t.type))).map(t => ({type:dType(t.type), why:vStr(t.why, 300)})),
+      sections:vArr(res.sections).filter(s => s && s.heading).slice(0, 20).map(s => ({heading:vStr(s.heading, 160), purpose:vStr(s.purpose, 400), arguments:L(s.arguments), importance:vStr(s.importance, 10), complexity:vStr(s.complexity, 10),
+        count:Math.min(8, Math.max(5, Math.round(Number(s.count)) || 6)), vulnerable:L(s.vulnerable), slides:L(s.slides)})),
+      slideMap:vArr(res.slides).filter(s => s && s.loc).map(s => ({loc:vStr(s.loc, 30), argument:vStr(s.argument, 300), section:vStr(s.section, 160)})),
+      gaps:vArr(res.gaps).filter(g => g && g.concept).slice(0, 15).map(g => ({concept:vStr(g.concept, 200), why:vStr(g.why, 300), where:vStr(g.where, 120)}))};
+    D.stages.analyse = {ver, at:Date.now(), by};
+    return {sections:D.analysis.sections.length, types:types.length};
+  }
+  const heads = dSecs(set).map(s => s.heading), matchHead = h => heads.find(x => x.toLowerCase() === vStr(h).toLowerCase()) || heads.find(x => x.toLowerCase().includes(vStr(h).toLowerCase()) || vStr(h).toLowerCase().includes(x.toLowerCase())) || vStr(h, 160);
+  if (stage === 'sections'){
+    const only = (arg || []).map(s => s.heading), list = vArr(res.questions).filter(q => q && (q.q || q.question)).map(q => dQ(q, {kind:'section', section:matchHead(q.section)}, ver, by));
+    const done = new Set(only.length ? only : list.map(q => q.section));
+    D.qs = [...D.qs.filter(q => !(q.kind === 'section' && done.has(q.section) && q.by !== 'me')), ...list];
+    D.stages.sections = {ver, at:Date.now(), by};
+    return {questions:list.length};
+  }
+  if (stage === 'challenge'){
+    const qs = [];
+    D.targets = vArr(res.targets).filter(t => t && t.point).slice(0, 16).map(t => {
+      const id = uid(), section = matchHead(t.section), mine = vArr(t.questions).filter(q => q && (q.q || q.question)).map(q => dQ(q, {kind:'challenge', section, target:id}, ver, by));
+      qs.push(...mine);
+      return {id, ver, kind:vStr(t.kind, 20).toLowerCase(), point:vStr(t.point, 600), section, support:vStr(t.support, 30).toLowerCase(), why:vStr(t.why, 600)};
+    });
+    D.qs = [...D.qs.filter(q => q.kind !== 'challenge' || q.by === 'me'), ...qs];
+    D.stages.challenge = {ver, at:Date.now(), by};
+    return {targets:D.targets.length, questions:qs.length};
+  }
+  if (stage === 'slides'){
+    const got = vArr(res.slides).filter(s => s && s.loc).map(s => ({loc:vStr(s.loc, 30).replace(/^slide\s*/i, 'Slide '), ver, argument:vStr(s.argument, 400), section:matchHead(s.section), challenge:L(s.challenge), concepts:L(s.concepts), raw:s}));
+    const locs = new Set([...(arg || []), ...got.map(s => s.loc)]), qs = [];
+    got.forEach(s => qs.push(...vArr(s.raw.questions).filter(q => q && (q.q || q.question)).map(q => dQ(q, {kind:'slide', section:s.section, slide:s.loc}, ver, by))));
+    D.slides = [...D.slides.filter(s => !locs.has(s.loc)), ...got.map(({raw, ...s}) => s)].sort((x, y) => parseInt(x.loc.replace(/\D/g, ''), 10) - parseInt(y.loc.replace(/\D/g, ''), 10));
+    D.qs = [...D.qs.filter(q => !(q.kind === 'slide' && locs.has(q.slide) && q.by !== 'me')), ...qs];
+    D.stages.slides = {ver, at:Date.now(), by};
+    return {slides:got.length, questions:qs.length};
+  }
+  return {};
+}
+
+/* --- running with Claude (in small parts, so long critiques fit) --- */
+let dRun = null;
+const D_FATAL = ['rate_limited', 'session_expired', 'not_granted', 'sampling_disabled', 'not_declared', 'capability_disabled', 'capability_removed'];
+async function dRunStages(set, stages, only){
+  if (!aiReady()) return toast('Claude writes the questions on the published ScholarPath page — you can copy the prompt into a Claude chat instead');
+  if (dRun || vRun || aiRun) return toast('Claude is still working — please wait or press Stop');
+  if (!set.docs.paper) return alert('Add the original research paper first — every question and answer is checked against it.');
+  if (!set.docs.critique) return alert('Add your written critique — the questions are written for its actual sections.');
+  if (stages.includes('slides') && !set.docs.pres && stages.length === 1) return alert('Add your presentation first.');
+  const ctl = new AbortController(), errors = [];
+  dRun = {ctl, label:'', i:0}; let ran = 0;
+  const one = async (stage, arg, label) => {
+    if (ctl.signal.aborted) return false;
+    dRun.i++; dRun.label = label; dRenderRun();
+    try { dApply(set, stage, await AI.json(dPrompt(set, stage, arg), {signal:ctl.signal, modelTier:(D_STAGES.find(s => s.k === stage) || {}).tier || 'default', cache:false}), arg); ran++; save(); dRefreshBody(); return true; }
+    catch (e){
+      if (e && e.code === 'cancelled'){ ctl.abort(); return false; }
+      errors.push(`${label}: ${aiError(e)}`);
+      if (e && D_FATAL.includes(e.code)) ctl.abort();
+      return false;
+    }
+  };
+  try {
+    for (const k of stages){
+      if (ctl.signal.aborted) break;
+      if (k === 'analyse' || !dStageCur(set, 'analyse')){                 // every question is written from a current analysis
+        if (!(await one('analyse', null, 'Analysing the paper, critique and slides'))) break;
+        if (k === 'analyse') continue;
+      }
+      if (k === 'sections'){
+        const secs = dSecs(set).filter(s => !only || only.includes(s.heading));
+        for (let i = 0; i < secs.length; i += 2) await one('sections', secs.slice(i, i + 2), `Questions for ${secs.slice(i, i + 2).map(s => `“${clip(s.heading, 40)}”`).join(' and ')} (${Math.min(i + 2, secs.length)} of ${secs.length} sections)`);
+      }
+      if (k === 'challenge') await one('challenge', null, 'Challenging your strengths, weaknesses and recommendations');
+      if (k === 'slides' && set.docs.pres){
+        const locs = dSlideLocs(set);
+        for (let i = 0; i < locs.length; i += 8) await one('slides', locs.slice(i, i + 8), `Questions for ${locs[i]}–${locs[Math.min(i + 7, locs.length - 1)]}`);
+      }
+    }
+  } finally {
+    dRun = null; save(); if (S.ui.tab === 'defend') RENDER.defend();
+  }
+  if (errors.length) alert('Some parts did not finish:\n\n' + errors.join('\n'));
+  else if (ran) toast('Questions ready — written by Claude: check each answer against the paper');
+}
+function dRenderRun(){
+  const el = $('#dRun'); if (!el) return;
+  el.innerHTML = dRun ? `<div class="ai-run"><span class="spin" aria-hidden="true"></span><span>Claude is working: <b>${esc(dRun.label)}</b> <span class="muted small">(each part can take a minute or two; what is finished is saved)</span></span><button class="btn sm" data-act="d-stop">${icon('stop')}Stop</button></div>` : '';
+  $$('[data-d-ai]').forEach(b => b.disabled = !!dRun || !aiReady());
+  $$('[data-d-busy]').forEach(b => b.disabled = !!dRun);
+}
+function dRefreshBody(){                                         // show finished parts while Claude keeps working
+  if (S.ui.tab !== 'defend') return;
+  const typing = document.activeElement && $('#panel-defend').contains(document.activeElement) && /INPUT|TEXTAREA|SELECT/.test(document.activeElement.tagName);
+  if (!typing){ const y = scrollY; RENDER.defend(); scrollTo(0, y); }
+}
+
+/* --- the mock professor: one question at a time, your answer, then feedback --- */
+function dEvalPrompt(set, q, question, model, answer, isFollow){
+  return dHead(set, {paper:60000, critique:25000, pres:12000}) + `YOUR TASK: you are now the student's professor in an ORAL EXAMINATION about their critique. Evaluate the student's answer fairly and constructively. Judge it against the ORIGINAL PAPER (the source of truth), not only against the model answer. Never invent evidence.
+
+QUESTION${isFollow ? ' (a follow-up)' : ''}: ${question}
+What it tests: ${q.means || '—'}
+Model answer for reference (written earlier by Claude; it may itself be imperfect): ${model || '— none —'}
+Evidence to look for: paper ${q.evidence.paper || '—'}; critique ${q.evidence.critique || '—'}
+
+THE STUDENT'S ANSWER:
+"""${answer}"""
+
+Reply with only JSON: {"verdict":"ready | almost | not yet","score":3,"good":["what was good"],"missing":["what was missing or unclear"],"errors":["anything that contradicts the paper, with its page"],"better":"a stronger version of the student's OWN answer, in their voice (2–4 sentences)","evidence":"the evidence they should mention","followUp":"${isFollow ? '' : 'one probing follow-up question based on what the student actually said'}","tip":"one short tip for saying it confidently"}
+"ready" only if the answer is accurate, answers the question and refers to evidence; "almost" if mostly right but something important is missing; "not yet" otherwise. "score" is 1–5.`;
+}
+const dFb = r => { r = r && typeof r === 'object' ? r : {}; const v = /ready/i.test(r.verdict) && !/not/i.test(r.verdict) ? 'ready' : /almost/i.test(r.verdict) ? 'almost' : 'not yet';
+  return {verdict:v, score:Math.min(5, Math.max(1, Math.round(Number(r.score)) || (v === 'ready' ? 4 : v === 'almost' ? 3 : 2))), good:vArr(r.good).map(x => vStr(x, 300)).filter(Boolean), missing:vArr(r.missing).map(x => vStr(x, 300)).filter(Boolean),
+    errors:vArr(r.errors).map(x => vStr(x, 300)).filter(Boolean), better:vStr(r.better, 1200), evidence:vStr(r.evidence, 400), followUp:vStr(r.followUp, 400), tip:vStr(r.tip, 300)}; };
+const dMockQ = set => { const m = dState(set).mock; return m && dState(set).qs.find(q => q.id === m.ids[m.i]); };
+function dPool(set, pool){
+  const qs = dState(set).qs;
+  if (pool === 'top') return dTop(set);
+  if (pool === 'notyet') return qs.filter(q => q.status !== 'prepared');
+  if (pool === 'challenge') return qs.filter(q => q.kind === 'challenge');
+  if (pool === 'slides') return qs.filter(q => q.kind === 'slide');
+  if (pool && pool.startsWith('sec:')) return qs.filter(q => q.section === pool.slice(4));
+  return qs;
+}
+function dMockStart(set, ids, mode){
+  if (!ids.length) return toast('There are no questions to practise in this group yet');
+  dState(set).mock = {ids, i:0, mode:mode === 'claude' && aiReady() ? 'claude' : 'self', phase:'ask', answer:'', fb:null, followQ:'', followAnswer:'', ffb:null, self:{}, started:Date.now(), done:[]};
+  S.verify.dview = 'mock'; save(); RENDER.defend(); $('#panel-defend .v-views')?.scrollIntoView({block:'start'});
+}
+function dRecord(set, q, m, verdict, extra){
+  const D = dState(set), entry = {id:uid(), at:Date.now(), qid:q.id, q:q.q, section:q.section, mode:m.mode, answer:m.answer, verdict, ...extra};
+  D.log.unshift(entry); D.log = D.log.slice(0, 200); m.logId = entry.id; m.done.push({q:q.q, verdict});
+  q.status = verdict === 'ready' ? 'prepared' : 'practising'; q.preparedBy = q.status === 'prepared' ? (m.mode === 'claude' ? 'claude' : 'self') : ''; q.lastVerdict = verdict; q.lastAt = Date.now();
+}
+async function dMockSubmit(set, follow){
+  const D = dState(set), m = D.mock, q = dMockQ(set); if (!m || !q) return;
+  const ans = (follow ? m.followAnswer : m.answer).trim();
+  if (ans.split(/\s+/).filter(Boolean).length < 5) return toast('Answer in at least one full sentence first');
+  if (m.mode === 'self'){ m.phase = 'fb'; save(); RENDER.defend(); return; }
+  if (dRun || vRun || aiRun) return toast('Claude is still working — please wait');
+  const ctl = new AbortController(); dRun = {ctl, label:follow ? 'Your professor is reading your follow-up answer' : 'Your professor is reading your answer', i:0}; dRenderRun();
+  try {
+    const fb = dFb(await AI.json(dEvalPrompt(set, q, follow ? m.followQ : q.q, follow ? (m.followQ === q.follow ? q.followAnswer : '') : (q.answer || q.oral), ans, follow), {signal:ctl.signal, modelTier:'default', cache:false}));
+    if (follow){ m.ffb = fb; m.phase = 'ffb'; const e = D.log.find(x => x.id === m.logId); if (e) e.follow = {q:m.followQ, answer:ans, fb}; }
+    else { m.fb = fb; m.followQ = fb.followUp || q.follow || ''; m.phase = 'fb'; dRecord(set, q, m, fb.verdict, {fb}); }
+    save();
+  } catch (e){ if (e && e.code !== 'cancelled') alert(aiError(e)); }
+  finally { dRun = null; if (S.ui.tab === 'defend') RENDER.defend(); }
+}
+function dMockNext(set, skip){
+  const m = dState(set).mock; if (!m) return;
+  if (skip) m.done.push({q:(dMockQ(set) || {}).q, verdict:'skipped'});
+  Object.assign(m, {i:m.i + 1, phase:m.i + 1 >= m.ids.length ? 'done' : 'ask', answer:'', fb:null, followQ:'', followAnswer:'', ffb:null, self:{}, logId:''});
+  save(); RENDER.defend();
+}
+function dSpeak(text){
+  try {
+    if (!('speechSynthesis' in window) || !text) return toast('Read-aloud is not available in this browser');
+    if (TTS.playing) ttsPause();
+    speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(text), pv = pickVoice('en');
+    if (pv.v){ u.voice = pv.v; u.lang = pv.v.lang; } else u.lang = 'en-GB';
+    u.pitch = pv.pitch; u.rate = S.reader.rate || 1; speechSynthesis.speak(u);
+  } catch { toast('Read-aloud is not available here'); }
+}
+let dRec = null;
+function dMic(btn){
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (!SR) return toast('Voice typing is not available in this browser — please type your answer');
+  if (dRec){ dRec.stop(); return; }
+  const ta = $(btn.dataset.target); if (!ta) return;
+  const base = ta.value.trim() ? ta.value.trim() + ' ' : '', r = new SR();
+  r.lang = 'en-US'; r.interimResults = true; r.continuous = true;
+  r.onresult = e => { let t = ''; for (const x of e.results) t += x[0].transcript; ta.value = base + t; ta.dispatchEvent(new Event('input', {bubbles:true})); };
+  r.onerror = e => toast(e.error === 'not-allowed' || e.error === 'service-not-allowed' ? 'The microphone is not allowed here — please type your answer' : 'Voice typing stopped');
+  r.onend = () => { dRec = null; btn.classList.remove('on'); btn.innerHTML = `${icon('mic')}Speak`; };
+  try { r.start(); dRec = r; btn.classList.add('on'); btn.innerHTML = `${icon('stop')}Stop`; } catch { toast('Voice typing could not start — please type your answer'); }
+}
+
+/* --- the final preparation report (A–F) --- */
+function dTop(set){
+  const w = {high:3, medium:2, extra:1};
+  return dState(set).qs.map((q, i) => [q, w[q.priority] + (q.kind === 'challenge' ? 0.5 : 0) - i / 1e5]).sort((a, b) => b[1] - a[1]).slice(0, 20).map(x => x[0]);
+}
+const dPrepLabel = q => q.status === 'prepared' ? (q.preparedBy === 'claude' ? 'Prepared — your answer was judged ready' : 'Prepared — self-checked') : q.status === 'practising' ? `Practising — last answer: ${q.lastVerdict || 'not yet'}` : 'Not practised yet';
+function dQText(q, n){
+  return [`${n ? n + '. ' : ''}${q.q}`, `   Type: ${q.type} · Priority: ${D_PRIO[q.priority][0]} ${D_PRIO[q.priority][1]}${q.slide ? ` · ${q.slide}` : ''} · ${dPrepLabel(q)}${q.by === 'me' ? ' · your own question' : ''}`,
+    q.means && `   What the professor means: ${q.means}`, q.answer && `   Detailed suggested answer: ${q.answer}`, q.oral && `   Short oral answer: ${q.oral}`,
+    `   Supporting evidence: paper — ${q.evidence.paper || 'not given'}; critique — ${q.evidence.critique || 'not given'}`,
+    q.follow && `   Possible follow-up question: ${q.follow}`, q.followAnswer && `   Suggested follow-up answer: ${q.followAnswer}`].filter(Boolean).join('\n');
+}
+function dGroups(set){                                           // section questions in the critique's own order, then slides
+  const D = dState(set), heads = dSecs(set).map(s => s.heading), sec = D.qs.filter(q => q.kind === 'section' || q.kind === 'mine');
+  const names = [...heads, ...new Set(sec.map(q => q.section).filter(h => !heads.includes(h)))];
+  return {sections:names.map(h => [h, sec.filter(q => q.section === h)]).filter(([h, l]) => l.length || heads.includes(h)),
+    slides:[...new Set(D.qs.filter(q => q.kind === 'slide').map(q => q.slide))].map(l => [l, D.qs.filter(q => q.kind === 'slide' && q.slide === l)])};
+}
+function dReport(set){
+  const D = dState(set), a = D.analysis, G = dGroups(set), ver = dCurVer(set), secs = [];
+  const stale = D.qs.filter(q => q.ver !== ver).length;
+  secs.push({h:'A. Section-by-Section Questions', p:[...(a ? [`Research topic: ${a.topic} (${a.discipline}; ${a.approach}).`] : []), ...G.sections.map(([h, l]) => `${h.toUpperCase()}\n${l.map((q, i) => dQText(q, i + 1)).join('\n\n') || '(no questions yet)'}`),
+    ...G.slides.map(([l, qs]) => `${l.toUpperCase()}${(D.slides.find(s => s.loc === l) || {}).argument ? ` — ${D.slides.find(s => s.loc === l).argument}` : ''}\n${qs.map((q, i) => dQText(q, i + 1)).join('\n\n')}`)]});
+  const top = dTop(set);
+  secs.push({h:`B. Top ${top.length} Priority Questions`, p:top.length ? top.map((q, i) => `${i + 1}. ${D_PRIO[q.priority][0]} ${q.q}\n   ${q.section || q.slide || ''} · ${q.type} · ${dPrepLabel(q)}\n   Short oral answer: ${q.oral || '—'}`) : ['No questions yet.']});
+  const ch = D.targets.map(t => `${(t.kind || 'point').toUpperCase()} — “${t.point}” (${t.section || '—'})\n   How well the paper supports it: ${t.support || '—'}${t.why ? ` — ${t.why}` : ''}\n${D.qs.filter(q => q.target === t.id).map((q, i) => dQText(q, i + 1)).join('\n')}`);
+  secs.push({h:'C. Most Challenging Defense Questions', p:ch.length ? ch : ['Not generated yet (step 3: Challenge my evaluation).']});
+  const gaps = [...(a ? a.gaps.map(g => `${g.concept}${g.where ? ` (${g.where})` : ''}${g.why ? ` — ${g.why}` : ''}`) : []), ...(a ? a.depth.map(x => `Needs deeper explanation: ${x}`) : []),
+    ...D.slides.flatMap(s => s.concepts.map(c => `${s.loc}: explain “${c}”`)), ...D.log.filter(e => e.fb && e.verdict !== 'ready').slice(0, 10).flatMap(e => e.fb.missing.slice(0, 2).map(x => `From your practice (“${clip(e.q, 70)}”): ${x}`))];
+  secs.push({h:'D. Knowledge Gaps', p:gaps.length ? gaps.map(g => `• ${g}`) : ['None identified yet.']});
+  const rows = D.qs.map(q => [q.section || q.slide || '—', q.q, q.type, `${D_PRIO[q.priority][0]} ${D_PRIO[q.priority][1]}`, `Paper: ${q.evidence.paper || '—'}; critique: ${q.evidence.critique || '—'}`, `${D_PREP[q.status || ''][0]} ${D_PREP[q.status || ''][1]}`]);
+  secs.push({h:'E. Adaptive Preparation Checklist', p:rows.length ? rows.map(r => `${r[5]} | ${r[0]} | ${r[1]} | ${r[2]} | ${r[3]} | ${r[4]}`) : ['No questions yet.'], table:rows});
+  secs.push({h:'F. Mock Professor Discussion', p:D.log.length ? D.log.slice(0, 40).map(e => `${vWhen(e.at)} — ${e.mode === 'claude' ? 'evaluated by Claude' : 'self-check'} — ${e.verdict.toUpperCase()}\n   Professor: ${e.q}\n   You: ${e.answer}${e.fb ? `\n   Feedback: ${[...e.fb.good.map(x => '+ ' + x), ...e.fb.missing.map(x => '– ' + x), ...e.fb.errors.map(x => '! ' + x)].join(' ')}` : ''}${e.self ? `\n   Self-check: ${['main point', 'evidence', 'follow-up'].filter((x, i) => e.self['abc'[i]]).join(', ') || 'none ticked'}` : ''}${e.follow ? `\n   Follow-up: ${e.follow.q}\n   You: ${e.follow.answer}\n   Feedback: ${e.follow.fb.verdict}` : ''}`)
+    : ['No practice yet. Open “Mock professor”: the professor asks one question at a time, and a question counts as prepared only after you have answered it.']});
+  return {secs, stale, rows};
+}
+function dReportText(set){
+  const r = dReport(set), D = dState(set);
+  return [`POTENTIAL PROFESSOR QUESTIONS & CRITICAL DISCUSSION PREPARATION${set.example ? ' (DEMO — not a real study)' : ''}`, set.name || '',
+    `Generated by ScholarPath on ${new Date().toLocaleString()} from the paper, critique and slides. Questions and suggested answers written by Claude must be checked against the original paper.`,
+    r.stale ? `NOTE: ${pl(r.stale, 'question was', 'questions were')} written for an earlier version of the documents — regenerate them.` : '', `Prepared: ${D.qs.filter(q => q.status === 'prepared').length} of ${D.qs.length} questions.`, '',
+    ...r.secs.flatMap(s => [s.h.toUpperCase(), ...s.p, ''])].join('\n');
+}
+function dReportDocx(set){
+  const r = dReport(set), P = [];
+  const H = t => wP(wR(t, {b:true, sz:28, serif:true, color:'1F3A6B'}), {before:320, after:120, keep:true, border:true});
+  const para = t => String(t).split('\n').map((l, i) => wP(wR(l, i === 0 && /^[A-Z0-9 “”"'’().,:;&—–-]{6,}$/.test(l) ? {b:true} : {}), {after:60}));
+  P.push(wP(wR('Potential Professor Questions & Critical Discussion Preparation', {b:true, sz:34, serif:true}), {align:'center', after:120}));
+  if (set.name) P.push(wP(wR(set.name, {sz:22}), {align:'center', after:60}));
+  P.push(wP(wR(`Generated by ScholarPath on ${new Date().toLocaleDateString()}. Questions and answers written by Claude must be checked against the original paper.`, {i:true, sz:18, color:'5B6476'}), {align:'center', after:240}));
+  if (set.example) P.push(wP(wR('Demo — not a real study', {i:true, color:'8A5A12'}), {align:'center'}));
+  r.secs.forEach(s => { P.push(H(s.h)); if (s.table && s.table.length) P.push(wTableN(['Critique section', 'Potential professor question', 'Question type', 'Priority', 'Evidence reference', 'Preparation status'], s.table, [1450, 3000, 1300, 1000, 1850, 1000])); else s.p.forEach(t => P.push(...para(t))); });
+  return docxPackage(`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><w:document xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"><w:body>${P.join('')}<w:sectPr><w:pgSz w:w="11906" w:h="16838"/><w:pgMar w:top="1134" w:right="1134" w:bottom="1134" w:left="1134" w:header="567" w:footer="567" w:gutter="0"/></w:sectPr></w:body></w:document>`);
+}
+
+/* --- the page --- */
+const D_VIEWS = [['prep', 'Prepare'], ['sections', 'By section'], ['challenge', 'Challenge my critique'], ['slides', 'Slides'], ['list', 'Q&A checklist'], ['mock', 'Mock professor'], ['report', 'Preparation report']];
+const dRunBtn = (stages, label, cls='', only='') => `<button class="btn sm ${cls}" data-act="d-run" data-stages="${stages}"${only ? ` data-only="${esc(only)}"` : ''} data-d-ai ${aiReady() ? '' : 'disabled title="Claude writes the questions on the published ScholarPath page"'}>${icon('sparkle')}${label}</button>`;
+const dGo = (view, label, cls='') => `<button class="btn sm ${cls}" data-act="d-view" data-view="${view}">${label}</button>`;
+const dList = (items, cls='') => items && items.length ? `<ul class="d-ul ${cls}">${items.map(x => `<li>${esc(x)}</li>`).join('')}</ul>` : '<span class="muted">—</span>';
+function dEvCheck(set, s){                                       // a page reference that the paper does not have
+  const m = /\bpp?\.?\s*(\d+)/i.exec(s || ''); if (!m) return '';
+  const U = vUnits(set, 'paper'); if (!U.some(u => /p\. \d+/.test(u.loc))) return '';
+  return U.some(u => u.loc === `p. ${m[1]}` || u.loc.includes(`(p. ${m[1]})`)) ? '' : ' <span class="v-warn small">page not found in the paper text — check it</span>';
+}
+function dQCard(set, q, n, open){
+  const ver = dCurVer(set), P = D_PRIO[q.priority], st = D_PREP[q.status || ''];
+  return `<details class="d-q pr-${q.priority}" ${open ? 'open' : ''}>
+    <summary><span class="d-prio" title="Priority: ${P[1]}">${P[0]}</span><span class="d-qt">${n ? `<span class="d-n">${n}.</span> ` : ''}${esc(q.q)}</span>
+      <span class="d-qmeta"><span class="chip">${esc(q.type)}</span>${q.slide ? `<span class="chip">${esc(q.slide)}</span>` : ''}${q.by === 'me' ? '<span class="chip tag">yours</span>' : ''}<span class="d-prep st-${q.status || 'none'}">${st[0]} ${st[1]}</span></span></summary>
+    <div class="d-qbody">
+      ${q.ver !== ver ? `<p class="small v-stale-msg">${icon('refresh')}Written for an earlier version of your documents — regenerate it.</p>` : ''}
+      <dl class="v-dl">
+        ${q.means ? `<dt>What the professor means</dt><dd>${esc(q.means)}</dd>` : ''}
+        ${q.answer ? `<dt>Detailed suggested answer</dt><dd>${esc(q.answer)}</dd>` : ''}
+        ${q.oral ? `<dt>Short oral answer <button class="btn sm ghost d-listen" data-act="d-listen" data-id="${q.id}" data-what="oral" aria-label="Listen to the short answer">${icon('volume')}Listen</button></dt><dd class="d-oral">${esc(q.oral)}</dd>` : ''}
+        <dt>Supporting evidence</dt><dd><b>Paper:</b> ${esc(q.evidence.paper) || '—'}${dEvCheck(set, q.evidence.paper)}<br><b>Critique:</b> ${esc(q.evidence.critique) || '—'}</dd>
+        ${q.follow ? `<dt>Possible follow-up question</dt><dd>${esc(q.follow)}</dd>` : ''}
+        ${q.followAnswer ? `<dt>Suggested follow-up answer</dt><dd>${esc(q.followAnswer)}</dd>` : ''}
+        <dt>Priority</dt><dd>${P[0]} ${P[1]} · <span class="muted">${esc(dPrepLabel(q))}</span></dd>
+      </dl>
+      <p class="small muted d-by">${q.by === 'me' ? 'Your own question.' : 'Written by Claude from your documents — check the answer against the paper before you rely on it.'}</p>
+      <div class="row"><button class="btn sm primary" data-act="d-practise" data-id="${q.id}">${icon('chat')}Practise this</button><button class="btn sm" data-act="d-listen" data-id="${q.id}" data-what="q">${icon('volume')}Hear the question</button><button class="btn sm ghost" data-act="d-copy-q" data-id="${q.id}">${icon('copy')}Copy</button>${q.by === 'me' ? `<button class="btn sm ghost" data-act="d-add" data-id="${q.id}">${icon('pen')}Edit</button><button class="btn sm ghost danger" data-act="d-del" data-id="${q.id}">${icon('trash')}Delete</button>` : ''}</div>
+    </div></details>`;
+}
+function dScoreHTML(set){
+  const D = dState(set), ver = dCurVer(set), qs = D.qs, a = D.analysis, hi = qs.filter(q => q.priority === 'high'), prep = qs.filter(q => q.status === 'prepared'), stale = qs.filter(q => q.ver !== ver).length;
+  const box = (n, l, cls='') => `<div class="v-stat ${cls}"><b>${n}</b><span>${l}</span></div>`;
+  const changed = a && a.ver !== ver;
+  const msg = !a ? 'Start with step 1: Claude reads your three documents and works out which kinds of questions fit this study.'
+    : changed ? 'Your documents have changed since they were analysed. Re-analyse and regenerate the questions so they match the new content (rules 1 and 2).'
+    : !qs.length ? 'The analysis is done. Next, generate the questions.'
+    : `${prep.length} of ${qs.length} questions prepared (${hi.filter(q => q.status === 'prepared').length} of ${hi.length} high-priority). A question counts as prepared only after you have answered it in the mock professor.`;
+  return `<div class="card v-score ${!changed && qs.length && prep.length === qs.length ? 'ok' : ''}">
+    <div class="v-stats">${box(qs.length, 'questions')}${box(hi.length, 'high priority', hi.length ? 'bad' : '')}${box(`${prep.length}/${qs.length}`, 'prepared', prep.length ? 'ok' : '')}${box(qs.filter(q => q.status === 'practising').length, 'practising', 'warn')}${box(D.log.length, 'answers practised')}${box(stale, 'need regenerating', stale ? 'warn' : '')}</div>
+    <p class="v-verdict small">${icon(changed ? 'refresh' : 'clock')}<span>${esc(msg)}</span></p>
+    ${changed ? `<div class="row" style="margin-top:8px">${dRunBtn('analyse,sections,challenge,slides', 'Re-analyse and regenerate everything', 'primary')}</div>` : ''}</div>`;
+}
+const D_PREVIEW = `<section class="card d-preview"><h3>What each question will look like</h3><p class="small muted">A preview of the format only — the real questions are written from your own paper, critique and slides.</p>
+  <dl class="v-dl"><dt>Professor’s question</dt><dd>[A realistic, academically challenging question about your critique]</dd><dt>What the professor means</dt><dd>[What the question is testing, in simple words]</dd>
+  <dt>Detailed suggested answer</dt><dd>[An accurate, evidence-based explanation]</dd><dt>Short oral answer</dt><dd>[Two or three sentences you can say confidently]</dd>
+  <dt>Supporting evidence</dt><dd>[Page, section, table or figure in the paper · section of your critique]</dd><dt>Possible follow-up question</dt><dd>[A deeper question that challenges your first answer]</dd>
+  <dt>Suggested follow-up answer</dt><dd>[A concise, defensible reply]</dd><dt>Priority</dt><dd>🔴 High · 🟡 Medium · 🟢 Additional Practice</dd></dl></section>`;
+RENDER.defend = () => {
+  const V = S.verify;
+  if (!V.sets.length) V.sets.push(Object.assign(newVerifySet(), {name:'My verification'}));
+  const set = vSet(); V.active = set.id;
+  const VV = vVers(set), D = dState(set), view = D_VIEWS.some(v => v[0] === V.dview) ? V.dview : 'prep';
+  if (!set.auto || set.auto.ver !== vVerKey(set)) vAuto(set);
+  const ver = dCurVer(set), counts = {sections:D.qs.filter(q => q.kind === 'section' || q.kind === 'mine').length || '', challenge:D.qs.filter(q => q.kind === 'challenge').length || '', slides:D.qs.filter(q => q.kind === 'slide').length || '', list:D.qs.length ? `${D.qs.filter(q => q.status === 'prepared').length}/${D.qs.length}` : '', mock:D.mock && D.mock.phase !== 'done' ? '●' : ''};
+  $('#panel-defend').innerHTML = vHead(set, VV, 1, 'Potential Professor Questions &amp; Critical Discussion Preparation',
+    `<p>Get ready for the questions your professor may ask about <b>your</b> critique and slides. Claude reads the paper, your critique and your presentation and writes the questions from their actual content — there is no fixed question bank. When a document changes, the questions are marked for regenerating. A question counts as prepared only after you have answered it.</p>`) +
+    dScoreHTML(set) +
+    `<div class="v-views" role="tablist" aria-label="Preparation views">${D_VIEWS.map(([k, l]) => `<button role="tab" class="v-view ${k === view ? 'on' : ''}" aria-selected="${k === view}" data-act="d-view" data-view="${k}">${l}${counts[k] ? ` <span class="v-count">${counts[k]}</span>` : ''}</button>`).join('')}</div>
+    <div id="dRun"></div><div class="v-body">${D_VIEW[view](set, ver)}</div>`;
+  dRenderRun();
+};
+const D_VIEW = {
+  prep:(set, ver) => {
+    const D = dState(set), a = D.analysis, secs = dSecs(set), locs = dSlideLocs(set), cur = k => dStageCur(set, k, ver);
+    const secDone = secs.filter(s => D.qs.some(q => q.kind === 'section' && q.section === s.heading && q.ver === ver)).length, slideDone = locs.filter(l => D.slides.some(s => s.loc === l && s.ver === ver)).length;
+    const st = (done, some) => done ? 'done' : some ? 'doing' : 'todo', lbl = {done:'Done', doing:'In progress', todo:'Not started'};
+    const prep = D.qs.filter(q => q.status === 'prepared').length;
+    const steps = [
+      {s:st(cur('analyse'), !!a), k:'analyse', t:'Analyse the paper, your critique and your slides', d:a ? `${a.ver === ver ? 'Done on these versions' : 'Done on an earlier version — run it again'}: ${pl(secs.length, 'critique section')}, ${pl(a.types.length, 'question type')} chosen for this study.` : 'Claude reads the three documents first: topic, methods, findings, your headings and arguments, and which kinds of questions fit.'},
+      {s:st(cur('sections'), secDone), k:'sections', t:'Write questions for each section of your critique', d:`${secDone} of ${secs.length} sections have questions for these versions (5–8 each, by importance and complexity).`},
+      {s:st(cur('challenge'), D.targets.length), k:'challenge', t:'Challenge your strengths, weaknesses and recommendations', d:D.targets.length ? `${pl(D.targets.length, 'point')} of your evaluation challenged, ${pl(D.qs.filter(q => q.kind === 'challenge').length, 'question')}.` : 'Questions that test the evidence, reasoning and fairness of your own evaluation.'},
+      {s:st(cur('slides'), slideDone), k:'slides', t:'Write questions for each slide', d:set.docs.pres ? `${slideDone} of ${locs.length} slides have questions for these versions (2–3 each).` : 'Add your presentation above (PowerPoint, PDF or the Presentation Builder outline).'},
+      {s:st(D.qs.length && prep === D.qs.length, D.log.length), view:'mock', t:'Practise with the mock professor', d:`${prep} of ${D.qs.length} questions prepared · ${pl(D.log.length, 'answer')} practised.`},
+      {s:st(D.qs.length && prep === D.qs.length, D.qs.length), view:'report', t:'Read the final preparation report', d:'A section-by-section questions · B top priority questions · C most challenging · D knowledge gaps · E checklist · F mock discussion.'}
+    ];
+    const stageRow = s => `<tr><td><b>${esc(s.short)}</b><div class="small muted">${D.stages[s.k] ? `${D.stages[s.k].ver === ver ? 'Made for these versions' : 'Made for an earlier version'} · ${vWhen(D.stages[s.k].at)}` : 'Not run yet'}</div></td><td class="v-stage-act">${dRunBtn(s.k, 'Run')}<button class="btn sm ghost" data-act="d-copy-prompt" data-stage="${s.k}">${icon('copy')}Copy prompt</button><button class="btn sm ghost" data-act="d-paste-reply" data-stage="${s.k}">Paste reply</button></td></tr>`;
+    const proc = D_PROCESS.map(g => `<h4>${esc(g.t)}</h4><ul class="d-proc">${g.items.map(([t, k, doc]) => { const ok = cur(k) && (!doc || set.docs[doc]); return `<li class="${ok ? 'ok' : ''}">${ok ? icon('check') : '<span class="d-dot"></span>'}<span>${esc(t)}${doc === 'pres' && !set.docs.pres ? ' <span class="small muted">(needs the presentation)</span>' : ''}</span></li>`; }).join('')}</ul>`).join('');
+    return `<section class="card"><div class="output-head"><div><h3 style="margin:0">Prepare in six steps</h3><p class="small muted" style="margin:4px 0 0">${aiReady() ? 'Claude does steps 1–4 in small parts (a few minutes in all); what is finished is saved straight away.' : 'Claude writes the questions on the published ScholarPath page. Here you can copy each step’s prompt into a Claude chat and paste the reply back, or add your own questions.'}</p></div>${dRunBtn('analyse,sections,challenge,slides', 'Generate everything', 'primary')}</div>
+      <ol class="v-steps">${steps.map((s, i) => `<li class="v-step ${s.s}"><span class="v-step-no">${s.s === 'done' ? icon('check') : i + 1}</span><div><div class="v-step-top"><b>${esc(s.t)}</b><span class="pill v-pill-${s.s}">${lbl[s.s]}</span></div><p class="small muted">${esc(s.d)}</p><div class="row">${s.k ? dRunBtn(s.k, s.k === 'analyse' ? 'Analyse' : 'Write the questions') : dGo(s.view, s.view === 'mock' ? 'Open the mock professor' : 'Open the report')}</div></div></li>`).join('')}</ol>
+      <div class="v-table-wrap" style="margin-top:12px"><table class="v-tbl v-stages"><tbody>${D_STAGES.map(stageRow).join('')}</tbody></table></div>
+      <p class="small muted" style="margin:8px 0 0"><button class="btn sm ghost" data-act="d-add">${icon('plus')}Add your own question</button></p></section>
+    ${a ? dAnalysisCard(set, a, ver) : D_PREVIEW}
+    <section class="card"><details><summary><b>Your checklist</b> <span class="small muted">— ticked only when the work was done on the current versions</span></summary><div class="d-procs">${proc}</div></details></section>
+    <section class="card"><h3>Continuous adaptation rules</h3><ol class="v-rules">${D_RULES.map(r => `<li>${esc(r)}</li>`).join('')}</ol><p class="small muted" style="margin:8px 0 0">Every prompt sent to Claude includes these rules, the three documents and the instruction not to agree automatically with your critique.</p></section>`;
+  },
+  sections:(set, ver) => {
+    const D = dState(set), G = dGroups(set), info = h => dSecs(set).find(s => s.heading === h);
+    if (!G.sections.length) return `<div class="empty">No section questions yet. ${dRunBtn('sections', 'Write the questions with Claude')} <button class="btn sm" data-act="d-add">${icon('plus')}Add your own</button></div>${D_PREVIEW}`;
+    return G.sections.map(([h, list], i) => { const s = info(h);
+      return `<section class="card d-sec"><div class="output-head"><div><h3 style="margin:0">${esc(h)}</h3>${s && s.purpose ? `<p class="small muted" style="margin:4px 0 0">${esc(s.purpose)}</p>` : ''}</div><span class="row">${s ? dRunBtn('sections', 'Regenerate', '', h) : ''}<button class="btn sm ghost" data-act="d-add" data-sec="${esc(h)}">${icon('plus')}Add</button>${list.length ? copyBtn(`#dSecT${i}`, 'Copy') : ''}</span></div>
+        ${s ? `<div class="d-secinfo"><div><b class="small">Your main arguments</b>${dList(s.arguments)}</div><div><b class="small">A professor may challenge</b>${dList(s.vulnerable, 'warn')}</div>${s.slides.length ? `<div><b class="small">Slides</b><div class="chips-row">${s.slides.map(x => `<span class="chip">${esc(x)}</span>`).join('')}</div></div>` : ''}</div>` : ''}
+        ${list.map((q, n) => dQCard(set, q, n + 1)).join('') || '<p class="small muted">No questions for this section yet.</p>'}
+        <pre hidden id="dSecT${i}">${esc(`${h}\n\n${list.map((q, n) => dQText(q, n + 1)).join('\n\n')}`)}</pre></section>`; }).join('');
+  },
+  challenge:(set) => {
+    const D = dState(set);
+    if (!D.targets.length) return `<div class="empty">Claude has not challenged your evaluation yet. ${dRunBtn('challenge', 'Challenge my critique')}</div>`;
+    const sup = s => /well/.test(s) ? 'ok' : /weak/.test(s) ? 'bad' : 'warn';
+    return `<section class="card"><div class="output-head"><div><h3 style="margin:0">Critically challenging your evaluation</h3><p class="small muted" style="margin:4px 0 0">Each strength, weakness, criticism and recommendation in your critique, how well the paper supports it, and the questions that test it. Claude does not simply agree with your critique — check its judgement against the paper.</p></div><span class="row">${dRunBtn('challenge', 'Regenerate')}${copyBtn('#dChT', 'Copy all')}</span></div></section>
+      ${D.targets.map(t => `<section class="card d-target"><div class="d-thead"><span class="pill">${esc(t.kind || 'point')}</span><span class="pill d-sup-${sup(t.support)}">${esc(t.support || 'not judged')}</span><span class="small muted">${esc(t.section)}</span></div>
+        <blockquote class="d-point">“${esc(t.point)}”</blockquote>${t.why ? `<p class="small"><b>Why:</b> ${esc(t.why)}</p>` : ''}
+        ${D.qs.filter(q => q.target === t.id).map(q => dQCard(set, q)).join('')}</section>`).join('')}
+      <pre hidden id="dChT">${esc(dReport(set).secs[2].p.join('\n\n'))}</pre>`;
+  },
+  slides:(set) => {
+    const D = dState(set), A = set.auto || {strong:[], numbers:[]}, flags = [...A.strong.filter(s => s.doc === 'pres').map(s => `${s.loc}: “${s.word}” — …${s.ctx}…`), ...A.numbers.filter(n => n.doc === 'pres' && !n.inPaper.length).map(n => `${n.loc}: the number ${n.shown} is not in the paper — …${n.ctx}…`)];
+    if (!set.docs.pres) return '<div class="empty">Add your presentation above to get questions for each slide.</div>';
+    const list = dSlideLocs(set).map(l => [l, D.slides.find(s => s.loc === l), D.qs.filter(q => q.kind === 'slide' && q.slide === l)]);
+    return `${flags.length ? `<section class="card"><h3>Claims a professor may pick up (found without AI)</h3><p class="small muted">Strong wording and numbers on your slides that are worth checking before you present.</p>${dList(flags, 'warn')}</section>` : ''}
+      <section class="card"><div class="output-head"><div><h3 style="margin:0">Questions for each slide</h3><p class="small muted" style="margin:4px 0 0">${pl(list.length, 'slide')} · 2–3 questions each, from what the slide actually says.</p></div><span class="row">${dRunBtn('slides', D.slides.length ? 'Regenerate' : 'Write the slide questions')}${D.slides.length ? copyBtn('#dSlT', 'Copy all') : ''}</span></div></section>
+      ${list.map(([l, s, qs]) => `<section class="card d-slide"><div class="d-thead"><span class="pill">${esc(l)}</span>${s && s.section ? `<span class="small muted">Critique: ${esc(s.section)}</span>` : ''}${s && s.ver !== dCurVer(set) ? '<span class="small v-stale-msg">made for an earlier version</span>' : ''}</div>
+        ${s ? `<p><b>Main argument:</b> ${esc(s.argument) || '—'}</p><div class="d-secinfo"><div><b class="small">Claims the professor may challenge</b>${dList(s.challenge, 'warn')}</div><div><b class="small">Concepts to explain clearly</b>${dList(s.concepts)}</div></div>` : '<p class="small muted">No questions for this slide yet.</p>'}
+        ${qs.map(q => dQCard(set, q)).join('')}</section>`).join('')}
+      <pre hidden id="dSlT">${esc(dReport(set).secs[0].p.filter(t => /^SLIDE/.test(t)).join('\n\n'))}</pre>`;
+  },
+  list:(set) => {
+    const D = dState(set), F = S.verify.dfilter ||= {}, secs = [...new Set(D.qs.map(q => q.section || q.slide).filter(Boolean))];
+    const rows = D.qs.filter(q => (!F.prio || q.priority === F.prio) && (!F.type || q.type === F.type) && (!F.status || (q.status || 'none') === F.status) && (!F.sec || (q.section || q.slide) === F.sec));
+    const sel = (k, label, opts) => `<label class="small">${label} <select class="status-select" data-dfilter="${k}"><option value="">All</option>${opts.map(([v, l]) => `<option value="${esc(v)}" ${F[k] === v ? 'selected' : ''}>${esc(l)}</option>`).join('')}</select></label>`;
+    const txt = ['Critique section\tPotential professor question\tQuestion type\tPriority\tEvidence reference\tPreparation status', ...rows.map(q => [q.section || q.slide || '—', q.q, q.type, `${D_PRIO[q.priority][0]} ${D_PRIO[q.priority][1]}`, `Paper: ${q.evidence.paper || '—'}; critique: ${q.evidence.critique || '—'}`, `${D_PREP[q.status || ''][0]} ${D_PREP[q.status || ''][1]}`].join('\t'))].join('\n');
+    return `<section class="card"><div class="output-head"><div><h3 style="margin:0">Adaptive Professor Q&amp;A Checklist</h3><p class="small muted" style="margin:4px 0 0">Built from your documents. ☐ not practised · ◐ practising · ☑ prepared — a question is ticked only after you have answered it well in the mock professor.</p></div><span class="row">${rows.length ? `<button class="btn sm primary" data-act="d-practise-list">${icon('chat')}Practise these ${rows.length}</button>` : ''}${copyBtn('#dListT', 'Copy table')}</span></div>
+      <div class="row d-filters">${sel('prio', 'Priority', Object.entries(D_PRIO).map(([k, v]) => [k, `${v[0]} ${v[1]}`]))}${sel('type', 'Type', [...new Set(D.qs.map(q => q.type))].map(t => [t, t]))}${sel('status', 'Status', [['none', '☐ Not practised'], ['practising', '◐ Practising'], ['prepared', '☑ Prepared']])}${sel('sec', 'Section / slide', secs.map(s => [s, clip(s, 50)]))}</div>
+      ${rows.length ? `<div class="v-table-wrap"><table class="v-matrix d-table"><thead><tr><th>Critique section</th><th>Potential professor question</th><th>Question type</th><th>Priority</th><th>Evidence reference</th><th>Preparation status</th></tr></thead><tbody>
+        ${rows.map(q => `<tr class="st-${q.status === 'prepared' ? 'verified' : q.status === 'practising' ? 'partial' : 'none'}"><th scope="row">${esc(q.section || q.slide || '—')}</th><td data-l="Question">${esc(q.q)}</td><td data-l="Type">${esc(q.type)}</td><td data-l="Priority">${D_PRIO[q.priority][0]} ${D_PRIO[q.priority][1]}</td><td data-l="Evidence" class="small">Paper: ${esc(q.evidence.paper) || '—'}<br>Critique: ${esc(q.evidence.critique) || '—'}</td><td data-l="Status"><span class="d-prep st-${q.status || 'none'}">${D_PREP[q.status || ''][0]} ${D_PREP[q.status || ''][1]}</span><button class="btn sm ghost" data-act="d-practise" data-id="${q.id}">Practise</button></td></tr>`).join('')}
+      </tbody></table></div>` : `<p class="small muted">${D.qs.length ? 'No questions match these filters.' : 'No questions yet — generate them in Prepare.'}</p>`}
+      <pre hidden id="dListT">${esc(txt)}</pre></section>`;
+  },
+  mock:(set) => {
+    const D = dState(set), m = D.mock, q = m && m.phase !== 'done' ? dMockQ(set) : null, P = S.verify.dmock ||= {pool:'top', n:'10', mode:'claude'};
+    const hist = D.log.length ? `<section class="card"><h3>Your practice so far</h3><ul class="d-log">${D.log.slice(0, 25).map(e => `<li><span class="pill d-v-${e.verdict.replace(' ', '')}">${esc(e.verdict)}</span> <span>${esc(clip(e.q, 120))}</span><span class="small muted"> · ${vWhen(e.at)} · ${e.mode === 'claude' ? 'Claude' : 'self-check'}</span></li>`).join('')}</ul></section>` : '';
+    if (!q){
+      const secs = dGroups(set).sections.map(([h]) => h);
+      const summary = m && m.phase === 'done' ? `<section class="card"><h3>Practice finished</h3><ul class="d-log">${m.done.map(d => `<li><span class="pill d-v-${String(d.verdict).replace(' ', '')}">${esc(d.verdict)}</span> ${esc(clip(d.q || '', 120))}</li>`).join('')}</ul></section>` : '';
+      return `${summary}<section class="card d-mock-setup"><h3>Mock professor</h3><p class="small muted">An oral examination: the professor asks one question at a time, you answer as you would speak (type it, or use <b>Speak</b> where your browser allows), and you get feedback. A question is marked <b>prepared</b> only when your answer is judged ready.</p>
+        ${D.qs.length ? `<div class="fields-2"><div class="field"><label class="f" for="dMockPool">Which questions?</label><select id="dMockPool" data-dmockpref="pool">${[['top', 'Top priority (up to 20)'], ['notyet', 'Not prepared yet'], ['challenge', 'Most challenging — my evaluation'], ['slides', 'Slide questions'], ['all', 'All questions'], ...secs.map(h => ['sec:' + h, 'Section: ' + clip(h, 60)])].map(([v, l]) => `<option value="${esc(v)}" ${P.pool === v ? 'selected' : ''}>${esc(l)}</option>`).join('')}</select></div>
+          <div class="field"><label class="f" for="dMockN">How many?</label><select id="dMockN" data-dmockpref="n">${['5', '10', '15', 'all'].map(v => `<option ${P.n === v ? 'selected' : ''} value="${v}">${v === 'all' ? 'All of them' : v}</option>`).join('')}</select></div></div>
+          <fieldset class="d-mode"><legend class="f">Feedback</legend><label class="check"><input type="radio" name="dMockMode" value="claude" data-dmockpref="mode" ${P.mode !== 'self' && aiReady() ? 'checked' : ''} ${aiReady() ? '' : 'disabled'}><span>Claude evaluates my answers${aiReady() ? '' : ' (on the published page)'}</span></label><label class="check"><input type="radio" name="dMockMode" value="self" data-dmockpref="mode" ${P.mode === 'self' || !aiReady() ? 'checked' : ''}><span>I check myself against the suggested answer</span></label></fieldset>
+          <button class="btn primary" data-act="d-mock-start">${icon('play')}Start the practice</button>` : `<p>Generate the questions first (Prepare), or add your own.</p>`}</section>${hist}`;
+    }
+    const fb = m.fb, ffb = m.ffb, fbHTML = (f, title) => `<div class="d-fb d-v-${f.verdict.replace(' ', '')}"><div class="d-fb-head"><b>${title}</b><span class="pill d-v-${f.verdict.replace(' ', '')}">${esc(f.verdict)} · ${f.score}/5</span><span class="chip">by Claude — check it</span></div>
+      ${f.good.length ? `<p class="small"><b>What was good</b></p>${dList(f.good)}` : ''}${f.missing.length ? `<p class="small"><b>What was missing</b></p>${dList(f.missing, 'warn')}` : ''}${f.errors.length ? `<p class="small"><b>Does not match the paper</b></p>${dList(f.errors, 'bad')}` : ''}
+      ${f.better ? `<p class="small"><b>A stronger version of your answer</b></p><p class="d-oral">${esc(f.better)}</p>` : ''}${f.evidence ? `<p class="small"><b>Evidence to mention:</b> ${esc(f.evidence)}</p>` : ''}${f.tip ? `<p class="small muted"><b>Tip:</b> ${esc(f.tip)}</p>` : ''}</div>`;
+    const answerBox = (field, label) => `<label class="f" for="dAns-${field}">${label}</label><textarea id="dAns-${field}" data-dmock="${field}" rows="5" placeholder="Answer as you would say it to your professor…">${esc(m[field])}</textarea>
+      <div class="row" style="margin-top:8px"><button class="btn sm" data-act="d-mic" data-target="#dAns-${field}">${icon('mic')}Speak</button><button class="btn primary" data-act="d-mock-submit" ${field === 'followAnswer' ? 'data-follow="1"' : ''} data-d-busy>${icon('send')}${m.mode === 'claude' ? 'Submit my answer' : 'Show the suggested answer'}</button></div>`;
+    let body = '';
+    if (m.phase === 'ask') body = answerBox('answer', 'Your answer') + `<details class="small" style="margin-top:10px"><summary>Need a hint?</summary><p>${esc(q.means || 'Think about what the paper actually reports, and where.')}</p></details>`;
+    else if (m.mode === 'self') body = `<div class="d-fb"><p class="small"><b>Your answer</b></p><p class="d-yours">${esc(m.answer)}</p>
+        <p class="small"><b>Suggested short answer</b> <button class="btn sm ghost" data-act="d-listen" data-id="${q.id}" data-what="oral">${icon('volume')}Listen</button></p><p class="d-oral">${esc(q.oral || q.answer || '—')}</p>
+        ${q.answer ? `<details class="small"><summary>Detailed suggested answer</summary><p>${esc(q.answer)}</p></details>` : ''}<p class="small"><b>Evidence:</b> paper — ${esc(q.evidence.paper) || '—'}; critique — ${esc(q.evidence.critique) || '—'}</p>
+        ${q.follow ? `<p class="small"><b>Follow-up the professor may ask:</b> ${esc(q.follow)}</p>${q.followAnswer ? `<p class="small muted">${esc(q.followAnswer)}</p>` : ''}` : ''}
+        <fieldset class="d-self"><legend class="small"><b>Check yourself honestly</b> — tick only what is true</legend>${[['a', 'My answer made the same main point'], ['b', 'I referred to evidence (a page, section, table or figure)'], ['c', 'I could also answer the follow-up question']].map(([k, t]) => `<label class="check"><input type="checkbox" data-dself="${k}" ${m.self[k] ? 'checked' : ''}><span>${t}</span></label>`).join('')}</fieldset>
+        <div class="row"><button class="btn primary" data-act="d-mock-self">${icon('check')}Save and continue</button></div></div>`;
+    else {
+      body = `<div class="d-fb-yours"><p class="small"><b>Your answer</b></p><p class="d-yours">${esc(m.answer)}</p></div>${fbHTML(fb, 'Feedback')}`;
+      if (m.phase === 'fb' && m.followQ) body += `<div class="d-prof d-prof-follow"><span class="d-prof-av">${icon('cap')}</span><div><b class="small">Follow-up</b><p class="d-prof-q">${esc(m.followQ)}</p><button class="btn sm ghost" data-act="d-listen" data-what="mfollow">${icon('volume')}Hear it</button></div></div>${answerBox('followAnswer', 'Your answer to the follow-up')}`;
+      if (m.phase === 'ffb') body += `<div class="d-fb-yours"><p class="small"><b>Follow-up:</b> ${esc(m.followQ)}</p><p class="d-yours">${esc(m.followAnswer)}</p></div>${fbHTML(ffb, 'Feedback on your follow-up answer')}`;
+      body += `<div class="row" style="margin-top:12px"><button class="btn primary" data-act="d-mock-next">${m.i + 1 >= m.ids.length ? 'Finish' : 'Next question'} ${icon('fwd')}</button></div>`;
+    }
+    return `<section class="card d-mock"><div class="d-mock-top"><span class="small muted">Question ${m.i + 1} of ${m.ids.length} · ${m.mode === 'claude' ? 'Claude evaluates' : 'self-check'}</span><span class="row"><button class="btn sm ghost" data-act="d-mock-skip">Skip</button><button class="btn sm ghost" data-act="d-mock-end">End practice</button></span></div>
+      <div class="d-prof"><span class="d-prof-av">${icon('cap')}</span><div><b class="small">Professor</b> <span class="chip">${esc(q.type)}</span> <span class="small muted">${D_PRIO[q.priority][0]} ${esc(q.section || q.slide || '')}</span><p class="d-prof-q">${esc(q.q)}</p><button class="btn sm ghost" data-act="d-listen" data-id="${q.id}" data-what="q">${icon('volume')}Hear the question</button></div></div>
+      ${body}</section>${hist}`;
+  },
+  report:(set) => {
+    const r = dReport(set), D = dState(set);
+    return `<section class="card v-report"><div class="output-head"><div><h3 style="margin:0">Final Preparation Report</h3><p class="small muted" style="margin:4px 0 0">Built from your documents and your practice${set.example ? ' (demo)' : ''}. Questions and answers written by Claude must be checked against the paper.</p></div>
+      <span class="row"><button class="btn sm" data-act="d-rep-copy">${icon('copy')}Copy</button><button class="btn sm primary" data-act="d-rep-docx">${icon('download')}Word (.docx)</button></span></div>
+      ${r.stale ? `<div class="v-verdict-box">${icon('refresh')}<span>${pl(r.stale, 'question was', 'questions were')} written for an earlier version of your documents — regenerate them in Prepare.</span></div>` : ''}
+      <p class="small">${D.qs.filter(q => q.status === 'prepared').length} of ${D.qs.length} questions prepared · ${pl(D.log.length, 'answer')} practised.</p>
+      ${r.secs.map(s => `<section class="v-rsec"><h4>${s.h}</h4>${s.p.map(t => `<p class="v-pre">${esc(t)}</p>`).join('')}</section>`).join('')}</section>`;
+  }
+};
+function dAnalysisCard(set, a, ver){
+  const row = (l, v) => `<dt>${l}</dt><dd>${Array.isArray(v) ? dList(v) : esc(v) || '—'}</dd>`;
+  const txt = [`Topic: ${a.topic}`, `Discipline: ${a.discipline}`, `Research approach: ${a.approach}`, `Objectives: ${a.objectives.join('; ')}`, `Methods and techniques: ${a.methods.join('; ')}`, `Key concepts: ${a.concepts.join('; ')}`, `Key findings: ${a.findings.join('; ')}`, `Limitations: ${a.limitations.join('; ')}`, `Contributions: ${a.contributions.join('; ')}`,
+    `Question types used: ${a.types.map(t => `${t.type} (${t.why})`).join('; ')}`, `Not used: ${a.excluded.map(t => `${t.type} (${t.why})`).join('; ')}`, `Needs deeper explanation: ${a.depth.join('; ')}`].join('\n');
+  return `<section class="card"><div class="output-head"><div><h3 style="margin:0">What Claude found in your documents</h3><p class="small muted" style="margin:4px 0 0">by Claude — check it against the paper${a.ver !== ver ? ' · <span class="v-warn">made for an earlier version of your documents</span>' : ''}</p></div>${copyBtn('#dAnaT', 'Copy')}</div>
+    <dl class="v-dl d-ana">${row('Topic', a.topic)}${row('Discipline', a.discipline)}${row('Research approach', a.approach)}${row('Objectives', a.objectives)}${row('Methods and techniques actually used', a.methods)}${row('Key concepts', a.concepts)}${row('Most important findings', a.findings)}${row('Limitations', a.limitations)}${row('Contributions', a.contributions)}${row('Needs deeper explanation or justification', a.depth)}</dl>
+    <h4>Question types for this study</h4><ul class="d-types">${a.types.map(t => `<li><span class="chip tag">${esc(t.type)}</span> <span class="small">${esc(t.why)}</span></li>`).join('') || '<li class="muted">—</li>'}</ul>
+    ${a.excluded.length ? `<h4>Not used for this study</h4><ul class="d-types">${a.excluded.map(t => `<li><span class="chip">${esc(t.type)}</span> <span class="small muted">${esc(t.why)}</span></li>`).join('')}</ul>` : ''}
+    ${a.sections.length ? `<h4>Your critique’s sections</h4><div class="v-table-wrap"><table class="v-tbl"><thead><tr><th>Heading</th><th>Importance</th><th>Complexity</th><th>Questions</th></tr></thead><tbody>${a.sections.map(s => `<tr><td>${esc(s.heading)}</td><td>${esc(s.importance)}</td><td>${esc(s.complexity)}</td><td>${s.count}</td></tr>`).join('')}</tbody></table></div>` : ''}
+    <pre hidden id="dAnaT">${esc(txt)}</pre></section>`;
+}
+
+/* --- events --- */
+function dQDialog(set, id, sec){
+  const D = dState(set), q = id ? D.qs.find(x => x.id === id) : null, heads = [...new Set([...dSecs(set).map(s => s.heading), ...D.qs.map(x => x.section).filter(Boolean)])], cur = q ? q.section : sec || heads[0] || '';
+  const f = (k, l, v, ph, ta) => `<div class="field"><label class="f" for="dq-${k}">${l}</label>${ta ? `<textarea id="dq-${k}" name="${k}" style="min-height:70px" placeholder="${ph}">${esc(v)}</textarea>` : `<input class="input" id="dq-${k}" name="${k}" value="${esc(v)}" placeholder="${ph}">`}</div>`;
+  openDialog(q ? 'Edit your question' : 'Add your own question', `
+    <div class="field"><label class="f" for="dq-sec">Critique section</label><input class="input" id="dq-sec" name="section" list="dqSecs" value="${esc(cur)}" placeholder="The heading in your critique"><datalist id="dqSecs">${heads.map(h => `<option value="${esc(h)}">`).join('')}</datalist></div>
+    <div class="field"><label class="f" for="dq-q">Professor’s question *</label><textarea id="dq-q" name="q" required style="min-height:70px">${esc(q ? q.q : '')}</textarea></div>
+    <div class="fields-2"><div class="field"><label class="f" for="dq-type">Question type</label><select id="dq-type" name="type">${D_TYPES.map(([t]) => `<option ${q && q.type === t ? 'selected' : ''}>${t}</option>`).join('')}</select></div>
+      <div class="field"><label class="f" for="dq-prio">Priority</label><select id="dq-prio" name="priority">${Object.entries(D_PRIO).map(([k, v]) => `<option value="${k}" ${(q ? q.priority : 'high') === k ? 'selected' : ''}>${v[0]} ${v[1]}</option>`).join('')}</select></div></div>
+    ${f('oral', 'My short answer', q ? q.oral : '', 'Two or three sentences', true)}${f('paper', 'Evidence in the paper', q ? q.evidence.paper : '', 'e.g. p. 6, Table 2')}${f('critique', 'Section of my critique', q ? q.evidence.critique : '', 'e.g. Section 4')}${f('follow', 'Possible follow-up question', q ? q.follow : '', '', true)}`, d => {
+      if (!d.q.trim()) return false;
+      const rec = {q:d.q.trim(), section:d.section.trim(), type:d.type, priority:d.priority, oral:d.oral.trim(), evidence:{paper:d.paper.trim(), critique:d.critique.trim()}, follow:d.follow.trim()};
+      if (q) Object.assign(q, rec, {ver:dCurVer(set)}); else D.qs.push({id:uid(), ver:dCurVer(set), by:'me', at:Date.now(), status:'', kind:'mine', means:'', answer:'', slide:'', followAnswer:'', ...rec});
+      save(); RENDER.defend(); toast(q ? 'Question updated' : 'Question added');
+    }, q ? 'Save' : 'Add');
+}
+const D_ACTIONS = {
+  'd-view': el => { S.verify.dview = el.dataset.view; save(); RENDER.defend(); $('#panel-defend .v-views')?.scrollIntoView({block:'nearest'}); },
+  'd-run': el => dRunStages(vSet(), el.dataset.stages.split(','), el.dataset.only ? [el.dataset.only] : null),
+  'd-stop': () => dRun && dRun.ctl.abort(),
+  'd-copy-prompt': el => { const set = vSet(), k = el.dataset.stage;
+    if (!set.docs.paper || !set.docs.critique) return toast('Add the paper and your critique first');
+    if (k !== 'analyse' && !dState(set).analysis) return toast('Do step 1 first: run it, or copy its prompt and paste the reply');
+    if (k === 'slides' && !set.docs.pres) return toast('Add your presentation first');
+    copyText(dPrompt(set, k, k === 'sections' ? dSecs(set) : k === 'slides' ? dSlideLocs(set) : null), 'Prompt copied — paste it into a Claude chat, then paste the reply back here'); },
+  'd-paste-reply': el => { const set = vSet(), st = D_STAGES.find(s => s.k === el.dataset.stage);
+    openDialog(`Paste Claude’s reply — ${st.short}`, `<p class="small muted">Paste the whole JSON reply Claude gave to the copied prompt. It is saved as Claude’s work for the current versions of your documents.</p><div class="field"><label class="f" for="d-rp">Reply *</label><textarea id="d-rp" name="reply" required style="min-height:240px;font-family:var(--mono);font-size:12px"></textarea></div>`, f => {
+      const res = vParseReply(f.reply); if (!res){ alert('This is not a JSON reply. Copy Claude’s whole answer (it starts with { ).'); return false; }
+      const out = dApply(set, st.k, res, null); save(); RENDER.defend(); toast(`Read: ${Object.entries(out).map(([k, v]) => `${v} ${k}`).join(', ') || 'nothing usable'}`);
+    }, 'Read the reply'); },
+  'd-practise': el => dMockStart(vSet(), [el.dataset.id], (S.verify.dmock || {}).mode || 'claude'),
+  'd-practise-list': () => { const set = vSet(), F = S.verify.dfilter || {}; dMockStart(set, dState(set).qs.filter(q => (!F.prio || q.priority === F.prio) && (!F.type || q.type === F.type) && (!F.status || (q.status || 'none') === F.status) && (!F.sec || (q.section || q.slide) === F.sec)).map(q => q.id), (S.verify.dmock || {}).mode || 'claude'); },
+  'd-mock-start': () => { const set = vSet(), P = S.verify.dmock || {}, list = dPool(set, P.pool || 'top'); dMockStart(set, (P.n === 'all' ? list : list.slice(0, +P.n || 10)).map(q => q.id), P.mode || 'claude'); },
+  'd-mock-submit': el => dMockSubmit(vSet(), !!el.dataset.follow),
+  'd-mock-self': () => { const set = vSet(), m = dState(set).mock, q = dMockQ(set); if (!m || !q) return; const ok = m.self.a && m.self.b && m.self.c;
+    dRecord(set, q, m, ok ? 'ready' : 'not yet', {self:{...m.self}}); toast(ok ? 'Marked as prepared (self-checked)' : 'Saved — practise this one again'); dMockNext(set); },
+  'd-mock-next': () => dMockNext(vSet()),
+  'd-mock-skip': () => dMockNext(vSet(), true),
+  'd-mock-end': () => { const set = vSet(), m = dState(set).mock; if (m) m.phase = 'done'; save(); RENDER.defend(); },
+  'd-listen': el => { const set = vSet(), m = dState(set).mock; if (el.dataset.what === 'mfollow') return dSpeak(m && m.followQ); const q = dState(set).qs.find(x => x.id === el.dataset.id); if (q) dSpeak(el.dataset.what === 'oral' ? q.oral : q.q); },
+  'd-mic': el => dMic(el),
+  'd-copy-q': el => { const q = dState(vSet()).qs.find(x => x.id === el.dataset.id); if (q) copyText(dQText(q) + (q.by === 'me' ? '' : '\n   (Written by Claude — check against the paper.)'), 'Question and answer copied'); },
+  'd-add': el => dQDialog(vSet(), el.dataset.id, el.dataset.sec),
+  'd-del': el => { const set = vSet(), D = dState(set); if (!confirm('Delete this question?')) return; D.qs = D.qs.filter(q => q.id !== el.dataset.id); save(); RENDER.defend(); },
+  'd-rep-copy': () => copyText(dReportText(vSet()), 'Report copied'),
+  'd-rep-docx': () => { const set = vSet(); saveFile(vFileName(`Professor questions - ${set.name || 'ScholarPath'}`) + '.docx', dReportDocx(set), 'Report saved as a Word document'); }
+};
+function dChange(t){
+  if (t.dataset.dfilter){ (S.verify.dfilter ||= {})[t.dataset.dfilter] = t.value; save(); const y = scrollY; RENDER.defend(); scrollTo(0, y); return true; }
+  if (t.dataset.dmockpref){ (S.verify.dmock ||= {pool:'top', n:'10', mode:'claude'})[t.dataset.dmockpref] = t.value; save(); return true; }
+  if (t.dataset.dself){ const m = dState(vSet()).mock; if (m){ m.self[t.dataset.dself] = t.checked; save(); } return true; }
+  return false;
+}
+function dInput(t){
+  if (t.dataset.dmock){ const m = dState(vSet()).mock; if (m){ m[t.dataset.dmock] = t.value; save(); } return true; }
+  return false;
+}
+function dStartStatus(){
+  const set = vSet(); if (!set) return 'Not started';
+  const D = dState(set), n = D.qs.length, p = D.qs.filter(q => q.status === 'prepared').length;
+  return n ? `${p} of ${pl(n, 'question')} prepared` : 'Questions from your own documents';
 }
 
 /* ---------- 6. My Progress ---------- */
@@ -4814,8 +5518,8 @@ RENDER.progress = () => {
     ${S.reader.papers.length ? S.reader.papers.map(p => { const t = p.paras.filter(isReadable), d = t.filter(x => (x.idea||'').trim() || (x.simple||'').trim()).length; return `<div class="bar-row" style="grid-template-columns:1fr 90px 60px"><span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(p.title || p.name)}${p.example?' <span class="badge-example">Demo</span>':''}</span><span class="bar"><span style="width:${t.length ? d/t.length*100 : 0}%;background:var(--ok)"></span></span><b>${d}/${t.length} ¶</b></div>`; }).join('') : '<p class="muted">No papers read yet.</p>'}
   </div>
 
-  <div class="card" style="margin-top:16px"><h3>Final verification</h3>
-    ${S.verify.sets.length ? S.verify.sets.map(v => { const R = vReadiness(v, vVers(v)); return `<div class="bar-row" style="grid-template-columns:1fr 90px 92px"><span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(v.name || 'Untitled verification')}${v.example ? ' <span class="badge-example">Demo</span>' : ''}</span><span class="bar"><span style="width:${R.cur / V_ITEMS.length * 100}%;background:${R.full ? 'var(--ok)' : 'var(--accent)'}"></span></span><b>${R.cur}/${V_ITEMS.length}${R.open ? ` · ${R.open}⚠` : ''}</b></div>`; }).join('') : '<p class="muted">No verification yet.</p>'}
+  <div class="card" style="margin-top:16px"><h3>Final verification &amp; professor questions</h3>
+    ${S.verify.sets.length ? S.verify.sets.map(v => { const R = vReadiness(v, vVers(v)); return `<div class="bar-row" style="grid-template-columns:1fr 90px 92px"><span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(v.name || 'Untitled verification')}${v.example ? ' <span class="badge-example">Demo</span>' : ''}${v.def && v.def.qs.length ? ` <span class="small muted">· questions prepared ${v.def.qs.filter(q => q.status === 'prepared').length}/${v.def.qs.length}</span>` : ''}</span><span class="bar"><span style="width:${R.cur / V_ITEMS.length * 100}%;background:${R.full ? 'var(--ok)' : 'var(--accent)'}"></span></span><b>${R.cur}/${V_ITEMS.length}${R.open ? ` · ${R.open}⚠` : ''}</b></div>`; }).join('') : '<p class="muted">No verification yet.</p>'}
     <p class="small muted" style="margin:6px 0 0">Checklist items checked on the current versions of the documents${S.verify.sets.some(v => v.contra.some(c => c.status === 'open')) ? '; ⚠ = open contradictions' : ''}.</p>
   </div>
 
@@ -5006,7 +5710,7 @@ const ACTIONS = {
     const theme = S.theme; S = seedState(); S.theme = theme; S.ui.tab = 'progress'; save(); showTab('progress'); toast('ScholarPath reset');
   }
 };
-Object.assign(ACTIONS, V_ACTIONS);
+Object.assign(ACTIONS, V_ACTIONS, D_ACTIONS);
 document.addEventListener('click', e => {
   const el = e.target.closest('[data-act]'); if (!el || el.disabled) return;
   const fn = ACTIONS[el.dataset.act]; if (!fn) return;
@@ -5023,7 +5727,7 @@ document.addEventListener('keydown', e => {
 });
 document.addEventListener('input', e => {
   const t = e.target, c = () => activeCrit();
-  if (vInput(t)) return;
+  if (vInput(t) || dInput(t)) return;
   if (t.dataset.chatIn){ t.style.height = 'auto'; t.style.height = Math.min(t.scrollHeight + 2, 160) + 'px'; return; }
   if (t.dataset.fl){ const r = activeFig(); r[t.dataset.fl] = t.value; save(); updateExplain(); return; }
   if (t.dataset.fb){ S.figlab.build.chart[t.dataset.fb] = t.value; save(); updateBuild(); return; }
@@ -5053,7 +5757,7 @@ document.addEventListener('input', e => {
 });
 document.addEventListener('change', e => {
   const t = e.target;
-  if (vChange(t)) return;
+  if (vChange(t) || dChange(t)) return;
   if (t.dataset.fl === 'critId'){ RENDER.figlab(); return; }
   if (t.id === 'flScanCrit'){ S.figlab.scanCrit = t.value; save(); RENDER.figlab(); return; }
   if (t.dataset.fsel !== undefined){ figScan.items[+t.dataset.fsel].sel = t.checked; const n = figScan.items.filter(i => i.sel).length;

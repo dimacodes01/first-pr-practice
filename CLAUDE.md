@@ -10,10 +10,10 @@ ScholarPath is a research companion web app built for **Dima Alkharraz** (Englis
 - Figures and tables are not part of the Paper Reader's reading. They are shown as pictures and explained in Figure Lab.
 - Label all example content. Put a Copy button on every generated output. Keep it working on phones, in light and dark mode. No login.
 - Mark Claude-generated text as Claude's, and remind the user to check it against the paper.
-- Part 4 · Verify: the original paper is the source of truth; never mark a check as done unless it was actually checked on the current document versions; never resolve a contradiction silently; never call the documents fully consistent before the complete comparison (spec §5.9).
+- Part 4 · Verify & defend: the original paper is the source of truth; never mark a check as done unless it was actually checked on the current document versions; never resolve a contradiction silently; never call the documents fully consistent before the complete comparison (spec §5.9). Professor questions (4.2) are generated from the actual documents only — no fixed question bank — and a question is "prepared" only after the student has answered it (spec §5.10).
 
 ## Code
-- The app is a journey in four parts (Write a paper → Critique a paper → Present → Verify), plus Start and My Progress; see spec §4. Part 4 (`verify` tab) is described in spec §5.9. `PARTS` lists the steps; `goStep` / `showTab` / `route` handle navigation.
+- The app is a journey in four parts (Write a paper → Critique a paper → Present → Verify & defend), plus Start and My Progress; see spec §4. Step 4.1 (`verify` tab) is spec §5.9 and step 4.2 (`defend` tab) is spec §5.10; they share one document set (`S.verify.sets`). `PARTS` lists the steps; `goStep` / `showTab` / `route` handle navigation.
 - `index.html` is the whole app: CSS, markup and one script in an IIFE. Each tab has a `RENDER.<tab>()`. Events use `data-act` → `ACTIONS`, plus `input` / `change` handlers keyed on `data-*`.
 - State lives in `localStorage['scholarpath.v1']` (`S`), and figure pictures in IndexedDB (`scholarpath` / `img`).
 - `vendor/pdfjs/` holds pdf.js 3.11.174 (with a cdnjs fallback).

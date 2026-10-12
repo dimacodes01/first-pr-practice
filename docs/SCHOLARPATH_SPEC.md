@@ -7,7 +7,7 @@
 | **Owner** | Dima Alkharraz — English teacher (Grade 5, Al Nahdha Charter School, Abu Dhabi) and Master's student in Artificial Intelligence |
 | **Course it serves** | Al Ain University — Advanced Research Methods (0106112) |
 | **What it is** | A research companion for master's students and early researchers who read, critique and write academic papers |
-| **Code** | `index.html` (single file, ~5,100 lines, vanilla JS, no build step) + `vendor/pdfjs/` |
+| **Code** | `index.html` (single file, ~5,850 lines, vanilla JS, no build step) + `vendor/pdfjs/` |
 | **Repository** | `dimacodes01/first-pr-practice`, branch `claude/scholarpath-research-app-jabga7` |
 | **Published page** | https://claude.ai/artifact/RQWX4dnGb7W68zTghnoLvz (private to the owner until shared) |
 | **First version (v1)** | https://claude.ai/artifact/5SBbxDnL3oV9XHyWgNwarW |
@@ -27,7 +27,7 @@ These override everything else. Check every change against them.
 6. **Examples are always labelled** "Example" or "Demo", and illustrative content is never presented as a real paper.
 7. **Every generated output has a Copy button.** Everything works on a phone. Light and dark mode. No login. Everything is saved in the browser.
 8. **Claude's output is always marked** ("by Claude — check it") and the user is reminded to verify it against the paper.
-9. **Nothing is marked as checked unless it has actually been checked and verified** (Part 4). The original paper is the source of truth, a contradiction is never resolved silently, and the documents are never called fully consistent before the complete comparison is done (see 5.9).
+9. **Nothing is marked as checked or prepared unless it really is** (Part 4). A verification item counts only when it was checked on the current documents; a professor question counts as prepared only after the student has answered it. The original paper is the source of truth, a contradiction is never resolved silently, and the documents are never called fully consistent before the complete comparison is done (see 5.9).
 
 ---
 
@@ -60,19 +60,19 @@ These override everything else. Check every change against them.
 
 ## 4. How the app is organised: four parts
 
-Since 12 October 2026 the app is presented as a **journey**, in the order the owner works (her request: *first writing a research paper and everything that helps, second building a critique, last the presentation*). Part 4, the final verification, was added the same day as a permanent quality-control step.
+Since 12 October 2026 the app is presented as a **journey**, in the order the owner works (her request: *first writing a research paper and everything that helps, second building a critique, last the presentation*). Part 4 — the final verification (4.1) and the professor-questions defence preparation (4.2) — was added the same day as a permanent quality-control and preparation step.
 
 | Part | Steps (in order) | Tab used |
 |---|---|---|
 | **Start** | The journey at a glance: four part cards with every step and its progress | `start` |
 | **1 · Write a paper** | 1.1 Writing path → 1.2 Find literature → 1.3 Ideas & reading list → 1.4 Figures & tables | `write`, `hub`, `ideas`, `figlab` (build mode) |
 | **2 · Critique a paper** | 2.1 Read the paper → 2.2 Explain the figures → 2.3 Write the critique | `reader` (paragraphs), `figlab` (explain mode), `critique` |
-| **3 · Present** | 3.1 Build the slides → 3.2 Prepare for questions | `present`, `reader` (questions view) |
-| **4 · Verify** | 4.1 Final verification & consistency | `verify` |
+| **3 · Present** | 3.1 Build the slides → 3.2 Questions about the paper | `present`, `reader` (questions view) |
+| **4 · Verify & defend** | 4.1 Final verification & consistency → 4.2 Professor questions & defense | `verify`, `defend` |
 | **My Progress** | Overview, backup and restore | `progress` |
 
 - **Navigation:** a parts row (pills) and a numbered steps row (1.1 › 1.2 › …). Each page's eyebrow says "Part 1 · Write a paper — Step 1.2: Find literature". **Previous / Next** buttons at the bottom of every step lead through the whole journey (the end of part 1 leads to part 2, and so on). Each part remembers its last open step.
-- **Addresses:** `#start`, `#writing/1` … `#writing/4`, `#critiquing/1` … `/3`, `#presenting/1` … `/2`, `#verifying`, `#progress`. Old addresses (`#reader`, `#figlab`, `#critique`, …) still work and are rewritten.
+- **Addresses:** `#start`, `#writing/1` … `#writing/4`, `#critiquing/1` … `/3`, `#presenting/1` … `/2`, `#verifying/1` … `/2`, `#progress`. Old addresses (`#reader`, `#figlab`, `#critique`, …) still work and are rewritten.
 - **Writing path → helpful tools:** each writing step links to the steps that help with it (e.g. *Find the gap* → Find literature, Read a key paper in simple English; *Results* → Build your figures).
 - **Figure Lab** has no mode switch any more: step 1.4 opens build mode and step 2.2 opens explain mode, each with a link to the other.
 - **Code:** `PARTS` defines parts and steps; `goStep(part, i)` opens a step; `showTab(tab)` (used throughout) finds the matching step with `stepFor`. `route()` reads the address. The header is sticky only at 720px and wider, and `--hdr` holds its height for sticky toolbars.
@@ -159,6 +159,11 @@ Since 12 October 2026 the app is presented as a **journey**, in the order the ow
 - Key Findings adds one figure from Figure Lab per main result.
 - Copyable outline.
 
+### 5.8 My Progress
+- Ideas, papers logged, critiques completed, **figures reviewed**, writing steps; bars by status; critique completion; writing path; Paper Reader progress.
+- Final verification & professor questions: per document set, checklist items checked on the current versions, open contradictions and questions prepared.
+- Backup and restore (JSON), remove or add examples, reset.
+
 ### 5.9 Final Academic Verification & Consistency Checklist (step 4.1)
 The owner's request (12 Oct 2026): compare **(1) the original research paper** (the primary source of truth), **(2) the written critique** and **(3) the PowerPoint presentation**; verify every factual statement against the paper; never mark a checklist item as complete unless it has actually been checked; make it a **permanent quality-control component**, used whenever a document is uploaded, revised or finalised. Her checklist items, the 12 mandatory rules and the 7 workflow steps are used **word for word** (`V_SECTIONS`, `V_RULES`, `V_WORKFLOW`).
 
@@ -188,9 +193,25 @@ Every document is turned into location-tagged pieces (`p. 4`, `Section 4 · Rese
 
 **Code:** `S.verify = {sets:[…], active, view}`; a set holds `docs`, `checks`, `matrix`, `contra`, `lang`, `terms`, `cites`, `unsupported`, `missing`, `strengths`, `overall`, `priorities`, `stages`, `auto`, `runs`. Main functions: `vUnits`, `vVers`, `vPrompt`, `vApply`, `vRunStages`, `vApplyEdit`, `vReplaceXml`, `vCorrectedCopy`, `vReadiness`, `vReport`, `RENDER.verify`, `V_ACTIONS`, `vChange`, `vInput`.
 
-### 5.8 My Progress
-- Ideas, papers logged, critiques completed, **figures reviewed**, writing steps; bars by status; critique completion; writing path; Paper Reader progress.
-- Backup and restore (JSON), remove or add examples, reset.
+### 5.10 Potential Professor Questions & Critical Discussion Preparation (step 4.2)
+The owner's request (12 Oct 2026, her "section 11"): a **permanent, dynamic** preparation for the professor's questions after a critique presentation. The questions, checklist and evaluation must **adapt to each paper** (topic, methods, findings, the critique's own headings and arguments, the slides) — **no fixed question bank**, no assumed methods, technical questions only when relevant — and a question must not be marked as prepared until she has shown she can answer it.
+
+**Documents:** the same three as 4.1 (one shared "document set" with the same versions). Every question remembers the versions it was written for; when a document changes the page says so, counts the questions that "need regenerating", and offers *Re-analyse and regenerate everything* (rules 1–2). Claude is never run automatically, only when she presses a button.
+
+**Steps (Claude, in small parts; each part is saved as soon as it is done):**
+1. **Analyse** (her §1): topic, discipline, objectives, the research approach the paper actually uses, methods/techniques/instruments actually used (with pages), concepts, key findings, arguments, limitations, contributions; the critique's **own headings** with each section's purpose, arguments, importance, complexity, number of questions (5–8, clamped) and the points a professor may challenge; each slide's argument and matching section; which of the 12 question types (her §3) fit this study, with reasons, and which do not; areas needing deeper explanation; knowledge gaps.
+2. **Section questions** (her §2 and §4), two sections per call: each question has *Professor's question · What the professor means · Detailed suggested answer · Short oral answer · Supporting evidence (paper + critique) · Possible follow-up question · Suggested follow-up answer · Priority (🔴 High / 🟡 Medium / 🟢 Additional Practice)*, plus type and slide.
+3. **Challenge my evaluation** (her §5): every major strength, weakness, criticism and recommendation, how well the paper supports it (well / partly / weakly, with evidence) and 1–2 questions on its evidence, reasoning, significance, practicality, alternatives, own argument or fairness.
+4. **Slide questions** (her §7), eight slides per call: main argument, matching section, claims to be challenged, concepts to explain, 2–3 questions with short oral answers. ScholarPath's own automatic checks add the slides' strong wording and numbers that are not in the paper.
+
+Every prompt contains the three documents, her ten adaptation rules (word for word, `D_RULES`), "the paper is the source of truth" and "do not automatically agree with my critique". **Copy prompt / Paste reply** works for every step without Claude, and she can add her own questions.
+
+**Views:** Prepare (six steps with status; the analysis; her §1/§2/§5/§7 checklists ticked only when the work was done on the current versions; the rules) · By section · Challenge my critique · Slides · **Q&A checklist** (her §6 table: critique section · question · type · priority · evidence · ☐/◐/☑ status, with filters and Copy) · **Mock professor** · **Preparation report** (A section-by-section · B top 15–20 · C most challenging · D knowledge gaps · E checklist · F mock discussion; Copy and Word export). Page references in the evidence that the paper does not have are flagged.
+
+**Mock professor (her §8F):** one question at a time; she answers in writing or with **Speak** (browser voice typing, where allowed); *Hear the question* reads it aloud. With Claude: verdict (ready / almost / not yet), score 1–5, what was good, what was missing, anything that contradicts the paper, a stronger version of *her own* answer, evidence to mention, a tip, then a follow-up question based on what she actually said. Without Claude: the suggested answer is revealed and she ticks three honest self-checks. **A question becomes ☑ Prepared only when an answer is judged ready (or all three self-checks are ticked); otherwise ◐ Practising.** The status cannot be set by hand. Every attempt is logged (report F).
+
+**Code:** `set.def = {analysis, qs, slides, targets, stages, log, mock}` inside each document set; question kinds `section`, `challenge`, `slide`, `mine`. Main functions: `dPrompt`, `dApply`, `dRunStages`, `dStageCur`, `dEvalPrompt`, `dMockSubmit`, `dRecord`, `dReport`, `RENDER.defend`, `D_ACTIONS`. `vHead()` draws the shared top of 4.1 and 4.2.
+
 
 ---
 
@@ -202,6 +223,7 @@ Every document is turned into location-tagged pieces (`p. 4`, `Section 4 · Rese
 | Critique Studio | AAU critique of *Gender Shades* | Real paper; references unverified on purpose |
 | Paper Reader | "Demo: How students use AI feedback…" — 6 paragraphs with simple versions, Arabic, a demo Fig. 1 and questions | **Written for ScholarPath — not a real study** |
 | Figure Lab | Example review "Fig. 3" and chart-builder data | Illustrative |
+| Professor questions (4.2) | No pre-written questions (they must come from her documents); a clearly marked **format preview** with placeholders shows what each question will contain | — |
 | Verify (Part 4) | "Demo — try the checks": the Paper Reader demo text, a 5-part demo critique and 5 demo slides with **deliberate errors** (30 vs twenty students; "all" vs eight interviewed; "proves" on a slide). Nothing is pre-checked | **Written for ScholarPath — not a real study** |
 
 ---
@@ -216,6 +238,8 @@ Every document is turned into location-tagged pieces (`p. 4`, `Section 4 · Rese
 - **AI features** need the published claude.ai page and use the viewer's Claude account. They are not available in the plain file.
 - **Pictures and data** are stored in the browser only. The JSON backup excludes the pictures and the original Word/PowerPoint files of Part 4.
 - **Word and PowerPoint (Part 4):** reading compressed files needs `DecompressionStream` (Chrome/Edge 80+, Safari 16.4+, Firefox 113+). Text in pictures, SmartArt and embedded objects is not read. A correction is made only when the old words sit inside one paragraph (not across a line break or two text boxes); otherwise it is marked "do this by hand". Chart data is read but not changed. Corrected copies are stored uncompressed, so they are larger than the original (they open normally).
+- **Voice typing** in the mock professor uses the browser's speech recognition (in Chrome an online service). It may be blocked inside the claude.ai page; typing always works.
+- **Professor questions** take several Claude calls (one analysis, then two critique sections or eight slides per call); a long critique takes a few minutes. Regenerating replaces Claude's questions (her own questions and the practice log stay), so preparation statuses start again for the new questions.
 - **Verification limits:** very long documents are cut before they are sent to Claude (the prompt says so, and those parts become "Not Verified"). External references can only be checked against the paper, so they are "Not Verified" unless the paper cites them. The automatic number check is a pointer, not proof: a number found in the paper may still be used with a different meaning.
 
 ---
@@ -230,6 +254,7 @@ Headless Chromium (Playwright) scripts, with stand-ins for Claude (`window.claud
 - **word preservation:** 20 generated two-column papers (indented and spaced paragraphs) with figures interrupting paragraphs (mid-sentence, between sentences, at column tops) and a table. Every word of every paragraph is compared with the original. Result: no word lost; every paragraph whole in indented papers.
 
 - **Part 4 (verification):** the demo set; a stand-in Claude for all four stages (checks, matrix, contradictions with exact-quote checks, language, citations); applying corrections and the re-check marking every affected item "Needs a re-check"; resolving a contradiction requires an explanation; the pasted-reply fallback (and a bad reply is refused); the A–G report and its Word export (opens in python-docx with a 6-column matrix). Real files made with python-pptx and python-docx: slides read in presentation order (not file order) with notes and chart data; Word headings and runs joined; corrected copies open in python-pptx/python-docx, only the edited slide/document part changes, and bold/colour formatting stays. All seven views at 1280 and 390 px, light and dark, without horizontal scrolling.
+- **Step 4.2 (professor questions):** a stand-in Claude checks that every prompt holds the rules and documents and that sections are sent two at a time; generation, the six step statuses and the process checklist; page references that the paper lacks are flagged; filters; the mock professor (a one-word answer is refused; feedback with a contradiction from the paper; a follow-up; "ready" → Prepared, "almost" → Practising; self-check needs all three ticks); own questions; the A–F report and its Word export; changing a document marks every question for regenerating; copy prompt / paste reply without Claude (question counts clamped to 5–8). All seven views at 1280 and 390 px, light and dark.
 
 The scripts lived in the session's scratch area. **Next step:** add them to `tests/` so they can be re-run.
 
@@ -250,6 +275,7 @@ The scripts lived in the session's scratch area. **Next step:** add them to `tes
 | 2026-10-10 | Reader: figures and tables kept out of the reading, explained in Figure Lab |
 | 2026-10-10 | Reader: whole paragraphs and every word kept around figures |
 | 2026-10-12 | Reorganised as a journey: Start page, Part 1 Write → Part 2 Critique → Part 3 Present, Previous/Next, helpful-tool links in the writing path |
+| 2026-10-12 | Step 4.2 · Potential Professor Questions & Critical Discussion Preparation (adaptive questions from the actual documents, challenges to the critique, slide questions, Q&A checklist, mock professor with feedback, report A–F); Part 4 renamed "Verify & defend"; step 3.2 renamed "Questions about the paper" |
 | 2026-10-12 | Part 4 · Verify: Final Academic Verification & Consistency Checklist — paper vs critique vs slides, version-aware checklist (51 items), consistency matrix, contradictions, corrections (incl. corrected Word/PowerPoint copies), automatic checks, QA report A–G with Word export |
 
 ---
