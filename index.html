@@ -596,6 +596,90 @@ ol.part-steps{list-style:none;margin:0;padding:0;display:flex;flex-direction:col
 .v-verdict-box{display:flex;gap:8px;align-items:flex-start;padding:10px 12px;border-radius:var(--radius-sm);background:var(--warn-soft);color:var(--warn);margin:10px 0}
 .v-verdict-box.ok{background:var(--ok-soft);color:var(--ok)}
 
+/* Step 2.4 · Source evidence mapping */
+:root{--ev-hl:#f4e4b8;--ev-hl-ink:#3d3214}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--ev-hl:#4a3e1f;--ev-hl-ink:#f3e7c6}}
+:root[data-theme="dark"]{--ev-hl:#4a3e1f;--ev-hl-ink:#f3e7c6}
+.h-sub{display:block;font-size:.55em;font-weight:500;color:var(--muted);margin-top:4px}
+.e-bar{padding:12px 16px;margin-bottom:14px}
+.e-bar-row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.e-bar-spacer{flex:1}
+.e-more{position:relative}
+.e-more > summary{list-style:none;cursor:pointer}
+.e-more > summary::-webkit-details-marker{display:none}
+.e-more-in{position:absolute;right:0;top:calc(100% + 6px);z-index:6;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius-sm);box-shadow:var(--shadow);padding:10px;display:flex;flex-direction:column;gap:6px;width:min(320px,80vw)}
+.e-first{width:80px;min-height:32px;padding:4px 8px;display:inline-block;margin-left:4px}
+.e-legend{display:flex;flex-wrap:wrap;gap:6px 14px;margin-top:10px;font-size:.84rem;color:var(--muted)}
+.e-leg{display:inline-flex;align-items:center;gap:6px}
+.e-leg b{color:var(--ink)}
+.e-dot{display:inline-block;width:9px;height:9px;border-radius:50%;flex:none;vertical-align:1px;margin-left:3px}
+.e-direct{background:var(--ok)} .e-para{background:var(--s1)} .e-interp{background:var(--violet)} .e-partial{background:var(--warn)} .e-unsup{background:var(--danger)} .e-ext{background:var(--muted)} .e-none{background:var(--line)}
+.e-todo{background:transparent;border:1.5px dashed var(--muted)}
+.e-leg .e-dot{margin-left:0}
+.e-warnline{display:flex;gap:6px;align-items:center;color:var(--danger);margin:8px 0 0}
+#eRun:empty{display:none}
+#eRun{margin-top:10px}
+.ev-grid{display:grid;gap:14px;grid-template-columns:1fr}
+@media(min-width:1000px){.ev-grid{grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);align-items:start}}
+.ev-col{padding:14px 16px;min-width:0}
+.ev-col-head{display:flex;flex-wrap:wrap;gap:8px;justify-content:space-between;align-items:center;margin-bottom:6px}
+.ev-col-head h3{margin:0}
+.ev-scroll{overflow:auto;overscroll-behavior:contain}
+@media(min-width:1000px){#evLeft{max-height:calc(100vh - var(--hdr,120px) - 120px)}.ev-paper{max-height:calc(100vh - var(--hdr,120px) - 160px)}}
+@media(max-width:999px){.ev-paper{max-height:70vh}}
+.evu h4{font:600 .82rem var(--sans);color:var(--muted);text-transform:uppercase;letter-spacing:.04em;margin:14px 0 4px}
+.evu:first-child h4{margin-top:4px}
+.evu-t{font:15.5px/1.75 var(--serif);margin:0;white-space:pre-wrap}
+.evs{cursor:pointer;border-radius:3px;padding:1px 0;transition:background .15s;text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:3px;text-decoration-color:color-mix(in srgb,var(--muted) 35%,transparent)}
+.evs.t-direct{text-decoration-color:color-mix(in srgb,var(--ok) 55%,transparent)} .evs.t-para{text-decoration-color:color-mix(in srgb,var(--s1) 55%,transparent)} .evs.t-interp{text-decoration-color:color-mix(in srgb,var(--violet) 55%,transparent)}
+.evs.t-partial{text-decoration-color:color-mix(in srgb,var(--warn) 60%,transparent)} .evs.t-unsup{text-decoration-color:color-mix(in srgb,var(--danger) 60%,transparent)} .evs.t-none{text-decoration:none}
+.evs:hover{background:var(--surface-2)}
+.evs:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+.evs.on{background:var(--ev-hl);color:var(--ev-hl-ink)}
+.evs.speaking{box-shadow:0 0 0 2px var(--accent)}
+.e-card{margin-bottom:10px}
+.e-ref{width:100%;border-collapse:collapse;font-size:.88rem}
+.e-ref th{width:34%;text-align:left;font:600 .76rem var(--sans);color:var(--muted);text-transform:uppercase;letter-spacing:.03em;vertical-align:top;padding:7px 8px 7px 0;border-top:1px solid var(--line)}
+.e-ref td{padding:7px 0;border-top:1px solid var(--line);vertical-align:top;overflow-wrap:anywhere}
+.e-ref tr:first-child th,.e-ref tr:first-child td{border-top:0}
+.e-ref tr:first-child td{font:15px/1.55 var(--serif)}
+@media(max-width:560px){.e-ref th,.e-ref td{display:block;width:auto;padding:4px 0}.e-ref th{border-top:1px solid var(--line);padding-top:8px}.e-ref td{border-top:0}}
+.e-tag{display:inline-flex;align-items:center;gap:4px;font:600 .76rem var(--sans);padding:2px 8px;border-radius:999px}
+.e-tag svg{width:14px;height:14px}
+.e-tag-ok{background:var(--ok-soft);color:var(--ok)} .e-tag-warn{background:var(--warn-soft);color:var(--warn)} .e-tag-bad{background:var(--danger-soft);color:var(--danger)} .e-tag-violet{background:var(--violet-soft);color:var(--violet)} .e-tag-grey{background:var(--surface-2);color:var(--muted)}
+.e-h5{margin:14px 0 6px;font:600 .9rem var(--sans);display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.e-evs,.e-cands{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:8px}
+.e-cands{list-style:none;padding:0}
+.e-evs li,.e-cands li{background:var(--surface-2);border-radius:var(--radius-sm);padding:8px 10px}
+.e-evs blockquote,.e-cands blockquote{margin:4px 0 0;font:15px/1.6 var(--serif);overflow-wrap:anywhere}
+.e-ev-meta{font-size:.8rem;color:var(--muted)}
+.e-go{float:right;margin:-2px -4px 0 6px}
+.e-cands .btn{margin-top:6px}
+.e-actions{margin-top:12px;gap:6px}
+.e-type select{width:auto;min-height:32px;padding:4px 8px;font-size:.84rem}
+.e-explain{margin-top:12px;border-top:1px solid var(--line);padding-top:4px}
+.ev-paper-head{display:flex;flex-wrap:wrap;gap:4px 10px;align-items:baseline;justify-content:space-between;border-top:1px solid var(--line);padding-top:10px;margin-top:10px}
+.ev-paper-head h4{margin:0;font-size:.95rem}
+.ev-paper{padding-right:4px}
+.evp-sec{font:600 .82rem var(--sans);color:var(--accent);text-transform:uppercase;letter-spacing:.04em;margin:16px 0 6px}
+.evp{margin:0 0 10px}
+.evp p{margin:0;font:15px/1.7 var(--serif)}
+.evp-meta{font:500 .72rem var(--mono);color:var(--muted)}
+mark.evm{background:var(--ev-hl);color:var(--ev-hl-ink);border-radius:3px;padding:1px 2px}
+mark.evm.basis{background:transparent;outline:2px dashed var(--violet);outline-offset:1px;color:inherit}
+mark.evm sup{font:700 .65rem var(--sans);margin-right:2px;color:var(--accent)}
+mark.evm.flash{animation:evflash 1.2s ease}
+@keyframes evflash{0%,100%{box-shadow:none}30%{box-shadow:0 0 0 4px color-mix(in srgb,var(--accent) 35%,transparent)}}
+@media (prefers-reduced-motion:reduce){mark.evm.flash{animation:none}.evs{transition:none}}
+.e-table td .e-rowlink{all:unset;cursor:pointer;color:var(--ink);text-decoration:underline;text-decoration-color:var(--line);text-underline-offset:3px}
+.e-table td .e-rowlink:hover{color:var(--accent)}
+.e-table td .e-rowlink:focus-visible{outline:2px solid var(--accent)}
+.e-search{display:flex;align-items:center;gap:6px;flex:1 1 220px}
+.e-search .input{min-height:34px;padding:5px 10px}
+.e-pdf{position:relative;margin:0 auto;max-width:100%}
+.e-pdf canvas{display:block;border:1px solid var(--line)}
+.e-pdf-hl{position:absolute;background:rgba(244,196,48,.38);mix-blend-mode:multiply;border-radius:2px;pointer-events:none}
+
 /* Part 4.2 · Professor questions & defense */
 #dRun:empty{display:none}
 #dRun{margin-bottom:12px}
@@ -768,6 +852,7 @@ footer.foot{max-width:1180px;margin:0 auto;padding:0 16px 40px;color:var(--muted
   <section class="panel" id="panel-write" role="tabpanel" aria-labelledby="tab-write" hidden></section>
   <section class="panel" id="panel-figlab" role="tabpanel" aria-labelledby="tab-figlab" hidden></section>
   <section class="panel" id="panel-present" role="tabpanel" aria-labelledby="tab-present" hidden></section>
+  <section class="panel" id="panel-evidence" role="tabpanel" hidden></section>
   <section class="panel" id="panel-verify" role="tabpanel" hidden></section>
   <section class="panel" id="panel-defend" role="tabpanel" hidden></section>
   <section class="panel" id="panel-progress" role="tabpanel" aria-labelledby="tab-progress" hidden></section>
@@ -777,6 +862,7 @@ footer.foot{max-width:1180px;margin:0 auto;padding:0 16px 40px;color:var(--muted
 
 <dialog id="dlg"><form method="dialog" id="dlgForm"></form></dialog>
 <dialog id="voiceDlg" class="voice-dialog" aria-label="Voices and accents"></dialog>
+<dialog id="evDlg" class="voice-dialog" aria-label="PDF page"></dialog>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 <noscript><p style="padding:20px">ScholarPath needs JavaScript enabled.</p></noscript>
 
@@ -840,7 +926,8 @@ const PARTS = [
   {id:'critiquing', no:2, label:'Critique a paper', short:'Critique', icon:'clip', blurb:'Understand the paper paragraph by paragraph, explain its figures, then complete the AAU critique form.', steps:[
     {tab:'reader', view:'paras', label:'Read the paper', desc:'Original text, simple English, Arabic, audio and Ask Claude'},
     {tab:'figlab', mode:'explain', label:'Explain the figures', desc:'What each figure shows, its strengths, weaknesses and role in the study'},
-    {tab:'critique', label:'Write the critique', desc:'The AAU 0106112 Paper Critique Form, with word limits and Word export'}]},
+    {tab:'critique', label:'Write the critique', desc:'The AAU 0106112 Paper Critique Form, with word limits and Word export'},
+    {tab:'evidence', label:'Trace your evidence', desc:'Where did this come from? Each statement of your critique linked to the exact passage of the paper'}]},
   {id:'presenting', no:3, label:'Present', short:'Present', icon:'slides', blurb:'Turn your critique or paper into a timed slide outline and prepare for questions.', steps:[
     {tab:'present', label:'Build the slides', desc:'Slide structure, speaker notes and timing for 5, 10 or 15 minutes'},
     {tab:'reader', view:'questions', label:'Questions about the paper', desc:'Discussion questions for the class, and quick questions about the paper'}]},
@@ -858,6 +945,7 @@ const TABS = [
   {id:'write', label:'Write Your Paper', icon:'pen'},
   {id:'figlab', label:'Figure Lab', icon:'image'},
   {id:'present', label:'Presentation Builder', icon:'slides'},
+  {id:'evidence', label:'Evidence map', icon:'link'},
   {id:'verify', label:'Verify', icon:'check'},
   {id:'defend', label:'Professor questions', icon:'chat'},
   {id:'progress', label:'My Progress', icon:'chart'}
@@ -1359,7 +1447,7 @@ RENDER.start = () => {
   const stepsDone = WRITE_STEPS.filter(stepDone).length;
   const status = {
     'writing/0':`${stepsDone} of ${WRITE_STEPS.length} steps done`, 'writing/1':`${DATABASES.length} databases`, 'writing/2':`${pl(S.ideas.length, 'idea')} · ${pl(S.papers.length, 'paper')}`, 'writing/3':'Chart and caption builder',
-    'critiquing/0':`${pl(S.reader.papers.length, 'paper')} in the reader`, 'critiquing/1':`${pl(S.figlab.reviews.filter(figDone).length, 'figure')} explained`, 'critiquing/2':`${S.critiques.filter(critDone).length} of ${pl(S.critiques.length, 'critique')} complete`,
+    'critiquing/0':`${pl(S.reader.papers.length, 'paper')} in the reader`, 'critiquing/1':`${pl(S.figlab.reviews.filter(figDone).length, 'figure')} explained`, 'critiquing/2':`${S.critiques.filter(critDone).length} of ${pl(S.critiques.length, 'critique')} complete`, 'critiquing/3':eStartStatus(),
     'presenting/0':`from your ${pl(S.critiques.length, 'critique')}`, 'verifying/0':vStartStatus(), 'verifying/1':dStartStatus(), 'presenting/1':`${pl(S.reader.papers.filter(p => p.questions && (p.questions.audience || []).length).length, 'paper')} with questions`
   };
   $('#panel-start').innerHTML = `
@@ -1609,7 +1697,8 @@ RENDER.critique = () => {
   $('#panel-critique').innerHTML = `
   <div class="page-head"><div class="eyebrow">Paper Critique Studio</div><h1>Review a paper, section by section</h1>
   <p>${aau ? 'Complete the official AAU Paper Critique Form: guidance, word limits and weights for every section, evidence search inside the paper, a quality-control check and export to Word.'
-           : 'Work through each part of the paper with the guiding questions, rate it from 1 to 5, then generate a formatted critique you can copy.'}</p></div>
+           : 'Work through each part of the paper with the guiding questions, rate it from 1 to 5, then generate a formatted critique you can copy.'}</p>
+  <p class="small cross-link">${icon('link')} When a draft is ready, <a href="#critiquing/4" data-act="crit-evidence" data-id="${c.id}">trace where each statement comes from in the paper</a> (step 2.4).</p></div>
 
   <div class="card">
     <div class="crit-bar">
@@ -2248,9 +2337,10 @@ function textToParagraphs(raw){
   });
   return {pages:[], paras, seq};
 }
-async function addReaderPaper(name, title, res){
+async function addReaderPaper(name, title, res, file){
   const paper = {id:uid(), created:Date.now(), name, title:res.title && res.title.length > 8 ? res.title : title, pages:res.pages, paras:res.paras, seq:res.seq, questions:null, context:res.context || ''};
   for (const [fid, b] of Object.entries(res.blobs || {})){ await IDB.put(`${paper.id}:${fid}:crop`, b.crop); await IDB.put(`${paper.id}:${fid}:page`, b.page); }
+  if (file) await IDB.put(`${paper.id}:pdf`, await file.arrayBuffer());      // the original PDF, to show evidence on the real page
   S.reader.papers.unshift(paper); S.reader.active = paper.id; S.reader.view = 'paras'; save();
   const nf = res.paras.filter(isFigure).length, np = res.paras.filter(isReadable).length;
   RENDER.reader(); toast(`${np} paragraphs ready${nf ? ` · ${nf} figure${nf === 1 ? '' : 's'}/table${nf === 1 ? '' : 's'} set aside for Figure Lab` : ''}`);
@@ -2259,7 +2349,7 @@ async function addReaderPaper(name, title, res){
 /* --- Claude (sample capability), only where the viewer provides it --- */
 const capUse = n => (window.claude && typeof window.claude.use === 'function') ? Promise.resolve(window.claude.use(n)).catch(() => null) : Promise.resolve(null);
 let AI = null, aiOff = false, aiRun = null;
-capUse('sample').then(fn => { AI = fn; if (fn && S.ui.tab === 'reader') RENDER.reader(); if (fn && S.ui.tab === 'figlab') RENDER.figlab(); if (fn && S.ui.tab === 'verify') RENDER.verify(); if (fn && S.ui.tab === 'defend') RENDER.defend(); });
+capUse('sample').then(fn => { AI = fn; if (fn && S.ui.tab === 'reader') RENDER.reader(); if (fn && S.ui.tab === 'figlab') RENDER.figlab(); if (fn && S.ui.tab === 'verify') RENDER.verify(); if (fn && S.ui.tab === 'defend') RENDER.defend(); if (fn && S.ui.tab === 'evidence') RENDER.evidence(); });
 const aiReady = () => !!AI && !aiOff;
 function aiError(e){
   const code = e && e.code;
@@ -2693,7 +2783,7 @@ function ttsSaveMark(){
   const pos = ttsPos(), ctx = TTS.ctx;
   if (pos && ctx && ctx.paperId && !ctx.sel){ (S.reader.marks ||= {})[ctx.paperId] = {...pos, from:ctx.from || null, only:ctx.only || null, section:ctx.section || null, parts:ctx.parts, at:Date.now()}; save(); }
 }
-function ttsPause(){ if (!TTS.playing) return; ttsHalt(); ttsSaveMark(); renderTtsBar(); }   // stop here, remember the exact place
+function ttsPause(){ if (!TTS.playing) return; ttsHalt(); ttsSaveMark(); renderTtsBar(); if (TTS.ctx && TTS.ctx.ev) evOnPause(); }   // stop here, remember the exact place
 function ttsRestore(){                                       // the reading list for this paper: still in memory, or rebuilt from the bookmark
   const paper = rPaper(), mark = paper && (S.reader.marks || {})[paper.id];
   if (TTS.list.length && TTS.ctx && TTS.ctx.paperId === (paper && paper.id) && TTS.list[TTS.i]) return true;
@@ -2764,7 +2854,9 @@ function ttsMark(c, scroll){
   $$('.speaking').forEach(e => e.classList.remove('speaking'));
   $$('.speaking-part').forEach(e => e.classList.remove('speaking-part'));
   $$('.orig-full[data-marked]').forEach(e => { e.textContent = e.dataset.marked; delete e.dataset.marked; });
+  $$('.evs.speaking').forEach(e => e.classList.remove('speaking'));
   if (!c || !c.pid) return;
+  if (c.part === 'ev'){ const s = $(`#evLeft [data-cid="${c.pid}"]`); if (s){ s.classList.add('speaking'); if (scroll || c.segStart === 0) s.scrollIntoView({block:'nearest'}); } return; }
   const card = $('#para-' + c.pid); if (!card) return;
   card.classList.add('speaking');
   const part = c.part === 'orig' ? $('#po-' + c.pid) : c.part === 'idea' ? ($('#rs-' + c.pid) || $('#ri-' + c.pid)) : c.part === 'ar' ? $('#ra-' + c.pid) : null;
@@ -2817,7 +2909,7 @@ function ttsBarHTML(){
     ${parts.ar && paper && !paper.paras.some(p => (p.ar || '').trim()) ? `<p class="small muted" style="margin:0">No Arabic translations yet — ${aiReady() ? 'use “Translate all to Arabic” above, or' : ''} add one under a paragraph.</p>` : ''}
   </div>`;
 }
-function renderTtsBar(){ const el = $('#ttsBar'); if (el) el.innerHTML = ttsBarHTML(); }
+function renderTtsBar(){ const el = $('#ttsBar'); if (el) el.innerHTML = ttsBarHTML(); evListenUI(); }
 
 /* --- Voices & accents --- */
 function ttsDevice(){
@@ -3064,7 +3156,7 @@ function readerBody(paper, view){
     <div class="row" style="justify-content:space-between;margin:10px 0 6px"><span class="small"><b id="rpDone">${done}</b> of ${text.length} paragraphs have a simple version</span>
       <span class="row">${aiReady() && todo.length ? `<button class="btn sm primary" data-act="rp-sum-all" data-ai-btn>${icon('sparkle')}Simplify ${done ? 'the rest' : 'all'} with Claude</button>` : ''}
       ${aiReady() && text.some(p => !(p.ar || '').trim()) ? `<button class="btn sm" data-act="rp-ar-all" data-ai-btn>${icon('sparkle')}Translate ${text.some(p => (p.ar || '').trim()) ? 'the rest' : 'all'} to Arabic</button>` : ''}
-      ${copyBtn('#rpNotes','Copy reading notes')}<button class="btn sm" data-act="rp-to-crit">${icon('clip')}Use in Critique</button></span></div>
+      ${copyBtn('#rpNotes','Copy reading notes')}<button class="btn sm" data-act="rp-to-crit">${icon('clip')}Use in Critique</button><button class="btn sm" data-act="rp-evidence" title="Where did each statement of your critique come from?">${icon('link')}Trace my evidence</button></span></div>
     <div class="progress"><span style="width:${text.length ? done/text.length*100 : 0}%"></span></div>
     <div id="aiBar"></div>
     <div id="ttsBar">${ttsBarHTML()}</div>
@@ -4430,7 +4522,12 @@ async function vLoadFile(set, which, file){
   else throw new Error(`Please upload ${which === 'pres' ? 'a .pptx or a PDF of the slides' : which === 'critique' ? 'a .docx, .pdf or .txt file' : 'a PDF'} (this was .${ext}).`);
   if (!units.some(u => u.text.trim())) throw new Error('No text could be read from this file. If it is a scan, paste the text instead.');
   if (ext === 'docx' || ext === 'pptx') await IDB.put(`v:${set.id}:${which}`, buf);       // kept to make a corrected copy later
-  set.docs[which] = {src:'upload', name:file.name, kind, units, at:Date.now()};
+  let paras = null;
+  if (ext === 'pdf' && which === 'paper'){                                                 // the paper: real paragraphs, pages and section headings, and the PDF for the page view
+    try { paras = (await pdfToParagraphs(new File([buf], file.name))).paras.filter(isReadable).map(x => ({page:x.page, section:x.section, text:x.text})); } catch {}
+    await IDB.put(`v:${set.id}:paper`, buf.slice(0));
+  }
+  set.docs[which] = {src:'upload', name:file.name, kind, units, at:Date.now(), ...(paras && paras.length ? {paras} : {})};
   return units.length;
 }
 
@@ -4925,8 +5022,8 @@ RENDER.verify = () => {
   <div class="v-body">${V_VIEW[view](set, VV, R)}</div>`;
   vRenderRun();
 };
-function vHead(set, VV, k, title, intro){                        // the top of steps 4.1 and 4.2: one set of three documents for both
-  const V = S.verify, part = partOf('verifying');
+function vHead(set, VV, k, title, intro, partId='verifying'){     // the top of steps 2.4, 4.1 and 4.2: one set of three documents for all
+  const V = S.verify, part = partOf(partId);
   return `<div class="page-head"><div class="eyebrow">Part ${part.no} · ${part.label} — Step ${part.no}.${k + 1}: ${esc(part.steps[k].label)}</div><h1>${title}</h1>${intro}</div>
   <div class="card v-setbar">
     <label class="f" for="vSetSel">Documents</label>
@@ -4937,7 +5034,7 @@ function vHead(set, VV, k, title, intro){                        // the top of s
   ${set.example ? `<p class="ai-note small">${icon('sparkle')} <b>Demo:</b> the ScholarPath demo text, with a short critique and five slides that contain <b>deliberate errors</b>, so you can see how this works. None of it is a real study. Press <b>New</b> to use your own documents.</p>` : ''}
   <div class="v-docs">${V_DOCS.map(d => vDocCard(set, d, VV)).join('')}</div>`;
 }
-const vRefresh = () => (S.ui.tab === 'defend' ? RENDER.defend : RENDER.verify)();
+const vRefresh = () => (S.ui.tab === 'defend' ? RENDER.defend : S.ui.tab === 'evidence' ? RENDER.evidence : RENDER.verify)();
 function vDocCard(set, d, VV){
   const doc = set.docs[d.k], U = doc ? vUnits(set, d.k) : [];
   const src = !doc ? '' : {reader:'from Paper Reader', app:'from Critique Studio — follows your edits', builder:'from Presentation Builder — follows your critique', paste:'pasted text', upload:`uploaded ${String(doc.kind || '').toUpperCase()}`}[doc.src] || '';
@@ -5044,7 +5141,8 @@ const V_VIEW = {
     const tbl = (head, rows) => rows.length ? `<div class="v-table-wrap"><table class="v-tbl"><thead><tr>${head.map(h => `<th>${h}</th>`).join('')}</tr></thead><tbody>${rows.join('')}</tbody></table></div>` : '';
     const where = (doc, loc) => `<b>${vDocT(doc).replace('Written research ', '').replace('PowerPoint ', '')}</b><div class="small muted">${esc(loc || '—')}</div>`;
     const mark = (ctx, w) => esc(ctx).replace(new RegExp(esc(w).replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'i'), m => `<mark class="v-mark">${m}</mark>`);
-    return `<section class="card"><div class="output-head"><div><h3 style="margin:0">5. Citations, references &amp; evidence</h3><p class="small muted" style="margin:4px 0 0">${set.stages.cites ? `Checked by Claude ${vWhen(set.stages.cites.at)}${vStageCur(set, 'cites') ? '' : ' — a document has changed since'}. Check each result against the paper.` : 'Not checked yet.'}</p></div>${vRunBtn('cites', 'Check with Claude')}</div>
+    const EM = set.docs.critique && set.docs.paper ? (() => { const P = ePassages(set), cl = eClaims(set, 'critique'), E = eState(set), vs = cl.map(c => { const keep = E.target; E.target = 'critique'; try { return eView(set, c, P); } finally { E.target = keep; } }); return {n:vs.length, m:vs.filter(v => v.st !== 'todo').length, ok:vs.filter(v => v.st === 'verified').length, nv:vs.filter(v => v.st === 'notver' || v.st === 'unsupported').length}; })() : null;
+    return `${EM ? `<section class="card"><div class="output-head"><div><h3 style="margin:0">Evidence map (step 2.4)</h3><p class="small muted" style="margin:4px 0 0">${EM.m} of ${pl(EM.n, 'statement')} traced to the paper · ${EM.ok} verified · ${EM.nv} not verified or unsupported.</p></div><button class="btn sm" data-act="goto" data-part="critiquing" data-i="3">${icon('link')}Open the evidence map</button></div></section>` : ''}<section class="card"><div class="output-head"><div><h3 style="margin:0">5. Citations, references &amp; evidence</h3><p class="small muted" style="margin:4px 0 0">${set.stages.cites ? `Checked by Claude ${vWhen(set.stages.cites.at)}${vStageCur(set, 'cites') ? '' : ' — a document has changed since'}. Check each result against the paper.` : 'Not checked yet.'}</p></div>${vRunBtn('cites', 'Check with Claude')}</div>
       ${tbl(['Where', 'Citation', 'Statement it supports', 'Status', 'Why'], set.cites.map(c => `<tr><td>${where(c.doc, c.loc)}</td><td>${esc(c.cite)}</td><td>${esc(c.claim)}</td><td><span class="pill v-p-${c.status}">${vLabel(c.status)}</span></td><td class="small">${esc(c.note)}</td></tr>`)) || '<p class="small muted">No citation results yet.</p>'}
       ${set.unsupported.length ? `<h4>Claims that need a citation or evidence</h4>${tbl(['Where', 'Claim', 'What it needs'], set.unsupported.map(u => `<tr><td>${where(u.doc, u.loc)}</td><td>“${esc(u.quote)}”${u.found === false ? ' <span class="v-warn small">not found word for word</span>' : ''}</td><td>${esc(u.needs)}</td></tr>`))}` : ''}
       ${set.missing.length ? `<h4>Missing or incomplete information</h4>${tbl(['Document', 'What is missing', 'Where to add it', 'Why'], set.missing.map(m => `<tr><td>${where(m.doc, '')}</td><td>${esc(m.what)}</td><td>${esc(m.where)}</td><td class="small">${esc(m.why)}</td></tr>`))}` : ''}</section>
@@ -5624,7 +5722,7 @@ function dQCard(set, q, n, open){
         <dt>Priority</dt><dd>${P[0]} ${P[1]} · <span class="muted">${esc(dPrepLabel(q))}</span></dd>
       </dl>
       <p class="small muted d-by">${q.by === 'me' ? 'Your own question.' : 'Written by Claude from your documents — check the answer against the paper before you rely on it.'}</p>
-      <div class="row"><button class="btn sm primary" data-act="d-practise" data-id="${q.id}">${icon('chat')}Practise this</button><button class="btn sm" data-act="d-listen" data-id="${q.id}" data-what="q">${icon('volume')}Hear the question</button><button class="btn sm ghost" data-act="d-copy-q" data-id="${q.id}">${icon('copy')}Copy</button>${q.by === 'me' ? `<button class="btn sm ghost" data-act="d-add" data-id="${q.id}">${icon('pen')}Edit</button><button class="btn sm ghost danger" data-act="d-del" data-id="${q.id}">${icon('trash')}Delete</button>` : ''}</div>
+      <div class="row"><button class="btn sm primary" data-act="d-practise" data-id="${q.id}">${icon('chat')}Practise this</button><button class="btn sm" data-act="d-listen" data-id="${q.id}" data-what="q">${icon('volume')}Hear the question</button><button class="btn sm" data-act="d-evidence" data-id="${q.id}" title="Find the passage of the paper behind this answer">${icon('link')}Show evidence</button><button class="btn sm ghost" data-act="d-copy-q" data-id="${q.id}">${icon('copy')}Copy</button>${q.by === 'me' ? `<button class="btn sm ghost" data-act="d-add" data-id="${q.id}">${icon('pen')}Edit</button><button class="btn sm ghost danger" data-act="d-del" data-id="${q.id}">${icon('trash')}Delete</button>` : ''}</div>
     </div></details>`;
 }
 function dScoreHTML(set){
@@ -5822,6 +5920,8 @@ const D_ACTIONS = {
   'd-mock-end': () => { const set = vSet(), m = dState(set).mock; if (m) m.phase = 'done'; save(); RENDER.defend(); },
   'd-listen': el => { const set = vSet(), m = dState(set).mock; if (el.dataset.what === 'mfollow') return dSpeak(m && m.followQ); const q = dState(set).qs.find(x => x.id === el.dataset.id); if (q) dSpeak(el.dataset.what === 'oral' ? q.oral : q.q); },
   'd-mic': el => dMic(el),
+  'd-evidence': el => { const set = vSet(), q = dState(set).qs.find(x => x.id === el.dataset.id); if (!q) return; if (!set.docs.paper) return toast('Add the original paper first');
+    eShowFor(set, q.oral || q.answer || q.q, `Answer to: ${clip(q.q, 90)}`); if (!aiReady()) toast('Claude finds the evidence on the published page — here you see passages that share words, to check yourself'); },
   'd-copy-q': el => { const q = dState(vSet()).qs.find(x => x.id === el.dataset.id); if (q) copyText(dQText(q) + (q.by === 'me' ? '' : '\n   (Written by Claude — check against the paper.)'), 'Question and answer copied'); },
   'd-add': el => dQDialog(vSet(), el.dataset.id, el.dataset.sec),
   'd-del': el => { const set = vSet(), D = dState(set); if (!confirm('Delete this question?')) return; D.qs = D.qs.filter(q => q.id !== el.dataset.id); save(); RENDER.defend(); },
@@ -5842,6 +5942,427 @@ function dStartStatus(){
   const set = vSet(); if (!set) return 'Not started';
   const D = dState(set), n = D.qs.length, p = D.qs.filter(q => q.status === 'prepared').length;
   return n ? `${p} of ${pl(n, 'question')} prepared` : 'Questions from your own documents';
+}
+
+
+/* ---------- Step 2.4 · Where Did This Come From? — Source Evidence Mapping ----------
+   Every statement of the critique (or the slides) is linked to the exact passage of the original paper.
+   Claude classifies the statement and quotes the passage; ScholarPath accepts a quotation only when it finds it
+   word for word in the paper, and takes the page, section and paragraph from the paper itself — never from Claude.
+   Uses the same document set as Part 4 (S.verify.sets). */
+const E_TYPES = {
+  direct:{t:'Directly Supported', d:'The original paper explicitly states this information.', ic:'check'},
+  para:{t:'Paraphrased', d:'The critique restates information from the paper accurately, in different words.', ic:'refresh'},
+  interp:{t:'Critical Interpretation', d:'Your own evaluation or interpretation of the research.', ic:'bulb'},
+  partial:{t:'Partially Supported', d:'The paper supports part of the statement; more explanation or evidence is needed.', ic:'clock'},
+  unsup:{t:'Unsupported', d:'No sufficient evidence was found in the original paper.', ic:'x'},
+  ext:{t:'External Evidence', d:'The statement relies on another academic source, not this paper.', ic:'library'},
+  none:{t:'Not a claim', d:'A heading, transition or administrative line — nothing to trace.', ic:'pen'}
+};
+const E_ORDER = ['direct', 'para', 'interp', 'partial', 'unsup', 'ext', 'none'];
+const E_NOTVER = 'Source not verified – Exact supporting passage could not be identified.';
+const eState = set => { const e = set.ev ||= {}; e.maps ||= {critique:{}, pres:{}}; e.explain ||= {}; e.filters ||= {}; e.target ||= 'critique'; e.view ||= 'viewer'; return e; };
+
+/* the paper as passages with their real page, section and paragraph */
+function ePassages(set){
+  const d = set.docs.paper; if (!d) return [];
+  const fromParas = list => list.map((x, i) => ({id:'P' + (i + 1), n:i + 1, page:x.page || null, section:(x.section || '').trim(), text:x.text, ref:x.id || ''}));
+  if (d.src === 'reader'){ const p = S.reader.papers.find(x => x.id === d.ref); return p ? fromParas(p.paras.filter(isReadable)) : []; }
+  if (d.paras && d.paras.length) return fromParas(d.paras);
+  const out = []; let sec = '';                                            // pasted text or an older upload: paragraphs inside each page
+  for (const u of vUnits(set, 'paper')){
+    const pm = /^p\. (\d+)/.exec(u.loc), page = pm ? +pm[1] : null;
+    const lines = u.text.split('\n'), max = Math.max(...lines.map(l => l.trim().length), 1); let cur = [];
+    const flush = () => { const t = cur.join(' ').replace(/\s+/g, ' ').trim(); if (t) out.push({id:'P' + (out.length + 1), n:out.length + 1, page, section:sec, text:t}); cur = []; };
+    for (const raw of lines){
+      const l = raw.trim(); if (!l){ flush(); continue; }
+      if (l.length < 70 && !/[.,;:]$/.test(l) && (/^(?:\d+(?:\.\d+)*\.?|[IVX]{1,5}\.)\s+[A-Z]/.test(l) || /^(abstract|introduction|background|literature review|related work|methods?|methodology|materials and methods|results|findings|discussion|conclusions?|limitations|future work|references|acknowledg(e)?ments?)$/i.test(l) || (/^[A-Z][A-Z\s&-]{3,}$/.test(l) && l.split(' ').length <= 6))){ flush(); sec = l; continue; }
+      cur.push(l);
+      if (/[.?!]["”’)]?$/.test(l) && l.length < max * 0.72) flush();            // a short line that ends a sentence ends the paragraph
+    }
+    flush();
+  }
+  return out;
+}
+const ePage = (set, page) => { if (!page) return 'Page not given in the document'; const f = parseInt(eState(set).firstPrinted, 10); return `PDF p. ${page}${f ? ` (printed p. ${page + f - 1})` : ''}`; };
+function eLocate(P, ev){                                                     // where a quotation really is — or null
+  const q = String(ev && ev.quote || '').trim();
+  if (q.split(/\s+/).length < 4 && q.length < 20) return null;
+  const order = [P.find(p => p.id === ev.pid || (ev.ref && p.ref === ev.ref)), ...P].filter(Boolean);
+  for (const p of order){ const at = vLocate(p.text, q); if (at) return {p, a:at[0], b:at[1]}; }
+  return null;
+}
+
+/* the statements: every sentence of the critique (or of the slides), in order */
+function eClaims(set, target){
+  const out = [], seen = {};
+  vUnits(set, target).forEach((u, ui) => ttsSentences(u.text).forEach((s, si) => {
+    const text = u.text.slice(s.start, s.end).trim(); if (!/\p{L}{3}/u.test(text)) return;
+    let cid = 'c' + textHash(text.replace(/\s+/g, ' ')); seen[cid] = (seen[cid] || 0) + 1; if (seen[cid] > 1) cid += '_' + seen[cid];   // by its words only: moving or re-labelling a section keeps the mapping
+    out.push({cid, ui, si, loc:u.loc, text, start:u.text.indexOf(text, s.start), para:ui + 1, sent:si + 1});
+  }));
+  return out;
+}
+function eView(set, cl, P){                                                  // a statement with its evidence located in the current paper
+  const m = eState(set).maps[eState(set).target][cl.cid];
+  if (!m) return {...cl, m:null, type:'', ev:[], basis:[], st:'todo'};
+  const loc = list => (list || []).map(ev => ({ev, at:eLocate(P, ev)}));
+  const ev = loc(m.ev), basis = loc(m.basis), okEv = ev.filter(x => x.at), okB = basis.filter(x => x.at);
+  const st = m.type === 'none' ? 'none' : m.type === 'unsup' ? 'unsupported' : m.type === 'ext' ? 'external' : m.type === 'interp' ? 'interp'
+    : okEv.length ? (m.type === 'partial' ? 'partial' : 'verified') : 'notver';
+  return {...cl, m, type:m.type, ev:okEv, basis:okB, lost:ev.length - okEv.length + basis.length - okB.length, st};
+}
+const E_ST = {verified:['Verified', 'ok'], partial:['Partial', 'warn'], unsupported:['Unsupported', 'bad'], notver:['Not verified', 'bad'], interp:['Interpretation', 'violet'], external:['External', 'grey'], none:['Not a claim', 'grey'], todo:['Not mapped yet', 'grey']};
+
+/* --- Claude: map the statements (pages and headings always come from the paper) --- */
+function ePaperBlock(P){
+  let out = '', cut = false;
+  for (const p of P){ const piece = `[${p.id} · ${p.page ? 'PDF p. ' + p.page : 'page unknown'} · ${p.section || 'section unknown'}]\n${p.text}\n\n`; if (out.length + piece.length > 170000){ cut = true; break; } out += piece; }
+  return out + (cut ? '[… the rest of the paper was cut to fit — do not guess about it]\n' : '');
+}
+const E_RULES = `MANDATORY RULES
+- Never invent page numbers, quotations or section headings: ScholarPath takes the page and section from the passage you cite, and checks that your quotation is in it word for word.
+- Quote EXACTLY: copy 5–40 consecutive words from the passage. Use the most precise passage, not a general section.
+- Never present a passage as evidence only because it shares keywords — it must actually support the statement.
+- Never confuse the student's criticism with the authors' findings. Never suggest the authors acknowledged a limitation unless a passage says so.
+- If the paper does not support a statement, say so ("unsup"). Accuracy matters more than finding a source for every statement.`;
+function eMapPrompt(set, P, batch){
+  return `You are checking where each statement of a student's ${eState(set).target === 'pres' ? 'presentation slides' : 'written critique'} comes from in the ORIGINAL RESEARCH PAPER.
+
+${E_RULES}
+
+Types:
+- "direct": the paper explicitly states this information.
+- "para": the statement accurately restates the paper in different words.
+- "interp": the student's own evaluation or interpretation. In "basis", cite the passages that describe what is being evaluated (for example the sampling method) — these show the evidence the argument was built on, not a criticism by the authors.
+- "partial": the paper supports part of the statement; say in "needs" what is missing.
+- "unsup": the paper does not support it; say in "needs" what evidence would be required.
+- "ext": the statement relies on another source; name it in "external".
+- "none": not a claim (a heading, transition or administrative line).
+
+PAPER PASSAGES (id · PDF page · section):
+${ePaperBlock(P)}
+STATEMENTS:
+${batch.map((c, i) => `[c${i + 1}] (${c.loc}) ${c.text}`).join('\n')}
+
+Reply with only JSON: {"claims":[{"id":"c1","type":"para","evidence":[{"p":"P12","quote":"exact words from passage P12"}],"basis":[],"external":"","explain":"how the source was used in the statement (1–2 sentences)","needs":""}]} — one object per statement, in order.`;
+}
+function eApply(set, batch, res, P, by='claude'){
+  const E = eState(set), map = E.maps[E.target], list = vArr(res && (res.claims || (Array.isArray(res) ? res : null)));
+  let n = 0, lost = 0;
+  const pick = arr => vArr(arr).filter(x => x && x.quote).slice(0, 4).map(x => ({pid:vStr(x.p || x.pid, 12), quote:vStr(x.quote, 600)})).filter(ev => { const at = eLocate(P, ev); if (!at){ lost++; return false; } ev.pid = at.p.id; ev.ref = at.p.ref || ''; return true; });
+  list.forEach((r, i) => {
+    const k = /^c?(\d+)$/.exec(vStr(r && r.id)), c = batch[k ? +k[1] - 1 : i]; if (!c) return;
+    const type = E_TYPES[r.type] ? r.type : 'unsup';
+    map[c.cid] = {type, ev:pick(r.evidence), basis:pick(r.basis), external:vStr(r.external, 300), explain:vStr(r.explain, 600), needs:vStr(r.needs, 400), by, at:Date.now()};
+    n++;
+  });
+  return {n, lost};
+}
+let eRun = null;
+async function eMap(set, which){                                              // which: 'new' (not mapped yet) | 'all' | [cid]
+  if (!aiReady()) return toast('Claude maps the statements on the published ScholarPath page — you can link evidence yourself, or copy the prompt');
+  if (eRun || dRun || vRun || aiRun) return toast('Claude is still working — please wait or press Stop');
+  const E = eState(set), P = ePassages(set);
+  if (!P.length) return alert('Add the original research paper first.');
+  const claims = eClaims(set, E.target), todo = Array.isArray(which) ? claims.filter(c => which.includes(c.cid)) : which === 'all' ? claims : claims.filter(c => !E.maps[E.target][c.cid]);
+  if (!todo.length) return toast('Every statement is already mapped');
+  const ctl = new AbortController(); eRun = {ctl, done:0, total:todo.length}; let lost = 0, errs = '';
+  eRenderRun();
+  try {
+    for (let i = 0; i < todo.length && !ctl.signal.aborted; i += 25){
+      const b = todo.slice(i, i + 25);
+      try { const r = eApply(set, b, await AI.json(eMapPrompt(set, P, b), {signal:ctl.signal, modelTier:'complex', cache:false}), P); lost += r.lost; }
+      catch (e){ if (e && e.code === 'cancelled') break; errs = aiError(e); if (e && D_FATAL.includes(e.code)) break; }
+      eRun.done += b.length; save(); eRenderRun(); if (S.ui.tab === 'evidence') eRefresh();
+    }
+  } finally { eRun = null; save(); if (S.ui.tab === 'evidence') RENDER.evidence(); }
+  if (errs) alert('Some statements were not mapped: ' + errs);
+  else toast(`Mapped — written by Claude, checked against the paper${lost ? `. ${pl(lost, 'quotation was', 'quotations were')} not found word for word in the paper and ${lost === 1 ? 'was' : 'were'} not used` : ''}`);
+}
+function eRenderRun(){
+  const el = $('#eRun'); if (!el) return;
+  el.innerHTML = eRun ? `<div class="ai-run"><span class="spin" aria-hidden="true"></span><span>Claude is tracing your statements — ${eRun.done} of ${eRun.total}</span><button class="btn sm" data-act="ev-stop">${icon('stop')}Stop</button></div>` : '';
+  $$('[data-e-ai]').forEach(b => b.disabled = !!eRun || !aiReady());
+}
+
+/* --- Explain the connection, and "Show my evidence" for any selected text --- */
+async function eExplain(set, cl, P){
+  if (!aiReady()) return toast('Claude explains the connection on the published ScholarPath page');
+  if (eRun || aiRun) return toast('Claude is still working — please wait');
+  const v = cl.cid === 'adhoc' ? eAdhocView(set, cl, P) : eView(set, cl, P), E = eState(set);
+  const evs = [...v.ev, ...v.basis].map((x, i) => `[${i + 1}] ${ePage(set, x.at.p.page)}, section "${x.at.p.section || 'not identified'}", paragraph ${x.at.p.n}: "${x.at.p.text.slice(x.at.a, x.at.b)}"\n   (the whole paragraph: ${clip(x.at.p.text, 1200)})`).join('\n');
+  const ctl = new AbortController(); eRun = {ctl, done:0, total:1}; eRenderRun();
+  try {
+    const r = await AI.json(`A master's student wrote this statement in their critique: "${cl.text}" (${cl.loc}).
+ScholarPath classified it as: ${v.type ? E_TYPES[v.type].t : 'not mapped'}.
+Verified evidence from the original paper:
+${evs || '(none was found)'}
+
+Explain in simple academic English, for the student, using ONLY the evidence above (never invent anything). Reply with only JSON:
+{"researchers":"what the original researchers stated","student":"what the student wrote","connection":"how the two statements are connected","accurate":"whether the critique accurately represents the source, and why","interpretation":"whether the student added an independent interpretation, and what it is","more":"whether additional evidence is needed, and what kind"}`, {signal:ctl.signal, modelTier:'default', cache:false});
+    E.explain[cl.cid] = Object.fromEntries(['researchers', 'student', 'connection', 'accurate', 'interpretation', 'more'].map(k => [k, vStr(r && r[k], 900)]));
+    E.explain[cl.cid].at = Date.now(); save();
+  } catch (e){ if (e && e.code !== 'cancelled') alert(aiError(e)); }
+  finally { eRun = null; if (S.ui.tab === 'evidence') RENDER.evidence(); }
+}
+async function eShowFor(set, text, from){                                    // "Show my evidence": any text — a selection, or an answer to a professor's question
+  const E = eState(set), P = ePassages(set);
+  E.adhoc = {cid:'adhoc', text:String(text).trim().slice(0, 1500), loc:from || 'Your selection', m:null, at:Date.now()}; E.sel = 'adhoc'; E.view = 'viewer';
+  save(); if (S.ui.tab !== 'evidence') goStep('critiquing', 3); else RENDER.evidence();
+  if (!P.length || !aiReady() || eRun || aiRun) return;
+  const ctl = new AbortController(); eRun = {ctl, done:0, total:1}; eRenderRun(); let lost = 0;
+  try {
+    const r = await AI.json(eMapPrompt(set, P, [E.adhoc]), {signal:ctl.signal, modelTier:'complex', cache:false});
+    const tmp = {}, keep = E.maps[E.target]; E.maps[E.target] = tmp;
+    lost = eApply(set, [E.adhoc], r, P).lost; E.adhoc.m = tmp.adhoc || null; E.maps[E.target] = keep; save();
+  } catch (e){ if (e && e.code !== 'cancelled') alert(aiError(e)); }
+  finally { eRun = null; if (S.ui.tab === 'evidence') RENDER.evidence(); }
+  if (lost) toast(`${pl(lost, 'quotation was', 'quotations were')} not found word for word in the paper and not used`);
+}
+const E_STOP = new Set('the a an and or of to in on for with by from as at is are was were be been this that these those it its their they them we our us not no but also than then which who whom whose what when where how why into over under between among about after before during such can may might could would should will has have had do does did more most less least very study paper research researchers authors author'.split(' '));
+const eTok = t => (String(t).toLowerCase().match(/[\p{L}\p{N}]+/gu) || []).filter(w => w.length > 2 && !E_STOP.has(w)).map(w => w.replace(/(ies|es|s|ing|ed)$/, ''));
+let eCandCache = null;
+function eCandidates(P, text, n=3){                                          // without Claude: passages that share words — to check yourself, never shown as evidence
+  const key = P.map(p => p.id + p.text.length).join(',');
+  if (!eCandCache || eCandCache.key !== key){
+    const sents = P.flatMap(p => ttsSentences(p.text).map(s => ({p, a:s.start, b:s.end, w:new Set(eTok(p.text.slice(s.start, s.end)))})));
+    const df = {}; sents.forEach(s => s.w.forEach(w => df[w] = (df[w] || 0) + 1));
+    eCandCache = {key, sents, df};
+  }
+  const {sents, df} = eCandCache, q = [...new Set(eTok(text))], N = sents.length || 1;
+  return sents.map(s => ({...s, sc:q.reduce((a, w) => a + (s.w.has(w) ? Math.log(1 + N / (df[w] || 1)) : 0), 0)})).filter(s => s.sc > 2).sort((x, y) => y.sc - x.sc).slice(0, n);
+}
+
+/* --- the page --- */
+const eDot = k => k ? `<span class="e-dot e-${k}" aria-hidden="true"></span>` : '<span class="e-dot e-todo" aria-hidden="true"></span>';
+function eTag(v){ const st = E_ST[v.st]; return `<span class="e-tag e-tag-${st[1]}">${icon(v.st === 'verified' ? 'check' : v.st === 'notver' || v.st === 'unsupported' ? 'x' : v.st === 'todo' ? 'clock' : 'link')}${st[0]}</span>`; }
+let eCache = null;
+RENDER.evidence = () => {
+  const V = S.verify;
+  if (!V.sets.length) V.sets.push(Object.assign(newVerifySet(), {name:'My documents'}));
+  const set = vSet(); V.active = set.id;
+  const VV = vVers(set), E = eState(set), P = ePassages(set), tgt = E.target, claims = set.docs[tgt] ? eClaims(set, tgt) : [];
+  const views = claims.map(c => eView(set, c, P));
+  eCache = {set, P, claims, views};
+  const cnt = k => views.filter(v => v.type === k).length, todo = views.filter(v => v.st === 'todo').length, mapped = views.length - todo;
+  const notver = views.filter(v => v.st === 'notver').length;
+  $('#panel-evidence').innerHTML = vHead(set, VV, 3, 'Where Did This Come From? <span class="h-sub">Source Evidence Mapping</span>',
+    `<p>Click any statement of your critique to see exactly where it comes from in the original paper: the page, the section, the paragraph and the original words. Claude suggests the links; ScholarPath only accepts a quotation it finds word for word in the paper, and takes every page number and heading from the paper itself.</p>`, 'critiquing') +
+    `<div class="card e-bar">
+      <div class="e-bar-row">
+        <span class="seg seg-sm" role="group" aria-label="What to trace">${[['critique', 'My critique'], ['pres', 'My slides']].map(([k, l]) => `<button data-act="ev-target" data-v="${k}" aria-pressed="${tgt === k}" ${set.docs[k] ? '' : 'disabled'}>${l}</button>`).join('')}</span>
+        <span class="seg seg-sm" role="group" aria-label="View">${[['viewer', 'Side by side'], ['table', 'Mapping table']].map(([k, l]) => `<button data-act="ev-view" data-v="${k}" aria-pressed="${E.view === k}">${l}</button>`).join('')}</span>
+        <span class="e-bar-spacer"></span>
+        <button class="btn sm primary" data-act="ev-map" data-v="new" data-e-ai ${aiReady() ? '' : 'disabled title="Claude maps the statements on the published ScholarPath page"'}>${icon('sparkle')}${mapped ? (todo ? `Map ${pl(todo, 'new statement')}` : 'All statements mapped') : 'Map every statement with Claude'}</button>
+        ${mapped ? `<button class="btn sm" data-act="ev-map" data-v="all" data-e-ai ${aiReady() ? '' : 'disabled'}>${icon('refresh')}Map again</button>` : ''}
+        <details class="e-more"><summary class="btn sm ghost">More</summary><div class="e-more-in">
+          <button class="btn sm ghost" data-act="ev-copy-prompt">${icon('copy')}Copy the mapping prompt</button>
+          <button class="btn sm ghost" data-act="ev-paste">Paste Claude’s reply</button>
+          <label class="small">Printed page numbers: the PDF’s first page is printed page <input class="input e-first" id="eFirst" inputmode="numeric" value="${esc(E.firstPrinted || '')}" placeholder="e.g. 77" aria-label="Printed number of the first PDF page"></label></div></details>
+      </div>
+      <div class="e-legend" role="list">${E_ORDER.map(k => `<span role="listitem" class="e-leg" title="${esc(E_TYPES[k].d)}">${eDot(k)}${E_TYPES[k].t} <b>${cnt(k)}</b></span>`).join('')}<span class="e-leg">${eDot('')}Not mapped yet <b>${todo}</b></span></div>
+      ${notver ? `<p class="small e-warnline">${icon('x')}${pl(notver, 'statement')}: ${E_NOTVER}</p>` : ''}
+      <div id="eRun"></div>
+    </div>
+    ${!set.docs.paper || !set.docs[tgt] ? `<div class="empty">Add the original paper and your ${tgt === 'pres' ? 'slides' : 'critique'} above to begin.</div>` : E.view === 'table' ? eTableHTML(set, views, P) : eViewerHTML(set, views, P)}`;
+  eRenderRun(); evListenUI();
+  if (E.view !== 'table'){ const on = $('#evLeft .evs.on'); if (on) on.scrollIntoView({block:'nearest'}); }
+};
+function eRefresh(){ const y = scrollY, l = $('#evLeft') && $('#evLeft').scrollTop, r = $('#evPaper') && $('#evPaper').scrollTop; RENDER.evidence(); scrollTo(0, y); if ($('#evLeft') && l != null) $('#evLeft').scrollTop = l; if ($('#evPaper') && r != null) $('#evPaper').scrollTop = r; }
+function eViewerHTML(set, views, P){
+  const E = eState(set), sel = E.sel === 'adhoc' && E.adhoc ? E.adhoc : views.find(v => v.cid === E.sel);
+  const units = vUnits(set, E.target);
+  const left = units.map((u, ui) => {
+    const vs = views.filter(v => v.ui === ui); let html = '', pos = 0;
+    vs.forEach(v => { if (v.start > pos) html += esc(u.text.slice(pos, v.start));
+      html += `<span class="evs t-${v.type || 'todo'} ${E.sel === v.cid ? 'on' : ''}" data-cid="${v.cid}" data-act="ev-sel" tabindex="0" role="button" aria-pressed="${E.sel === v.cid}" aria-label="${esc(E_TYPES[v.type] ? E_TYPES[v.type].t : 'Not mapped yet')}: ${esc(clip(v.text, 80))}">${esc(v.text)}${eDot(v.type)}</span>`;
+      pos = v.start + v.text.length; });
+    html += esc(u.text.slice(pos));
+    return `<section class="evu"><h4>${esc(u.loc)}</h4><p class="evu-t">${html}</p></section>`;
+  }).join('');
+  const selV = sel ? (sel.cid === 'adhoc' ? eAdhocView(set, sel, P) : sel) : null;
+  const marks = {}; if (selV) [...selV.ev.map((x, i) => [x, i + 1, 'ev']), ...selV.basis.map((x, i) => [x, selV.ev.length + i + 1, 'basis'])].forEach(([x, n, k]) => (marks[x.at.p.id] ||= []).push({a:x.at.a, b:x.at.b, n, k}));
+  let lastSec = null;
+  const paper = P.map(p => { const ms = (marks[p.id] || []).sort((x, y) => x.a - y.a); let t = '', pos = 0;
+    ms.forEach(m => { if (m.a < pos) return; t += esc(p.text.slice(pos, m.a)) + `<mark class="evm ${m.k}" id="evm-${m.n}" data-n="${m.n}"><sup>${m.n}</sup>${esc(p.text.slice(m.a, m.b))}</mark>`; pos = m.b; });
+    t += esc(p.text.slice(pos));
+    const head = p.section !== lastSec ? `<h4 class="evp-sec">${esc(p.section || 'Section not identified')}</h4>` : ''; lastSec = p.section;
+    return `${head}<div class="evp ${ms.length ? 'has' : ''}" id="evp-${p.id}"><span class="evp-meta">${p.page ? `PDF p. ${p.page}` : 'page —'} · ¶${p.n}</span><p>${t}</p></div>`; }).join('');
+  return `<div class="ev-grid">
+    <section class="card ev-col" aria-label="Your ${E.target === 'pres' ? 'slides' : 'critique'}"><div class="ev-col-head"><h3>${E.target === 'pres' ? 'Your slides' : 'Your critique'}</h3>
+      <span class="row"><button class="btn sm" id="evShowBtn" data-act="ev-show-sel" disabled title="Select words in your critique, then press here">${icon('search')}Show my evidence</button>${TTS.ok ? `<span id="evListen"></span>` : ''}</span></div>
+      <p class="small muted" style="margin:0 0 8px">Click a statement — or select any words and press <b>Show my evidence</b>.</p>
+      <div class="ev-scroll" id="evLeft">${left}</div></section>
+    <section class="card ev-col" aria-label="The original paper">${selV ? eCardHTML(set, selV, P) : `<div class="ev-col-head"><h3>The original paper</h3></div><p class="small muted">Choose a statement on the left to see where it comes from.</p>`}
+      <div class="ev-paper-head"><h4>${esc(vDocName(set, 'paper'))}</h4><span class="small muted">${pl(P.length, 'paragraph')} · shown as extracted text, every word kept</span></div>
+      <div class="ev-scroll ev-paper" id="evPaper">${paper || '<p class="small muted">No text in the paper.</p>'}</div></section></div>`;
+}
+function eAdhocView(set, a, P){
+  if (!a.m) return {...a, type:'', ev:[], basis:[], st:'todo', ui:-1};
+  const E = eState(set), keep = E.maps[E.target]; E.maps[E.target] = {adhoc:a.m};
+  try { return eView(set, a, P); } finally { E.maps[E.target] = keep; }
+}
+function eCardHTML(set, v, P){
+  const E = eState(set), m = v.m, ex = E.explain[v.cid], tp = v.type && E_TYPES[v.type];
+  const evRows = (list, n0=0) => list.map((x, i) => `<li><button class="btn sm ghost e-go" data-act="ev-go" data-n="${n0 + i + 1}">${icon('ext')}Go to source</button><span class="e-ev-meta">${esc(ePage(set, x.at.p.page))} · ${esc(x.at.p.section || 'section not identified')} · ¶${x.at.p.n}</span><blockquote>“${esc(x.at.p.text.slice(x.at.a, x.at.b))}”</blockquote></li>`).join('');
+  const st = E_ST[v.st];
+  const cand = !v.ev.length && !v.basis.length && v.st !== 'none' ? eCandidates(P, v.text) : [];
+  return `<div class="e-card">
+    <div class="ev-col-head"><h3>Where this comes from</h3><span class="row">${v.cid !== 'adhoc' ? `<button class="btn sm ghost" data-act="ev-step" data-v="-1" aria-label="Previous statement">${icon('back')}</button><button class="btn sm ghost" data-act="ev-step" data-v="1" aria-label="Next statement">${icon('fwd')}</button>` : ''}</span></div>
+    <table class="e-ref"><tbody>
+      <tr><th>Critique statement</th><td>“${esc(v.text)}”</td></tr>
+      <tr><th>Critique location</th><td>${esc(v.loc)}${v.cid !== 'adhoc' ? ` · paragraph ${v.para} · sentence ${v.sent}` : ''}</td></tr>
+      <tr><th>Original paper page</th><td>${v.ev.length || v.basis.length ? [...new Set([...v.ev, ...v.basis].map(x => ePage(set, x.at.p.page)))].map(esc).join('; ') : 'Not found'}</td></tr>
+      <tr><th>Original paper section</th><td>${v.ev.length || v.basis.length ? [...new Set([...v.ev, ...v.basis].map(x => x.at.p.section || 'not identified'))].map(esc).join('; ') : '—'}</td></tr>
+      <tr><th>Evidence type</th><td>${tp ? `${eDot(v.type)}<b>${tp.t}</b> <span class="small muted">— ${esc(tp.d)}</span>` : 'Not mapped yet'}</td></tr>
+      <tr><th>Verification status</th><td>${eTag(v)}${v.st === 'notver' ? ` <span class="small">${E_NOTVER}</span>` : ''}${v.lost ? ` <span class="small muted">(${pl(v.lost, 'quotation')} not found word for word in the paper, so not shown)</span>` : ''}</td></tr>
+      ${m && m.explain ? `<tr><th>Explanation</th><td>${esc(m.explain)} ${m.by === 'me' ? '<span class="chip tag">yours</span>' : '<span class="chip">by Claude — check it</span>'}</td></tr>` : ''}
+      ${m && m.needs ? `<tr><th>What is missing</th><td>${esc(m.needs)}</td></tr>` : ''}
+      ${m && m.external ? `<tr><th>External source</th><td>${esc(m.external)} <span class="small muted">— not part of this paper, so ScholarPath cannot verify it here</span></td></tr>` : ''}
+    </tbody></table>
+    ${v.ev.length ? `<h5 class="e-h5">Supporting evidence (${v.ev.length})</h5><ol class="e-evs">${evRows(v.ev)}</ol>` : ''}
+    ${v.basis.length ? `<h5 class="e-h5">What your argument is based on</h5><p class="small muted" style="margin:0 0 4px">The paper describes this; the criticism is your own reasoning — the authors do not make it here.</p><ol class="e-evs" start="${v.ev.length + 1}">${evRows(v.basis, v.ev.length)}</ol>` : ''}
+    ${v.type === 'interp' && !v.basis.length ? `<p class="small e-warnline">No passage describing what you evaluate was verified — add the evidence your argument is based on.</p>` : ''}
+    ${cand.length ? `<h5 class="e-h5">Passages that share words with this statement</h5><p class="small muted" style="margin:0 0 4px">Found by matching words only — <b>not verified as evidence</b>. Read them and link one only if it really supports your statement.</p><ul class="e-cands">${cand.map(c => `<li><span class="e-ev-meta">${esc(ePage(set, c.p.page))} · ${esc(c.p.section || 'section not identified')} · ¶${c.p.n}</span><blockquote>“${esc(c.p.text.slice(c.a, c.b).trim())}”</blockquote><button class="btn sm" data-act="ev-link" data-pid="${c.p.id}" data-a="${c.a}" data-b="${c.b}">${icon('link')}This supports my statement</button></li>`).join('')}</ul>` : ''}
+    <div class="row e-actions">
+      ${aiReady() ? `<button class="btn sm primary" data-act="ev-explain" data-e-ai>${icon('sparkle')}Explain the connection</button>${v.cid !== 'adhoc' ? `<button class="btn sm" data-act="ev-map" data-v="one" data-e-ai>${icon('refresh')}Trace this again</button>` : ''}` : ''}
+      ${v.cid !== 'adhoc' ? `<label class="small e-type">Type <select data-evtype="${v.cid}" aria-label="Evidence type">${['', ...E_ORDER].map(k => `<option value="${k}" ${v.type === k ? 'selected' : ''}>${k ? E_TYPES[k].t : '—'}</option>`).join('')}</select></label>` : ''}
+      ${v.ev.length + v.basis.length && ePdfAvailable(set) ? `<button class="btn sm ghost" data-act="ev-pdf">${icon('image')}See it on the PDF page</button>` : ''}
+    </div>
+    ${ex ? `<div class="e-explain"><h5 class="e-h5">The connection, explained <span class="chip">by Claude — check it</span></h5><dl class="v-dl">${[['researchers', 'What the researchers stated'], ['student', 'What you wrote'], ['connection', 'How they are connected'], ['accurate', 'Is the source represented accurately?'], ['interpretation', 'Your own interpretation'], ['more', 'Is more evidence needed?']].map(([k, l]) => `<dt>${l}</dt><dd>${esc(ex[k]) || '—'}</dd>`).join('')}</dl></div>`
+      : !aiReady() && (v.ev.length || v.basis.length) ? `<div class="e-explain small"><b>Check the connection yourself:</b> 1) What did the researchers state (the quotation)? 2) What did you write? 3) Does your sentence keep their meaning? 4) Did you add your own judgement? 5) Is more evidence needed?</div>` : ''}
+  </div>`;
+}
+function eTableHTML(set, views, P){
+  const E = eState(set), F = E.filters, secs = [...new Set(views.map(v => v.loc))];
+  const rows = views.filter(v => (!F.sec || v.loc === F.sec) && (!F.type || (v.type || 'todo') === F.type) && (!F.st || v.st === F.st) && (!F.q || (v.text + ' ' + v.ev.map(x => x.at.p.text.slice(x.at.a, x.at.b)).join(' ')).toLowerCase().includes(F.q.toLowerCase())));
+  const sel = (k, label, opts) => `<label class="small">${label} <select class="status-select" data-evfilter="${k}"><option value="">All</option>${opts.map(([v, l]) => `<option value="${esc(v)}" ${F[k] === v ? 'selected' : ''}>${esc(l)}</option>`).join('')}</select></label>`;
+  return `<section class="card"><div class="output-head"><div><h3 style="margin:0">Evidence Mapping Table</h3><p class="small muted" style="margin:4px 0 0">Every statement, in the order of your ${E.target === 'pres' ? 'slides' : 'critique'}. Pages and evidence are taken from the paper and checked word for word.</p></div>
+      <span class="row"><button class="btn sm" data-act="ev-export" data-v="copy">${icon('copy')}Copy</button><button class="btn sm" data-act="ev-export" data-v="csv">${icon('download')}CSV</button><button class="btn sm primary" data-act="ev-export" data-v="docx">${icon('download')}Word</button></span></div>
+    <div class="row d-filters">${sel('sec', 'Section', secs.map(s => [s, clip(s, 50)]))}${sel('type', 'Evidence type', [...E_ORDER.map(k => [k, E_TYPES[k].t]), ['todo', 'Not mapped yet']])}${sel('st', 'Status', Object.entries(E_ST).map(([k, v]) => [k, v[0]]))}
+      <label class="small e-search">${icon('search')}<input class="input" id="eSearch" value="${esc(F.q || '')}" placeholder="Search statements and evidence" aria-label="Search"></label></div>
+    <div class="v-table-wrap"><table class="v-matrix e-table"><thead><tr><th>Critique section</th><th>Critique statement</th><th>Research paper page</th><th>Original evidence</th><th>Evidence type</th><th>Status</th></tr></thead><tbody>
+      ${rows.map(v => `<tr><th scope="row">${esc(v.loc)}</th><td data-l="Statement"><button class="e-rowlink" data-act="ev-open" data-cid="${v.cid}">${esc(v.text)}</button></td>
+        <td data-l="Page">${v.ev.length || v.basis.length ? [...new Set([...v.ev, ...v.basis].map(x => ePage(set, x.at.p.page)))].map(esc).join('<br>') : 'Not found'}</td>
+        <td data-l="Evidence" class="small">${[...v.ev, ...v.basis].map(x => `“${esc(clip(x.at.p.text.slice(x.at.a, x.at.b), 220))}”`).join('<br>') || (v.st === 'notver' ? esc(E_NOTVER) : v.st === 'todo' ? '—' : 'No verified evidence')}</td>
+        <td data-l="Type">${eDot(v.type)}${v.type ? E_TYPES[v.type].t : 'Not mapped yet'}</td><td data-l="Status">${eTag(v)}</td></tr>`).join('') || `<tr><td colspan="6" class="small muted">No statements match.</td></tr>`}
+    </tbody></table></div></section>`;
+}
+function eRows(set){
+  const {views} = eCache || {views:[]};
+  return views.map(v => [v.loc, v.text, v.ev.length || v.basis.length ? [...new Set([...v.ev, ...v.basis].map(x => ePage(set, x.at.p.page)))].join('; ') : 'Not found',
+    [...v.ev, ...v.basis].map(x => `“${x.at.p.text.slice(x.at.a, x.at.b)}”`).join(' | ') || (v.st === 'notver' ? E_NOTVER : v.st === 'todo' ? 'Not mapped yet' : 'No verified evidence'),
+    v.type ? E_TYPES[v.type].t : 'Not mapped yet', E_ST[v.st][0]]);
+}
+
+/* --- the real PDF page, with the evidence highlighted (when the PDF is stored in this browser) --- */
+const ePdfKey = set => { const d = set.docs.paper; return !d ? '' : d.src === 'reader' ? `${d.ref}:pdf` : d.src === 'upload' && d.kind === 'pdf' ? `v:${set.id}:paper` : ''; };
+let ePdfHave = {};
+function ePdfAvailable(set){
+  const k = ePdfKey(set); if (!k) return false;
+  if (!(k in ePdfHave)){ ePdfHave[k] = false; IDB.get(k).then(b => { ePdfHave[k] = !!b; if (b && S.ui.tab === 'evidence') eRefresh(); }); }
+  return ePdfHave[k];
+}
+async function ePdfPage(set, v){
+  const items = [...v.ev, ...v.basis]; if (!items.length) return;
+  const page = items[0].at.p.page, buf = await IDB.get(ePdfKey(set));
+  if (!buf || !page) return toast('The PDF page is not available — the text view shows the verified passage');
+  const dlg = $('#evDlg');
+  dlg.innerHTML = `<div class="dlg-head"><h3>PDF page ${page}</h3><button type="button" class="btn ghost icon" data-act="ev-pdf-close" aria-label="Close">${icon('x')}</button></div><div class="dlg-body"><p class="small muted" id="evPdfNote">Loading the page…</p><div class="e-pdf" id="evPdfBox"></div></div>`;
+  dlg.showModal();
+  try {
+    const lib = await loadPdfJs(), doc = await lib.getDocument({data:buf.slice(0)}).promise, pg = await doc.getPage(page);
+    const box = $('#evPdfBox'), w = Math.min(box.clientWidth || 640, 900), vp = pg.getViewport({scale:w / pg.getViewport({scale:1}).width}), dpr = window.devicePixelRatio || 1;
+    const cv = document.createElement('canvas'); cv.width = vp.width * dpr; cv.height = vp.height * dpr; cv.style.width = vp.width + 'px'; cv.style.height = vp.height + 'px';
+    box.style.width = vp.width + 'px'; box.style.height = vp.height + 'px'; box.appendChild(cv);
+    await pg.render({canvasContext:cv.getContext('2d'), viewport:vp, transform:dpr !== 1 ? [dpr, 0, 0, dpr, 0, 0] : null}).promise;
+    const tc = await pg.getTextContent(), map = [], norm = [];
+    tc.items.forEach((it, i) => { for (let k = 0; k < it.str.length; k++){ const ch = it.str[k].toLowerCase(); if (/[\p{L}\p{N}]/u.test(ch)){ norm.push(ch); map.push([i, k]); } } });
+    const N = norm.join(''); let found = 0;
+    items.filter(x => x.at.p.page === page).forEach((x, n) => {
+      const q = x.at.p.text.slice(x.at.a, x.at.b).toLowerCase().replace(/[^\p{L}\p{N}]/gu, ''), at = q.length > 8 ? N.indexOf(q) : -1; if (at < 0) return;
+      found++; const s = map[at], e = map[at + q.length - 1];
+      for (let i = s[0]; i <= e[0]; i++){
+        const it = tc.items[i], len = it.str.length || 1, k0 = i === s[0] ? s[1] : 0, k1 = i === e[0] ? e[1] + 1 : len, tr = it.transform, h = Math.hypot(tr[2], tr[3]) || it.height || 10;
+        const x0 = tr[4] + it.width * k0 / len, x1 = tr[4] + it.width * k1 / len, r = vp.convertToViewportRectangle([x0, tr[5] - h * 0.2, x1, tr[5] + h * 0.85]);
+        const d = document.createElement('div'); d.className = 'e-pdf-hl'; d.style.left = Math.min(r[0], r[2]) + 'px'; d.style.top = Math.min(r[1], r[3]) + 'px'; d.style.width = Math.abs(r[2] - r[0]) + 'px'; d.style.height = Math.abs(r[3] - r[1]) + 'px'; box.appendChild(d);
+      }
+    });
+    $('#evPdfNote').textContent = found ? 'The verified evidence is highlighted on the original page.' : 'The evidence is on this page, but its exact position in the PDF layout could not be matched, so nothing is highlighted. The text view shows the verified passage.';
+  } catch (e){ $('#evPdfNote').textContent = 'This PDF page could not be shown. ' + (e && e.message || ''); }
+}
+
+/* --- listening to the critique: pause, and its source opens --- */
+function evListen(){
+  const c = eCache; if (!c || !c.views.length) return;
+  const list = c.views.filter(v => v.type !== 'none');
+  const from = Math.max(0, list.findIndex(v => v.cid === eState(c.set).sel));
+  ttsStart(list.slice(from).map(v => ({pid:v.cid, part:'ev', text:v.text, lang:baseLang(v.text)})), {ev:true});
+}
+function evOnPause(){ const cur = TTS.list[TTS.i]; if (!cur || !eCache) return; eState(eCache.set).sel = cur.pid; save(); if (S.ui.tab === 'evidence') eRefresh(); }
+function evListenUI(){
+  const el = $('#evListen'); if (!el) return;
+  const mine = TTS.ctx && TTS.ctx.ev;
+  el.innerHTML = mine && TTS.playing ? `<button class="btn sm primary" data-act="ev-listen-pause">${icon('pause')}Pause</button>`
+    : mine && TTS.list[TTS.i] ? `<button class="btn sm" data-act="ev-listen-go">${icon('play')}Continue</button>` : `<button class="btn sm" data-act="ev-listen">${icon('volume')}Listen</button>`;
+}
+document.addEventListener('selectionchange', () => {                         // "Show my evidence" for selected words
+  const b = $('#evShowBtn'); if (!b) return;
+  const s = getSelection(), n = s && !s.isCollapsed && s.anchorNode, el = n && (n.nodeType === 1 ? n : n.parentElement);
+  const ok = !!(el && $('#evLeft') && $('#evLeft').contains(el) && s.toString().trim().length > 3);
+  if (ok) eSelText = s.toString(); b.disabled = !ok && !eSelText;
+});
+let eSelText = '';
+const E_ACTIONS = {
+  'ev-target': el => { eState(vSet()).target = el.dataset.v; eState(vSet()).sel = ''; save(); RENDER.evidence(); },
+  'ev-view': el => { eState(vSet()).view = el.dataset.v; save(); RENDER.evidence(); },
+  'ev-sel': el => { const s = getSelection(); if (s && !s.isCollapsed && s.toString().trim()) return;     // selecting words is for "Show my evidence"
+    const E = eState(vSet()); E.sel = el.dataset.cid; save(); eRefresh(); if (innerWidth < 1000) $('#panel-evidence .e-card')?.scrollIntoView({behavior:'smooth', block:'start'}); else $('#evm-1')?.scrollIntoView({block:'center'}); },
+  'ev-step': el => { const c = eCache, E = eState(c.set), list = c.views.filter(v => v.type !== 'none'), i = list.findIndex(v => v.cid === E.sel), nx = list[Math.max(0, Math.min(list.length - 1, i + +el.dataset.v))]; if (nx){ E.sel = nx.cid; save(); eRefresh(); $(`#evLeft [data-cid="${nx.cid}"]`)?.scrollIntoView({block:'center'}); $('#evm-1')?.scrollIntoView({block:'center'}); } },
+  'ev-go': el => { const m = $(`#evm-${el.dataset.n}`); if (!m) return toast('This passage is not shown in the text view'); m.scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block:'center'}); m.classList.remove('flash'); void m.offsetWidth; m.classList.add('flash'); },
+  'ev-map': el => { const set = vSet(), v = el.dataset.v; eMap(set, v === 'one' ? [eState(set).sel] : v); },
+  'ev-stop': () => eRun && eRun.ctl.abort(),
+  'ev-explain': () => { const c = eCache, E = eState(c.set), cl = E.sel === 'adhoc' ? eAdhocView(c.set, E.adhoc, c.P) : c.views.find(v => v.cid === E.sel); if (cl) eExplain(c.set, cl.cid === 'adhoc' ? E.adhoc : cl, c.P); },
+  'ev-show-sel': () => { const t = (getSelection().toString() || eSelText).trim(); if (!t) return toast('Select some words in your critique first');
+    const c = eCache, hit = c.views.find(v => v.text.includes(t) || (t.includes(v.text) && t.length < v.text.length * 1.3));
+    if (hit){ eState(c.set).sel = hit.cid; save(); eRefresh(); return; }
+    eShowFor(c.set, t, 'Your selection'); },
+  'ev-link': el => { const c = eCache, E = eState(c.set), p = c.P.find(x => x.id === el.dataset.pid); if (!p || !E.sel || E.sel === 'adhoc') return;
+    const quote = p.text.slice(+el.dataset.a, +el.dataset.b).trim(), cur = E.maps[E.target][E.sel] || {type:'para', ev:[], basis:[], explain:'', needs:'', external:''};
+    cur.ev = [...(cur.ev || []), {pid:p.id, ref:p.ref || '', quote}]; cur.by = 'me'; if (!cur.type || cur.type === 'unsup') cur.type = 'para'; E.maps[E.target][E.sel] = cur; save(); eRefresh(); toast('Linked — choose the evidence type that fits'); },
+  'ev-pdf': () => { const c = eCache, E = eState(c.set), v = E.sel === 'adhoc' ? eAdhocView(c.set, E.adhoc, c.P) : c.views.find(x => x.cid === E.sel); if (v) ePdfPage(c.set, v); },
+  'ev-pdf-close': () => $('#evDlg').close(),
+  'ev-open': el => { const E = eState(vSet()); E.sel = el.dataset.cid; E.view = 'viewer'; save(); RENDER.evidence(); $(`#evLeft [data-cid="${el.dataset.cid}"]`)?.scrollIntoView({block:'center'}); $('#evm-1')?.scrollIntoView({block:'center'}); },
+  'ev-listen': () => evListen(),
+  'ev-listen-pause': () => ttsPause(),
+  'ev-listen-go': () => { if (TTS.ctx && TTS.ctx.ev && TTS.list[TTS.i]){ ttsHalt(); ttsSpeak(true); } else evListen(); },
+  'ev-copy-prompt': () => { const set = vSet(), P = ePassages(set), cl = eClaims(set, eState(set).target); if (!P.length || !cl.length) return toast('Add the paper and your critique first'); copyText(eMapPrompt(set, P, cl), 'Prompt copied — paste it into a Claude chat, then paste the reply back here'); },
+  'ev-paste': () => { const set = vSet(); openDialog('Paste Claude’s reply — evidence mapping', `<p class="small muted">Paste the whole JSON reply Claude gave to the copied mapping prompt. Every quotation is checked against the paper before it is used.</p><div class="field"><label class="f" for="ev-rp">Reply *</label><textarea id="ev-rp" name="reply" required style="min-height:220px;font-family:var(--mono);font-size:12px"></textarea></div>`, f => {
+      const res = vParseReply(f.reply); if (!res){ alert('This is not a JSON reply. Copy Claude’s whole answer (it starts with { ).'); return false; }
+      const r = eApply(set, eClaims(set, eState(set).target), res, ePassages(set)); save(); RENDER.evidence(); toast(`${pl(r.n, 'statement')} mapped${r.lost ? ` · ${r.lost} quotation(s) not found in the paper, not used` : ''}`); }, 'Read the reply'); },
+  'ev-export': el => { const set = vSet(), rows = eRows(set), head = ['Critique section', 'Critique statement', 'Research paper page', 'Original evidence', 'Evidence type', 'Status'], k = el.dataset.v, name = vFileName(`Evidence map - ${set.name || 'ScholarPath'}`);
+    if (k === 'copy') return copyText([head.join('\t'), ...rows.map(r => r.join('\t'))].join('\n'), 'Mapping table copied');
+    if (k === 'csv') return saveFile(name + '.csv', new Blob(['﻿' + [head, ...rows].map(r => r.map(x => `"${String(x).replace(/"/g, '""')}"`).join(',')).join('\r\n')], {type:'text/csv'}), 'Table saved as CSV');
+    const P2 = [wP(wR('Evidence Mapping Table', {b:true, sz:34, serif:true}), {align:'center', after:80}), wP(wR(`${set.name || ''} · generated by ScholarPath on ${new Date().toLocaleDateString()} · evidence written by Claude is checked word for word against the paper`, {i:true, sz:18, color:'5B6476'}), {align:'center', after:200}),
+      wTableN(head, rows, [1300, 2300, 1000, 2700, 1200, 1100])];
+    saveFile(name + '.docx', docxPackage(`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><w:document xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"><w:body>${P2.join('')}<w:sectPr><w:pgSz w:w="16838" w:h="11906" w:orient="landscape"/><w:pgMar w:top="1000" w:right="1000" w:bottom="1000" w:left="1000" w:header="567" w:footer="567" w:gutter="0"/></w:sectPr></w:body></w:document>`), 'Table saved as a Word document'); }
+};
+function eChange(t){
+  if (t.dataset.evtype){ const E = eState(vSet()), map = E.maps[E.target]; if (!t.value) delete map[t.dataset.evtype]; else { const cur = map[t.dataset.evtype] || {ev:[], basis:[], explain:'', needs:'', external:''}; map[t.dataset.evtype] = {...cur, type:t.value, by:'me', at:Date.now()}; } save(); eRefresh(); return true; }
+  if (t.dataset.evfilter){ eState(vSet()).filters[t.dataset.evfilter] = t.value; save(); eRefresh(); return true; }
+  if (t.id === 'eFirst'){ eState(vSet()).firstPrinted = t.value.replace(/\D/g, ''); save(); eRefresh(); return true; }
+  return false;
+}
+function eInput(t){
+  if (t.id === 'eSearch'){ eState(vSet()).filters.q = t.value; save(); clearTimeout(eInput.t); eInput.t = setTimeout(() => { eRefresh(); const s = $('#eSearch'); if (s){ s.focus(); s.setSelectionRange(s.value.length, s.value.length); } }, 250); return true; }
+  return false;
+}
+document.addEventListener('keydown', e => { if ((e.key === 'Enter' || e.key === ' ') && e.target.classList && e.target.classList.contains('evs')){ e.preventDefault(); E_ACTIONS['ev-sel'](e.target); } });
+function eStartStatus(){
+  const set = vSet(); if (!set || !set.docs.critique || !set.docs.paper) return 'Add the paper and your critique';
+  const E = eState(set), cl = eClaims(set, 'critique'), m = cl.filter(c => E.maps.critique[c.cid]).length;
+  return m ? `${m} of ${pl(cl.length, 'statement')} traced` : `${pl(cl.length, 'statement')} to trace`;
 }
 
 /* ---------- 6. My Progress ---------- */
@@ -5977,6 +6498,8 @@ const ACTIONS = {
     const ctx = {paperId:paper.id, only:p.id, parts:{[part]:true}};
     ttsStart(ttsSegs(paper, ctx), ctx);
   },
+  'rp-evidence': () => { if (!S.verify.sets.length) S.verify.sets.push(Object.assign(newVerifySet(), {name:'My documents'})); const set = vSet(), paper = rPaper(); if (paper && !(set.docs.paper && set.docs.paper.src === 'reader' && set.docs.paper.ref === paper.id)){ set.docs.paper = {src:'reader', ref:paper.id, at:Date.now()}; save(); toast('This paper is now the original paper for tracing and verification'); } goStep('critiquing', 3); scrollTo({top:0}); },
+  'crit-evidence': el => { if (!S.verify.sets.length) S.verify.sets.push(Object.assign(newVerifySet(), {name:'My documents'})); const set = vSet(), c = S.critiques.find(x => x.id === el.dataset.id); if (set && c && !(set.docs.critique && set.docs.critique.src === 'app' && set.docs.critique.ref === c.id)){ set.docs.critique = {src:'app', ref:c.id, at:Date.now()}; save(); } goStep('critiquing', 3); scrollTo({top:0}); },
   'rp-ar-one': el => { const paper = rPaper(); translateParas(paper, paper.paras.filter(x => x.id === el.dataset.id)); },
   'rp-ar-all': () => { const paper = rPaper(); translateParas(paper, paper.paras.filter(x => isReadable(x) && !(x.ar || '').trim())); },
   'rp-ar-open': el => { const id = el.dataset.id, paper = rPaper(), card = $('#para-' + id); arOpen.add(id); if (card) card.outerHTML = paraCard(paper, paper.paras.find(x => x.id === id)); $('#ra-' + id)?.focus(); },
@@ -6094,7 +6617,7 @@ const ACTIONS = {
     const theme = S.theme; S = seedState(); S.theme = theme; S.ui.tab = 'progress'; save(); showTab('progress'); toast('ScholarPath reset');
   }
 };
-Object.assign(ACTIONS, V_ACTIONS, D_ACTIONS);
+Object.assign(ACTIONS, V_ACTIONS, D_ACTIONS, E_ACTIONS);
 document.addEventListener('click', e => {
   const el = e.target.closest('[data-act]'); if (!el || el.disabled) return;
   const fn = ACTIONS[el.dataset.act]; if (!fn) return;
@@ -6111,7 +6634,7 @@ document.addEventListener('keydown', e => {
 });
 document.addEventListener('input', e => {
   const t = e.target, c = () => activeCrit();
-  if (vInput(t) || dInput(t)) return;
+  if (vInput(t) || dInput(t) || eInput(t)) return;
   if (t.dataset.chatIn){ t.style.height = 'auto'; t.style.height = Math.min(t.scrollHeight + 2, 160) + 'px'; return; }
   if (t.dataset.fl){ const r = activeFig(); r[t.dataset.fl] = t.value; save(); updateExplain(); return; }
   if (t.dataset.fb){ S.figlab.build.chart[t.dataset.fb] = t.value; save(); updateBuild(); return; }
@@ -6141,7 +6664,7 @@ document.addEventListener('input', e => {
 });
 document.addEventListener('change', e => {
   const t = e.target;
-  if (vChange(t) || dChange(t)) return;
+  if (vChange(t) || dChange(t) || eChange(t)) return;
   if (t.dataset.fl === 'critId'){ RENDER.figlab(); return; }
   if (t.id === 'flScanCrit'){ S.figlab.scanCrit = t.value; save(); RENDER.figlab(); return; }
   if (t.dataset.fsel !== undefined){ figScan.items[+t.dataset.fsel].sel = t.checked; const n = figScan.items.filter(i => i.sel).length;
@@ -6174,7 +6697,7 @@ document.addEventListener('change', e => {
     pdfToParagraphs(file).then(res => {
       if (!res.paras.length){ alert('No text could be found — the PDF may be a scanned image. Try “Paste text” instead.'); return; }
       const name = file.name.replace(/\.pdf$/i, '');
-      addReaderPaper(file.name, name, res);
+      addReaderPaper(file.name, name, res, file);
     }).catch(err => alert('Could not read this PDF. ' + (err && err.message || '')));
     return;
   }
