@@ -7,7 +7,7 @@
 | **Owner** | Dima Alkharraz — English teacher (Grade 5, Al Nahdha Charter School, Abu Dhabi) and Master's student in Artificial Intelligence |
 | **Course it serves** | Al Ain University — Advanced Research Methods (0106112) |
 | **What it is** | A research companion for master's students and early researchers who read, critique and write academic papers |
-| **Code** | `index.html` (single file, ~5,850 lines, vanilla JS, no build step) + `vendor/pdfjs/` |
+| **Code** | `index.html` (single file, ~6,250 lines, vanilla JS, no build step) + `vendor/pdfjs/` |
 | **Repository** | `dimacodes01/first-pr-practice`, branch `claude/scholarpath-research-app-jabga7` |
 | **Published page** | https://claude.ai/artifact/RQWX4dnGb7W68zTghnoLvz (private to the owner until shared) |
 | **First version (v1)** | https://claude.ai/artifact/5SBbxDnL3oV9XHyWgNwarW |
@@ -54,7 +54,7 @@ These override everything else. Check every change against them.
 | Claude (AI) | Only on the published claude.ai page: `window.claude.use('sample')`, using the **viewer's own Claude account** (consent is asked on the first call). In the plain file there is no AI; every AI feature has a manual alternative. |
 | Downloads | On claude.ai: `window.claude.use('downloads')` (the viewer confirms each save). Elsewhere: a normal download link. |
 | Published capabilities | `{"sample": {"images": true}, "downloads": true}`. Publish `index.html` with `vendor/pdfjs/pdf.min.js` and `vendor/pdfjs/pdf.worker.min.js` as supporting files. |
-| Speech | The browser's `speechSynthesis` (free, offline). The app does **not** use browser pause and resume; it tracks its own position (see 4.3). |
+| Speech | The voices built into the viewer's device and browser (`speechSynthesis`, the Web Speech API): free, no account, nothing uploaded. ScholarPath has no voices of its own and no paid voice service (see 5.3). The app does **not** use browser pause and resume; it tracks its own position. |
 
 ---
 
@@ -115,10 +115,16 @@ Since 12 October 2026 the app is presented as a **journey**, in the order the ow
 
 **Views:** Paragraphs · Idea flow (chain of main ideas and links, with figure markers; copyable reading notes) · Questions (three groups: *You ask the class*, *The professor may ask you* with answer tips and paragraph links, *Colleagues may ask you*). Without Claude, sensible starter questions are shown.
 
-**Read aloud:**
-- Choose any mix of **Original / Simple / Arabic translation**; a **Woman / Man** voice (common system voice names are recognised; if no voice of that kind exists, the pitch is adjusted and the user is told); speed 0.75–1.5×; exact English and Arabic voices.
-- **Pause keeps the exact word; Continue resumes there** — also after leaving the tab, switching paper or reloading (a bookmark per paper in `S.reader.marks`). Back and forward move one sentence; Stop forgets the place; "From the start".
-- Reads sentence by sentence and highlights the current sentence in the original text. Arabic text uses an Arabic voice. Figures are never read.
+**Read aloud** (rebuilt 12 Oct 2026 after the owner found the voices robotic, especially Arabic):
+- **Provider:** the device's own voices. ScholarPath ranks them by quality — *Natural* (neural: Edge "Online (Natural)", Apple "Enhanced/Premium", Siri, WaveNet…), *Good* (online, e.g. Chrome's Google voices), *Standard*, *Basic* (often robotic) — and always prefers the most natural one. Edge's broken "undefined" voices (Edge 150 bug) are hidden.
+- **Honest accents and regions:** English 🇺🇸 American, 🇬🇧 British, 🇦🇺 Australian, 🇨🇦 Canadian, each offered **only** when the device has a voice whose own language tag is en-US / en-GB / en-AU / en-CA; otherwise "Not available on this device". Arabic: **Modern Standard Arabic is the default**; voices are grouped by the speaker's country (Gulf, Levantine, Egyptian, other) with the honest note that every Arabic voice reads what is written (a translation in الفصحى is read in الفصحى) — no dialect is imitated. **Pitch is never changed** (the old "adjust the pitch for a missing gender" was removed).
+- **Voices & accents dialog:** every voice with its quality, woman/man, full system name and language; **Preview** (an academic English sample; an MSA sample with vowel marks; a mixed Arabic sentence with *Machine Learning* and *Facial Recognition Technology*); **Use**; "best voice" per accent or region; woman/man preference for automatic choice; a device-specific tip for getting natural voices (Edge, iPhone/iPad, Mac, Android, Windows).
+- **The spoken copy (the written text never changes):** sentences are not split after *et al.*, *e.g.*, *Fig.*, initials or decimals, and long ones are split at ; : , rather than mid-phrase; abbreviations (e.g., i.e., Fig., p./pp., vs.), statistics (p < .05, M, SD, SE, df, 95% CI, R², χ², ±, ≤, Greek letters), ranges, links/DOIs and vowel-less acronyms (NLP → "N L P") are said in words; numeric citations [12] are skipped by default (or read as "reference 12"); Arabic tatweel is ignored and PDF presentation-form letters are normalised. A **personal pronunciation list** (written → say as, English/Arabic/both, with Try). Positions are mapped back to the written text, so highlighting and the exact-word bookmark still work.
+- **Bilingual reading:** each sentence is split into English and Arabic runs; English terms in Arabic text are read by the English voice and Arabic words in English text by the Arabic voice; the runs of one sentence are queued together so there is no extra pause at the switch (can be turned off).
+- **Arabic vowel marks for listening (Claude):** an optional, separate copy of each Arabic translation with full tashkeel (incl. shadda, tanween, case endings). It is used only if its letters are *exactly* the translation's letters (checked character by character), so no word can change; it is shown read-only under the translation ("by Claude — check it") and becomes invalid when the translation is edited.
+- **Controls:** Play all / Pause / Continue / Stop / From the start; previous sentence, **replay sentence**, next sentence; Play only: **Selection** (select text in the paper, including in the simple/Arabic boxes), **Paragraph**, **Section** (also a Section button on every paragraph); speed 0.75 · 0.85 · 1.0 · 1.15 · 1.25 · 1.5 (the voice's own rate, no pitch change); volume; natural pauses between paragraphs and after headings; the section heading is said when a new section starts (can be turned off).
+- **Pause keeps the exact word; Continue resumes there** — also after leaving the tab, switching paper or reloading (a bookmark per paper in `S.reader.marks`). Reading a selection or a preview never moves the bookmark. All voice settings are saved (`S.reader`: enAccent, voiceEn, arRegion, voiceAr, gender, rate, volume, mixed, pauses, headings, cites, lexicon).
+- Highlights the current sentence in the original text. Figures are never read. The professor-questions step (4.2) uses the same voices and pronunciation.
 
 **Ask Claude:** a chat per paragraph and one for the whole paper. Suggested prompts include *Explain this more simply*, *Give me an everyday example* and *اشرح هذه الفقرة بالعربية*. Claude must answer from the paper and separate general knowledge from what the paper says. Answers stream, can be stopped, can be listened to and copied, and are saved.
 
@@ -234,7 +240,9 @@ Every prompt contains the three documents, her ten adaptation rules (word for wo
 - **Paragraph detection** is heuristic. In papers that separate paragraphs with a blank space (not an indent), a figure placed exactly where a sentence ends with a short line is ambiguous, so the text stays as two blocks (no words lost).
 - **Figure cropping** is automatic and can include a stray line; the full page is always sent to Claude as well. Captions must start with "Fig. N." / "Figure N:" / "TABLE N".
 - **PDF page numbers** are the PDF's own pages, not the journal's printed numbers.
-- **Voices** depend on the device. Some voices don't report word positions, so Continue then restarts at the sentence.
+- **Voices** depend on the device and browser; ScholarPath cannot make a robotic voice natural, only choose the best one available and tell the user how to get better ones. Natural voices in Edge need an internet connection. Some voices don't report word positions, so Continue then restarts at the sentence. Real audio quality (naturalness, accents, Arabic fluency) can only be judged by listening on the owner's devices — the automated tests use a stand-in speech engine.
+- **No premium voice service:** neural cloud services (Azure, Google Cloud, ElevenLabs, OpenAI) would need an API key kept on a server, cost money per character, and may not be reachable from the claude.ai page. Not integrated (the owner asked for pricing and setup first).
+- **Dialects:** no Arabic voice speaks a dialect from Standard Arabic text; regional voices are offered as speakers' accents only. Mixed-language switching depends on the engine honouring queued utterances; a very short switch (one Arabic word such as "و" between English terms) is still a separate utterance.
 - **AI features** need the published claude.ai page and use the viewer's Claude account. They are not available in the plain file.
 - **Pictures and data** are stored in the browser only. The JSON backup excludes the pictures and the original Word/PowerPoint files of Part 4.
 - **Word and PowerPoint (Part 4):** reading compressed files needs `DecompressionStream` (Chrome/Edge 80+, Safari 16.4+, Firefox 113+). Text in pictures, SmartArt and embedded objects is not read. A correction is made only when the old words sit inside one paragraph (not across a line break or two text boxes); otherwise it is marked "do this by hand". Chart data is read but not changed. Corrected copies are stored uncompressed, so they are larger than the original (they open normally).
@@ -249,7 +257,7 @@ Every prompt contains the three documents, her ten adaptation rules (word for wo
 Headless Chromium (Playwright) scripts, with stand-ins for Claude (`window.claude`) and the speech engine:
 - every tab renders without errors, on desktop and phone, in light and dark mode, without horizontal scrolling;
 - AI flows: summaries, questions, chat, translation and figure analysis, including unusual reply shapes;
-- read-aloud: voice choice, pause/continue at the exact word, continue after reload, sentence skip;
+- read-aloud: voice choice, pause/continue at the exact word, continue after reload, sentence skip; and (Oct 12) with an Edge-like set of 14 stand-in voices: accent and region grouping (Canadian correctly 'not available'), quality badges, the hidden 'undefined' voice, previews, Use and persistence, sentence splitting, the spoken forms of statistics/abbreviations/citations/acronyms (also unit-tested in Node), English runs in Arabic read by the English voice, speed and volume, replay/next/previous, Selection/Paragraph/Section, the pronunciation list, vowel marks (accepted only when the letters match; the written translation unchanged), pitch always 1, a device without Arabic voices, phone width in dark mode. Listening quality itself was not testable here;
 - the Word export opens in python-docx; the matplotlib code runs and exports at 3.5 in / 600 dpi;
 - **word preservation:** 20 generated two-column papers (indented and spaced paragraphs) with figures interrupting paragraphs (mid-sentence, between sentences, at column tops) and a table. Every word of every paragraph is compared with the original. Result: no word lost; every paragraph whole in indented papers.
 
@@ -275,6 +283,7 @@ The scripts lived in the session's scratch area. **Next step:** add them to `tes
 | 2026-10-10 | Reader: figures and tables kept out of the reading, explained in Figure Lab |
 | 2026-10-10 | Reader: whole paragraphs and every word kept around figures |
 | 2026-10-12 | Reorganised as a journey: Start page, Part 1 Write → Part 2 Critique → Part 3 Present, Previous/Next, helpful-tool links in the writing path |
+| 2026-10-12 | Read aloud rebuilt: natural-voice ranking, honest English accents (US/UK/AU/CA) and Arabic speaker regions with MSA default, Voices & accents dialog with previews, no pitch faking, spoken-copy rules for academic text, pronunciation list, bilingual voice switching, Arabic vowel marks for listening (Claude), replay/selection/paragraph/section, volume, pauses and headings |
 | 2026-10-12 | Step 4.2 · Potential Professor Questions & Critical Discussion Preparation (adaptive questions from the actual documents, challenges to the critique, slide questions, Q&A checklist, mock professor with feedback, report A–F); Part 4 renamed "Verify & defend"; step 3.2 renamed "Questions about the paper" |
 | 2026-10-12 | Part 4 · Verify: Final Academic Verification & Consistency Checklist — paper vs critique vs slides, version-aware checklist (51 items), consistency matrix, contradictions, corrections (incl. corrected Word/PowerPoint copies), automatic checks, QA report A–G with Word export |
 
@@ -288,4 +297,5 @@ The scripts lived in the session's scratch area. **Next step:** add them to `tes
 - OCR for scanned PDFs; detection of sub-section headings ("A. Participants").
 - Include figure pictures in the backup (zip), and sync between devices.
 - An Arabic interface option for the whole app.
+- Read aloud: if the owner wants studio-quality voices on every device, a small server (holding an Azure or Google Cloud key) could create audio for ScholarPath — only after she agrees to the cost and setup (see the reply of 12 Oct 2026).
 - Part 4: read text inside PowerPoint pictures (OCR) and SmartArt; let a correction span two paragraphs; compare two versions of the same document side by side.

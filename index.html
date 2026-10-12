@@ -354,6 +354,42 @@ svg.mini{width:100%;max-width:220px;height:auto;display:block}
 .voice-more summary{cursor:pointer;color:var(--accent)}
 .voice-more label{display:inline-flex;align-items:center;gap:6px}
 mark.tts-now{background:var(--warn-soft);color:var(--ink);border-radius:3px;padding:0 1px}
+.tts-scope{display:inline-flex;gap:4px;flex-wrap:wrap;align-items:center}
+.tts-bar .tts-row{align-self:stretch}
+.tts-ctl{display:inline-flex;align-items:center;gap:6px}
+.tts-ctl select{width:auto}
+.tts-ctl input[type=range]{width:96px;accent-color:var(--accent)}
+.tts-voices{font-size:.86rem}
+.vq{display:inline-block;font:600 .68rem var(--sans);letter-spacing:.03em;padding:1px 6px;border-radius:999px;vertical-align:1px;background:var(--surface-2);color:var(--muted)}
+.vq-3{background:var(--ok-soft);color:var(--ok)}
+.vq-2{background:var(--accent-soft);color:var(--accent)}
+.vq-0{background:var(--warn-soft);color:var(--warn)}
+dialog.voice-dialog{width:min(820px,calc(100vw - 24px));overflow:auto;padding:0}
+.voice-dlg h4{margin:0 0 8px}
+.voice-dlg h5{margin:12px 0 4px;font:600 .9rem var(--sans)}
+.vsec{border-top:1px solid var(--line);padding-top:14px;margin-top:14px}
+.vtip{display:flex;gap:8px;align-items:flex-start;background:var(--accent-soft);border-radius:var(--radius-sm);padding:8px 12px}
+.accents{display:grid;gap:10px;grid-template-columns:1fr}
+@media(min-width:760px){.accents{grid-template-columns:1fr 1fr}}
+.accent{border:1px solid var(--line);border-radius:var(--radius-sm);padding:10px 12px;min-width:0}
+.accent.on{border-color:var(--accent)}
+.accent-head{display:flex;flex-wrap:wrap;gap:6px;justify-content:space-between;align-items:center;margin-bottom:6px}
+.vlist{list-style:none;margin:0;padding:0}
+.vrow{display:flex;flex-wrap:wrap;gap:6px 10px;justify-content:space-between;align-items:center;padding:7px 0;border-top:1px solid var(--line)}
+.vrow:first-child{border-top:0}
+.vrow.on .vname b{color:var(--accent)}
+.vname{min-width:0;flex:1 1 200px}
+.vfull{display:block;overflow-wrap:anywhere}
+.vrow .row{gap:4px}
+.lexlist{list-style:none;margin:0 0 8px;padding:0}
+.lexlist li{display:flex;flex-wrap:wrap;justify-content:space-between;gap:6px;align-items:center;padding:6px 0;border-top:1px solid var(--line)}
+.lexadd{display:grid;gap:6px;grid-template-columns:1fr}
+@media(min-width:620px){.lexadd{grid-template-columns:1fr 1fr auto auto}}
+.lexadd .input,.lexadd select{min-height:34px;padding:5px 10px}
+.ar-voc{margin-top:6px}
+.ar-voc summary{cursor:pointer;color:var(--ok);display:inline-flex;gap:6px;align-items:center;flex-wrap:wrap}
+.ar-voc-text{font:1.12rem/2 "Noto Naskh Arabic","Amiri","Traditional Arabic",serif;background:var(--surface-2);border-radius:8px;padding:8px 12px}
+.ar-voc-btn{margin-top:6px}
 .ar-text{font-size:1.02rem;line-height:1.8;font-family:"Noto Naskh Arabic","Geeza Pro","Segoe UI",Tahoma,var(--sans)}
 
 
@@ -740,6 +776,7 @@ footer.foot{max-width:1180px;margin:0 auto;padding:0 16px 40px;color:var(--muted
 <footer class="foot">ScholarPath saves everything in this browser only (localStorage). Use <b>My Progress → Back up</b> to keep a copy.</footer>
 
 <dialog id="dlg"><form method="dialog" id="dlgForm"></form></dialog>
+<dialog id="voiceDlg" class="voice-dialog" aria-label="Voices and accents"></dialog>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 <noscript><p style="padding:20px">ScholarPath needs JavaScript enabled.</p></noscript>
 
@@ -1185,7 +1222,8 @@ for (const k of Object.keys(base)) if (S[k] === undefined) S[k] = base[k];
 S.ui = Object.assign({}, base.ui, S.ui);
 S.writing = Object.assign({}, base.writing, S.writing);
 S.pres = Object.assign({}, base.pres, S.pres);
-S.reader = Object.assign({papers:[], active:'', view:'paras', rate:1, gender:'f', voiceEn:'', voiceAr:'', marks:{}}, S.reader);
+S.reader = Object.assign({papers:[], active:'', view:'paras', rate:1, gender:'f', voiceEn:'', voiceAr:'', marks:{}, enAccent:'en-US', arRegion:'msa', volume:1, mixed:true, pauses:true, headings:true, cites:'skip', lexicon:[]}, S.reader);
+S.reader.rate = [0.75, 0.85, 1, 1.15, 1.25, 1.5].reduce((a, r) => Math.abs(r - S.reader.rate) < Math.abs(a - S.reader.rate) ? r : a, 1);
 S.reader.ttsParts = Object.assign({orig:true, idea:true, ar:false}, S.reader.ttsParts);
 S.verify = Object.assign({sets:[], active:'', view:'flow'}, S.verify);
 S.verify.sets = (S.verify.sets || []).filter(Boolean).map(v => Object.assign(newVerifySet(), v, {docs:Object.assign({paper:null, critique:null, pres:null}, v.docs)}));
@@ -2373,53 +2411,240 @@ function starterQuestions(paper){
   };
 }
 
-/* --- Read aloud (the browser's own speech voices: free, offline, no account) ---
-   Plays a list of segments (a paragraph's original text, simple version or Arabic translation), one
-   sentence at a time. Pausing keeps the exact position (word-level where the voice reports it,
-   otherwise the start of the sentence), and a per-paper bookmark survives leaving the tab or reloading. */
+/* --- Read aloud: the voices built into this device and browser (Web Speech API — free, no account, nothing uploaded) ---
+   ScholarPath has no voices of its own. It picks the most natural voice the device offers (neural "Natural",
+   "Enhanced" or "Premium" voices first), names an accent or region only from the voice's own language tag, and
+   never fakes an accent, dialect or gender by changing pitch. The written text is never changed: only the copy
+   that is spoken is prepared (sentences split around abbreviations; statistics, symbols and citations said in
+   words; a personal pronunciation list; English and Arabic phrases each read by a voice of their own language).
+   Pausing keeps the exact place, and a per-paper bookmark survives leaving the tab or reloading. */
 const TTS = {ok:typeof window.speechSynthesis !== 'undefined' && typeof window.SpeechSynthesisUtterance !== 'undefined',
-  list:[], i:0, char:0, playing:false, gen:0, ctx:null, note:''};
+  list:[], i:0, char:0, playing:false, gen:0, ctx:null, note:'', sel:null, timer:0};
+const TTS_RATES = [0.75, 0.85, 1, 1.15, 1.25, 1.5];
+const EN_ACCENTS = [{k:'en-US', flag:'🇺🇸', t:'American English'}, {k:'en-GB', flag:'🇬🇧', t:'British English'}, {k:'en-AU', flag:'🇦🇺', t:'Australian English'}, {k:'en-CA', flag:'🇨🇦', t:'Canadian English'}];
+const AR_REGIONS = [{k:'gulf', t:'Gulf', ar:'الخليج', cc:['AE', 'SA', 'KW', 'QA', 'BH', 'OM', 'YE']}, {k:'levant', t:'Levantine', ar:'بلاد الشام', cc:['JO', 'LB', 'SY', 'PS']},
+  {k:'egypt', t:'Egyptian', ar:'مصر', cc:['EG']}, {k:'other', t:'Other Arabic voices', ar:'أخرى', cc:[]}];
+const COUNTRY = {AE:'UAE', SA:'Saudi Arabia', KW:'Kuwait', QA:'Qatar', BH:'Bahrain', OM:'Oman', YE:'Yemen', JO:'Jordan', LB:'Lebanon', SY:'Syria', PS:'Palestine', EG:'Egypt', IQ:'Iraq', MA:'Morocco', DZ:'Algeria', TN:'Tunisia', LY:'Libya', SD:'Sudan', '001':'World', XA:'Arabic', US:'United States', GB:'United Kingdom', AU:'Australia', CA:'Canada'};
+const TTS_SAMPLE = {
+  en:'This study examines how students use AI feedback on their writing. The results suggest that feedback improved accuracy (p < .05), but not the structure of their essays.',
+  ar:'تتناولُ هذه الدراسةُ أثرَ التغذيةِ الراجعةِ التي يقدِّمُها الذكاءُ الاصطناعيُّ في كتابةِ الطلبة. وتُشيرُ النتائجُ إلى تحسُّنٍ واضحٍ في الدقّةِ اللغويّة، غيرَ أنَّ بِنيةَ النصِّ لم تتحسَّنْ بالقدرِ نفسِه.',
+  mix:'يعتمدُ هذا البحثُ على تقنياتِ Machine Learning و Facial Recognition Technology لتحليلِ البيانات، ويقارنُ نتائجَها بدراساتٍ سابقة.'
+};
 const isArabic = t => /[؀-ۿ]/.test(t || '');
-const FEMALE_RE = /female|woman|\b(zira|hazel|susan|samantha|victoria|karen|moira|tessa|fiona|veena|serena|kate|allison|ava|nicky|joanna|kendra|kimberly|salli|ivy|emma|amy|aria|jenny|libby|sonia|natasha|clara|michelle|sara|catherine|heera|hoda|salma|zariyah|laila|layla|mariam|amira|nora|noura|hala|lana|rana|mona|fatima|yasmin|iman|reem|amany|sana|eva|linda|heather|julie|shelley|sandy|flo|grandma|martha|ellie|joanna)\b/i;
-const MALE_RE = /\bmale\b|\bman\b|\b(david|mark|george|james|daniel|alex|fred|arthur|oliver|rishi|aaron|tom|guy|ryan|thomas|matthew|joey|justin|brian|eric|christopher|roger|steffan|liam|william|naayf|maged|majed|tarik|tariq|hamed|shakir|omar|bassel|hamdan|fahed|moaz|ali|zayed|taim|jamal|rami|kareem|karim|ahmed|mohammed|reed|rocko|ralph|eddy|grandpa|junior|albert|bruce)\b/i;
-const voiceGender = v => FEMALE_RE.test(v.name) ? 'f' : MALE_RE.test(v.name) ? 'm' : /google us english|google (العربية|arabic)/i.test(v.name) ? 'f' : '';
-const voiceQuality = v => /natural|neural|online|premium|enhanced|siri/i.test(v.name) ? 2 : v.localService ? 1 : 0;
-function ttsVoices(lang){ try { return TTS.ok ? speechSynthesis.getVoices().filter(v => (lang ? new RegExp('^' + lang, 'i') : /^(en|ar)/i).test(v.lang)) : []; } catch { return []; } }
-function pickVoice(lang){
-  const all = ttsVoices(lang), want = S.reader.gender || 'f', chosen = lang === 'ar' ? S.reader.voiceAr : S.reader.voiceEn;
-  const exact = all.find(v => v.voiceURI === chosen);
-  if (exact) return {v:exact, pitch:1};
-  const rank = v => (voiceGender(v) === want ? 10 : 0) + voiceQuality(v) * 2 + (v.default ? 1 : 0) + (/^en-(gb|us)/i.test(v.lang) ? 0.5 : 0);
-  const best = all.slice().sort((a, b) => rank(b) - rank(a))[0];
-  if (!best) return {v:null, pitch:want === 'm' ? 0.8 : 1.12};
-  return {v:best, pitch:voiceGender(best) === want ? 1 : want === 'm' ? 0.8 : 1.12};    // no voice of that kind: adjust the pitch instead
+const baseLang = t => (String(t || '').match(/[\u0600-\u06FF]/g) || []).length > (String(t || '').match(/[A-Za-z]/g) || []).length ? 'ar' : 'en';   // the language most of the text is in
+const FEMALE_RE = /female|woman|\b(zira|hazel|susan|samantha|victoria|karen|moira|tessa|fiona|veena|serena|kate|allison|ava|nicky|joanna|kendra|kimberly|salli|ivy|emma|amy|aria|jenny|libby|maisie|sonia|natasha|clara|michelle|sara|catherine|heera|hoda|salma|zariyah|laila|layla|mariam|amira|nora|noura|hala|lana|rana|mona|fatima|yasmin|iman|reem|amany|sana|eva|linda|heather|julie|shelley|sandy|flo|grandma|martha|ellie|zoe|annette|carly|elsie|freya|joanne|kim|tina|abbi|bella|hollie|olivia|sophie|ana|emily|nancy|jane|sara|amal|mouna|aysha|lily|yara|zainab)\b/i;
+const MALE_RE = /\bmale\b|\bman\b|\b(david|mark|george|james|daniel|alex|fred|arthur|oliver|rishi|aaron|tom|guy|ryan|thomas|matthew|joey|justin|brian|eric|christopher|roger|steffan|liam|william|naayf|maged|majed|tarik|tariq|hamed|shakir|omar|bassel|hamdan|fahed|moaz|ali|zayed|taim|jamal|rami|kareem|karim|ahmed|mohammed|reed|rocko|ralph|eddy|grandpa|junior|albert|bruce|lee|evan|nathan|noah|ken|duncan|darren|neil|tim|alfie|elliot|ethan|hayley|noah|oscar|andrew|brandon|davis|jacob|jason|tony|laith|hassan|saleh|youssef|jaber|abdullah|hedda)\b/i;
+const voiceGender = v => FEMALE_RE.test(v.name) ? 'f' : MALE_RE.test(v.name) ? 'm' : '';
+const vLang = v => String(v.lang || '').replace('_', '-');
+const vCC = v => (vLang(v).split('-')[1] || '').toUpperCase();
+// 3 = neural (Natural / Neural / Enhanced / Premium), 2 = online voices, 1 = standard device voice, 0 = basic voices that often sound robotic
+function voiceTier(v){
+  const n = `${v.name} ${v.voiceURI}`;
+  if (/natural|neural|premium|enhanced|siri|wavenet|studio|journey|chirp/i.test(n)) return 3;
+  if (/compact|espeak|desktop|robot|novelty|bad news|bells|boing|bubbles|cellos|jester|organ|superstar|trinoids|whisper|wobble|zarvox|albert|fred|junior|ralph|bahh|good news/i.test(n)) return 0;
+  if (/^google\b/i.test(v.name) || v.localService === false) return 2;
+  return 1;
 }
-function ttsChunks(text){                                    // sentences (long ones split at a space), with their offsets
-  const out = [], re = /[^.!?؟]+(?:[.!?؟]+["”’)]*|$)\s*/g; let m;
-  while ((m = re.exec(text || '')) && m[0]){
-    let s = m[0], start = m.index;
-    while (s.trim().length > 230){ const cut = s.lastIndexOf(' ', 210) > 60 ? s.lastIndexOf(' ', 210) : 210; out.push({start, text:s.slice(0, cut)}); start += cut; s = s.slice(cut); }
-    if (s.trim()) out.push({start, text:s});
+const TIER = [['Basic', 'May sound robotic'], ['Standard', 'Built-in voice'], ['Good', 'Online voice'], ['Natural', 'Neural voice — the most natural']];
+function ttsVoices(lang){
+  try { return TTS.ok ? speechSynthesis.getVoices().filter(v => v && v.name && !/undefined/i.test(`${v.name} ${v.lang}`) && (lang ? new RegExp('^' + lang + '\\b', 'i') : /^(en|ar)\b/i).test(vLang(v))) : []; }
+  catch { return []; }
+}
+const enAccentOf = v => (EN_ACCENTS.find(a => a.k.toLowerCase() === vLang(v).toLowerCase()) || {}).k || '';
+const arRegionOf = v => (AR_REGIONS.find(r => r.cc.includes(vCC(v))) || AR_REGIONS[3]).k;
+const voiceRank = (v, want, kind) => voiceTier(v) * 10 + (voiceGender(v) === want ? 3 : 0) + (kind === 'ar' && /^(SA|001|XA|AE)$/.test(vCC(v)) ? 1 : 0) + (v.default ? 0.5 : 0);
+const voiceName = v => String(v.name).replace(/^(Microsoft|Google|Apple)\s+/i, '').replace(/\s*Online \(Natural\)/i, '').replace(/\s*-\s*(English|Arabic).*$/i, '').trim();
+// the voice for English or Arabic text: your chosen voice, else the most natural voice for your accent or region
+function pickVoice(kind){
+  const R = S.reader, all = ttsVoices(kind), want = R.gender || 'f', chosen = kind === 'ar' ? R.voiceAr : R.voiceEn;
+  const exact = all.find(v => v.voiceURI === chosen);
+  if (exact) return {v:exact, note:''};
+  let pool = all, note = '';
+  if (kind === 'en'){
+    const acc = EN_ACCENTS.find(a => a.k === R.enAccent) || EN_ACCENTS[0], inAcc = all.filter(v => enAccentOf(v) === acc.k);
+    if (inAcc.length) pool = inAcc; else if (all.length) note = `This device has no ${acc.t} voice, so another English voice is used.`;
+  } else if (R.arRegion && R.arRegion !== 'msa'){
+    const inReg = all.filter(v => arRegionOf(v) === R.arRegion);
+    if (inReg.length) pool = inReg; else if (all.length) note = 'This device has no Arabic voice from the region you chose, so the best Arabic voice is used.';
+  }
+  const v = pool.slice().sort((a, b) => voiceRank(b, want, kind) - voiceRank(a, want, kind))[0] || null;
+  if (!v) return {v:null, note:kind === 'ar' ? 'No Arabic voice was found on this device — see “Voices & accents” for how to add one.' : 'No English voice was found on this device.'};
+  if (chosen && !note) note = `Your chosen ${kind === 'ar' ? 'Arabic' : 'English'} voice is not available here, so ${voiceName(v)} is used.`;
+  else if (!note && voiceGender(v) && voiceGender(v) !== want && !pool.some(x => voiceGender(x) === want)) note = `No ${want === 'm' ? 'male' : 'female'} voice of this kind on this device, so ${voiceName(v)} is used (the voice is not altered).`;
+  return {v, note};
+}
+
+/* the copy that is spoken: written text in, words to say out, with a map back to the written position */
+const reEsc = s => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+const TTS_LEX = [['IEEE', 'I triple E'], ['AI', 'A I'], ['GenAI', 'gen A I'], ['ChatGPT', 'Chat G P T'], ['UAE', 'U A E'], ['MSA', 'M S A'], ['AAU', 'A A U'], ['PhD', 'P H D'], ['MSc', 'M S C'], ['BSc', 'B S C'], ['UNESCO', 'yoo-NESS-koh']];
+const OPW = {'<':'less than', '>':'greater than', '=':'equals', '≤':'less than or equal to', '≥':'greater than or equal to', '≠':'not equal to'};
+const STATW = {M:'mean', SD:'standard deviation', SE:'standard error', SEM:'standard error of the mean', df:'degrees of freedom', OR:'odds ratio', CI:'confidence interval', IQR:'interquartile range'};
+const GREEK = {α:'alpha', β:'beta', γ:'gamma', δ:'delta', Δ:'delta', ε:'epsilon', θ:'theta', κ:'kappa', λ:'lambda', μ:'mu', π:'pi', ρ:'rho', σ:'sigma', Σ:'sum', τ:'tau', φ:'phi', χ:'chi', ψ:'psi', ω:'omega', η:'eta'};
+let ttsRuleCache = {};
+function ttsRules(lang){
+  const lex = S.reader.lexicon || [], key = `${lang}|${S.reader.cites}|${JSON.stringify(lex)}`;
+  if (ttsRuleCache[lang] && ttsRuleCache[lang].key === key) return ttsRuleCache[lang].R;
+  const R = [], WB = '(?<![\\p{L}\\p{N}])', WE = '(?![\\p{L}\\p{N}])';
+  const add = (src, to, flags='') => { try { R.push({re:new RegExp(src, 'yu' + flags), to}); } catch {} };   // a rule this browser cannot run is skipped
+  lex.filter(e => e && e.w && e.say != null && (!e.lang || e.lang === 'both' || e.lang === lang)).sort((a, b) => b.w.length - a.w.length).forEach(e => add(WB + reEsc(e.w) + WE, e.say, e.cs ? '' : 'i'));
+  const cite = m => { const n = m[0].replace(/[\s[\]]/g, '').replace(/[;،]/g, ',').replace(/[–-]/g, lang === 'ar' ? ' إلى ' : ' to ').replace(/,+/g, ', ');
+    return S.reader.cites === 'read' ? (lang === 'ar' ? ` (المرجع ${n})` : ` (reference ${n})`) : ''; };
+  const C1 = '\\[\\d{1,3}(?:\\s*[,،–-]\\s*\\d{1,3})*\\]';
+  add('\\s?' + C1 + '(?:\\s*[,;،]\\s*' + C1 + ')*', cite);
+  add('https?://\\S+|www\\.\\S+', lang === 'ar' ? ' رابط ' : ' link ');
+  if (lang === 'ar'){
+    add('\\u0640+', '');                                                         // tatweel (stretching) is not a sound
+    add('[\\uFB50-\\uFDFF\\uFE70-\\uFEFF]', m => m[0].normalize('NFKC'));      // PDF "presentation forms" → normal Arabic letters
+    add('%', ' بالمئة');
+    ttsRuleCache[lang] = {key, R}; return R;
+  }
+  TTS_LEX.forEach(([w, say]) => add(WB + reEsc(w) + WE, say));
+  add('doi:\\s*\\S+', 'D O I', 'i'); add(WB + '10\\.\\d{4,9}/\\S+', 'D O I');
+  add('et al\\.', 'et al', 'i');
+  [['e\\.g\\.', 'for example'], ['i\\.e\\.', 'that is'], ['cf\\.', 'compare'], ['vs\\.?' + WE, 'versus'], ['etc\\.', 'etcetera'], ['approx\\.', 'approximately'], ['n\\.d\\.', 'no date'], ['viz\\.', 'namely'],
+   ['Figs\\.(?=\\s*\\d)', 'Figures'], ['Fig\\.(?=\\s*\\d)', 'Figure'], ['Eqs?\\.(?=\\s*[\\d(])', 'Equation'], ['Secs?\\.(?=\\s*[\\dIVX])', 'Section'], ['Tab\\.(?=\\s*\\d)', 'Table'], ['No\\.(?=\\s*\\d)', 'number'],
+   ['Vol\\.(?=\\s*\\d)', 'volume'], ['pp\\.(?=\\s*\\d)', 'pages'], ['p\\.(?=\\s*\\d)', 'page'], ['Ch\\.(?=\\s*\\d)', 'Chapter'], ['ca\\.(?=\\s*\\d)', 'circa'], ['Dr\\.(?=\\s)', 'Doctor'], ['Prof\\.(?=\\s)', 'Professor']]
+    .forEach(([re, say]) => add(WB + re, say, /^(Fig|Eq|Sec|Tab|No|Vol|Ch|Dr|Prof)/.test(re) ? '' : 'i'));
+  add('(?<![\\p{L}])p\\s*([<>=≤≥])\\s*(?=[-−]?[.\\d])', m => `p ${OPW[m[1]]} `);
+  add('(?<=[\\s(;,\\[])(SEM|SD|SE|IQR|df|OR|CI|M)(?=\\s*[=:]\\s*[-−]?[.\\d\\[])', m => STATW[m[1]]);
+  add('(?<=%\\s?)CI' + WE, 'confidence interval');
+  add('R(?:²|\\^2)', 'R squared'); add('η(?:²|\\^2)', 'eta squared'); add('χ(?:²|\\^2)', 'chi-square'); add('ω(?:²|\\^2)', 'omega squared');
+  add('\\s*([<>=≤≥≠])\\s*(?=[-−]?[.\\d])', m => ` ${OPW[m[1]]} `); add('[≤≥≠]', m => ` ${OPW[m[0]]} `);
+  add('\\s*±\\s*', ' plus or minus '); add('(?<=\\d)\\s*×\\s*(?=\\d)', ' times '); add('\\s*≈\\s*', ' approximately '); add('\\s*→\\s*', ' leads to ');
+  add('−(?=\\d)', 'minus '); add('(?<![\\d.,])\\.(?=\\d)', '0.');
+  add('²', ' squared'); add('³', ' cubed');
+  add('[αβγδΔεθκλμπρσΣτφχψωη]', m => ` ${GREEK[m[0]]} `);
+  add('(?<=\\d)\\s?[–—]\\s?(?=\\d)', ' to '); add('(?<=(?:19|20)\\d\\d)-(?=(?:19|20)\\d\\d' + WE + ')', ' to ');
+  add('\\s&\\s', ' and ');
+  add(WB + '([B-DF-HJ-NP-TV-Z]{2,5})(s?)' + WE, m => m[1].split('').join(' ') + (m[2] ? "'s" : ''));   // NLP, LLMs, CNN: spelled out
+  ttsRuleCache[lang] = {key, R}; return R;
+}
+function spokenForm(src, lang){
+  const R = ttsRules(lang), segs = []; let say = '', i = 0;
+  while (i < src.length){
+    let hit = null;
+    for (const r of R){ r.re.lastIndex = i; const m = r.re.exec(src); if (m && m[0].length){ hit = [r, m]; break; } }
+    if (hit){ const out = typeof hit[0].to === 'function' ? hit[0].to(hit[1]) : hit[0].to; segs.push([say.length, i, out.length, false]); say += out; i += hit[1][0].length; continue; }
+    const last = segs[segs.length - 1];
+    if (last && last[3] && last[0] + last[2] === say.length) last[2]++; else segs.push([say.length, i, 1, true]);
+    say += src[i]; i++;
+  }
+  return {say, map:k => { for (let j = segs.length - 1; j >= 0; j--){ const s = segs[j]; if (k >= s[0]) return s[3] ? s[1] + Math.min(k - s[0], s[2]) : s[1]; } return 0; }};
+}
+
+/* sentences: split at . ! ? ؟ — but not after "et al.", "e.g.", "Fig.", initials or decimals */
+const TTS_ABBR = /(?:^|[\s(])(?:et al|e\.g|i\.e|cf|vs|approx|figs?|eqs?|secs?|tab|nos?|vol|pp?|ch|dr|prof|mr|mrs|ms|st|inc|ltd|jr|sr|resp|ca|viz|n\.d|al)$/i;
+function ttsSentences(text){
+  const out = [], re = /([.!?؟…]+)(["”’)\]]*)(\s+|$)|\n+/g; let start = 0, m;
+  while ((m = re.exec(text))){
+    if (m[0] === '' ){ re.lastIndex++; continue; }
+    const end = m.index + m[0].length;
+    if (m[1] === '.' && m[3]){
+      const before = text.slice(Math.max(start, m.index - 14), m.index), next = text.charAt(end);
+      if (TTS_ABBR.test(before) || (/(?:^|[\s(])[A-Z]$/.test(before) && /[A-Z]/.test(next)) || /^[a-z(,;]/.test(next)) continue;
+    }
+    if (text.slice(start, end).trim()) out.push({start, end});
+    start = end;
+  }
+  if (text.slice(start).trim()) out.push({start, end:text.length});
+  return out;
+}
+const TTS_MAX = 240;
+function ttsChunks(text){                                    // sentences; long ones split at a clause (; : , —) rather than mid-phrase
+  const out = [];
+  for (const s of ttsSentences(text || '')){
+    let start = s.start, t = text.slice(s.start, s.end);
+    while (t.trim().length > TTS_MAX){
+      const head = t.slice(0, TTS_MAX), at = re => { let best = -1, m; const g = new RegExp(re, 'g'); while ((m = g.exec(head))) if (m.index > 70) best = m.index + m[0].length; return best; };
+      let cut = at('[;:؛]\\s'); if (cut < 0) cut = at('[,،—–]\\s'); if (cut < 0) cut = head.lastIndexOf(' ') > 70 ? head.lastIndexOf(' ') + 1 : TTS_MAX;
+      out.push({start, text:t.slice(0, cut)}); start += cut; t = t.slice(cut);
+    }
+    if (t.trim()) out.push({start, text:t});
   }
   return out;
 }
-const PART_LABEL = {orig:'Original', idea:'Simple', ar:'Arabic'};
-function ttsSegs(paper, opts){                                // opts: {from, only, parts}
+// English and Arabic phrases inside one sentence: each is read by a voice of its own language
+const AR_CH = /[؀-ۿݐ-ݿࢠ-ࣿﭐ-﷿ﹰ-﻿]/, LA_CH = /[A-Za-zÀ-ɏ]/;
+function langRuns(T, from, base){
+  let runs = [], cur = null;
+  for (let i = from; i < T.length; i++){
+    const ch = T[i], k = AR_CH.test(ch) ? 'ar' : LA_CH.test(ch) ? 'en' : '';
+    if (!cur){ cur = {lang:k || base, a:i, b:i + 1, n:k ? 1 : 0}; continue; }
+    if (!k || k === cur.lang){ cur.b = i + 1; if (k) cur.n++; continue; }
+    runs.push(cur); cur = {lang:k, a:i, b:i + 1, n:1};
+  }
+  if (cur) runs.push(cur);
+  runs.forEach(r => { if (r.lang !== base && r.n < 2) r.lang = base; });                 // a single letter (a variable such as p or x) stays with its sentence
+  return runs.reduce((acc, r) => { const l = acc[acc.length - 1]; if (l && l.lang === r.lang) l.b = r.b; else acc.push({lang:r.lang, a:r.a, b:r.b}); return acc; }, []);
+}
+// Arabic with vowel marks (for listening only): the mark-free letters must be exactly the written translation
+const AR_DIAC = /[ً-ٰٟۖ-ۭ]/;
+function vocMap(orig, voc){
+  if (!orig || !voc) return null;
+  const pos = new Array(orig.length + 1); let j = 0;
+  for (let i = 0; i < orig.length; i++){
+    const o = orig[i];
+    if (/\s/.test(o)){ while (j < voc.length && AR_DIAC.test(voc[j])) j++; pos[i] = j; while (j < voc.length && /\s/.test(voc[j])) j++; continue; }
+    while (j < voc.length && ((AR_DIAC.test(voc[j]) && voc[j] !== o) || (/\s/.test(voc[j]) && !/\s/.test(o) && i > 0 && /\s/.test(orig[i - 1])))) j++;
+    if (voc[j] !== o) return null;
+    pos[i] = j; j++;
+  }
+  while (j < voc.length && AR_DIAC.test(voc[j])) j++;
+  if (voc.slice(j).trim()) return null;
+  pos[orig.length] = voc.length;
+  return pos;
+}
+const textHash = s => { let h = 2166136261; for (const ch of String(s || '')){ h ^= ch.charCodeAt(0); h = Math.imul(h, 16777619); } return (h >>> 0).toString(36); };
+const arVocOf = p => p.arVoc && p.arVoc.for === textHash(p.ar) && vocMap(p.ar, p.arVoc.text) ? p.arVoc.text : '';
+// one sentence → the utterances to queue: [{say, lang, at (written offset), map(spoken index → written offset)}]
+function ttsPieces(c, from){
+  const T = c.text, base = c.lang === 'ar' ? 'ar' : baseLang(T);
+  const runs = S.reader.mixed === false ? [{lang:base, a:from, b:T.length}] : langRuns(T, from, base);
+  return runs.map(r => {
+    let src = T.slice(r.a, r.b), toW = k => r.a + k;
+    if (c.vpos && r.lang === 'ar'){
+      const g0 = c.segStart + r.a, g1 = c.segStart + r.b, p0 = c.vpos[g0];
+      src = c.voc.slice(p0, c.vpos[g1]);
+      toW = k => { let lo = g0, hi = g1; while (lo < hi){ const mid = (lo + hi + 1) >> 1; if (c.vpos[mid] - p0 <= k) lo = mid; else hi = mid - 1; } return lo - c.segStart; };
+    }
+    const sp = spokenForm(src, r.lang);
+    return {say:sp.say, lang:r.lang, at:r.a, map:k => toW(sp.map(k))};
+  }).filter(x => /[\p{L}\p{N}]/u.test(x.say));
+}
+function ttsUtter(x, voice){
+  const u = new SpeechSynthesisUtterance(x.say), v = voice || pickVoice(x.lang).v;
+  if (v){ u.voice = v; u.lang = vLang(v); } else u.lang = x.lang === 'ar' ? 'ar-SA' : (S.reader.enAccent || 'en-US');
+  u.rate = S.reader.rate || 1; u.volume = Math.max(0, Math.min(1, S.reader.volume ?? 1)); u.pitch = 1;     // the voice is never altered
+  return u;
+}
+
+const PART_LABEL = {orig:'Original', idea:'Simple', ar:'Arabic', head:'Heading', sel:'Selection'};
+function ttsSegs(paper, opts){                                // opts: {from, only, section, parts}
   const parts = opts.parts || S.reader.ttsParts || {orig:true, idea:true};
-  const list = paper.paras.filter(isReadable), start = opts.from ? Math.max(0, list.findIndex(p => p.id === opts.from)) : 0;
-  const ps = opts.only ? list.filter(p => p.id === opts.only) : list.slice(start);
-  return ps.flatMap(p => [
+  const list = paper.paras.filter(isReadable);
+  let ps;
+  if (opts.only) ps = list.filter(p => p.id === opts.only);
+  else if (opts.section){
+    const i = Math.max(0, list.findIndex(p => p.id === opts.section)); let a = i, b = i;
+    while (a > 0 && list[a - 1].section === list[i].section) a--; while (b < list.length - 1 && list[b + 1].section === list[i].section) b++;
+    ps = list.slice(a, b + 1);
+  } else ps = list.slice(opts.from ? Math.max(0, list.findIndex(p => p.id === opts.from)) : 0);
+  const heads = S.reader.headings !== false && !opts.only;
+  return ps.flatMap((p, k) => [
+    heads && p.section && (k === 0 || ps[k - 1].section !== p.section) && {pid:p.id, part:'head', text:p.section + '.', lang:isArabic(p.section) ? 'ar' : 'en'},
     parts.orig && p.text && {pid:p.id, part:'orig', text:p.text, lang:'en'},
     parts.idea && (simpleOf(p) || ideaOf(p)) && {pid:p.id, part:'idea', text:simpleOf(p) ? 'In simple words: ' + simpleOf(p) : 'Main idea: ' + ideaOf(p), lang:'en'},
-    parts.ar && (p.ar || '').trim() && {pid:p.id, part:'ar', text:p.ar.trim(), lang:'ar'}
+    parts.ar && (p.ar || '').trim() && {pid:p.id, part:'ar', text:p.ar, lang:'ar', voc:arVocOf(p)}
   ].filter(Boolean));
 }
 function ttsLoad(segs, ctx){
-  TTS.list = segs.flatMap((s, si) => ttsChunks(s.text).map(c => ({...s, si, segStart:c.start, text:c.text})));
+  TTS.list = segs.flatMap((s, si) => { const vpos = s.voc ? vocMap(s.text, s.voc) : null;
+    return ttsChunks(s.text).map(c => ({...s, si, segStart:c.start, text:c.text, vpos, voc:vpos ? s.voc : ''})); });
   TTS.ctx = ctx; TTS.i = 0; TTS.char = 0;
 }
 function ttsStart(segs, ctx, at){
   if (!TTS.ok) return toast('Your browser cannot read aloud');
+  if (TTS.playing && TTS.ctx && !TTS.ctx.sel) ttsSaveMark();          // reading a selection keeps your place in the paper
   ttsHalt();
   ttsLoad(segs, ctx);
   if (!TTS.list.length) return toast('Nothing to read yet — the selected parts are empty');
@@ -2432,50 +2657,64 @@ function ttsSeek(at){                                         // at: {pid, part,
   TTS.i = idx; TTS.char = Math.max(0, Math.min(at.offset - TTS.list[idx].segStart, TTS.list[idx].text.length - 1));
 }
 function ttsSpeak(scroll){
+  clearTimeout(TTS.timer);
   const c = TTS.list[TTS.i];
   if (!c){ ttsFinish(); return; }
   let from = TTS.char;
-  if (from > 0){ const sp = c.text.lastIndexOf(' ', from); from = sp > 0 ? sp + 1 : 0; }     // back to the start of the word
-  const say = c.text.slice(from);
-  const gen = ++TTS.gen, u = new SpeechSynthesisUtterance(say), lang = c.lang === 'ar' || isArabic(say) ? 'ar' : 'en';
-  const {v, pitch} = pickVoice(lang);
-  if (v){ u.voice = v; u.lang = v.lang; } else u.lang = lang === 'ar' ? 'ar-SA' : 'en-GB';
-  TTS.note = !v && lang === 'ar' ? 'No Arabic voice was found on this device — add one in your system’s language or speech settings.' : v && pitch !== 1 ? `No ${S.reader.gender === 'm' ? 'male' : 'female'} ${lang === 'ar' ? 'Arabic' : 'English'} voice on this device, so the pitch of “${v.name}” is adjusted instead.` : '';
-  u.pitch = pitch; u.rate = S.reader.rate || 1;
-  u.onboundary = e => { if (gen === TTS.gen && typeof e.charIndex === 'number') TTS.char = from + e.charIndex; };
-  u.onend = () => { if (gen !== TTS.gen || !TTS.playing) return; TTS.i++; TTS.char = 0; ttsSpeak(false); };
-  u.onerror = e => { if (gen !== TTS.gen || !TTS.playing || /interrupted|canceled/.test(e.error || '')) return; TTS.i++; TTS.char = 0; ttsSpeak(false); };
+  if (from > 0){ const sp = Math.max(c.text.lastIndexOf(' ', from), c.text.lastIndexOf('\n', from)); from = sp > 0 ? sp + 1 : 0; }     // back to the start of the word
+  const gen = ++TTS.gen, xs = ttsPieces(c, from), notes = new Set();
+  xs.forEach(x => { const n = pickVoice(x.lang).note; if (n) notes.add(n); });
+  TTS.note = [...notes].join(' ');
   TTS.playing = true; TTS.char = from;
   ttsMark(c, scroll || (c.segStart === 0 && from === 0 && TTS.ctx && TTS.ctx.follow));
   try { speechSynthesis.cancel(); } catch {}
-  speechSynthesis.speak(u);
+  if (!xs.length){ ttsAdvance(gen); return; }               // nothing to say here (for example, only a citation number)
+  xs.forEach((x, k) => {
+    const u = ttsUtter(x), last = k === xs.length - 1;
+    u.onstart = () => { if (gen === TTS.gen) TTS.char = x.at; };
+    u.onboundary = e => { if (gen === TTS.gen && typeof e.charIndex === 'number') TTS.char = Math.max(x.at, x.map(e.charIndex)); };
+    u.onend = () => { if (last && gen === TTS.gen && TTS.playing) ttsAdvance(gen); };
+    u.onerror = e => { if (!last || gen !== TTS.gen || !TTS.playing || /interrupted|canceled/.test(e.error || '')) return; ttsAdvance(gen); };
+    speechSynthesis.speak(u);                                 // the pieces of one sentence are queued together: no gap when the language changes
+  });
   renderTtsBar();
 }
-function ttsHalt(){ TTS.gen++; TTS.playing = false; try { if (TTS.ok) speechSynthesis.cancel(); } catch {} }
+function ttsAdvance(gen){                                     // the next sentence, after a natural pause at a paragraph or heading
+  const cur = TTS.list[TTS.i]; TTS.i++; TTS.char = 0;
+  const nx = TTS.list[TTS.i];
+  if (!nx){ ttsFinish(); return; }
+  const pause = S.reader.pauses === false ? 0 : cur.part === 'head' || nx.part === 'head' ? 650 : nx.pid !== cur.pid ? 550 : nx.si !== cur.si ? 350 : 0;
+  if (!pause) return ttsSpeak(false);
+  TTS.timer = setTimeout(() => { if (gen === TTS.gen && TTS.playing) ttsSpeak(false); }, pause / (S.reader.rate || 1));
+}
+function ttsHalt(){ TTS.gen++; TTS.playing = false; clearTimeout(TTS.timer); try { if (TTS.ok) speechSynthesis.cancel(); } catch {} }
 function ttsPos(){ const c = TTS.list[TTS.i]; return c ? {pid:c.pid, part:c.part, offset:c.segStart + TTS.char} : null; }
 function ttsSaveMark(){
   const pos = ttsPos(), ctx = TTS.ctx;
-  if (pos && ctx && ctx.paperId){ (S.reader.marks ||= {})[ctx.paperId] = {...pos, from:ctx.from || null, only:ctx.only || null, parts:ctx.parts, at:Date.now()}; save(); }
+  if (pos && ctx && ctx.paperId && !ctx.sel){ (S.reader.marks ||= {})[ctx.paperId] = {...pos, from:ctx.from || null, only:ctx.only || null, section:ctx.section || null, parts:ctx.parts, at:Date.now()}; save(); }
 }
 function ttsPause(){ if (!TTS.playing) return; ttsHalt(); ttsSaveMark(); renderTtsBar(); }   // stop here, remember the exact place
+function ttsRestore(){                                       // the reading list for this paper: still in memory, or rebuilt from the bookmark
+  const paper = rPaper(), mark = paper && (S.reader.marks || {})[paper.id];
+  if (TTS.list.length && TTS.ctx && TTS.ctx.paperId === (paper && paper.id) && TTS.list[TTS.i]) return true;
+  if (!mark) return false;
+  const ctx = {paperId:paper.id, from:mark.from, only:mark.only, section:mark.section, parts:mark.parts, follow:true};
+  ttsLoad(ttsSegs(paper, ctx), ctx); ttsSeek(mark);
+  return !!TTS.list.length;
+}
 function ttsContinue(){
   if (!TTS.ok) return;
-  const paper = rPaper(), mark = paper && (S.reader.marks || {})[paper.id];
-  if (TTS.list.length && TTS.ctx && TTS.ctx.paperId === (paper && paper.id) && TTS.list[TTS.i]){ ttsSpeak(true); return; }   // still in memory
-  if (!mark) return ttsPlayAll();
-  const ctx = {paperId:paper.id, from:mark.from, only:mark.only, parts:mark.parts, follow:true};
-  ttsStart(ttsSegs(paper, ctx), ctx, mark);
+  if (!ttsRestore()) return ttsPlayAll();
+  ttsHalt(); ttsSpeak(true);
 }
-function ttsSkip(dir){
-  if (!TTS.list.length) return;
-  if (dir < 0 && TTS.char > 12) TTS.char = 0;                                  // back: first to the start of this sentence
-  else { TTS.i = Math.max(0, Math.min(TTS.list.length - 1, TTS.i + dir)); TTS.char = 0; }
-  const was = TTS.playing; ttsHalt();
-  if (was) ttsSpeak(true); else { ttsSaveMark(); ttsMark(TTS.list[TTS.i], true); renderTtsBar(); }
+function ttsSkip(dir){                                        // -1 previous sentence · 0 this sentence again · 1 next sentence
+  if (!ttsRestore()) return;
+  TTS.i = Math.max(0, Math.min(TTS.list.length - 1, TTS.i + dir)); TTS.char = 0;
+  ttsHalt(); ttsSpeak(true);
 }
 function ttsFinish(){
   ttsHalt();
-  const ctx = TTS.ctx; if (ctx && ctx.paperId && S.reader.marks) { delete S.reader.marks[ctx.paperId]; save(); }
+  const ctx = TTS.ctx; if (ctx && ctx.paperId && !ctx.sel && S.reader.marks){ delete S.reader.marks[ctx.paperId]; save(); }
   TTS.list = []; TTS.i = 0; TTS.char = 0; ttsMark(null); renderTtsBar();
 }
 function ttsStop(){ ttsFinish(); }                               // stop and forget the place
@@ -2484,6 +2723,43 @@ function ttsPlayAll(from){
   const ctx = {paperId:paper.id, from:from || null, parts:{...(S.reader.ttsParts || {orig:true, idea:true})}, follow:true};
   ttsStart(ttsSegs(paper, ctx), ctx);
 }
+function ttsHerePid(){                                        // the paragraph being read, or where you paused, or the first one
+  const paper = rPaper(), c = TTS.list[TTS.i], mark = paper && (S.reader.marks || {})[paper.id];
+  return (c && c.pid) || (mark && mark.pid) || (TTS.sel && TTS.sel.pid) || ((paper && paper.paras.find(isReadable)) || {}).id;
+}
+function ttsPlaySection(pid){
+  const paper = rPaper(); if (!paper || !pid) return;
+  const ctx = {paperId:paper.id, section:pid, parts:{...(S.reader.ttsParts || {orig:true, idea:true})}, follow:true};
+  ttsStart(ttsSegs(paper, ctx), ctx);
+}
+function ttsPlayPara(pid){
+  const paper = rPaper(); if (!paper || !pid) return;
+  const ctx = {paperId:paper.id, only:pid, parts:{...(S.reader.ttsParts || {orig:true, idea:true})}, follow:true};
+  ttsStart(ttsSegs(paper, ctx), ctx);
+}
+function ttsReadSelection(){
+  const paper = rPaper(), s = TTS.sel;
+  if (!s || !s.text.trim()) return toast('Select some text in the paper first (press and hold on a phone), then press “Selection”');
+  ttsStart([{pid:s.pid, part:'sel', text:s.text, lang:baseLang(s.text)}], {paperId:paper && paper.id, sel:true});
+}
+document.addEventListener('selectionchange', () => {                    // remember the last text you selected in the reader
+  const panel = $('#panel-reader'); if (!panel || panel.hidden) return;
+  const ae = document.activeElement; let text = '', node = null;
+  if (ae && /TEXTAREA|INPUT/.test(ae.tagName) && panel.contains(ae) && ae.selectionEnd > ae.selectionStart){ text = ae.value.slice(ae.selectionStart, ae.selectionEnd); node = ae; }
+  else { const sel = getSelection(); if (sel && !sel.isCollapsed){ text = sel.toString(); node = sel.anchorNode && (sel.anchorNode.nodeType === 1 ? sel.anchorNode : sel.anchorNode.parentElement); } }
+  if (!text.trim() || !node || !panel.contains(node)) return;
+  const card = node.closest('.para'); TTS.sel = {text, pid:card ? card.id.replace(/^para-/, '') : ''};
+  const b = $('#ttsSelBtn'); if (b){ b.disabled = false; b.title = 'Read the selected text: “' + clip(text.replace(/\s+/g, ' '), 80) + '”'; }
+});
+// speak any text (voice previews, the pronunciation list, the professor's questions); keeps your place in the paper
+function ttsSay(text, base, voice){
+  if (!TTS.ok || !text) return toast('Read-aloud is not available in this browser');
+  if (TTS.playing) ttsPause();
+  ttsHalt();
+  const gen = TTS.gen;
+  ttsPieces({text, segStart:0, lang:base || baseLang(text)}, 0)
+    .forEach(x => { if (gen === TTS.gen) speechSynthesis.speak(ttsUtter(x, voice && (x.lang === (voice.lang.startsWith('ar') ? 'ar' : 'en')) ? voice : null)); });
+}
 function ttsMark(c, scroll){
   $$('.speaking').forEach(e => e.classList.remove('speaking'));
   $$('.speaking-part').forEach(e => e.classList.remove('speaking-part'));
@@ -2491,7 +2767,7 @@ function ttsMark(c, scroll){
   if (!c || !c.pid) return;
   const card = $('#para-' + c.pid); if (!card) return;
   card.classList.add('speaking');
-  const part = c.part === 'orig' ? $('#po-' + c.pid) : c.part === 'idea' ? ($('#rs-' + c.pid) || $('#ri-' + c.pid)) : $('#ra-' + c.pid);
+  const part = c.part === 'orig' ? $('#po-' + c.pid) : c.part === 'idea' ? ($('#rs-' + c.pid) || $('#ri-' + c.pid)) : c.part === 'ar' ? $('#ra-' + c.pid) : null;
   if (part){
     part.classList.add('speaking-part');
     if (c.part === 'orig'){                                  // follow along: highlight the sentence being read
@@ -2501,43 +2777,135 @@ function ttsMark(c, scroll){
   }
   if (scroll) (part || card).scrollIntoView({behavior:'smooth', block:'center'});
 }
+const voiceBadge = v => { const t = voiceTier(v); return `<span class="vq vq-${t}" title="${TIER[t][1]}">${TIER[t][0]}</span>`; };
+function ttsVoiceSummary(){
+  const en = pickVoice('en').v, ar = pickVoice('ar').v, acc = en && EN_ACCENTS.find(a => a.k === enAccentOf(en));
+  return `${en ? `${acc ? acc.flag + ' ' : ''}${esc(voiceName(en))} ${voiceBadge(en)}` : 'no English voice'} · <span lang="ar">${ar ? `${esc(voiceName(ar))} ${voiceBadge(ar)}` : 'no Arabic voice'}</span>`;
+}
 function ttsBarHTML(){
   if (!TTS.ok) return '<p class="small muted" style="margin:10px 0 0">Read-aloud is not supported in this browser.</p>';
   const paper = rPaper(), mark = paper && (S.reader.marks || {})[paper.id], c = TTS.list[TTS.i];
-  const parts = S.reader.ttsParts || {orig:true, idea:true}, g = S.reader.gender || 'f';
+  const parts = S.reader.ttsParts || {orig:true, idea:true};
   const paused = !TTS.playing && (mark || (TTS.list.length && TTS.ctx && paper && TTS.ctx.paperId === paper.id));
   const where = TTS.playing && c ? c : paused && mark ? mark : null;
-  const whereTxt = where && paper ? `¶${paraNo(paper, where.pid)} · ${PART_LABEL[where.part]}` : '';
-  const en = ttsVoices('en'), ar = ttsVoices('ar');
-  const vOpt = (list, sel) => `<option value="">Automatic (${g === 'm' ? 'man' : 'woman'})</option>` + list.map(v => `<option value="${esc(v.voiceURI)}" ${sel === v.voiceURI ? 'selected' : ''}>${{f:'♀ ', m:'♂ '}[voiceGender(v)] || ''}${esc(clip(v.name, 34))} (${esc(v.lang)})</option>`).join('');
+  const whereTxt = where && paper ? (where.part === 'sel' ? 'your selection' : `¶${paraNo(paper, where.pid)} · ${PART_LABEL[where.part]}`) : '';
+  const rate = S.reader.rate || 1, vol = S.reader.volume ?? 1, has = !!TTS.list.length || !!mark;
+  const vocTodo = parts.ar && paper && aiReady() ? paper.paras.filter(p => isReadable(p) && (p.ar || '').trim() && !arVocOf(p)).length : 0;
   return `<div class="tts-bar" role="group" aria-label="Read aloud">
     <div class="tts-row">
       <span class="small"><b>${icon('volume')}Read aloud</b></span>
       ${TTS.playing ? `<button class="btn sm primary" data-act="tts-pause">${icon('pause')}Pause</button>`
         : paused ? `<button class="btn sm primary" data-act="tts-continue">${icon('play')}Continue</button>` : `<button class="btn sm primary" data-act="tts-all">${icon('play')}Play all</button>`}
-      <button class="btn sm icon" data-act="tts-skip" data-v="-1" title="Back one sentence" aria-label="Back one sentence" ${TTS.list.length ? '' : 'disabled'}>${icon('back')}</button>
-      <button class="btn sm icon" data-act="tts-skip" data-v="1" title="Forward one sentence" aria-label="Forward one sentence" ${TTS.list.length ? '' : 'disabled'}>${icon('fwd')}</button>
+      <button class="btn sm icon" data-act="tts-skip" data-v="-1" title="Previous sentence" aria-label="Previous sentence" ${has ? '' : 'disabled'}>${icon('back')}</button>
+      <button class="btn sm icon" data-act="tts-skip" data-v="0" title="Replay this sentence" aria-label="Replay this sentence" ${has ? '' : 'disabled'}>${icon('refresh')}</button>
+      <button class="btn sm icon" data-act="tts-skip" data-v="1" title="Next sentence" aria-label="Next sentence" ${has ? '' : 'disabled'}>${icon('fwd')}</button>
       <button class="btn sm" data-act="tts-stop" ${TTS.playing || paused ? '' : 'disabled'} title="Stop and forget the place">${icon('stop')}Stop</button>
-      ${paused && !TTS.playing ? `<button class="btn sm ghost" data-act="tts-restart" title="Start again from the beginning">${icon('refresh')}From the start</button>` : ''}
-      <span class="tts-status small" aria-live="polite">${TTS.playing ? `Reading ${whereTxt}` : paused ? `Paused at ${whereTxt}${mark && mark.at ? ` · ${new Date(mark.at).toLocaleString([], {dateStyle:'short', timeStyle:'short'})}` : ''}` : ''}</span>
+      ${paused && !TTS.playing ? `<button class="btn sm ghost" data-act="tts-restart" title="Start again from the beginning">From the start</button>` : ''}
+      <span class="tts-status small" aria-live="polite">${TTS.playing ? `Reading ${whereTxt}` : paused ? `Paused at ${whereTxt}${mark && mark.at && !(TTS.ctx && TTS.ctx.sel) ? ` · ${new Date(mark.at).toLocaleString([], {dateStyle:'short', timeStyle:'short'})}` : ''}` : ''}</span>
     </div>
     <div class="tts-row">
       <span class="small muted">Read:</span>
-      <span class="filter-chips">${['orig','idea','ar'].map(k => `<button class="fchip sm-chip" data-act="tts-part" data-v="${k}" aria-pressed="${!!parts[k]}">${PART_LABEL[k]}${k === 'ar' ? ' translation' : ''}</button>`).join('')}</span>
-      <span class="small muted" style="margin-left:6px">Voice:</span>
-      <span class="seg seg-sm" role="group" aria-label="Voice">${[['f','♀ Woman'],['m','♂ Man']].map(([v,l]) => `<button data-act="tts-gender" data-v="${v}" aria-pressed="${g === v}">${l}</button>`).join('')}</span>
-      <select id="ttsRate" aria-label="Speed" style="width:auto">${[0.75,0.9,1,1.15,1.3,1.5].map(r => `<option value="${r}" ${(S.reader.rate||1)==r?'selected':''}>${r}×</option>`).join('')}</select>
-      <details class="voice-more"><summary class="small">Choose exact voices</summary><div class="row" style="margin-top:6px">
-        <label class="small">English <select id="ttsVoiceEn" style="width:auto;max-width:230px">${vOpt(en, S.reader.voiceEn)}</select></label>
-        <label class="small">Arabic <select id="ttsVoiceAr" style="width:auto;max-width:230px">${ar.length ? vOpt(ar, S.reader.voiceAr) : '<option value="">No Arabic voice on this device</option>'}</select></label></div></details>
+      <span class="filter-chips">${['orig', 'idea', 'ar'].map(k => `<button class="fchip sm-chip" data-act="tts-part" data-v="${k}" aria-pressed="${!!parts[k]}">${PART_LABEL[k]}${k === 'ar' ? ' translation' : ''}</button>`).join('')}</span>
+      <span class="tts-scope"><span class="small muted">Play only:</span><button class="btn sm" id="ttsSelBtn" data-act="tts-sel" ${TTS.sel ? '' : 'disabled'} title="Select text in the paper, then press here">Selection</button><button class="btn sm" data-act="tts-para" title="Read the current paragraph">Paragraph</button><button class="btn sm" data-act="tts-section" title="Read the whole section">Section</button></span>
+      <label class="small tts-ctl">Speed <select id="ttsRate" aria-label="Speed">${TTS_RATES.map(r => `<option value="${r}" ${rate === r ? 'selected' : ''}>${r === 1 ? '1.0' : r}×</option>`).join('')}</select></label>
+      <label class="small tts-ctl">Volume <input type="range" id="ttsVol" min="0.1" max="1" step="0.05" value="${vol}" aria-label="Volume"></label>
     </div>
-    ${TTS.note ? `<p class="small muted" style="margin:6px 0 0">${esc(TTS.note)}</p>` : ''}
-    ${parts.idea && paper && aiReady() && paper.paras.some(p => isReadable(p) && !simpleOf(p)) ? `<p class="small muted" style="margin:6px 0 0">${paper.paras.filter(p => isReadable(p) && !simpleOf(p)).length} paragraph(s) have no simple version yet, so “Simple” reads their main idea instead. <button class="btn sm ghost" data-act="rp-sum-all" data-ai-btn>${icon('sparkle')}Write them with Claude</button></p>` : ''}
-    ${parts.ar && paper && !paper.paras.some(p => (p.ar || '').trim()) ? `<p class="small muted" style="margin:6px 0 0">No Arabic translations yet — ${aiReady() ? 'use “Translate all to Arabic” above, or' : ''} add one under a paragraph.</p>` : ''}
+    <div class="tts-row tts-voices"><span class="small muted">Voices:</span><span class="small">${ttsVoiceSummary()}</span><button class="btn sm" data-act="tts-voices">${icon('volume')}Voices &amp; accents</button></div>
+    ${TTS.note ? `<p class="small muted" style="margin:0">${esc(TTS.note)}</p>` : ''}
+    ${vocTodo ? `<p class="small muted" style="margin:0">${pl(vocTodo, 'Arabic translation has', 'Arabic translations have')} no vowel marks for listening. Arabic voices pronounce text much more accurately with them. <button class="btn sm ghost" data-act="rp-voc-all" data-ai-btn>${icon('sparkle')}Add vowel marks with Claude</button></p>` : ''}
+    ${parts.idea && paper && aiReady() && paper.paras.some(p => isReadable(p) && !simpleOf(p)) ? `<p class="small muted" style="margin:0">${paper.paras.filter(p => isReadable(p) && !simpleOf(p)).length} paragraph(s) have no simple version yet, so “Simple” reads their main idea instead. <button class="btn sm ghost" data-act="rp-sum-all" data-ai-btn>${icon('sparkle')}Write them with Claude</button></p>` : ''}
+    ${parts.ar && paper && !paper.paras.some(p => (p.ar || '').trim()) ? `<p class="small muted" style="margin:0">No Arabic translations yet — ${aiReady() ? 'use “Translate all to Arabic” above, or' : ''} add one under a paragraph.</p>` : ''}
   </div>`;
 }
 function renderTtsBar(){ const el = $('#ttsBar'); if (el) el.innerHTML = ttsBarHTML(); }
-if (TTS.ok) try { speechSynthesis.onvoiceschanged = () => renderTtsBar(); } catch {}
+
+/* --- Voices & accents --- */
+function ttsDevice(){
+  const ua = navigator.userAgent || '';
+  return /Edg\//.test(ua) ? 'edge' : /iPhone|iPad|iPod/.test(ua) || (/Macintosh/.test(ua) && 'ontouchend' in document) ? 'ios' : /Android/.test(ua) ? 'android' : /Macintosh/.test(ua) ? 'mac' : /Windows/.test(ua) ? 'windows' : 'other';
+}
+const TTS_TIPS = {
+  edge:'You are using Microsoft Edge, which includes free natural (neural) voices — Arabic from many countries and English from the US, UK, Australia and Canada. They need an internet connection.',
+  ios:'On iPhone and iPad, download better voices in Settings → Accessibility → Spoken Content → Voices → English or Arabic. Choose a voice marked “Enhanced” or “Premium”, then reload this page.',
+  mac:'On a Mac, add better voices in System Settings → Accessibility → Spoken Content → System voice → Manage Voices. Choose “Enhanced” or “Premium” voices, then reload this page. Microsoft Edge for Mac also has free natural voices.',
+  android:'On Android, install or update “Speech Services by Google” and download the English and Arabic voices in Settings → Accessibility → Text-to-speech, then reload this page.',
+  windows:'On Windows, Microsoft Edge includes free natural (neural) voices, including Arabic. The voices that Chrome uses on Windows are older and sound more robotic, especially in Arabic.',
+  other:'The voices come from your device and browser. For the most natural voices, open ScholarPath in Microsoft Edge, or install Enhanced/Premium voices on your device.'
+};
+function voiceRow(v, kind){
+  const R = S.reader, on = (kind === 'ar' ? R.voiceAr : R.voiceEn) === v.voiceURI, g = voiceGender(v);
+  return `<li class="vrow ${on ? 'on' : ''}"><span class="vname"><b>${esc(voiceName(v))}</b> ${voiceBadge(v)}${g ? ` <span class="small muted">${g === 'f' ? '♀ woman' : '♂ man'}</span>` : ''}<span class="small muted vfull">${esc(v.name)} · ${esc(vLang(v))}${kind === 'ar' && COUNTRY[vCC(v)] ? ` · ${COUNTRY[vCC(v)]}` : ''}</span></span>
+    <span class="row"><button class="btn sm ghost" data-act="tts-preview" data-uri="${esc(v.voiceURI)}" data-kind="${kind}">${icon('play')}Preview</button>${kind === 'ar' ? `<button class="btn sm ghost" data-act="tts-preview" data-uri="${esc(v.voiceURI)}" data-kind="mix" title="An Arabic sentence with English terms">Mixed</button>` : ''}<button class="btn sm ${on ? 'primary' : ''}" data-act="tts-use" data-uri="${esc(v.voiceURI)}" data-kind="${kind}">${on ? `${icon('check')}In use` : 'Use'}</button></span></li>`;
+}
+function voiceDlgHTML(){
+  const R = S.reader, en = ttsVoices('en'), ar = ttsVoices('ar'), all = [...en, ...ar], nat = all.filter(v => voiceTier(v) === 3).length, dev = ttsDevice();
+  const sortV = (list, kind) => list.slice().sort((a, b) => voiceRank(b, R.gender || 'f', kind) - voiceRank(a, R.gender || 'f', kind));
+  const lex = R.lexicon || [];
+  return `<div class="dlg-head"><h3>Voices &amp; accents</h3><button type="button" class="btn ghost icon" data-act="tts-voices-close" aria-label="Close">${icon('x')}</button></div>
+  <div class="dlg-body voice-dlg">
+    <p class="small">ScholarPath reads with the voices built into <b>this device and browser</b>: ${pl(all.length, 'English or Arabic voice')} found, <b>${nat} natural (neural)</b>. Voices marked <span class="vq vq-3">Natural</span> sound the most human; <span class="vq vq-0">Basic</span> voices often sound robotic.</p>
+    <p class="vtip small">${icon('bulb')}<span>${esc(TTS_TIPS[dev])}${dev !== 'edge' && dev !== 'other' ? ' ' + esc(TTS_TIPS.other) : ''}</span></p>
+    ${!all.length ? '<p class="small v-warn">No voices have loaded yet. Wait a moment, or reload the page.</p>' : ''}
+    <div class="vsec"><h4>Automatic choice prefers</h4><span class="seg seg-sm" role="group" aria-label="Voice">${[['f', '♀ A woman’s voice'], ['m', '♂ A man’s voice']].map(([v, l]) => `<button data-act="tts-gender" data-v="${v}" aria-pressed="${(R.gender || 'f') === v}">${l}</button>`).join('')}</span>
+      <p class="small muted" style="margin:6px 0 0">When a device has no voice of that kind, another voice is used as it is — ScholarPath never changes a voice’s pitch to imitate a gender or an accent.</p></div>
+    <div class="vsec"><h4>English accent</h4>
+      <div class="accents">${EN_ACCENTS.map(a => { const list = sortV(en.filter(v => enAccentOf(v) === a.k), 'en'), on = (R.enAccent || 'en-US') === a.k;
+        return `<section class="accent ${on ? 'on' : ''}"><div class="accent-head"><b>${a.flag} ${a.t}</b>${list.length ? `<button class="btn sm ${on && !R.voiceEn ? 'primary' : ''}" data-act="tts-accent" data-k="${a.k}">${on && !R.voiceEn ? `${icon('check')}Best ${a.t.split(' ')[0]} voice` : 'Use the best voice'}</button>` : ''}</div>
+          ${list.length ? `<ul class="vlist">${list.map(v => voiceRow(v, 'en')).join('')}</ul>` : `<p class="small muted">Not available on this device — ScholarPath does not imitate this accent. ${dev === 'edge' ? '' : 'Microsoft Edge includes ' + a.t + ' natural voices.'}</p>`}</section>`; }).join('')}</div></div>
+    <div class="vsec"><h4>Arabic <span lang="ar" dir="rtl">العربية</span></h4>
+      <p class="small">Academic papers are read in <b>Modern Standard Arabic (الفصحى)</b> — the default. Every Arabic voice reads text exactly as it is written, so a translation in الفصحى is read in الفصحى. The voices come from speakers in different countries: you can prefer a Gulf, Levantine or Egyptian speaker when your device has one. ScholarPath does not turn الفصحى into a dialect or imitate one by changing pitch or speed.</p>
+      <div class="row" style="gap:6px;margin-bottom:8px"><button class="btn sm ${(R.arRegion || 'msa') === 'msa' && !R.voiceAr ? 'primary' : ''}" data-act="tts-arregion" data-k="msa">Best voice for الفصحى (default)</button>${AR_REGIONS.filter(r => r.k !== 'other' && ar.some(v => arRegionOf(v) === r.k)).map(r => `<button class="btn sm ${R.arRegion === r.k && !R.voiceAr ? 'primary' : ''}" data-act="tts-arregion" data-k="${r.k}">Prefer a ${r.t} speaker</button>`).join('')}
+        <button class="btn sm ghost" data-act="tts-preview" data-kind="mix">${icon('play')}Hear Arabic with English terms</button></div>
+      ${ar.length ? AR_REGIONS.map(r => { const list = sortV(ar.filter(v => arRegionOf(v) === r.k), 'ar'); return list.length ? `<h5>${r.t} <span lang="ar">${r.ar}</span></h5><ul class="vlist">${list.map(v => voiceRow(v, 'ar')).join('')}</ul>` : ''; }).join('')
+        : `<p class="small v-warn">No Arabic voice on this device. ${esc(TTS_TIPS[dev])}</p>`}</div>
+    <div class="vsec"><h4>How to read</h4>
+      ${[['mixed', 'Read English terms in Arabic text with the English voice (and Arabic words in English text with the Arabic voice)', R.mixed !== false],
+         ['pauses', 'Natural pauses between paragraphs and after headings', R.pauses !== false],
+         ['headings', 'Say the section heading when a new section starts', R.headings !== false],
+         ['cites', 'Skip citation numbers such as [12] (author–year citations are always read)', R.cites !== 'read']].map(([k, t, on]) => `<label class="check"><input type="checkbox" data-ttsopt="${k}" ${on ? 'checked' : ''}><span>${t}</span></label>`).join('')}
+      <details class="small" style="margin-top:8px"><summary>What ScholarPath says differently from what is written (your text is never changed)</summary>
+        <ul class="d-ul"><li>Abbreviations: e.g. → “for example”, i.e. → “that is”, et al., Fig. 2 → “Figure 2”, p. 5 → “page 5”, pp. → “pages”, vs. → “versus”.</li>
+          <li>Statistics: p &lt; .05 → “p less than 0.05”, M = 3.2 → “mean equals 3.2”, SD → “standard deviation”, 95% CI → “95 percent confidence interval”, R² → “R squared”, ± → “plus or minus”, Greek letters by name.</li>
+          <li>Ranges: 2018–2020 → “2018 to 2020”. Links and DOIs → “link” / “D O I”.</li>
+          <li>Acronyms without vowels are spelled (NLP → “N L P”, LLMs → “L L M’s”); AI, IEEE, UAE, MSA, AAU, PhD have fixed forms.</li>
+          <li>Arabic: the stretching mark (ـ) is ignored and PDF letter shapes are turned into normal letters. Translations with vowel marks for listening are read with the marks.</li>
+          <li>Sentences are not split after “et al.”, “e.g.”, “Fig.”, initials or decimals; very long sentences are split at a semicolon or comma, never mid-word.</li></ul></details></div>
+    <div class="vsec"><h4>Your pronunciation list</h4><p class="small muted" style="margin-top:0">For names and terms a voice gets wrong. Only the spoken copy changes.</p>
+      ${lex.length ? `<ul class="lexlist">${lex.map((e, i) => `<li><span><b>${esc(e.w)}</b> → ${esc(e.say)} <span class="small muted">· ${e.lang === 'ar' ? 'Arabic' : e.lang === 'en' ? 'English' : 'both'}</span></span><span class="row"><button class="btn sm ghost" data-act="lex-try" data-i="${i}">${icon('play')}Try</button><button class="btn sm ghost danger" data-act="lex-del" data-i="${i}" aria-label="Delete">${icon('trash')}</button></span></li>`).join('')}</ul>` : ''}
+      <div class="lexadd"><input class="input" id="lexW" placeholder="Written, e.g. Buolamwini" aria-label="Written word"><input class="input" id="lexSay" placeholder="Say as, e.g. bwo-lam-WEE-nee" aria-label="Say it as"><select id="lexLang" aria-label="Language"><option value="en">English</option><option value="ar">Arabic</option><option value="both">Both</option></select><button class="btn sm" data-act="lex-add">${icon('plus')}Add</button></div></div>
+  </div>
+  <div class="dlg-foot"><button type="button" class="btn primary" data-act="tts-voices-close">Done</button></div>`;
+}
+function renderVoiceDlg(){ const d = $('#voiceDlg'); if (d && d.open){ const y = d.querySelector('.dlg-body')?.scrollTop || 0; d.innerHTML = voiceDlgHTML(); const b = d.querySelector('.dlg-body'); if (b) b.scrollTop = y; } }
+function openVoiceDlg(){ const d = $('#voiceDlg'); d.innerHTML = voiceDlgHTML(); d.showModal(); }
+if (TTS.ok) try { speechSynthesis.onvoiceschanged = () => { renderTtsBar(); renderVoiceDlg(); }; } catch {}
+
+/* --- vowel marks for listening (Claude): a separate spoken copy; the written translation is not changed --- */
+async function vocalizeParas(paper, list){
+  if (!aiReady() || aiRun || !list.length) return;
+  const ctl = new AbortController(); aiRun = {ctl, label:'Adding vowel marks for listening', done:0, total:list.length}; renderAiBar();
+  let ok = 0, bad = 0;
+  try {
+    for (let i = 0; i < list.length && !ctl.signal.aborted; i += 4){
+      const b = list.slice(i, i + 4);
+      const items = await AI.json(`Add full Arabic diacritics (tashkeel: fatha, damma, kasra, sukun, shadda and tanween, with correct case endings) to each Modern Standard Arabic paragraph below, so that a text-to-speech voice pronounces it correctly.
+STRICT RULES: copy every paragraph EXACTLY, letter for letter — only insert diacritic marks. Do not add, remove, replace or reorder any letter, hamza, word, number, punctuation mark or space. Leave English words, numbers and symbols exactly as they are.
+
+${b.map(p => `[${p.id}]\n${p.ar}`).join('\n\n')}
+
+Reply with only a JSON array, one object per paragraph in the same order: [{"id":"p3","voc":"..."}]`, {signal:ctl.signal, modelTier:'default'});
+      const got = Array.isArray(items) ? items : items && typeof items === 'object' ? (Object.values(items).find(Array.isArray) || (items.voc ? [items] : [])) : [];
+      for (const it of got){
+        const p = b.find(x => x.id === String(it && it.id)) || (b.length === 1 ? b[0] : null), voc = String((it && it.voc) || '');
+        if (!p) continue;
+        if (vocMap(p.ar, voc)){ p.arVoc = {for:textHash(p.ar), text:voc}; ok++; } else bad++;
+      }
+      save(); aiRun.done += b.length; renderAiBar();
+    }
+  } catch (e){ if (e && e.code !== 'cancelled') alert(aiError(e)); }
+  finally { aiRun = null; renderAiBar(); if (S.ui.tab === 'reader') RENDER.reader(); }
+  if (ok || bad) toast(`Vowel marks added to ${pl(ok, 'paragraph')}${bad ? ` · ${bad} skipped (Claude changed letters, so it was not used)` : ''}`);
+}
 
 /* --- Arabic translation of paragraphs (Claude on the published page; otherwise typed or pasted) --- */
 let arOpen = new Set();
@@ -2568,7 +2936,9 @@ function arBlock(p){
   const has = (p.ar || '').trim(), open = has || arOpen.has(p.id);
   if (!open) return '';
   return `<label class="f idea-lbl" for="ra-${p.id}" style="margin-top:12px">${icon('book')}Arabic translation <span class="chip">${p.arSrc === 'me' ? 'mine' : p.arSrc === 'demo' ? 'demo' : has ? 'by Claude — check it' : 'type or paste'}</span></label>
-    <textarea id="ra-${p.id}" data-rp="ar" data-id="${p.id}" dir="rtl" lang="ar" rows="3" class="ar-text" placeholder="اكتب أو الصق الترجمة العربية هنا">${esc(p.ar || '')}</textarea>`;
+    <textarea id="ra-${p.id}" data-rp="ar" data-id="${p.id}" dir="rtl" lang="ar" rows="3" class="ar-text" placeholder="اكتب أو الصق الترجمة العربية هنا">${esc(p.ar || '')}</textarea>
+    ${has ? (arVocOf(p) ? `<details class="ar-voc small"><summary>${icon('check')}Vowel marks for listening are ready <span class="chip">by Claude — check it</span></summary><p class="small muted">The voice reads this copy. It has exactly the same letters as your translation — only vowel marks are added, and the translation above is not changed.</p><div class="ar-voc-text" dir="rtl" lang="ar">${esc(arVocOf(p))}</div></details>`
+      : aiReady() ? `<button class="btn sm ghost ar-voc-btn" data-act="rp-voc-one" data-id="${p.id}" data-ai-btn>${icon('sparkle')}Add vowel marks for clearer listening</button>` : '') : ''}`;
 }
 
 /* --- Ask Claude: a chat per paragraph, and one about the whole paper --- */
@@ -2789,6 +3159,7 @@ function paraCard(paper, p){
         <button class="btn sm" data-act="tts-one" data-id="${p.id}" data-part="orig">Original</button>
         <button class="btn sm" data-act="tts-one" data-id="${p.id}" data-part="idea" title="${simpleOf(p) ? 'Listen to the simple version' : 'Write the simple version, then listen'}">Simple</button>
         ${(p.ar || '').trim() ? `<button class="btn sm" data-act="tts-one" data-id="${p.id}" data-part="ar">Arabic</button>` : ''}
+        <button class="btn sm ghost" data-act="tts-one" data-id="${p.id}" data-part="section" title="Read this whole section, using the parts chosen in the Read aloud bar">Section</button>
         <button class="btn sm ghost" data-act="tts-one" data-id="${p.id}" data-part="from" title="Read from here to the end, using the parts chosen in the Read aloud bar">${icon('play')}From here</button></span>` : ''}
       ${(p.ar || '').trim() || arOpen.has(p.id) ? '' : aiReady() ? `<button class="btn sm ghost" data-act="rp-ar-one" data-id="${p.id}" data-ai-btn>${icon('sparkle')}Translate to Arabic</button>` : `<button class="btn sm ghost" data-act="rp-ar-open" data-id="${p.id}">${icon('plus')}Add Arabic translation</button>`}
       <span class="spacer"></span>
@@ -5154,12 +5525,7 @@ function dMockNext(set, skip){
 }
 function dSpeak(text){
   try {
-    if (!('speechSynthesis' in window) || !text) return toast('Read-aloud is not available in this browser');
-    if (TTS.playing) ttsPause();
-    speechSynthesis.cancel();
-    const u = new SpeechSynthesisUtterance(text), pv = pickVoice('en');
-    if (pv.v){ u.voice = pv.v; u.lang = pv.v.lang; } else u.lang = 'en-GB';
-    u.pitch = pv.pitch; u.rate = S.reader.rate || 1; speechSynthesis.speak(u);
+    ttsSay(text);
   } catch { toast('Read-aloud is not available here'); }
 }
 let dRec = null;
@@ -5581,10 +5947,28 @@ const ACTIONS = {
   'tts-stop': () => ttsStop(),
   'tts-skip': el => ttsSkip(+el.dataset.v),
   'tts-part': el => { const parts = S.reader.ttsParts, k = el.dataset.v; parts[k] = !parts[k]; if (!parts.orig && !parts.idea && !parts.ar) parts[k] = true; save(); renderTtsBar(); },
-  'tts-gender': el => { S.reader.gender = el.dataset.v; S.reader.voiceEn = ''; S.reader.voiceAr = ''; save(); if (TTS.playing){ ttsHalt(); ttsSpeak(false); } else renderTtsBar(); },
+  'tts-gender': el => { S.reader.gender = el.dataset.v; S.reader.voiceEn = ''; S.reader.voiceAr = ''; save(); renderVoiceDlg(); if (TTS.playing){ ttsHalt(); ttsSpeak(false); } else renderTtsBar(); },
+  'tts-sel': () => ttsReadSelection(),
+  'tts-para': () => ttsPlayPara(ttsHerePid()),
+  'tts-section': () => ttsPlaySection(ttsHerePid()),
+  'tts-voices': () => openVoiceDlg(),
+  'tts-voices-close': () => $('#voiceDlg').close(),
+  'tts-preview': el => { const k = el.dataset.kind, v = el.dataset.uri ? ttsVoices(k === 'en' ? 'en' : 'ar').find(x => x.voiceURI === el.dataset.uri) : null; ttsSay(TTS_SAMPLE[k], k === 'en' ? 'en' : 'ar', v); },
+  'tts-use': el => { const k = el.dataset.kind, v = ttsVoices(k).find(x => x.voiceURI === el.dataset.uri); if (!v) return toast('This voice is no longer available');
+    if (k === 'en'){ S.reader.voiceEn = v.voiceURI; S.reader.enAccent = enAccentOf(v) || S.reader.enAccent; } else { S.reader.voiceAr = v.voiceURI; S.reader.arRegion = arRegionOf(v); }
+    save(); renderVoiceDlg(); toast(`${voiceName(v)} will read ${k === 'en' ? 'English' : 'Arabic'}`); if (TTS.playing){ ttsHalt(); ttsSpeak(false); } else renderTtsBar(); },
+  'tts-accent': el => { S.reader.enAccent = el.dataset.k; S.reader.voiceEn = ''; save(); renderVoiceDlg(); if (TTS.playing){ ttsHalt(); ttsSpeak(false); } else renderTtsBar(); },
+  'tts-arregion': el => { S.reader.arRegion = el.dataset.k; S.reader.voiceAr = ''; save(); renderVoiceDlg(); if (TTS.playing){ ttsHalt(); ttsSpeak(false); } else renderTtsBar(); },
+  'lex-add': () => { const w = ($('#lexW').value || '').trim(), say = ($('#lexSay').value || '').trim(); if (!w || !say) return toast('Type the word and how to say it');
+    (S.reader.lexicon ||= []).push({w, say, lang:$('#lexLang').value}); save(); renderVoiceDlg(); toast('Added to your pronunciation list'); },
+  'lex-del': el => { S.reader.lexicon.splice(+el.dataset.i, 1); save(); renderVoiceDlg(); },
+  'lex-try': el => { const e = S.reader.lexicon[+el.dataset.i]; if (e) ttsSay(e.w, e.lang === 'ar' ? 'ar' : 'en'); },
+  'rp-voc-all': () => { const paper = rPaper(); vocalizeParas(paper, paper.paras.filter(x => isReadable(x) && (x.ar || '').trim() && !arVocOf(x))); },
+  'rp-voc-one': el => { const paper = rPaper(); vocalizeParas(paper, paper.paras.filter(x => x.id === el.dataset.id)); },
   'tts-one': async el => {
     const paper = rPaper(), p = paper.paras.find(x => x.id === el.dataset.id), part = el.dataset.part;
     if (part === 'from') return ttsPlayAll(p.id);
+    if (part === 'section') return ttsPlaySection(p.id);
     if (part === 'idea' && !simpleOf(p)){                                   // no simple version yet: make one first
       if (aiReady()){ ttsHalt(); renderTtsBar(); if (!(await summarizeParas(paper, [p], 'Simplifying'))) return; }
       else { const card = $('#para-' + p.id); simOpen.add(p.id); if (card) card.outerHTML = paraCard(paper, p); $('#rs-' + p.id)?.focus();
@@ -5605,7 +5989,7 @@ const ACTIONS = {
   'chat-stop': () => chatRun && chatRun.ctl.abort(),
   'chat-suggest': el => chatSend(el.dataset.scope, el.dataset.q),
   'chat-clear': el => { if (!confirm('Clear this chat?')) return; const paper = rPaper(); chatOf(paper, el.dataset.scope).length = 0; save(); rerenderChat(paper, el.dataset.scope); },
-  'chat-listen': el => { const m = chatOf(rPaper(), el.dataset.scope)[+el.dataset.i]; if (m){ const text = m.content.replace(/\*\*/g, '').replace(/^\s*[-•*]\s+/gm, ''); ttsStart([{text, lang:isArabic(text) ? 'ar' : 'en'}], {}); } },
+  'chat-listen': el => { const m = chatOf(rPaper(), el.dataset.scope)[+el.dataset.i]; if (m){ const text = m.content.replace(/\*\*/g, '').replace(/^\s*[-•*]\s+/gm, ''); ttsStart([{text, lang:baseLang(text)}], {}); } },
   'chat-copy': el => { const m = chatOf(rPaper(), el.dataset.scope)[+el.dataset.i]; if (m) copyText(m.content); },
   'rp-fig-open': (el, e) => { e.preventDefault(); const paper = rPaper(), f = paper.paras.find(x => x.id === el.dataset.id); if (f) openFigureInLab(paper, f); },
   'fl-back-reader': () => { const r = activeFig(), [pid, fid] = (r.srcKey || '').split(':'); if (!S.reader.papers.some(p => p.id === pid)) return toast('That paper is no longer in the Paper Reader');
@@ -5782,7 +6166,8 @@ document.addEventListener('change', e => {
     save(); refreshCards([para]); return;
   }
   if (t.id === 'rpSel'){ if (TTS.playing) ttsPause(); chatOpen = null; S.reader.active = t.value; save(); RENDER.reader(); return; }
-  if (t.id === 'ttsRate'){ S.reader.rate = +t.value; save(); if (TTS.playing){ ttsHalt(); ttsSpeak(false); } return; }
+  if (t.id === 'ttsRate' || t.id === 'ttsVol'){ S.reader[t.id === 'ttsRate' ? 'rate' : 'volume'] = +t.value; save(); if (TTS.playing){ ttsHalt(); ttsSpeak(false); } return; }
+  if (t.dataset.ttsopt){ const k = t.dataset.ttsopt; S.reader[k] = k === 'cites' ? (t.checked ? 'skip' : 'read') : t.checked; save(); if (TTS.playing){ ttsHalt(); ttsSpeak(false); } return; }
   if (t.id === 'ttsVoiceEn' || t.id === 'ttsVoiceAr'){ S.reader[t.id === 'ttsVoiceEn' ? 'voiceEn' : 'voiceAr'] = t.value; save(); if (TTS.playing){ ttsHalt(); ttsSpeak(false); } else renderTtsBar(); return; }
   if (t.id === 'rpFile' && t.files[0]){
     const file = t.files[0]; t.value = ''; toast('Reading the paper…');

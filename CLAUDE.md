@@ -10,6 +10,7 @@ ScholarPath is a research companion web app built for **Dima Alkharraz** (Englis
 - Figures and tables are not part of the Paper Reader's reading. They are shown as pictures and explained in Figure Lab.
 - Label all example content. Put a Copy button on every generated output. Keep it working on phones, in light and dark mode. No login.
 - Mark Claude-generated text as Claude's, and remind the user to check it against the paper.
+- Read aloud uses the device's own voices: label an accent or region only from the voice's language tag, never fake an accent, dialect or gender with pitch, and never change the written text — only the spoken copy (spec §5.3). Do not claim a voice was upgraded unless the app really uses it.
 - Part 4 · Verify & defend: the original paper is the source of truth; never mark a check as done unless it was actually checked on the current document versions; never resolve a contradiction silently; never call the documents fully consistent before the complete comparison (spec §5.9). Professor questions (4.2) are generated from the actual documents only — no fixed question bank — and a question is "prepared" only after the student has answered it (spec §5.10).
 
 ## Code
