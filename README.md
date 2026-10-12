@@ -20,6 +20,8 @@ Nothing yet — it's a sandbox for practicing git and GitHub.
 `index.html` is **ScholarPath**, a single-page research companion for master's students and early researchers.
 Open the file in any modern browser. It needs no install, build step or login, and all work is saved in the browser's localStorage.
 
+The app is organised as a journey in three parts: **1 · Write a paper** (writing path, find literature, ideas & reading list, figures & tables), **2 · Critique a paper** (read the paper, explain the figures, write the AAU critique) and **3 · Present** (build the slides, prepare for questions), plus a Start page and My Progress.
+
 | Tab | What it does |
 | --- | --- |
 | Resource Hub | Cards for 10 academic databases, a search-link builder (keywords + optional start year), and search tips |

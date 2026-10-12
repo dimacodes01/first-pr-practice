@@ -160,7 +160,7 @@ textarea{min-height:110px;resize:vertical;line-height:1.55}
 .crit-bar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between}
 .progress{height:8px;background:var(--surface-2);border-radius:999px;overflow:hidden;border:1px solid var(--line)}
 .progress > span{display:block;height:100%;background:var(--accent);border-radius:999px;transition:width .3s}
-.sec{scroll-margin-top:130px}
+.sec{scroll-margin-top:calc(var(--hdr,120px) + 16px)}
 .sec-head{display:flex;align-items:center;gap:12px;margin-bottom:10px}
 .sec-num{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;font:600 .82rem var(--sans);background:var(--accent-soft);color:var(--accent);flex:none}
 .sec.filled .sec-num{background:var(--accent);color:var(--accent-ink)}
@@ -176,7 +176,7 @@ textarea{min-height:110px;resize:vertical;line-height:1.55}
 .jump{display:flex;gap:6px;overflow-x:auto;padding-bottom:4px;scrollbar-width:thin}
 .jump a{flex:none;font-size:.8rem;text-decoration:none;padding:4px 10px;border-radius:999px;background:var(--surface-2);color:var(--muted);border:1px solid var(--line)}
 .jump a.done{background:var(--accent-soft);color:var(--accent);border-color:transparent}
-@media(min-width:760px){.sticky-sub{position:sticky;top:110px;z-index:5}}
+@media(min-width:760px){.sticky-sub{position:sticky;top:calc(var(--hdr,120px) - 6px);z-index:5}}
 
 
 /* AAU critique form */
@@ -226,7 +226,7 @@ mark{background:var(--warn-soft);color:var(--ink);padding:0 2px;border-radius:3p
 .title-input{font-family:var(--serif);font-size:1.05rem;font-weight:600;border-color:transparent;background:transparent;padding-left:4px}
 .title-input:hover,.title-input:focus{border-color:var(--line);background:var(--surface)}
 .ok-chip{background:var(--ok-soft);color:var(--ok);border-color:transparent}
-.para{margin-bottom:12px;scroll-margin-top:150px;transition:box-shadow .3s}
+.para{margin-bottom:12px;scroll-margin-top:calc(var(--hdr,120px) + 40px);transition:box-shadow .3s}
 .para.has-idea{border-left:3px solid var(--ok)}
 .para.front{background:transparent;box-shadow:none}
 .para.flash{box-shadow:0 0 0 3px var(--accent)}
@@ -267,7 +267,7 @@ ol.qs li{margin-bottom:12px}
 .mode-seg button{display:inline-flex;align-items:center;gap:7px;padding:10px 16px}
 .fl-layout{display:grid;gap:16px;grid-template-columns:1fr}
 .fl-layout > *{min-width:0}
-@media(min-width:900px){.fl-layout{grid-template-columns:270px 1fr;align-items:start}.fl-list{position:sticky;top:110px;max-height:calc(100vh - 130px);overflow:auto}}
+@media(min-width:900px){.fl-layout{grid-template-columns:270px 1fr;align-items:start}.fl-list{position:sticky;top:calc(var(--hdr,120px) - 6px);max-height:calc(100vh - var(--hdr,120px) - 20px);overflow:auto}}
 .fl-group{font:600 .72rem var(--sans);letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin:12px 0 6px}
 .fl-item{appearance:none;display:flex;align-items:center;gap:8px;width:100%;text-align:left;border:0;background:none;font:inherit;font-size:.88rem;color:var(--ink);padding:8px;border-radius:var(--radius-sm);cursor:pointer}
 .fl-item:hover{background:var(--surface-2)}
@@ -340,7 +340,7 @@ svg.mini{width:100%;max-width:220px;height:auto;display:block}
 .scan-item input{width:18px;height:18px;accent-color:var(--accent)}
 .scan-cap{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 @media(max-width:620px){.scan-item{grid-template-columns:auto auto 1fr}.scan-item .scan-cap{grid-column:2/-1;white-space:normal}}
-.fig-shot{scroll-margin-top:120px;margin:4px 0 14px;background:#fff;border:1px solid var(--line);border-radius:var(--radius-sm);padding:8px;text-align:center}
+.fig-shot{scroll-margin-top:calc(var(--hdr,120px) + 10px);margin:4px 0 14px;background:#fff;border:1px solid var(--line);border-radius:var(--radius-sm);padding:8px;text-align:center}
 .fig-shot img{max-width:100%;max-height:420px;display:block;margin:0 auto 6px}
 .fig-shot .small{text-align:left}
 .ai-note{margin:-4px 0 12px;padding:8px 10px;background:var(--accent-soft);border-radius:var(--radius-sm)}
@@ -366,7 +366,7 @@ textarea.simple-box{min-height:80px;font-size:.98rem;line-height:1.65;border-col
 
 
 /* Figures inside the Paper Reader */
-.figure-card{scroll-margin-top:150px;border-left:3px solid var(--violet);background:color-mix(in srgb,var(--violet-soft) 35%,var(--surface))}
+.figure-card{scroll-margin-top:calc(var(--hdr,120px) + 40px);border-left:3px solid var(--violet);background:color-mix(in srgb,var(--violet-soft) 35%,var(--surface))}
 .figure-card .para-no{display:inline-flex;align-items:center;gap:5px;background:var(--violet-soft);color:var(--violet)}
 .figure-card .para-no svg{width:14px;height:14px}
 .figure-card .fig-shot{margin:8px 0 10px}
@@ -377,9 +377,52 @@ textarea.simple-box{min-height:80px;font-size:.98rem;line-height:1.65;border-col
 .flow-fig .para-no{background:var(--violet-soft);color:var(--violet)}
 .flow-fig .para-no svg{width:13px;height:13px}
 
+
+/* Journey navigation: parts, steps, previous/next */
+nav.parts{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;margin:0 -16px;padding:2px 16px 0}
+nav.parts::-webkit-scrollbar{display:none}
+.part{appearance:none;display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line);background:var(--surface);color:var(--muted);font:600 .9rem var(--sans);padding:7px 14px 7px 8px;border-radius:999px;cursor:pointer;white-space:nowrap;min-height:38px}
+.part.part-plain{padding-left:12px}
+.part:hover{color:var(--ink);border-color:var(--accent)}
+.part.active{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.part-no{width:24px;height:24px;border-radius:50%;display:inline-grid;place-items:center;font:700 .8rem var(--sans);background:var(--accent-soft);color:var(--accent);flex:none}
+.part.active .part-no{background:var(--accent-ink);color:var(--accent)}
+.part-no.big{width:42px;height:42px;font-size:1.2rem}
+.part-short{display:none}
+@media(max-width:620px){.part .part-label{display:none}.part .part-short{display:inline}.part{padding:6px 12px 6px 7px;gap:6px}}
+nav.steps-nav{align-items:center}
+nav.steps-nav[hidden]{display:none}
+.step-tab .step-no{font:700 .74rem var(--mono);color:var(--muted);margin-right:2px}
+.step-tab[aria-selected="true"] .step-no{color:var(--accent)}
+.step-arrow{color:var(--line);font-size:1.3rem;padding:0 2px;flex:none}
+@media(max-width:719px){header.top{position:static}}
+.step-foot{max-width:1180px;margin:-40px auto 40px;padding:0 16px}
+.step-foot-in{display:flex;align-items:center;justify-content:space-between;gap:12px;border-top:1px solid var(--line);padding-top:18px}
+.step-foot .btn{text-align:left;line-height:1.3;padding:10px 14px}
+.step-foot .btn.primary{text-align:right}
+.step-pos{text-align:center}
+@media(max-width:560px){.step-pos{display:none}.step-foot .btn{flex:1}}
+.cross-link{margin:8px 0 0}
+.help-tools{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin:-4px 0 14px}
+.journey{display:grid;gap:16px;grid-template-columns:1fr}
+@media(min-width:1000px){.journey{grid-template-columns:1fr auto 1fr auto 1fr;align-items:stretch}}
+.journey-arrow{display:none;align-self:center;color:var(--muted);font-size:1.6rem}
+@media(min-width:1000px){.journey-arrow{display:block}}
+.part-card{display:flex;flex-direction:column;gap:14px}
+.part-card-head{display:flex;gap:12px;align-items:flex-start}
+.part-card-head h2{margin:0 0 4px}
+.part-card-head p{margin:0;font-size:.92rem}
+ol.part-steps{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px;flex:1}
+.part-step{appearance:none;width:100%;display:grid;grid-template-columns:auto 1fr;gap:4px 10px;align-items:start;text-align:left;border:1px solid var(--line);background:var(--surface-2);color:var(--ink);font:inherit;padding:10px 12px;border-radius:var(--radius-sm);cursor:pointer}
+.part-step:hover{border-color:var(--accent)}
+.part-step .step-no{font:700 .78rem var(--mono);color:var(--accent);padding-top:2px}
+.ps-text{display:flex;flex-direction:column}
+.ps-status{grid-column:2;color:var(--ok)}
+.part-card > .btn{align-self:flex-start}
+
 /* Writing */
 .write-layout{display:grid;gap:16px;grid-template-columns:1fr}
-@media(min-width:900px){.write-layout{grid-template-columns:290px 1fr;align-items:start}.stepper{position:sticky;top:110px}}
+@media(min-width:900px){.write-layout{grid-template-columns:290px 1fr;align-items:start}.stepper{position:sticky;top:calc(var(--hdr,120px) - 6px)}}
 .stepper{display:flex;flex-direction:column;gap:2px;padding:10px}
 .step-btn{appearance:none;display:flex;align-items:center;gap:10px;width:100%;text-align:left;border:0;background:none;font:500 .9rem var(--sans);color:var(--ink);padding:9px 10px;border-radius:var(--radius-sm);cursor:pointer}
 .step-btn:hover{background:var(--surface-2)}
@@ -461,18 +504,20 @@ footer.foot{max-width:1180px;margin:0 auto;padding:0 16px 40px;color:var(--muted
 <header class="top">
   <div class="top-inner">
     <div class="brand-row">
-      <a class="brand" href="#hub" data-act="tab" data-tab="hub" aria-label="ScholarPath home">
+      <a class="brand" href="#start" data-act="part" data-part="start" aria-label="ScholarPath start page">
         <span class="brand-mark" data-icon="cap"></span>
         <span><span class="brand-name">ScholarPath</span><span class="brand-tag">Your research companion — read, critique, write</span></span>
       </a>
       <span class="spacer"></span>
       <button class="btn ghost icon" id="themeBtn" data-act="theme" title="Theme" aria-label="Change theme"></button>
     </div>
-    <nav class="tabs" role="tablist" aria-label="Sections" id="tabs"></nav>
+    <nav class="parts" aria-label="Parts" id="parts"></nav>
+    <nav class="tabs steps-nav" role="tablist" aria-label="Steps" id="tabs"></nav>
   </div>
 </header>
 
 <main>
+  <section class="panel" id="panel-start" hidden></section>
   <section class="panel" id="panel-hub" role="tabpanel" aria-labelledby="tab-hub"></section>
   <section class="panel" id="panel-ideas" role="tabpanel" aria-labelledby="tab-ideas" hidden></section>
   <section class="panel" id="panel-reader" role="tabpanel" aria-labelledby="tab-reader" hidden></section>
@@ -482,6 +527,7 @@ footer.foot{max-width:1180px;margin:0 auto;padding:0 16px 40px;color:var(--muted
   <section class="panel" id="panel-present" role="tabpanel" aria-labelledby="tab-present" hidden></section>
   <section class="panel" id="panel-progress" role="tabpanel" aria-labelledby="tab-progress" hidden></section>
 </main>
+<nav class="step-foot" id="stepFoot" aria-label="Previous and next step"></nav>
 <footer class="foot">ScholarPath saves everything in this browser only (localStorage). Use <b>My Progress → Back up</b> to keep a copy.</footer>
 
 <dialog id="dlg"><form method="dialog" id="dlgForm"></form></dialog>
@@ -535,7 +581,26 @@ const $ = (s, r=document) => r.querySelector(s);
 const $$ = (s, r=document) => [...r.querySelectorAll(s)];
 
 /* ---------- Static content ---------- */
+// The app is presented as a journey: write a paper → critique a paper → present. Each step opens a tab
+// (some tabs serve two steps: Figure Lab builds figures in part 1 and explains them in part 2).
+const PARTS = [
+  {id:'start', label:'Start', icon:'cap', steps:[{tab:'start', label:'Start'}]},
+  {id:'writing', no:1, label:'Write a paper', short:'Write', icon:'pen', blurb:'Plan your study, find and organise sources, write it step by step and build clear figures.', steps:[
+    {tab:'write', label:'Writing path', desc:'Ten steps from topic to references, with checklists and notes'},
+    {tab:'hub', label:'Find literature', desc:'Ten databases and a search-link builder'},
+    {tab:'ideas', label:'Ideas & reading list', desc:'Research ideas, research questions and the papers you read'},
+    {tab:'figlab', mode:'build', label:'Figures & tables', desc:'Choose, draw and caption figures for your paper (IEEE)'}]},
+  {id:'critiquing', no:2, label:'Critique a paper', short:'Critique', icon:'clip', blurb:'Understand the paper paragraph by paragraph, explain its figures, then complete the AAU critique form.', steps:[
+    {tab:'reader', view:'paras', label:'Read the paper', desc:'Original text, simple English, Arabic, audio and Ask Claude'},
+    {tab:'figlab', mode:'explain', label:'Explain the figures', desc:'What each figure shows, its strengths, weaknesses and role in the study'},
+    {tab:'critique', label:'Write the critique', desc:'The AAU 0106112 Paper Critique Form, with word limits and Word export'}]},
+  {id:'presenting', no:3, label:'Present', short:'Present', icon:'slides', blurb:'Turn your critique or paper into a timed slide outline and prepare for questions.', steps:[
+    {tab:'present', label:'Build the slides', desc:'Slide structure, speaker notes and timing for 5, 10 or 15 minutes'},
+    {tab:'reader', view:'questions', label:'Prepare for questions', desc:'What to ask the class, and what your professor and colleagues may ask you'}]},
+  {id:'progress', label:'My Progress', icon:'chart', steps:[{tab:'progress', label:'My Progress'}]}
+];
 const TABS = [
+  {id:'start', label:'Start', icon:'cap'},
   {id:'hub', label:'Resource Hub', icon:'library'},
   {id:'ideas', label:'Idea Organizer', icon:'bulb'},
   {id:'reader', label:'Paper Reader', icon:'book'},
@@ -706,6 +771,17 @@ const WRITE_STEPS = [
    checks:['Every in-text citation is in the reference list (and vice versa)','One citation style applied consistently','DOIs or URLs included where available','Managed with a reference tool']}
 ];
 
+// links from each writing step to the parts of ScholarPath that help with it: [part, step index, label]
+const WRITE_HELP = {
+  topic:[['writing', 2, 'Note your ideas'], ['writing', 1, 'Search the literature']],
+  gap:[['writing', 1, 'Search the databases'], ['critiquing', 0, 'Read a key paper in simple English']],
+  question:[['writing', 2, 'Write it on an idea card']],
+  litreview:[['writing', 2, 'Your reading list'], ['critiquing', 0, 'Read and simplify sources']],
+  methodology:[['critiquing', 2, 'Check your method against the critique questions']],
+  results:[['writing', 3, 'Build your figures and tables']],
+  discussion:[['critiquing', 1, 'See how figures are judged']],
+  references:[['writing', 2, 'Your reading list'], ['writing', 1, 'Find DOIs in the databases']]
+};
 const SELF_REVIEW = [
   ['Clarity','Every paragraph has one clear point; jargon is defined; a non-specialist could follow the argument.'],
   ['Originality','I can state my contribution in one sentence and show how it differs from the closest prior work.'],
@@ -940,19 +1016,78 @@ const stepDone = st => { const ws = stepState(st.key); return st.checks.every((_
 const stepCount = st => { const ws = stepState(st.key); return st.checks.filter((_,i) => ws.checks[i]).length; };
 
 /* ---------- Tabs & theme ---------- */
+const partOf = id => PARTS.find(p => p.id === id) || PARTS[0];
 function renderTabs(){
-  $('#tabs').innerHTML = TABS.map(t => `<button class="tab" role="tab" id="tab-${t.id}" aria-controls="panel-${t.id}" aria-selected="${S.ui.tab===t.id}" tabindex="${S.ui.tab===t.id?0:-1}" data-act="tab" data-tab="${t.id}">${icon(t.icon)}${t.label}</button>`).join('');
+  const cur = partOf(S.ui.part), i = S.ui.step | 0;
+  $('#parts').innerHTML = PARTS.map(p => `<button class="part ${p.id === cur.id ? 'active' : ''} ${p.no ? '' : 'part-plain'}" data-act="part" data-part="${p.id}" ${p.id === cur.id ? 'aria-current="page"' : ''}>${p.no ? `<span class="part-no">${p.no}</span>` : icon(p.icon)}<span class="part-label">${p.label}</span><span class="part-short">${p.short || p.label.replace('My ', '')}</span></button>`).join('');
+  $('#parts .part.active')?.scrollIntoView({block:'nearest', inline:'nearest'});
+  const steps = cur.steps;
+  $('#tabs').hidden = steps.length < 2;
+  $('#tabs').innerHTML = steps.length < 2 ? '' : steps.map((st, k) => `<button class="tab step-tab" role="tab" aria-selected="${k === i}" tabindex="${k === i ? 0 : -1}" data-act="step" data-part="${cur.id}" data-i="${k}"><span class="step-no">${cur.no}.${k + 1}</span>${esc(st.label)}</button>${k < steps.length - 1 ? '<span class="step-arrow" aria-hidden="true">›</span>' : ''}`).join('');
+}
+// which step shows a tab: prefer the current part, then the first part that has it
+function stepFor(tab){
+  const ok = st => st.tab === tab && (tab !== 'figlab' || !st.mode || st.mode === (S.figlab.mode || 'explain')) && (tab !== 'reader' || !st.view || st.view === (S.reader.view === 'questions' ? 'questions' : 'paras'));
+  const loose = st => st.tab === tab;
+  for (const test of [ok, loose]){
+    const cur = partOf(S.ui.part), k = cur.steps.findIndex(test);
+    if (k >= 0) return [cur.id, k];
+    for (const p of PARTS){ const j = p.steps.findIndex(test); if (j >= 0) return [p.id, j]; }
+  }
+  return ['start', 0];
+}
+function goStep(partId, i, push=true){
+  const p = partOf(partId), k = Math.max(0, Math.min(i | 0, p.steps.length - 1)), st = p.steps[k];
+  if (st.mode) S.figlab.mode = st.mode;
+  if (st.view) S.reader.view = st.view;
+  S.ui.part = p.id; S.ui.step = k; (S.ui.partStep ||= {})[p.id] = k;
+  openTab(st.tab, push);
 }
 const RENDER = {};
-function showTab(id, push=true){
-  if (!TABS.some(t => t.id === id)) id = 'hub';
+function showTab(id, push=true){                                 // used all over the app: keeps the journey in step
+  if (!TABS.some(t => t.id === id)) id = 'start';
+  const [pid, k] = stepFor(id);
+  S.ui.part = pid; S.ui.step = k; (S.ui.partStep ||= {})[pid] = k;
+  openTab(id, push);
+}
+function openTab(id, push){
   if (id !== 'reader' && TTS.playing) ttsPause();          // keeps the place for Continue
   S.ui.tab = id; save();
   renderTabs();
   for (const t of TABS) $('#panel-'+t.id).hidden = t.id !== id;
   RENDER[id]();
-  if (push && location.hash !== '#'+id) history.replaceState(null, '', '#'+id);
-  const tb = $('#tab-'+id); tb && tb.scrollIntoView({block:'nearest', inline:'nearest'});
+  const p = partOf(S.ui.part), k = S.ui.step | 0, st = p.steps[k];
+  const eb = $(`#panel-${id} .page-head .eyebrow`);
+  if (eb && p.no) eb.textContent = `Part ${p.no} · ${p.label} — Step ${p.no}.${k + 1}: ${st.label}`;
+  renderStepFoot();
+  const hash = p.steps.length > 1 ? `#${p.id}/${k + 1}` : `#${p.id}`;
+  if (push && location.hash !== hash) history.replaceState(null, '', hash);
+  $('#tabs .step-tab[aria-selected="true"]')?.scrollIntoView({block:'nearest', inline:'nearest'});
+  measureHeader();
+}
+function renderStepFoot(){
+  const el = $('#stepFoot'), p = partOf(S.ui.part), k = S.ui.step | 0;
+  if (!p.no){ el.innerHTML = ''; return; }
+  const parts = PARTS.filter(x => x.no), pi = parts.indexOf(p);
+  const prev = k > 0 ? {part:p.id, i:k - 1, label:`${p.no}.${k} ${p.steps[k - 1].label}`} : pi > 0 ? {part:parts[pi - 1].id, i:parts[pi - 1].steps.length - 1, label:`Part ${parts[pi - 1].no}: ${parts[pi - 1].label}`} : {part:'start', i:0, label:'Start'};
+  const next = k < p.steps.length - 1 ? {part:p.id, i:k + 1, label:`${p.no}.${k + 2} ${p.steps[k + 1].label}`} : pi < parts.length - 1 ? {part:parts[pi + 1].id, i:0, label:`Part ${parts[pi + 1].no}: ${parts[pi + 1].label}`} : {part:'progress', i:0, label:'My Progress'};
+  el.innerHTML = `<div class="step-foot-in">
+    <button class="btn" data-act="goto" data-part="${prev.part}" data-i="${prev.i}">${icon('back')}<span><span class="small muted">Previous</span><br>${esc(prev.label)}</span></button>
+    <span class="small muted step-pos">Part ${p.no} · step ${k + 1} of ${p.steps.length}</span>
+    <button class="btn primary" data-act="goto" data-part="${next.part}" data-i="${next.i}"><span><span class="small">Next</span><br>${esc(next.label)}</span>${icon('fwd')}</button></div>`;
+}
+function measureHeader(){                                        // sticky toolbars sit just below the (sticky) header
+  const h = $('header.top'); if (!h) return;
+  const sticky = getComputedStyle(h).position === 'sticky';
+  document.documentElement.style.setProperty('--hdr', (sticky ? h.offsetHeight : 0) + 'px');
+}
+window.addEventListener('resize', measureHeader);
+function route(hash){
+  const [a, b] = (hash || '').replace(/^#/, '').split('/');
+  if (PARTS.some(p => p.id === a)) return goStep(a, (parseInt(b, 10) || 1) - 1, false);
+  if (a === 'reader') return goStep('critiquing', 0, true);      // older links such as #reader: open, then show the new address
+  if (TABS.some(t => t.id === a)) return showTab(a, true);
+  goStep(S.ui.part || 'start', S.ui.part ? S.ui.step : 0, false);
 }
 function applyTheme(){
   const root = document.documentElement;
@@ -961,6 +1096,27 @@ function applyTheme(){
   $('#themeBtn').innerHTML = icon({auto:'auto', light:'sun', dark:'moon'}[S.theme]);
   $('#themeBtn').title = label; $('#themeBtn').setAttribute('aria-label', label + ' (click to change)');
 }
+
+/* ---------- Start: the journey at a glance ---------- */
+const pl = (n, one, many) => `${n} ${n === 1 ? one : (many || one + 's')}`;
+RENDER.start = () => {
+  const stepsDone = WRITE_STEPS.filter(stepDone).length;
+  const status = {
+    'writing/0':`${stepsDone} of ${WRITE_STEPS.length} steps done`, 'writing/1':`${DATABASES.length} databases`, 'writing/2':`${pl(S.ideas.length, 'idea')} · ${pl(S.papers.length, 'paper')}`, 'writing/3':'Chart and caption builder',
+    'critiquing/0':`${pl(S.reader.papers.length, 'paper')} in the reader`, 'critiquing/1':`${pl(S.figlab.reviews.filter(figDone).length, 'figure')} explained`, 'critiquing/2':`${S.critiques.filter(critDone).length} of ${pl(S.critiques.length, 'critique')} complete`,
+    'presenting/0':`from your ${pl(S.critiques.length, 'critique')}`, 'presenting/1':`${pl(S.reader.papers.filter(p => p.questions && (p.questions.audience || []).length).length, 'paper')} with questions`
+  };
+  $('#panel-start').innerHTML = `
+  <div class="page-head"><div class="eyebrow">ScholarPath</div><h1>Your research journey, in three parts</h1>
+  <p>Work through the parts in order, or jump straight to what you need today. Everything you do is saved in this browser.</p></div>
+  <div class="journey">${PARTS.filter(p => p.no).map(p => `<section class="card part-card">
+    <div class="part-card-head"><span class="part-no big">${p.no}</span><div><h2>${p.label}</h2><p class="muted">${p.blurb}</p></div></div>
+    <ol class="part-steps">${p.steps.map((st, i) => `<li><button class="part-step" data-act="goto" data-part="${p.id}" data-i="${i}">
+      <span class="step-no">${p.no}.${i + 1}</span><span class="ps-text"><b>${esc(st.label)}</b><span class="small muted">${esc(st.desc)}</span></span><span class="ps-status small">${esc(status[p.id + '/' + i] || '')}</span></button></li>`).join('')}</ol>
+    <button class="btn primary" data-act="goto" data-part="${p.id}" data-i="0">Start part ${p.no} ${icon('fwd')}</button>
+  </section>`).join('<div class="journey-arrow" aria-hidden="true">→</div>')}</div>
+  <p class="small muted" style="margin-top:18px">See everything you have done, and back up your work, in <a href="#progress" data-act="part" data-part="progress">My Progress</a>.</p>`;
+};
 
 /* ---------- 1. Resource Hub ---------- */
 RENDER.hub = () => {
@@ -2523,6 +2679,7 @@ RENDER.write = () => {
       <div class="row" style="justify-content:space-between;margin-bottom:6px"><span class="eyebrow" style="margin:0">Step ${a+1} of ${WRITE_STEPS.length}</span></div>
       <h2>${st.title}</h2>
       <div class="explain"><p>${esc(st.explain)}</p></div>
+      ${(WRITE_HELP[st.key] || []).length ? `<div class="help-tools"><span class="small muted">Helpful for this step:</span>${WRITE_HELP[st.key].map(([pid, i, label]) => `<button class="fchip sm-chip" data-act="goto" data-part="${pid}" data-i="${i}">${esc(label)} →</button>`).join('')}</div>` : ''}
       <h4>Checklist</h4>
       <div style="margin:0 -10px 14px">${st.checks.map((ch,i) => `<label class="check ${ws.checks[i]?'on':''}"><input type="checkbox" data-wcheck="${i}" ${ws.checks[i]?'checked':''}><span>${esc(ch)}</span></label>`).join('')}</div>
       <label class="f" for="wNotes">My notes for this step</label>
@@ -3133,13 +3290,15 @@ async function reanalyse(r){
 RENDER.figlab = () => {
   const mode = S.figlab.mode || 'explain';
   S.figlab.reviews.forEach(fixFig);
-  $('#panel-figlab').innerHTML = `
-  <div class="page-head"><div class="eyebrow">Figure Lab</div><h1>Read figures critically, build them clearly</h1>
-  <p>Explain and judge a figure in a paper you are critiquing — or plan, draw and caption the figures for your own paper.</p></div>
-  <div class="seg mode-seg" role="group" aria-label="Mode">
-    <button data-act="fl-mode" data-v="explain" aria-pressed="${mode==='explain'}">${icon('search')}Explain a figure</button>
-    <button data-act="fl-mode" data-v="build" aria-pressed="${mode==='build'}">${icon('chart')}Build a figure</button></div>
-  <div style="margin-top:18px">${mode === 'build' ? buildView() : explainView()}</div>`;
+  $('#panel-figlab').innerHTML = mode === 'build' ? `
+  <div class="page-head"><div class="eyebrow">Figure Lab</div><h1>Figures and tables for your paper</h1>
+  <p>Choose the right figure for what you want to show, draw it, and write an IEEE caption and alt text.</p>
+  <p class="small cross-link">Critiquing the figures in someone else's paper? <a href="#critiquing/2" data-act="goto" data-part="critiquing" data-i="1">Go to Part 2 · Explain the figures</a></p></div>
+  <div style="margin-top:18px">${buildView()}</div>` : `
+  <div class="page-head"><div class="eyebrow">Figure Lab</div><h1>Explain and critique the figures</h1>
+  <p>What each figure or table shows, how well it shows it, why it matters to the study and how it affects the conclusions.</p>
+  <p class="small cross-link">Making figures for your own paper? <a href="#writing/4" data-act="goto" data-part="writing" data-i="3">Go to Part 1 · Figures &amp; tables</a></p></div>
+  <div style="margin-top:18px">${explainView()}</div>`;
   if (mode === 'build') updateBuild(); else { updateExplain(); loadFigShot(activeFig()); renderFigRun(); }
 };
 function critOptions(sel){
@@ -3504,6 +3663,9 @@ RENDER.progress = () => {
 /* ---------- Event handling ---------- */
 const ACTIONS = {
   tab: el => { showTab(el.dataset.tab); window.scrollTo({top:0}); },
+  part: el => { const id = el.dataset.part; goStep(id, (S.ui.partStep || {})[id] || 0); window.scrollTo({top:0}); },
+  step: el => { goStep(el.dataset.part, +el.dataset.i); window.scrollTo({top:0}); },
+  goto: el => { goStep(el.dataset.part, +el.dataset.i); window.scrollTo({top:0}); },
   theme: () => { S.theme = {auto:'light', light:'dark', dark:'auto'}[S.theme] || 'auto'; applyTheme(); save(); toast({auto:'Theme follows your system', light:'Light mode', dark:'Dark mode'}[S.theme]); },
   copy: el => { const t = $(el.dataset.target); if (t) copyText(t.textContent); },
   search: () => { const r = buildSearch(); if (!r) return; window.open(r.url, '_blank', 'noopener'); if (r.db.note) copyText(r.q, 'Query copied — paste it into Web of Science'); },
@@ -3679,9 +3841,9 @@ document.addEventListener('click', e => {
 document.addEventListener('keydown', e => {
   if (e.target.id === 'q' && e.key === 'Enter'){ e.preventDefault(); ACTIONS.search(); }
   if (e.target.dataset.chatIn && e.key === 'Enter' && !e.shiftKey && !e.isComposing){ e.preventDefault(); const sc = e.target.dataset.chatIn; const q = e.target.value; e.target.value = ''; chatSend(sc, q); }
-  if (e.target.classList.contains('tab') && (e.key === 'ArrowRight' || e.key === 'ArrowLeft')){
-    const i = TABS.findIndex(t => t.id === S.ui.tab), n = TABS[(i + (e.key === 'ArrowRight' ? 1 : -1) + TABS.length) % TABS.length];
-    showTab(n.id); $('#tab-'+n.id).focus();
+  if (e.target.classList.contains('step-tab') && (e.key === 'ArrowRight' || e.key === 'ArrowLeft')){
+    const p = partOf(S.ui.part), n = ((S.ui.step | 0) + (e.key === 'ArrowRight' ? 1 : -1) + p.steps.length) % p.steps.length;
+    goStep(p.id, n); $('#tabs .step-tab[aria-selected="true"]')?.focus();
   }
 });
 document.addEventListener('input', e => {
@@ -3798,13 +3960,13 @@ document.addEventListener('change', e => {
     r.readAsText(t.files[0]); t.value = '';
   }
 });
-window.addEventListener('hashchange', () => showTab(location.hash.slice(1), false));
+window.addEventListener('hashchange', () => route(location.hash));
 
 /* ---------- Boot ---------- */
 $('.brand-mark').innerHTML = icon('cap');
 S.critiques.forEach(fixCrit);
 applyTheme();
-showTab(location.hash.slice(1) || S.ui.tab || 'hub');
+route(location.hash);
 })();
 </script>
 </body>

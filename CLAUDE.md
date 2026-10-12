@@ -12,6 +12,7 @@ ScholarPath is a research companion web app built for **Dima Alkharraz** (Englis
 - Mark Claude-generated text as Claude's, and remind the user to check it against the paper.
 
 ## Code
+- The app is a journey in three parts (Write a paper → Critique a paper → Present), plus Start and My Progress; see spec §4. `PARTS` lists the steps; `goStep` / `showTab` / `route` handle navigation.
 - `index.html` is the whole app: CSS, markup and one script in an IIFE. Each tab has a `RENDER.<tab>()`. Events use `data-act` → `ACTIONS`, plus `input` / `change` handlers keyed on `data-*`.
 - State lives in `localStorage['scholarpath.v1']` (`S`), and figure pictures in IndexedDB (`scholarpath` / `img`).
 - `vendor/pdfjs/` holds pdf.js 3.11.174 (with a cdnjs fallback).
@@ -21,7 +22,7 @@ ScholarPath is a research companion web app built for **Dima Alkharraz** (Englis
 ## Before committing
 - Check the script compiles: extract the `<script>` from `index.html` and run `new Function(js)` in Node.
 - Run the app in Chromium (Playwright; `PLAYWRIGHT_BROWSERS_PATH=/opt/pw-browsers`). Check every tab for page errors, at 1280px and 390px wide, light and dark.
-- If PDF reading changed, re-run the word-preservation check (spec §7): every word of every paragraph must survive.
+- If PDF reading changed, re-run the word-preservation check (spec §8): every word of every paragraph must survive.
 
 ## Publishing
 - Published page: https://claude.ai/artifact/RQWX4dnGb7W68zTghnoLvz

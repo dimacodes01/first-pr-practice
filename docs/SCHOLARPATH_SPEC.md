@@ -56,21 +56,39 @@ These override everything else. Check every change against them.
 
 ---
 
-## 4. Features, tab by tab
+## 4. How the app is organised: three parts
 
-Tab order: **Resource Hub · Idea Organizer · Paper Reader · Critique Studio · Write Your Paper · Figure Lab · Presentation Builder · My Progress**
+Since 12 October 2026 the app is presented as a **journey in three parts**, in the order the owner works (her request: *first writing a research paper and everything that helps, second building a critique, last the presentation*).
 
-### 4.1 Resource Hub
+| Part | Steps (in order) | Tab used |
+|---|---|---|
+| **Start** | The journey at a glance: three part cards with every step and its progress | `start` |
+| **1 · Write a paper** | 1.1 Writing path → 1.2 Find literature → 1.3 Ideas & reading list → 1.4 Figures & tables | `write`, `hub`, `ideas`, `figlab` (build mode) |
+| **2 · Critique a paper** | 2.1 Read the paper → 2.2 Explain the figures → 2.3 Write the critique | `reader` (paragraphs), `figlab` (explain mode), `critique` |
+| **3 · Present** | 3.1 Build the slides → 3.2 Prepare for questions | `present`, `reader` (questions view) |
+| **My Progress** | Overview, backup and restore | `progress` |
+
+- **Navigation:** a parts row (pills) and a numbered steps row (1.1 › 1.2 › …). Each page's eyebrow says "Part 1 · Write a paper — Step 1.2: Find literature". **Previous / Next** buttons at the bottom of every step lead through the whole journey (the end of part 1 leads to part 2, and so on). Each part remembers its last open step.
+- **Addresses:** `#start`, `#writing/1` … `#writing/4`, `#critiquing/1` … `/3`, `#presenting/1` … `/2`, `#progress`. Old addresses (`#reader`, `#figlab`, `#critique`, …) still work and are rewritten.
+- **Writing path → helpful tools:** each writing step links to the steps that help with it (e.g. *Find the gap* → Find literature, Read a key paper in simple English; *Results* → Build your figures).
+- **Figure Lab** has no mode switch any more: step 1.4 opens build mode and step 2.2 opens explain mode, each with a link to the other.
+- **Code:** `PARTS` defines parts and steps; `goStep(part, i)` opens a step; `showTab(tab)` (used throughout) finds the matching step with `stepFor`. `route()` reads the address. The header is sticky only at 720px and wider, and `--hdr` holds its height for sticky toolbars.
+
+## 5. Features, by tab
+
+(Sections 5.1–5.8 describe the tabs; see section 4 for where each appears in the journey.)
+
+### 5.1 Resource Hub (step 1.2)
 - Cards for IEEE Xplore, Google Scholar, Scopus, Web of Science, ACM DL, ScienceDirect, SpringerLink, arXiv, Semantic Scholar and ResearchGate, each with a one-line "best for".
 - **Search builder:** database + keywords + optional "from year" → a search link (Copy / Open). Web of Science cannot take a link, so it opens the search page and copies the query. arXiv, ResearchGate and WoS ignore the year (the user is told).
 - Search tips: Boolean operators, quotation marks, date filters, field search, snowballing, search log.
 
-### 4.2 Idea Organizer
+### 5.2 Idea Organizer (step 1.3)
 - Idea cards: title, research question, keywords, tags, status (Idea / Exploring / Drafting / Done). Filter by status and tag.
 - Reading list: title, authors, year, venue, link/DOI (a bare DOI becomes a doi.org link), one-line takeaway, linked idea.
 - Example: one idea (Arabic-language fairness in GenAI tutors) and two real papers (*Gender Shades*, 2018; *Stochastic Parrots*, 2021).
 
-### 4.3 Paper Reader
+### 5.3 Paper Reader (steps 2.1 and 3.2)
 **Input:** upload a PDF, or paste text. Each paper keeps its own notes and chats. Title is taken from page 1 (largest font).
 
 **PDF → paragraphs (the hardest part; follow rules 2–4).** `pdfPageLines` builds lines with positions, then `pdfToParagraphs`:
@@ -105,7 +123,7 @@ Tab order: **Resource Hub · Idea Organizer · Paper Reader · Critique Studio �
 
 **Use in Critique:** attaches the paper's text to the AAU critique for evidence search.
 
-### 4.4 Critique Studio
+### 5.4 Critique Studio (step 2.3)
 **Default template: the official AAU Advanced Research Methods (0106112) Paper Critique Form**, in the exact order of the form:
 - **Page 2 – Paper Information:** student name and ID (entered by the user, never changed), topic ID, paper ID, presentation number (placeholders if missing — never invented), date, exact title, authors in order, venue, year, verified DOI, publication status, reading version.
 - **Part A – Diagnostic (0%):** Work and Contribution 1–5, Originality and Novelty 1–5, Related-Work / Citation Relevance **1–3**, Quality of Presentation 1–5 — each with a justification.
@@ -118,11 +136,11 @@ Tab order: **Resource Hub · Idea Organizer · Paper Reader · Critique Studio �
 - A **general 11-section template** (citation → verdict, with 1–5 ratings) is also available.
 - Example: a full AAU critique of *Gender Shades* (Buolamwini & Gebru, 2018) using only facts known to be accurate. Its 10 references are real papers but were written from memory, so their **Verified boxes are deliberately unticked**.
 
-### 4.5 Write Your Paper
+### 5.5 Write Your Paper (step 1.1)
 - Ten steps (topic → gap → question → literature review → methodology → results → discussion → conclusion → abstract → references), each with an explanation, a checklist and notes.
 - IMRaD template, IEEE structure guide, an outline generated from the notes, and an 8-item self-review (clarity, originality, alignment, citations, formatting, limits, plagiarism, ethics/disclosure).
 
-### 4.6 Figure Lab
+### 5.6 Figure Lab (steps 1.4 and 2.2)
 **Explain a figure (critique):**
 - **Analyse the figures in a paper:** upload a PDF → every figure and table is found by its caption, cropped, and linked to the sentences that cite it → Claude analyses each one (sees the crop and the full page) → a review is filled in. Without Claude, draft reviews are created.
 - **Review fields:** figure number, caption, linked critique, type (10 types, each with reading steps and red flags), axes, main pattern, the claim it supports and whether fully, partially or not at all, **importance to the study, effect on its conclusions, relation to the research question**, strengths and weaknesses, a 10-item quality checklist (with N/A), and ratings (clarity, accuracy, relevance).
@@ -133,18 +151,18 @@ Tab order: **Resource Hub · Idea Organizer · Paper Reader · Critique Studio �
 - Chart builder (bar, grouped bar, line, scatter; up to 3 series) with a live preview → **SVG code**, **data table**, and **matplotlib code** for an IEEE single column (3.5 in, 8 pt, 600 dpi, legend above the plot).
 - IEEE caption and alt-text builder. Panels on writing about figures and IEEE figure and table rules.
 
-### 4.7 Presentation Builder
+### 5.7 Presentation Builder (step 3.1)
 - From any critique (general or AAU) or the paper outline → 8 slides (title, background, problem, method, key findings, critique, conclusion, Q&A) with speaker notes and timings for 5, 10 or 15 minutes.
 - Key Findings adds one figure from Figure Lab per main result.
 - Copyable outline.
 
-### 4.8 My Progress
+### 5.8 My Progress
 - Ideas, papers logged, critiques completed, **figures reviewed**, writing steps; bars by status; critique completion; writing path; Paper Reader progress.
 - Backup and restore (JSON), remove or add examples, reset.
 
 ---
 
-## 5. Example and demo content
+## 6. Example and demo content
 
 | Where | Content | Real or illustrative |
 |---|---|---|
@@ -155,7 +173,7 @@ Tab order: **Resource Hub · Idea Organizer · Paper Reader · Critique Studio �
 
 ---
 
-## 6. Known limitations
+## 7. Known limitations
 
 - **Scanned PDFs** (images of pages) have no text: use *Paste text*. OCR is not built in.
 - **Paragraph detection** is heuristic. In papers that separate paragraphs with a blank space (not an indent), a figure placed exactly where a sentence ends with a short line is ambiguous, so the text stays as two blocks (no words lost).
@@ -167,7 +185,7 @@ Tab order: **Resource Hub · Idea Organizer · Paper Reader · Critique Studio �
 
 ---
 
-## 7. How it was tested
+## 8. How it was tested
 
 Headless Chromium (Playwright) scripts, with stand-ins for Claude (`window.claude`) and the speech engine:
 - every tab renders without errors, on desktop and phone, in light and dark mode, without horizontal scrolling;
@@ -180,7 +198,7 @@ The scripts lived in the session's scratch area. **Next step:** add them to `tes
 
 ---
 
-## 8. Change log
+## 9. Change log
 
 | Date | Change |
 |---|---|
@@ -194,10 +212,11 @@ The scripts lived in the session's scratch area. **Next step:** add them to `tes
 | 2026-10-10 | Reader: full simple-English version of each paragraph; fixed "Simple does nothing" |
 | 2026-10-10 | Reader: figures and tables kept out of the reading, explained in Figure Lab |
 | 2026-10-10 | Reader: whole paragraphs and every word kept around figures |
+| 2026-10-12 | Reorganised as a journey: Start page, Part 1 Write → Part 2 Critique → Part 3 Present, Previous/Next, helpful-tool links in the writing path |
 
 ---
 
-## 9. Ideas for next steps
+## 10. Ideas for next steps
 
 - Merge the branch into `main` (pull request) so `main` holds the current app.
 - Move the test scripts into `tests/` with a one-line run command.
