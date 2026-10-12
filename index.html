@@ -405,9 +405,8 @@ nav.steps-nav[hidden]{display:none}
 .cross-link{margin:8px 0 0}
 .help-tools{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin:-4px 0 14px}
 .journey{display:grid;gap:16px;grid-template-columns:1fr}
-@media(min-width:1000px){.journey{grid-template-columns:1fr auto 1fr auto 1fr;align-items:stretch}}
-.journey-arrow{display:none;align-self:center;color:var(--muted);font-size:1.6rem}
-@media(min-width:1000px){.journey-arrow{display:block}}
+@media(min-width:800px){.journey{grid-template-columns:1fr 1fr;align-items:stretch}}
+.journey-arrow{display:none}
 .part-card{display:flex;flex-direction:column;gap:14px}
 .part-card-head{display:flex;gap:12px;align-items:flex-start}
 .part-card-head h2{margin:0 0 4px}
@@ -419,6 +418,147 @@ ol.part-steps{list-style:none;margin:0;padding:0;display:flex;flex-direction:col
 .ps-text{display:flex;flex-direction:column}
 .ps-status{grid-column:2;color:var(--ok)}
 .part-card > .btn{align-self:flex-start}
+
+/* Part 4 · Verify */
+.v-setbar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;padding:12px 16px;margin-bottom:14px}
+.v-setbar label.f{margin:0}
+.v-setbar select{flex:1 1 220px;width:auto;min-width:0;max-width:480px}
+.v-setbtns{margin-left:auto;gap:6px}
+.v-docs{display:grid;gap:14px;grid-template-columns:1fr;margin-bottom:14px}
+@media(min-width:900px){.v-docs{grid-template-columns:repeat(3,minmax(0,1fr))}}
+.v-doc{display:flex;flex-direction:column;gap:10px;min-width:0}
+.v-doc.has{border-color:color-mix(in srgb,var(--ok) 45%,var(--line))}
+.v-doc-head{display:flex;gap:10px;align-items:flex-start}
+.v-doc-head h3{margin:0;font-size:1.05rem}
+.v-doc-head p{margin:2px 0 0}
+.v-doc-no{flex:none;width:30px;height:30px;border-radius:50%;display:grid;place-items:center;background:var(--accent-soft);color:var(--accent);font:600 .9rem var(--sans)}
+.v-doc.has .v-doc-no{background:var(--ok-soft);color:var(--ok)}
+.v-doc-file{display:flex;flex-direction:column;gap:2px;overflow-wrap:anywhere}
+.v-doc-empty{margin:0}
+.v-doc-text summary{cursor:pointer;color:var(--accent)}
+.v-units{max-height:240px;font-size:12px;margin-top:6px}
+.v-doc-add{display:flex;flex-wrap:wrap;gap:6px;margin-top:auto}
+.v-doc-add select{flex:1 1 100%;min-height:36px;padding:6px 10px;font-size:.86rem}
+.v-doc-change{margin-top:auto}
+.v-doc-change summary{cursor:pointer;color:var(--accent);margin-bottom:6px}
+.v-score{margin-bottom:14px}
+.v-stats{display:grid;gap:8px;grid-template-columns:repeat(3,minmax(0,1fr))}
+@media(min-width:900px){.v-stats{grid-template-columns:repeat(6,minmax(0,1fr))}}
+.v-stat{background:var(--surface-2);border-radius:var(--radius-sm);padding:8px 10px;display:flex;flex-direction:column;min-width:0}
+.v-stat b{font:600 1.35rem/1.2 var(--serif)}
+.v-stat span{font-size:.76rem;color:var(--muted);line-height:1.3}
+.v-stat.ok b{color:var(--ok)} .v-stat.bad b{color:var(--danger)} .v-stat.warn b{color:var(--warn)}
+.v-verdict{margin:10px 0 0;display:flex;gap:8px;align-items:flex-start}
+.v-score.ok .v-verdict{color:var(--ok)}
+.v-views{display:flex;gap:6px;overflow-x:auto;padding:2px 0 6px;margin-bottom:12px;scrollbar-width:thin}
+.v-view{flex:none;appearance:none;border:1px solid var(--line);background:var(--surface);color:var(--muted);font:500 .88rem var(--sans);padding:7px 13px;border-radius:999px;cursor:pointer;min-height:36px}
+.v-view:hover{border-color:var(--accent);color:var(--ink)}
+.v-view.on{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.v-count{display:inline-block;min-width:1.4em;padding:0 6px;border-radius:999px;background:var(--surface-2);color:var(--ink);font-size:.74rem;margin-left:3px;text-align:center}
+.v-view.on .v-count{background:color-mix(in srgb,var(--accent-ink) 22%,transparent);color:var(--accent-ink)}
+#vRun:empty{display:none}
+#vRun{margin-bottom:12px}
+.v-body > .card,.v-body > .empty{margin-bottom:14px}
+.v-subhead{margin:18px 0 10px}
+.v-steps{list-style:none;margin:10px 0 0;padding:0;display:flex;flex-direction:column;gap:10px}
+.v-step{display:grid;grid-template-columns:32px minmax(0,1fr);gap:10px;align-items:start;padding:12px;border:1px solid var(--line);border-radius:var(--radius-sm);background:var(--surface)}
+.v-step-no{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;background:var(--surface-2);color:var(--muted);font-weight:600}
+.v-step.done{border-color:color-mix(in srgb,var(--ok) 40%,var(--line))}
+.v-step.done .v-step-no{background:var(--ok);color:var(--surface)}
+.v-step.part .v-step-no{background:var(--warn-soft);color:var(--warn)}
+.v-step-top{display:flex;gap:8px;justify-content:space-between;align-items:flex-start;flex-wrap:wrap}
+.v-step p{margin:4px 0 8px}
+.v-step .row{gap:6px}
+.v-pill-done{background:var(--ok-soft);color:var(--ok);border-color:transparent}
+.v-pill-part{background:var(--warn-soft);color:var(--warn);border-color:transparent}
+.v-rules{margin:6px 0 0;padding-left:22px;display:flex;flex-direction:column;gap:4px}
+.v-runs{list-style:none;margin:0;padding:0}
+.v-runs li{border-top:1px solid var(--line);padding:8px 0}
+.v-stages td{vertical-align:middle}
+.v-stage-act{text-align:right;white-space:nowrap}
+@media(max-width:700px){.v-stages tr{display:flex;flex-direction:column}.v-stages td{border:0}.v-stage-act{text-align:left;white-space:normal;padding-top:0}.v-stages tr{border-bottom:1px solid var(--line)}}
+.v-sec-head{display:flex;flex-wrap:wrap;gap:4px 12px;align-items:baseline;justify-content:space-between;margin-bottom:4px}
+.v-sec-head h3{margin:0}
+.v-item{border-top:1px solid var(--line);padding:10px 0}
+.v-item-top{display:grid;grid-template-columns:36px minmax(0,1fr);gap:6px 8px;align-items:start}
+.v-item-ctl{grid-column:2;display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+@media(min-width:900px){.v-item-top{grid-template-columns:36px minmax(0,1fr) auto}.v-item-ctl{grid-column:auto;justify-content:flex-end;max-width:420px}}
+.v-key{font:600 .8rem var(--mono);color:var(--accent);padding-top:3px}
+.v-item-t{margin:0}
+.v-item > .v-note,.v-item > .v-stale-msg{margin:6px 0 0 44px}
+.v-mine{display:block;width:calc(100% - 44px);margin:6px 0 0 44px;min-height:34px;font-size:.86rem;padding:5px 10px}
+.v-item.st-verified .status-select,.v-item.st-na .status-select{border-color:var(--ok);color:var(--ok)}
+.v-item.st-fix .status-select{border-color:var(--danger);color:var(--danger)}
+.v-item.st-partial .status-select,.v-item.st-unverified .status-select{border-color:var(--warn);color:var(--warn)}
+.v-stale-msg{color:var(--warn);display:flex;gap:6px;align-items:center;margin:4px 0 0}
+.v-note{background:var(--surface-2);border-radius:8px;padding:6px 10px;margin:6px 0 0}
+.v-legend{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0 10px}
+.v-legend span{background:var(--surface-2);border-radius:999px;padding:2px 9px;color:var(--muted)}
+.v-table-wrap{overflow-x:auto;max-width:100%}
+.v-matrix{width:100%;border-collapse:collapse;font-size:.86rem;min-width:900px}
+.v-matrix th,.v-matrix td{border:1px solid var(--line);padding:8px;vertical-align:top;text-align:left}
+.v-matrix thead th{background:var(--accent-soft);color:var(--accent);font:600 .8rem var(--sans)}
+.v-matrix tbody th{font-family:var(--serif);width:120px}
+.v-matrix td .chip,.v-matrix td .btn{margin-top:6px}
+.v-matrix tr.st-verified th,.v-matrix tr.st-na th{box-shadow:inset 4px 0 var(--ok)}
+.v-matrix tr.st-fix th{box-shadow:inset 4px 0 var(--danger)}
+.v-matrix tr.st-partial th,.v-matrix tr.st-unverified th,.v-matrix tr.stale th{box-shadow:inset 4px 0 var(--warn)}
+@media(max-width:760px){
+  .v-matrix{min-width:0}
+  .v-matrix thead{display:none}
+  .v-matrix,.v-matrix tbody,.v-matrix tr,.v-matrix th,.v-matrix td{display:block;width:auto}
+  .v-matrix tr{border:1px solid var(--line);border-radius:var(--radius-sm);margin-bottom:10px;overflow:hidden}
+  .v-matrix th,.v-matrix td{border:0;border-top:1px solid var(--line)}
+  .v-matrix tbody th{border-top:0;background:var(--surface-2);width:auto}
+  .v-matrix td:empty{display:none}
+  .v-matrix td::before{content:attr(data-l);display:block;font:600 .72rem var(--sans);color:var(--muted);text-transform:uppercase;letter-spacing:.04em;margin-bottom:2px}
+}
+.v-tbl{width:100%;border-collapse:collapse;font-size:.86rem;min-width:560px}
+.v-tbl th,.v-tbl td{border-bottom:1px solid var(--line);padding:7px 8px;text-align:left;vertical-align:top}
+.v-tbl thead th{font:600 .78rem var(--sans);color:var(--muted);text-transform:uppercase;letter-spacing:.03em}
+.v-stages{min-width:0}
+.v-row-bad td:first-child{box-shadow:inset 3px 0 var(--danger)}
+.v-p-verified,.v-p-na{background:var(--ok-soft);color:var(--ok);border-color:transparent}
+.v-p-fix{background:var(--danger-soft);color:var(--danger);border-color:transparent}
+.v-p-partial,.v-p-unverified{background:var(--warn-soft);color:var(--warn);border-color:transparent}
+.v-mark{background:var(--warn-soft);color:var(--warn);border-radius:3px;padding:0 2px}
+.v-contra{border-left:4px solid var(--warn);margin-bottom:14px}
+.v-contra.sev-critical{border-left-color:var(--danger)}
+.v-contra.sev-minor{border-left-color:var(--line)}
+.v-contra.closed{border-left-color:var(--ok)}
+.v-contra-head{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:10px}
+.v-contra-head h4{margin:0;flex:1 1 200px}
+.v-sev{font:600 .72rem var(--sans);text-transform:uppercase;letter-spacing:.06em;padding:3px 8px;border-radius:999px;background:var(--warn-soft);color:var(--warn)}
+.sev-critical .v-sev{background:var(--danger-soft);color:var(--danger)}
+.sev-minor .v-sev{background:var(--surface-2);color:var(--muted)}
+.v-quotes{display:grid;gap:8px;grid-template-columns:1fr}
+@media(min-width:900px){.v-quotes{grid-template-columns:repeat(auto-fit,minmax(220px,1fr))}}
+.v-quote{margin:0;background:var(--surface-2);border-radius:var(--radius-sm);padding:8px 12px;border-top:3px solid var(--line);min-width:0}
+.v-quote.d-paper{border-top-color:var(--s1)} .v-quote.d-critique{border-top-color:var(--s2)} .v-quote.d-pres{border-top-color:var(--s3)}
+.v-quote blockquote{margin:4px 0 0;font:15px/1.55 var(--serif);overflow-wrap:anywhere}
+.v-warn{color:var(--warn);font-weight:600}
+.v-okk{color:var(--ok)}
+.v-dl{margin:12px 0 0}
+.v-dl dt{font:600 .76rem var(--sans);color:var(--muted);text-transform:uppercase;letter-spacing:.04em;margin-top:8px}
+.v-dl dd{margin:2px 0 0}
+.v-edits{margin-top:10px}
+.v-contra-act{margin-top:12px;gap:6px}
+.v-edit{border:1px dashed var(--line);border-radius:var(--radius-sm);padding:8px 10px;margin-top:8px;display:flex;flex-direction:column;gap:6px}
+.v-fixcard .v-edit{border:0;padding:0;margin-top:4px}
+.v-fixcard{margin-bottom:10px;padding:12px 14px}
+.v-edit .row{gap:6px}
+.v-diff{display:flex;flex-wrap:wrap;gap:6px;align-items:baseline;overflow-wrap:anywhere}
+.v-diff del{background:var(--danger-soft);color:var(--danger);padding:1px 4px;border-radius:4px}
+.v-diff ins{background:var(--ok-soft);color:var(--ok);text-decoration:none;padding:1px 4px;border-radius:4px}
+.v-es-applied,.v-es-copied,.v-es-queued{background:var(--ok-soft);color:var(--ok);border-color:transparent}
+.v-es-failed,.v-es-manual{background:var(--warn-soft);color:var(--warn);border-color:transparent}
+.v-how{margin:0 0 10px;padding-left:20px}
+.v-file{display:flex;flex-wrap:wrap;gap:10px;justify-content:space-between;align-items:center;border:1px solid var(--line);border-radius:var(--radius-sm);padding:10px 12px;margin-bottom:10px}
+.v-report h4{margin:0 0 6px}
+.v-rsec{border-top:1px solid var(--line);padding-top:12px;margin-top:14px}
+.v-pre{white-space:pre-wrap;margin:0 0 8px;overflow-wrap:anywhere}
+.v-verdict-box{display:flex;gap:8px;align-items:flex-start;padding:10px 12px;border-radius:var(--radius-sm);background:var(--warn-soft);color:var(--warn);margin:10px 0}
+.v-verdict-box.ok{background:var(--ok-soft);color:var(--ok)}
 
 /* Writing */
 .write-layout{display:grid;gap:16px;grid-template-columns:1fr}
@@ -525,6 +665,7 @@ footer.foot{max-width:1180px;margin:0 auto;padding:0 16px 40px;color:var(--muted
   <section class="panel" id="panel-write" role="tabpanel" aria-labelledby="tab-write" hidden></section>
   <section class="panel" id="panel-figlab" role="tabpanel" aria-labelledby="tab-figlab" hidden></section>
   <section class="panel" id="panel-present" role="tabpanel" aria-labelledby="tab-present" hidden></section>
+  <section class="panel" id="panel-verify" role="tabpanel" hidden></section>
   <section class="panel" id="panel-progress" role="tabpanel" aria-labelledby="tab-progress" hidden></section>
 </main>
 <nav class="step-foot" id="stepFoot" aria-label="Previous and next step"></nav>
@@ -597,6 +738,8 @@ const PARTS = [
   {id:'presenting', no:3, label:'Present', short:'Present', icon:'slides', blurb:'Turn your critique or paper into a timed slide outline and prepare for questions.', steps:[
     {tab:'present', label:'Build the slides', desc:'Slide structure, speaker notes and timing for 5, 10 or 15 minutes'},
     {tab:'reader', view:'questions', label:'Prepare for questions', desc:'What to ask the class, and what your professor and colleagues may ask you'}]},
+  {id:'verifying', no:4, label:'Verify', short:'Verify', icon:'check', blurb:'Check the critique and the slides against the original paper: accuracy, contradictions, language and citations, then a final QA report.', steps:[
+    {tab:'verify', label:'Final verification & consistency', desc:'Checklist, consistency matrix, contradictions, corrections and the quality-assurance report'}]},
   {id:'progress', label:'My Progress', icon:'chart', steps:[{tab:'progress', label:'My Progress'}]}
 ];
 const TABS = [
@@ -608,6 +751,7 @@ const TABS = [
   {id:'write', label:'Write Your Paper', icon:'pen'},
   {id:'figlab', label:'Figure Lab', icon:'image'},
   {id:'present', label:'Presentation Builder', icon:'slides'},
+  {id:'verify', label:'Verify', icon:'check'},
   {id:'progress', label:'My Progress', icon:'chart'}
 ];
 
@@ -953,6 +1097,7 @@ function seedState(){
       chart:{title:'Accuracy by model and language', x:'Model', y:'Accuracy (%)', cats:'Model A, Model B, Model C', type:'grouped',
         series:[{name:'Arabic', values:'71, 78, 86'}, {name:'English', values:'84, 88, 90'}, {name:'', values:''}]},
       cap:{no:'2', shows:'Accuracy of three models on the Arabic and English test sets', data:'n = 1,200 essays per language', finding:'Model C performs best in both languages, but every model scores lower on Arabic'}}},
+    verify:{sets:[demoVerifySet()], active:'ex-verify-1', view:'flow'},
     ui:{tab:'hub', db:'scholar', status:'All', tag:'', paperIdea:''},
     theme:'auto'
   };
@@ -971,6 +1116,8 @@ S.writing = Object.assign({}, base.writing, S.writing);
 S.pres = Object.assign({}, base.pres, S.pres);
 S.reader = Object.assign({papers:[], active:'', view:'paras', rate:1, gender:'f', voiceEn:'', voiceAr:'', marks:{}}, S.reader);
 S.reader.ttsParts = Object.assign({orig:true, idea:true, ar:false}, S.reader.ttsParts);
+S.verify = Object.assign({sets:[], active:'', view:'flow'}, S.verify);
+S.verify.sets = (S.verify.sets || []).filter(Boolean).map(v => Object.assign(newVerifySet(), v, {docs:Object.assign({paper:null, critique:null, pres:null}, v.docs)}));
 S.figlab = Object.assign({}, base.figlab, S.figlab); S.figlab.build = Object.assign({}, base.figlab.build, S.figlab.build);
 
 let saveTimer;
@@ -1104,10 +1251,10 @@ RENDER.start = () => {
   const status = {
     'writing/0':`${stepsDone} of ${WRITE_STEPS.length} steps done`, 'writing/1':`${DATABASES.length} databases`, 'writing/2':`${pl(S.ideas.length, 'idea')} · ${pl(S.papers.length, 'paper')}`, 'writing/3':'Chart and caption builder',
     'critiquing/0':`${pl(S.reader.papers.length, 'paper')} in the reader`, 'critiquing/1':`${pl(S.figlab.reviews.filter(figDone).length, 'figure')} explained`, 'critiquing/2':`${S.critiques.filter(critDone).length} of ${pl(S.critiques.length, 'critique')} complete`,
-    'presenting/0':`from your ${pl(S.critiques.length, 'critique')}`, 'presenting/1':`${pl(S.reader.papers.filter(p => p.questions && (p.questions.audience || []).length).length, 'paper')} with questions`
+    'presenting/0':`from your ${pl(S.critiques.length, 'critique')}`, 'verifying/0':vStartStatus(), 'presenting/1':`${pl(S.reader.papers.filter(p => p.questions && (p.questions.audience || []).length).length, 'paper')} with questions`
   };
   $('#panel-start').innerHTML = `
-  <div class="page-head"><div class="eyebrow">ScholarPath</div><h1>Your research journey, in three parts</h1>
+  <div class="page-head"><div class="eyebrow">ScholarPath</div><h1>Your research journey, in four parts</h1>
   <p>Work through the parts in order, or jump straight to what you need today. Everything you do is saved in this browser.</p></div>
   <div class="journey">${PARTS.filter(p => p.no).map(p => `<section class="card part-card">
     <div class="part-card-head"><span class="part-no big">${p.no}</span><div><h2>${p.label}</h2><p class="muted">${p.blurb}</p></div></div>
@@ -1645,7 +1792,7 @@ const crc32 = b => { let c = 0xFFFFFFFF; for (let i = 0; i < b.length; i++) c = 
 function zipStore(files, type){
   const te = new TextEncoder(), parts = [], central = []; let off = 0;
   for (const f of files){
-    const name = te.encode(f.name), data = te.encode(f.data), crc = crc32(data);
+    const name = te.encode(f.name), data = typeof f.data === 'string' ? te.encode(f.data) : f.data, crc = crc32(data);
     const h = new DataView(new ArrayBuffer(30));
     h.setUint32(0, 0x04034b50, true); h.setUint16(4, 20, true); h.setUint16(6, 0x0800, true); h.setUint16(12, 0x21, true);
     h.setUint32(14, crc, true); h.setUint32(18, data.length, true); h.setUint32(22, data.length, true); h.setUint16(26, name.length, true);
@@ -1660,14 +1807,15 @@ function zipStore(files, type){
   e.setUint32(0, 0x06054b50, true); e.setUint16(8, files.length, true); e.setUint16(10, files.length, true); e.setUint32(12, size, true); e.setUint32(16, off, true);
   return new Blob([...parts, ...central, new Uint8Array(e.buffer)], {type});
 }
-function aauDocx(c){
+function aauDocx(c){ return docxPackage(aauDocxXml(c)); }
+function docxPackage(documentXml){                               // a minimal Word file around a document.xml
   const W = 'http://schemas.openxmlformats.org/', X = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>';
   return zipStore([
     {name:'[Content_Types].xml', data:`${X}<Types xmlns="${W}package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/word/document.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml"/><Override PartName="/word/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.styles+xml"/></Types>`},
     {name:'_rels/.rels', data:`${X}<Relationships xmlns="${W}package/2006/relationships"><Relationship Id="rId1" Type="${W}officeDocument/2006/relationships/officeDocument" Target="word/document.xml"/></Relationships>`},
     {name:'word/_rels/document.xml.rels', data:`${X}<Relationships xmlns="${W}package/2006/relationships"><Relationship Id="rId1" Type="${W}officeDocument/2006/relationships/styles" Target="styles.xml"/></Relationships>`},
     {name:'word/styles.xml', data:`${X}<w:styles xmlns:w="${W}wordprocessingml/2006/main"><w:docDefaults><w:rPrDefault><w:rPr><w:rFonts w:ascii="Calibri" w:hAnsi="Calibri" w:eastAsia="Calibri" w:cs="Calibri"/><w:sz w:val="22"/><w:szCs w:val="22"/><w:lang w:val="en-GB"/></w:rPr></w:rPrDefault><w:pPrDefault><w:pPr><w:spacing w:after="120" w:line="276" w:lineRule="auto"/></w:pPr></w:pPrDefault></w:docDefaults></w:styles>`},
-    {name:'word/document.xml', data:aauDocxXml(c)}
+    {name:'word/document.xml', data:documentXml}
   ], 'application/vnd.openxmlformats-officedocument.wordprocessingml.document');
 }
 
@@ -2002,7 +2150,7 @@ async function addReaderPaper(name, title, res){
 /* --- Claude (sample capability), only where the viewer provides it --- */
 const capUse = n => (window.claude && typeof window.claude.use === 'function') ? Promise.resolve(window.claude.use(n)).catch(() => null) : Promise.resolve(null);
 let AI = null, aiOff = false, aiRun = null;
-capUse('sample').then(fn => { AI = fn; if (fn && S.ui.tab === 'reader') RENDER.reader(); if (fn && S.ui.tab === 'figlab') RENDER.figlab(); });
+capUse('sample').then(fn => { AI = fn; if (fn && S.ui.tab === 'reader') RENDER.reader(); if (fn && S.ui.tab === 'figlab') RENDER.figlab(); if (fn && S.ui.tab === 'verify') RENDER.verify(); });
 const aiReady = () => !!AI && !aiOff;
 function aiError(e){
   const code = e && e.code;
@@ -3607,6 +3755,1025 @@ RENDER.present = () => {
   <div class="output" id="presOut">${esc(presOutline(plan))}</div></div>`;
 };
 
+/* ---------- Part 4 · Final Academic Verification & Consistency Checklist ----------
+   Compares the original paper (source of truth), the written critique and the presentation.
+   Nothing is marked as checked unless it was actually checked on the current version of the documents. */
+const V_STATUS = [['', 'Not checked'], ['verified', 'Verified'], ['fix', 'Needs Correction'], ['partial', 'Partially Aligned'], ['unverified', 'Not Verified'], ['na', 'Not Applicable']];
+const vLabel = k => (V_STATUS.find(x => x[0] === (k || '')) || V_STATUS[0])[1];
+const vKey = label => { const t = String(label || '').toLowerCase().replace(/[^a-z]/g, ''); const m = V_STATUS.find(x => x[1].toLowerCase().replace(/[^a-z]/g, '') === t); return m ? m[0] : ''; };
+const V_SECTIONS = [                                            // the owner's checklist, word for word
+  {k:'s1', t:'1. Language, Grammar & Terminology Verification', stage:'lang', items:[
+    'Check spelling, grammar, punctuation, and sentence structure throughout the critique and presentation.',
+    'Identify unclear, awkward, repetitive, or academically inappropriate wording.',
+    'Ensure that technical and research-related terminology is accurate.',
+    'Verify that the same academic terms are used consistently across documents.',
+    'Check that paraphrased information preserves the original meaning.',
+    'Ensure that simplified presentation wording does not distort the research findings.',
+    'Identify statements that are too strong, misleading, vague, or unsupported.',
+    'Improve clarity and academic tone without unnecessarily changing my original writing style.']},
+  {k:'s2', t:'2. Original Research Paper vs. Written Critique', stage:'matrix', items:[
+    'Verify that the research problem and objectives are accurately represented.',
+    'Confirm that the literature review correctly reflects the studies and research gaps discussed in the original paper.',
+    'Check the research design, methodology, sampling techniques, and data collection procedures.',
+    'Verify all statistical information, numerical results, percentages, sample sizes, and country-specific findings.',
+    'Ensure that the data analysis methods are correctly described.',
+    'Check that the findings and discussion accurately represent the original research.',
+    'Confirm that the researchers\' conclusions are not exaggerated or misinterpreted.',
+    'Verify that the strengths and limitations identified in my critique are academically justified.',
+    'Distinguish between limitations acknowledged by the researchers and additional limitations identified through my critical analysis.',
+    'Identify any unsupported assumptions or conclusions.']},
+  {k:'s3', t:'3. Written Critique vs. PowerPoint Presentation', stage:'matrix', items:[
+    'Compare every presentation slide with the corresponding section of the written critique.',
+    'Ensure that the presentation accurately summarizes the critique.',
+    'Verify that both documents communicate the same research objectives, methodology, results, and conclusions.',
+    'Ensure that the strengths and weaknesses discussed in the presentation match those in the critique.',
+    'Check that the literature review is adequately represented in the presentation.',
+    'Identify important critique points missing from the slides.',
+    'Check that no additional claims have been introduced without supporting evidence.',
+    'Ensure that recommendations and future research suggestions are consistent across both documents.',
+    'Verify that charts, tables, figures, and visual explanations accurately represent the research findings.',
+    'Check that shortening information for slides has not changed its meaning.']},
+  {k:'s4', t:'4. Contradiction Detection', stage:'contra', items:[
+    'Identify conflicting numerical information.',
+    'Detect inconsistent descriptions of the methodology.',
+    'Identify differences in reported research findings.',
+    'Check for contradictory interpretations of statistical results.',
+    'Detect conflicting statements about the study\'s strengths and limitations.',
+    'Identify situations where the presentation makes stronger claims than the written critique.',
+    'Check for inconsistencies between the researchers\' conclusions and my interpretation.',
+    'Verify that all statements are logically consistent within each document and across all three documents.']},
+  {k:'s5', t:'5. Citations, References & Evidence Verification', stage:'cites', items:[
+    'Verify that every citation refers to the correct source.',
+    'Check that page numbers accurately support the associated statements.',
+    'Ensure that references are consistent between the critique and presentation.',
+    'Identify unsupported claims requiring citations.',
+    'Check that external references used in the critique are relevant and accurately represented.',
+    'Verify that no references, quotations, statistics, or findings have been fabricated.',
+    'Clearly flag any information that cannot be verified from the available documents.']},
+  {k:'s6', t:'6. Critical Evaluation Quality', stage:'cites', items:[
+    'Ensure that my critique goes beyond summarizing the original research.',
+    'Check that strengths and weaknesses are supported by methodological reasoning.',
+    'Verify that criticism is fair, specific, and academically defensible.',
+    'Ensure that recommendations address actual limitations of the study.',
+    'Check that the critique distinguishes correlation from causation.',
+    'Verify that sampling limitations and generalizability are discussed accurately.',
+    'Ensure that interpretations do not exceed what the research evidence supports.',
+    'Identify opportunities to strengthen my critical arguments without introducing unsupported claims.']}
+];
+const V_ITEMS = V_SECTIONS.flatMap(sec => sec.items.map((t, i) => ({key:`${sec.k}.${i + 1}`, sec, t})));
+const V_MATRIX = ['Research Problem', 'Research Objectives', 'Literature Review', 'Methodology', 'Sampling', 'Data Analysis', 'Results', 'Discussion', 'Strengths', 'Limitations', 'Recommendations', 'Conclusion', 'References'];
+const V_RULES = [                                               // §9, word for word
+  'The original research paper is the primary source of truth for what the researchers actually did, found, and concluded.',
+  'Do not invent, assume, or fabricate information.',
+  'Do not automatically agree with my critique. Evaluate its academic accuracy objectively.',
+  'Preserve my original arguments when they are supported by evidence.',
+  'Do not change factual information without verifying it against the source.',
+  'Distinguish factual errors from reasonable differences in academic interpretation.',
+  'Do not treat a point missing from the presentation as a contradiction unless the omission changes or misrepresents the meaning.',
+  'Use exact page numbers, section references, and slide numbers whenever possible.',
+  'If information cannot be verified, explicitly state "Not Verified" rather than guessing.',
+  'Do not claim that the documents are fully consistent until the complete comparison has been performed.',
+  'After making corrections, repeat the verification process to ensure that no new contradictions have been introduced.',
+  'Maintain the existing PowerPoint design, formatting, and visual style unless a change is necessary for accuracy or clarity.'
+];
+const V_WORKFLOW = [                                            // §10, word for word
+  'Read and understand the original research paper.',
+  'Review the written critique against the original paper.',
+  'Compare the PowerPoint presentation with both documents.',
+  'Complete the language, terminology, citation, and contradiction checks.',
+  'Generate the verification checklist and consistency matrix.',
+  'Recommend and implement necessary corrections, clearly distinguishing verified factual corrections from suggested editorial improvements.',
+  'Recheck all revised documents and provide the final quality-assurance report.'
+];
+const V_DOCS = [
+  {k:'paper', no:1, t:'Original research paper', sub:'The primary source of truth'},
+  {k:'critique', no:2, t:'Written research critique', sub:'Your academic evaluation of the paper'},
+  {k:'pres', no:3, t:'PowerPoint presentation', sub:'Your slides presenting the critique'}
+];
+const V_STAGES = [
+  {k:'matrix', label:'Paper vs. critique vs. slides — consistency matrix', short:'Matrix (§2, §3, §7)', tier:'complex'},
+  {k:'contra', label:'Contradiction detection', short:'Contradictions (§4)', tier:'complex'},
+  {k:'lang', label:'Language, grammar & terminology', short:'Language (§1)', tier:'default'},
+  {k:'cites', label:'Citations, evidence & critical evaluation', short:'Citations & evaluation (§5, §6)', tier:'complex'}
+];
+
+function newVerifySet(){
+  return {id:uid(), created:Date.now(), name:'', docs:{paper:null, critique:null, pres:null}, checks:{}, matrix:{}, contra:[], lang:[], terms:[],
+    cites:[], unsupported:[], missing:[], strengths:[], overall:null, priorities:{critical:[], important:[], minor:[]}, stages:{}, auto:null, runs:[]};
+}
+function vSet(){                                   // the open verification, with any missing fields filled in
+  const set = (S.verify.sets || []).find(x => x.id === S.verify.active) || (S.verify.sets || [])[0];
+  if (set){ const base = newVerifySet(); for (const k of Object.keys(base)) if (set[k] == null && k !== 'auto' && k !== 'overall') set[k] = base[k]; set.docs = Object.assign(base.docs, set.docs); }
+  return set;
+}
+
+/* --- the documents, as location-tagged pieces of text --- */
+function critUnits(c){
+  if (c.form === 'aau'){
+    const i = c.info, U = [{loc:'Paper Information', text:AAU_INFO.filter(f => (i[f.k] || '').trim()).map(f => `${f.l}: ${i[f.k]}`).join('\n')}];
+    U.push({loc:'Part A – Diagnostic Evaluation', text:AAU_A.map(a => { const v = c.partA[a.k] || {}; return `${a.t}: ${v.score ? `${v.score}/${a.max}` : 'not rated'}${v.note ? ` — ${v.note}` : ''}`; }).join('\n')});
+    AAU_B.forEach(s => { const t = aauText(c, s.k); if (t.trim()) U.push({loc:`Section ${s.no} · ${s.t}`, text:t}); });
+    c.refs.forEach((r, n) => { if (r.text.trim()) U.push({loc:`Section 7 · Reference [${n + 1}]`, text:r.text}); });
+    AAU_8.forEach(s => { const t = aauText(c, s.k); if (t.trim()) U.push({loc:`Section ${s.t}`, text:t}); });
+    return U.filter(u => u.text.trim());
+  }
+  const ci = c.citation || {};
+  return [{loc:'Citation details', text:[ci.authors, ci.year, ci.title, ci.venue, ci.doi].filter(Boolean).join(' · ')},
+    ...CRIT_SECTIONS.map(s => ({loc:s.title, text:((c.sections[s.key] || {}).text || '')}))].filter(u => u.text.trim());
+}
+function builderSlides(c){
+  const keep = S.pres.source; S.pres.source = 'crit:' + c.id;
+  try { return slidePlan().map(s => ({loc:`Slide ${s.n}`, text:`${s.title}${s.h ? ` — ${s.h}` : ''}\n• ${s.b.join('\n• ')}`})); }
+  finally { S.pres.source = keep; }
+}
+function vUnits(set, which){
+  const d = set.docs[which]; if (!d) return [];
+  if (d.src === 'reader'){
+    const p = S.reader.papers.find(x => x.id === d.ref); if (!p) return [];
+    return p.pages && p.pages.length ? p.pages.map((t, i) => ({loc:`p. ${i + 1}`, text:t}))
+      : p.paras.map(x => ({loc:isFigure(x) ? (x.label || 'Figure') : `¶${paraNo(p, x.id)}${x.page ? ` (p. ${x.page})` : ''}`, text:x.text}));
+  }
+  if (d.src === 'app'){ const c = S.critiques.find(x => x.id === d.ref); return c ? critUnits(c) : []; }
+  if (d.src === 'builder'){ const c = S.critiques.find(x => x.id === d.ref); return c ? builderSlides(c) : []; }
+  return d.units || [];
+}
+const vHash = units => { let h = 2166136261; for (const ch of units.map(u => u.loc + '\u0001' + u.text).join('\u0002')){ h ^= ch.charCodeAt(0); h = Math.imul(h, 16777619); } return (h >>> 0).toString(36); };
+const vVers = set => Object.fromEntries(V_DOCS.map(d => [d.k, set.docs[d.k] ? vHash(vUnits(set, d.k)) : '']));
+const vVerKey = set => { const v = vVers(set); return `${v.paper}-${v.critique}-${v.pres}`; };
+const vDocName = (set, which) => { const d = set.docs[which]; if (!d) return ''; if (d.src === 'reader'){ const p = S.reader.papers.find(x => x.id === d.ref); return p ? p.title || p.name : 'missing paper'; }
+  if (d.src === 'app' || d.src === 'builder'){ const c = S.critiques.find(x => x.id === d.ref); return (d.src === 'builder' ? 'Slide outline from: ' : '') + (c ? critTitle(c) || 'Untitled critique' : 'missing critique'); } return d.name; };
+
+/* --- reading Word, PowerPoint, PDF and text files --- */
+const NS = {a:'http://schemas.openxmlformats.org/drawingml/2006/main', w:'http://schemas.openxmlformats.org/wordprocessingml/2006/main', p:'http://schemas.openxmlformats.org/presentationml/2006/main',
+  r:'http://schemas.openxmlformats.org/officeDocument/2006/relationships', rel:'http://schemas.openxmlformats.org/package/2006/relationships', c:'http://schemas.openxmlformats.org/drawingml/2006/chart'};
+async function readZip(buf){
+  const u8 = new Uint8Array(buf), dv = new DataView(buf), td = new TextDecoder();
+  let e = -1; for (let i = u8.length - 22; i >= Math.max(0, u8.length - 66000); i--) if (dv.getUint32(i, true) === 0x06054b50){ e = i; break; }
+  if (e < 0) throw new Error('This does not look like a Word or PowerPoint file.');
+  const entries = new Map(); let p = dv.getUint32(e + 16, true);
+  for (let k = 0, n = dv.getUint16(e + 10, true); k < n && dv.getUint32(p, true) === 0x02014b50; k++){
+    const nlen = dv.getUint16(p + 28, true), xlen = dv.getUint16(p + 30, true), clen = dv.getUint16(p + 32, true);
+    entries.set(td.decode(u8.subarray(p + 46, p + 46 + nlen)), {method:dv.getUint16(p + 10, true), csize:dv.getUint32(p + 20, true), off:dv.getUint32(p + 42, true)});
+    p += 46 + nlen + xlen + clen;
+  }
+  const bytes = async name => {
+    const en = entries.get(name); if (!en) return null;
+    const start = en.off + 30 + dv.getUint16(en.off + 26, true) + dv.getUint16(en.off + 28, true), raw = u8.subarray(start, start + en.csize);
+    if (en.method === 0) return raw.slice();
+    if (en.method !== 8 || typeof DecompressionStream === 'undefined') throw new Error('This browser cannot open compressed Office files — try Chrome, Edge or Safari 16.4+.');
+    return new Uint8Array(await new Response(new Blob([raw]).stream().pipeThrough(new DecompressionStream('deflate-raw'))).arrayBuffer());
+  };
+  return {names:[...entries.keys()], bytes, text:async name => { const b = await bytes(name); return b ? td.decode(b) : null; }};
+}
+const xmlDoc = s => new DOMParser().parseFromString(s || '<x/>', 'application/xml');
+const byNS = (node, ns, tag) => [...node.getElementsByTagNameNS(NS[ns], tag)];
+function zipPath(base, target){ if (target.startsWith('/')) return target.slice(1); const out = base.split('/'); out.pop(); target.split('/').forEach(seg => { if (seg === '..') out.pop(); else if (seg && seg !== '.') out.push(seg); }); return out.join('/'); }
+async function relsOf(zip, path){
+  const relPath = path.replace(/([^/]+)$/, '_rels/$1.rels'), x = xmlDoc(await zip.text(relPath));
+  return byNS(x, 'rel', 'Relationship').map(r => ({id:r.getAttribute('Id'), type:r.getAttribute('Type') || '', target:zipPath(path, r.getAttribute('Target') || '')}));
+}
+async function pptxUnits(zip){
+  const pres = xmlDoc(await zip.text('ppt/presentation.xml')), rels = await relsOf(zip, 'ppt/presentation.xml');
+  const order = byNS(pres, 'p', 'sldId').map(s => (rels.find(r => r.id === s.getAttributeNS(NS.r, 'id')) || {}).target).filter(Boolean);
+  const paraText = x => byNS(x, 'a', 'p').map(p => byNS(p, 'a', 't').map(t => t.textContent).join('')).filter(t => t.trim()).join('\n');
+  const U = [];
+  for (let i = 0; i < order.length; i++){
+    const path = order[i], n = i + 1, x = xmlDoc(await zip.text(path));
+    U.push({loc:`Slide ${n}`, text:paraText(x) || '(no text on this slide)'});
+    for (const r of await relsOf(zip, path)){
+      if (/\/notesSlide$/.test(r.type)){ const t = paraText(xmlDoc(await zip.text(r.target))).replace(/^\d+$/m, '').trim(); if (t) U.push({loc:`Slide ${n} notes`, text:t}); }
+      if (/\/chart$/.test(r.type)){
+        const cx = xmlDoc(await zip.text(r.target));
+        const series = byNS(cx, 'c', 'ser').map(sr => {
+          const v = el => el ? byNS(el, 'c', 'v').map(e => e.textContent) : [];
+          const name = v(byNS(sr, 'c', 'tx')[0])[0] || 'Series', cats = v(byNS(sr, 'c', 'cat')[0]), vals = v(byNS(sr, 'c', 'val')[0] || byNS(sr, 'c', 'yVal')[0]);
+          return `${name}: ` + vals.map((val, j) => `${cats[j] != null ? cats[j] + ' = ' : ''}${val}`).join('; ');
+        });
+        if (series.length) U.push({loc:`Slide ${n} chart`, text:'Chart data — ' + series.join(' | ')});
+      }
+    }
+  }
+  return U;
+}
+async function docxUnits(zip){
+  const x = xmlDoc(await zip.text('word/document.xml')), U = []; let head = 'Start', n = 0;
+  for (const p of byNS(x, 'w', 'p')){
+    const style = (byNS(p, 'w', 'pStyle')[0] || {getAttributeNS:() => ''}).getAttributeNS(NS.w, 'val') || '';
+    const text = [...p.getElementsByTagNameNS(NS.w, '*')].map(el => el.localName === 't' ? el.textContent : el.localName === 'tab' ? ' ' : '').join('').trim();
+    if (!text) continue;
+    if (/heading|title/i.test(style) && text.length < 160){ head = text; continue; }
+    n++; U.push({loc:`${clip(head, 60)} · ¶${n}`, text});
+  }
+  return U;
+}
+function textUnits(t, slides){                  // pasted or .txt text: by slide ("Slide 3 …"), by page ("[p. 3]") or by paragraph
+  t = String(t || '').replace(/\r/g, '');
+  if (slides && /^\s*slide\s*\d+/im.test(t)) return t.split(/^\s*(?=slide\s*\d+)/im).map(b => b.trim()).filter(Boolean)
+    .map((b, i) => { const n = b.match(/^slide\s*(\d+)/i); return {loc:`Slide ${n ? n[1] : i + 1}`, text:b.replace(/^slide\s*\d+\s*[:.)\-–]?\s*/i, '')}; });
+  if (!slides && /\[p\.?\s*\d+\]/i.test(t)){
+    const bits = t.split(/\[p\.?\s*(\d+)\]/i), U = bits[0].trim() ? [{loc:'Start', text:bits[0].trim()}] : [];
+    for (let i = 1; i < bits.length; i += 2) if (bits[i + 1].trim()) U.push({loc:`p. ${bits[i]}`, text:bits[i + 1].trim()});
+    return U;
+  }
+  return t.split(/\n\s*\n/).map(b => b.trim()).filter(Boolean).map((b, i) => ({loc:slides ? `Slide ${i + 1}` : `¶${i + 1}`, text:b}));
+}
+async function vLoadFile(set, which, file){
+  const ext = (file.name.split('.').pop() || '').toLowerCase(), buf = await file.arrayBuffer();
+  let units, kind = ext;
+  if (ext === 'pdf') units = (await extractPdf(new File([buf], file.name))).map((t, i) => ({loc:which === 'pres' ? `Slide ${i + 1}` : `p. ${i + 1}`, text:t}));
+  else if (ext === 'pptx') units = await pptxUnits(await readZip(buf));
+  else if (ext === 'docx') units = await docxUnits(await readZip(buf));
+  else if (ext === 'txt' || ext === 'md') units = textUnits(new TextDecoder().decode(buf), which === 'pres');
+  else throw new Error(`Please upload ${which === 'pres' ? 'a .pptx or a PDF of the slides' : which === 'critique' ? 'a .docx, .pdf or .txt file' : 'a PDF'} (this was .${ext}).`);
+  if (!units.some(u => u.text.trim())) throw new Error('No text could be read from this file. If it is a scan, paste the text instead.');
+  if (ext === 'docx' || ext === 'pptx') await IDB.put(`v:${set.id}:${which}`, buf);       // kept to make a corrected copy later
+  set.docs[which] = {src:'upload', name:file.name, kind, units, at:Date.now()};
+  return units.length;
+}
+
+/* --- automatic checks (no AI): numbers, strong wording, citations --- */
+const NUM_RE = /(?<![\p{L}\d.,])(\d{1,3}(?:,\d{3})+|\d+)(?:\.(\d+))?\s?(%|percent\b)?/giu;
+const NUM_W = {ten:10, eleven:11, twelve:12, thirteen:13, fourteen:14, fifteen:15, sixteen:16, seventeen:17, eighteen:18, nineteen:19, twenty:20, thirty:30, forty:40, fifty:50, sixty:60, seventy:70, eighty:80, ninety:90, hundred:100};
+const NUM_W1 = {one:1, two:2, three:3, four:4, five:5, six:6, seven:7, eight:8, nine:9};
+const NUM_W_RE = /\b(twenty|thirty|forty|fifty|sixty|seventy|eighty|ninety)(?:[-\s](one|two|three|four|five|six|seven|eight|nine))?\b|\b(ten|eleven|twelve|thirteen|fourteen|fifteen|sixteen|seventeen|eighteen|nineteen|(?:one |a )?hundred)\b/gi;
+const NOT_A_RESULT = /(?:^|[^a-z])(?:fig(?:ure)?s?\.?|tables?|sections?|sec\.|p\.|pp\.|pages?|slides?|vol\.|no\.|refs?\.?|chapter|step|part|item)\s*$/i;
+function numbersIn(units){                       // the numbers a reader would check: results, sample sizes, percentages
+  const out = [], ctx = (t, i, n) => t.slice(Math.max(0, i - 50), i + n + 50).replace(/\s+/g, ' ');
+  units.forEach(u => {
+    const t = u.text; let m; NUM_RE.lastIndex = 0;
+    while ((m = NUM_RE.exec(t))){
+      const int = m[1].replace(/,/g, ''), val = String(Number(int + (m[2] ? '.' + m[2] : ''))), pct = !!m[3], pre = t.slice(Math.max(0, m.index - 12), m.index);
+      if (!m[2] && !pct && /^(19|20)\d\d$/.test(int)) continue;                      // years
+      if (!pct && !m[2] && Number(int) < 10) continue;                                // small counts
+      if (NOT_A_RESULT.test(pre) || /\[\s*$/.test(pre) || /^\s*\]/.test(t.slice(m.index + m[0].length)) || /\d\s*[-–]\s*$/.test(pre)) continue;   // page, figure, slide and citation numbers
+      out.push({loc:u.loc, val, shown:m[0].trim(), ctx:ctx(t, m.index, m[0].length)});
+    }
+    NUM_W_RE.lastIndex = 0;
+    while ((m = NUM_W_RE.exec(t))){
+      const v = m[1] ? NUM_W[m[1].toLowerCase()] + (m[2] ? NUM_W1[m[2].toLowerCase()] : 0) : NUM_W[m[3].toLowerCase().replace(/^(one|a) /, '')];
+      out.push({loc:u.loc, val:String(v), shown:m[0], ctx:ctx(t, m.index, m[0].length), word:true});
+    }
+  });
+  return out;
+}
+const STRONG_RE = /\b(prove[sd]?|proof that|definitely|undoubtedly|certainly|always|never|all (?:students|participants|teachers|learners|users)|clearly (?:shows?|demonstrates?|proves?)|causes?|caused|leads? to|results? in|guarantees?|significantly)\b/gi;
+const CITE_RE = /\[(\d{1,3})\]|\(([A-Z][\p{L}'\-]+)(?: et al\.?| and [A-Z][\p{L}'\-]+)?,? (\d{4}[a-z]?)\)|([A-Z][\p{L}'\-]+)(?: et al\.?| and [A-Z][\p{L}'\-]+)? \((\d{4}[a-z]?)\)/gu;
+function citesIn(units){
+  const out = []; units.forEach(u => { let m; CITE_RE.lastIndex = 0; while ((m = CITE_RE.exec(u.text))) out.push({loc:u.loc, key:m[1] ? `[${m[1]}]` : `${m[2] || m[4]} ${m[3] || m[5]}`}); });
+  return out;
+}
+function vAuto(set){
+  const P = vUnits(set, 'paper'), C = vUnits(set, 'critique'), T = vUnits(set, 'pres');
+  const paperNums = new Map(); numbersIn(P).forEach(n => { if (!paperNums.has(n.val)) paperNums.set(n.val, new Set()); paperNums.get(n.val).add(n.loc); });
+  const digits = U => numbersIn(U).filter(n => !n.word), critNums = new Set(numbersIn(C).map(n => n.val));   // spelled-out numbers count as matches, but only figures are checked
+  const numbers = [...digits(C).map(n => ({...n, doc:'critique'})), ...digits(T).map(n => ({...n, doc:'pres'}))].map(n => ({...n, inPaper:[...(paperNums.get(n.val) || [])].slice(0, 4), inCritique:n.doc === 'pres' ? critNums.has(n.val) : null}));
+  const strong = [];
+  [['critique', C], ['pres', T]].forEach(([doc, units]) => units.forEach(u => { let m; STRONG_RE.lastIndex = 0;
+    while ((m = STRONG_RE.exec(u.text))) strong.push({doc, loc:u.loc, word:m[0], ctx:u.text.slice(Math.max(0, m.index - 70), m.index + m[0].length + 70).replace(/\s+/g, ' ')}); }));
+  const critCites = new Set(citesIn(C).map(c => c.key.toLowerCase()));
+  const presOnly = citesIn(T).filter(c => !critCites.has(c.key.toLowerCase()));
+  set.auto = {at:Date.now(), ver:vVerKey(set), numbers, strong, presOnly};
+}
+
+/* --- versions: every check remembers the versions of the documents it was made on --- */
+const V_ALL = ['paper', 'critique', 'pres'];
+const V_SEC_DOCS = {s1:V_ALL, s2:['paper', 'critique'], s3:V_ALL, s4:V_ALL, s5:V_ALL, s6:['paper', 'critique']};
+const vVerOf = (VV, docs) => docs.map(d => VV[d] || '-').join('.');
+const vItemVer = (VV, key) => vVerOf(VV, V_SEC_DOCS[key.split('.')[0]]);
+const vStageKeys = stage => V_ITEMS.filter(it => it.sec.stage === stage).map(it => it.key);
+const vCur = (set, key, VV) => { const r = set.checks[key]; return !!(r && r.status && r.ver === vItemVer(VV, key)); };
+const vOk = st => st === 'verified' || st === 'na';
+const vDocKey = s => { s = String(s || '').toLowerCase(); return /pres|slide|ppt/.test(s) ? 'pres' : /crit/.test(s) ? 'critique' : /paper|orig|source/.test(s) ? 'paper' : ''; };
+const vDocT = k => (V_DOCS.find(d => d.k === k) || {t:'Document'}).t;
+const vStr = (v, n=4000) => String(v ?? '').trim().slice(0, n);
+const vArr = v => Array.isArray(v) ? v : [];
+
+// find a quotation in a text: exactly, or allowing for spacing, quote marks and dashes to differ
+function vLocate(hay, needle){
+  needle = String(needle || '').trim(); if (!needle || !hay) return null;
+  const i = hay.indexOf(needle); if (i >= 0) return [i, i + needle.length];
+  const pat = needle.split(/\s+/).map(w => w.replace(/[.*+?^${}()|[\]\\]/g, '\\$&').replace(/['’‘]/g, "['’‘]").replace(/["“”]/g, '["“”]').replace(/[-–—]/g, '[-–—]')).join('\\s+');
+  try { const m = new RegExp(pat).exec(hay); return m ? [m.index, m.index + m[0].length] : null; } catch { return null; }
+}
+const vFound = (set, doc, quote) => !!doc && vUnits(set, doc).some(u => vLocate(u.text, quote));
+
+/* --- the prompts: one per stage, all carrying the mandatory rules --- */
+const V_CAP = {paper:140000, critique:40000, pres:30000};
+function vDocsBlock(set){
+  let caps = {...V_CAP}, out = '', cut = [];
+  for (let tries = 0; tries < 5; tries++){
+    const parts = []; cut = [];
+    for (const d of V_DOCS){
+      if (!set.docs[d.k]){ parts.push(`=== DOCUMENT ${d.no}: ${d.t.toUpperCase()} ===\n(NOT PROVIDED — anything that needs this document is "Not Verified")`); continue; }
+      let text = '', short = false;
+      for (const u of vUnits(set, d.k)){
+        const piece = `[${u.loc}]\n${u.text.trim()}\n\n`;
+        if (text.length + piece.length > caps[d.k]){ text += piece.slice(0, Math.max(0, caps[d.k] - text.length)); short = true; break; }
+        text += piece;
+      }
+      if (short) cut.push(d.t.toLowerCase());
+      parts.push(`=== DOCUMENT ${d.no}: ${d.t.toUpperCase()}${d.k === 'paper' ? ' — THE SOURCE OF TRUTH' : ''} ("${vDocName(set, d.k)}") ===\n${text.trim()}${short ? '\n[… the rest of this document was cut to fit]' : ''}`);
+    }
+    out = parts.join('\n\n');
+    if (new TextEncoder().encode(out).length < 200000) break;
+    caps = {paper:caps.paper * 0.7, critique:caps.critique * 0.85, pres:caps.pres * 0.85};
+  }
+  return {text:out, cut};
+}
+const V_STATUS_HELP = 'Statuses: "Verified" = accurate and consistent; "Needs Correction" = an error or contradiction was found; "Partially Aligned" = accurate but incomplete or potentially misleading; "Not Verified" = insufficient evidence is available; "Not Applicable" = the item does not apply.';
+function vChecksAsk(stage){
+  return `"checks": one object for EVERY checklist item below: {"key":"${vStageKeys(stage)[0]}","status":"Verified | Needs Correction | Partially Aligned | Not Verified | Not Applicable","note":"the evidence, with exact page / section / slide locations (under 60 words)"}. Use "Verified" only when you actually compared the relevant text above and found it accurate. If a document the item needs is missing or was cut, use "Not Verified".
+Checklist items:
+${vStageKeys(stage).map(k => `${k}: ${V_ITEMS.find(x => x.key === k).t}`).join('\n')}`;
+}
+function vPrompt(set, stage){
+  const D = vDocsBlock(set), q = '(copy the words exactly as they appear in the document)';
+  const head = `You are a careful academic quality-assurance reviewer. A master's student (Al Ain University, Advanced Research Methods 0106112) needs their WRITTEN CRITIQUE and PRESENTATION checked against the ORIGINAL RESEARCH PAPER.
+
+Do not assume that information is correct simply because it appears in one of the documents. Verify every factual statement against the original research paper. Clearly distinguish the researchers' findings from the student's own critical evaluation.
+
+MANDATORY VERIFICATION RULES
+${V_RULES.map((r, i) => `${i + 1}. ${r}`).join('\n')}
+
+Each document is split into pieces that start with a location tag in square brackets, e.g. [p. 4], [Section 4 · Research Design & Methodology] or [Slide 6]. Use these tags as locations ("loc"), adding a section or figure name when it helps. ${V_STATUS_HELP}${D.cut.length ? `\nNote: the end of the ${D.cut.join(' and the ')} was cut to fit. Anything that may be in the missing part is "Not Verified".` : ''}
+
+${D.text}
+
+`;
+  const tasks = {
+    matrix:`YOUR TASK (workflow steps 2, 3 and 5): review the written critique against the original paper, then compare the presentation with both documents.
+Reply with only JSON:
+{"matrix":[{"row":"Research Problem","paper":"what the paper actually says, with its page/section","critique":"the corresponding statement in the critique, with its section — or \\"Not covered\\"","pres":"the slide number(s) and what they say — or \\"Not covered\\"","status":"Verified","fix":"the required correction and where to make it — \\"\\" when Verified or Not Applicable"}],
+ "checks":[…]}
+"matrix": exactly one row for each research component, in this order: ${V_MATRIX.join(', ')}. Keep each cell under 45 words. The status covers the row as a whole across the three documents.
+${vChecksAsk('matrix')}`,
+    contra:`YOUR TASK (workflow step 4): detect contradictions between any two or all three documents, and inside each document. Look for: conflicting numerical information; inconsistent descriptions of the methodology; differences in reported findings; contradictory interpretations of statistical results; conflicting statements about strengths and limitations; the presentation making stronger claims than the written critique; inconsistencies between the researchers' conclusions and the student's interpretation; statements that are not logically consistent.
+A point missing from the presentation is NOT a contradiction unless the omission changes or misrepresents the meaning. Reasonable differences in academic interpretation are not factual errors: if you report one, set "type" to "interpretation" and say so. If there are no contradictions, return an empty list — never invent one.
+${(() => { const seen = set.contra.filter(c => c.status === 'not'); return seen.length ? `The student has already examined these and explained why they are not contradictions — do not report them again unless you have new evidence:\n${seen.map(c => `- ${c.topic}: ${c.note}`).join('\n')}\n` : ''; })()}
+Reply with only JSON:
+{"contradictions":[{"topic":"short name","type":"numbers | methodology | findings | statistics | strengths-limitations | stronger-claim | interpretation | logic","severity":"critical | important | minor","statements":[{"doc":"paper | critique | pres","loc":"p. 4","quote":"the exact statement ${q}"}],"explain":"why these statements conflict","evidence":"the supporting evidence from the original paper, quoted, with its page — or \\"Not Verified\\" if the paper does not settle it","fix":"the recommended correction","edits":[{"doc":"critique | pres","loc":"Section 4","find":"the exact words to replace ${q}","replace":"the corrected words"}]}],
+ "checks":[…]}
+"statements": one entry for each document involved (two or three). "edits": only direct wording changes that you verified against the paper; [] when the fix needs rewriting by the student. Severity: critical = factual error, major contradiction or unsupported conclusion; important = misleading or incomplete; minor = small inconsistency.
+${vChecksAsk('contra')}`,
+    lang:`YOUR TASK (workflow step 4 — language and terminology): check the written critique and the presentation (not the paper itself) for spelling, grammar, punctuation and sentence structure; unclear, awkward, repetitive or academically inappropriate wording; inaccurate technical or research terminology; terms used inconsistently across the documents; paraphrases that do not preserve the paper's meaning; simplified slide wording that distorts the findings; statements that are too strong, misleading, vague or unsupported. Improve clarity and academic tone WITHOUT unnecessarily changing the student's own writing style — change only what needs changing.
+Reply with only JSON:
+{"corrections":[{"doc":"critique | pres","loc":"Section 2","original":"the exact words ${q} — a phrase or one sentence","improved":"the corrected wording","why":"short reason","type":"spelling | grammar | punctuation | clarity | terminology | tone | too-strong | meaning","kind":"factual | editorial"}],
+ "terms":[{"term":"…","paper":"how the paper uses it, with page","critique":"how the critique uses it — or \\"not used\\"","pres":"how the slides use it — or \\"not used\\"","consistent":true,"note":""}],
+ "checks":[…]}
+"kind" is "factual" only when the change corrects a fact you verified against the paper (give the page in "why"); everything else is "editorial". Up to 40 corrections, most important first; up to 15 key terms.
+${vChecksAsk('lang')}`,
+    cites:`YOUR TASK (workflow steps 4 and 7 — citations, evidence and the quality of the critical evaluation, then the overall assessment).
+Earlier findings in this verification (use them in "overall" and "priorities"):
+${vPriorSummary(set)}
+Reply with only JSON:
+{"citations":[{"doc":"critique | pres","loc":"Section 3","cite":"the citation or page reference as written","claim":"the statement it supports (short)","status":"Verified | Needs Correction | Partially Aligned | Not Verified","note":"why"}],
+ "unsupported":[{"doc":"critique | pres","loc":"Slide 5","quote":"the claim ${q}","needs":"what evidence or citation it needs"}],
+ "missing":[{"doc":"critique | pres","what":"the important missing or incomplete information","where":"where to add it","why":"why it matters"}],
+ "strengths":["an aspect that is already accurate, well-supported and academically strong — with its location"],
+ "overall":"120–200 words: how accurately the critique and presentation reflect the original paper",
+ "priorities":{"critical":["short action — with location"],"important":["…"],"minor":["…"]},
+ "checks":[…]}
+"citations": every citation, page reference, figure/table reference or reference-list entry that can be checked (up to 40). An external reference that the paper itself does not cite cannot be checked from these documents: give it "Not Verified" and say so. "unsupported": up to 15. "missing": up to 15. "strengths": up to 8.
+"overall": do not say the documents are fully consistent unless every comparison supports it, and say what could not be verified.
+Priorities: critical = factual errors, major contradictions or unsupported conclusions; important = missing information, weak academic arguments or misleading wording; minor = grammar, formatting, terminology and presentation improvements.
+${vChecksAsk('cites')}`
+  };
+  return head + tasks[stage];
+}
+function vPriorSummary(set){
+  const VV = vVers(set), L = [], cur = k => set.stages[k] && set.stages[k].ver === vVerKey(set);
+  L.push(cur('matrix') ? `Matrix rows needing correction or only partially aligned: ${V_MATRIX.filter(r => ['fix', 'partial'].includes((set.matrix[r] || {}).status)).map(r => `${r} (${vLabel(set.matrix[r].status)}: ${clip(set.matrix[r].fix || '', 120)})`).join('; ') || 'none'}` : 'Consistency matrix: not run on these versions yet.');
+  L.push(cur('contra') ? `Open contradictions: ${set.contra.filter(c => c.status === 'open').map(c => `${c.topic} (${c.severity})`).join('; ') || 'none'}` : 'Contradiction check: not run on these versions yet.');
+  L.push(cur('lang') ? `Language corrections suggested: ${set.lang.filter(x => !x.state).length} still open.` : 'Language check: not run on these versions yet.');
+  const fixes = V_ITEMS.filter(it => vCur(set, it.key, VV) && ['fix', 'partial'].includes(set.checks[it.key].status)).map(it => `${it.key} (${vLabel(set.checks[it.key].status)})`);
+  if (fixes.length) L.push(`Checklist items not yet passing: ${fixes.join(', ')}`);
+  return L.join('\n');
+}
+
+/* --- reading Claude's answer (from the page, or pasted from a Claude chat) --- */
+function vApplyChecks(set, list, stage, VV, by){
+  const keys = vStageKeys(stage); let n = 0;
+  vArr(list).forEach(c => {
+    const key = vStr(c && c.key).replace(/^s?/, 's'), st = vKey(c && c.status);
+    if (!keys.includes(key) || !st) return;
+    const ver = vItemVer(VV, key), prev = set.checks[key], note = vStr(c.note, 1200);
+    if (prev && prev.by === 'me' && prev.ver === ver){ prev.claude = {status:st, note}; return; }   // your own current decision stays
+    set.checks[key] = {status:st, note, noteBy:'claude', mine:prev ? prev.mine || '' : '', by, confirmed:false, ver, at:Date.now(),
+      corrected:st === 'verified' && !!prev && (prev.corrected || ['fix', 'partial'].includes(prev.status))};
+    n++;
+  });
+  return n;
+}
+function vApply(set, stage, res, by='claude'){
+  res = res && typeof res === 'object' && !Array.isArray(res) ? res : {};
+  const VV = vVers(set), all = vVerOf(VV, V_ALL), out = {checks:vApplyChecks(set, res.checks, stage, VV, by)};
+  if (stage === 'matrix'){
+    out.rows = 0;
+    vArr(res.matrix).forEach(r => {
+      const row = V_MATRIX.find(m => m.toLowerCase() === vStr(r && (r.row || r.component)).toLowerCase()); if (!row) return;
+      const prev = set.matrix[row];
+      const rec = {paper:vStr(r.paper, 800), critique:vStr(r.critique, 800), pres:vStr(r.pres || r.presentation, 800), status:vKey(r.status) || 'unverified', fix:vStr(r.fix, 800), by, ver:all, at:Date.now()};
+      if (prev && prev.by === 'me' && prev.ver === all){ prev.claude = rec; return; }
+      set.matrix[row] = rec; out.rows++;
+    });
+  }
+  if (stage === 'contra'){
+    const list = vArr(res.contradictions).filter(c => c && typeof c === 'object').map(c => {
+      const sts = vArr(c.statements).filter(s => s && s.quote).slice(0, 4).map(s => { const doc = vDocKey(s.doc); return {doc, loc:vStr(s.loc, 120), quote:vStr(s.quote, 1500), found:vFound(set, doc, s.quote)}; });
+      return {id:uid(), by, at:Date.now(), ver:all, status:'open', note:'', topic:vStr(c.topic, 160) || 'Contradiction', type:vStr(c.type, 40),
+        severity:['critical', 'important', 'minor'].includes(c.severity) ? c.severity : 'important', statements:sts,
+        explain:vStr(c.explain, 1500), evidence:vStr(c.evidence, 1500), fix:vStr(c.fix, 1500),
+        edits:vArr(c.edits).filter(e => e && vStr(e.find) && e.replace != null && ['critique', 'pres'].includes(vDocKey(e.doc))).slice(0, 6)
+          .map(e => ({id:uid(), doc:vDocKey(e.doc), loc:vStr(e.loc, 120), find:vStr(e.find, 1500), replace:vStr(e.replace, 1500), kind:'factual', state:'', found:vFound(set, vDocKey(e.doc), e.find)}))};
+    });
+    set.contra = [...list, ...set.contra.filter(c => c.by === 'me' || c.status !== 'open')];   // your own and the already-resolved ones stay
+    out.contra = list.length;
+  }
+  if (stage === 'lang'){
+    const list = vArr(res.corrections).filter(x => x && vStr(x.original) && x.improved != null && ['critique', 'pres'].includes(vDocKey(x.doc))).slice(0, 60).map(x => {
+      const doc = vDocKey(x.doc); return {id:uid(), by, at:Date.now(), ver:all, doc, loc:vStr(x.loc, 120), find:vStr(x.original, 1500), replace:vStr(x.improved, 1500),
+        why:vStr(x.why, 400), type:vStr(x.type, 30), kind:x.kind === 'factual' ? 'factual' : 'editorial', state:'', found:vFound(set, doc, x.original)}; });
+    set.lang = [...list, ...set.lang.filter(x => x.state === 'applied' || x.state === 'queued')];
+    set.terms = vArr(res.terms).filter(t => t && t.term).slice(0, 20).map(t => ({term:vStr(t.term, 80), paper:vStr(t.paper, 300), critique:vStr(t.critique, 300), pres:vStr(t.pres, 300), consistent:t.consistent !== false && t.consistent !== 'false', note:vStr(t.note, 300)}));
+    out.lang = list.length;
+  }
+  if (stage === 'cites'){
+    set.cites = vArr(res.citations).filter(c => c && (c.cite || c.claim)).slice(0, 60).map(c => ({doc:vDocKey(c.doc) || 'critique', loc:vStr(c.loc, 120), cite:vStr(c.cite, 300), claim:vStr(c.claim, 500), status:vKey(c.status) || 'unverified', note:vStr(c.note, 500)}));
+    set.unsupported = vArr(res.unsupported).filter(u => u && u.quote).slice(0, 20).map(u => { const doc = vDocKey(u.doc) || 'critique'; return {doc, loc:vStr(u.loc, 120), quote:vStr(u.quote, 800), needs:vStr(u.needs, 400), found:vFound(set, doc, u.quote)}; });
+    set.missing = vArr(res.missing).filter(m => m && m.what).slice(0, 20).map(m => ({doc:vDocKey(m.doc) || 'critique', what:vStr(m.what, 500), where:vStr(m.where, 200), why:vStr(m.why, 400)}));
+    set.strengths = vArr(res.strengths).map(s => vStr(typeof s === 'string' ? s : s && (s.text || s.point), 500)).filter(Boolean).slice(0, 10);
+    if (vStr(res.overall)) set.overall = {text:vStr(res.overall, 3000), by, ver:all, at:Date.now()};
+    const P = res.priorities || {};
+    set.priorities = Object.fromEntries(['critical', 'important', 'minor'].map(k => [k, vArr(P[k]).map(x => vStr(typeof x === 'string' ? x : x && (x.text || x.action), 500)).filter(Boolean).slice(0, 15)]));
+    out.cites = set.cites.length;
+  }
+  set.stages[stage] = {at:Date.now(), ver:vVerKey(set), by};
+  return out;
+}
+function vParseReply(text){
+  const t = String(text || '').trim(), fence = t.match(/```(?:json)?\s*([\s\S]*?)```/i), body = fence ? fence[1] : t;
+  try { return JSON.parse(body); } catch {}
+  const a = body.indexOf('{'), b = body.lastIndexOf('}');
+  if (a >= 0 && b > a) try { return JSON.parse(body.slice(a, b + 1)); } catch {}
+  return null;
+}
+
+/* --- running the stages with Claude --- */
+let vRun = null;
+async function vRunStages(set, stages){
+  if (!aiReady()) return toast('Claude runs these checks on the published ScholarPath page — you can copy the prompt, or check every item yourself');
+  if (vRun || aiRun) return toast('Claude is still working — please wait or press Stop');
+  if (!set.docs.paper) return alert('Add the original research paper first — it is the source of truth for every check.');
+  if (!set.docs.critique && !set.docs.pres) return alert('Add your written critique or your presentation, so there is something to compare with the paper.');
+  const ctl = new AbortController(), before = vSnapshot(set), errors = [];
+  vRun = {ctl, stages, i:0, label:''}; let ran = 0;
+  try {
+    for (const k of stages){
+      if (ctl.signal.aborted) break;
+      const st = V_STAGES.find(s => s.k === k); vRun.i++; vRun.label = st.label; vRenderRun();
+      try { vApply(set, k, await AI.json(vPrompt(set, k), {signal:ctl.signal, modelTier:st.tier}), 'claude'); ran++; save(); }
+      catch (e){
+        if (e && e.code === 'cancelled') break;
+        errors.push(`${st.short}: ${aiError(e)}`);
+        if (e && ['rate_limited', 'session_expired', 'not_granted', 'sampling_disabled', 'not_declared', 'capability_disabled', 'capability_removed'].includes(e.code)) break;
+      }
+    }
+  } finally {
+    vRun = null;
+    if (ran) vLogRun(set, before, stages, 'claude');
+    save(); if (S.ui.tab === 'verify') RENDER.verify();
+  }
+  if (errors.length) alert('Some checks did not finish:\n\n' + errors.join('\n'));
+  else if (ran) toast('Verification finished — read each finding and check it against the paper');
+}
+function vRenderRun(){
+  const el = $('#vRun'); if (!el) return;
+  el.innerHTML = vRun ? `<div class="ai-run"><span class="spin" aria-hidden="true"></span><span>Claude is checking: <b>${esc(vRun.label)}</b> — stage ${vRun.i} of ${vRun.stages.length} <span class="muted small">(each stage can take a minute or two)</span></span><button class="btn sm" data-act="v-stop">${icon('stop')}Stop</button></div>` : '';
+  $$('[data-v-ai]').forEach(b => b.disabled = !!vRun || !aiReady());
+}
+// a short record of every run, so a re-check after corrections shows what changed
+function vSnapshot(set){
+  const VV = vVers(set), cnt = st => V_ITEMS.filter(it => vCur(set, it.key, VV) && set.checks[it.key].status === st).length;
+  return {verified:cnt('verified'), fix:cnt('fix'), partial:cnt('partial'), unverified:cnt('unverified'), open:set.contra.filter(c => c.status === 'open').length,
+    rowsFix:V_MATRIX.filter(r => (set.matrix[r] || {}).status === 'fix').length};
+}
+function vLogRun(set, before, stages, by){
+  set.runs.unshift({at:Date.now(), stages, by, ver:vVers(set), before, after:vSnapshot(set)}); set.runs = set.runs.slice(0, 25);
+}
+
+/* --- corrections (step 6): straight into your ScholarPath critique, or into a corrected copy of your file --- */
+const vAllEdits = set => [...set.contra.flatMap(c => c.edits.map(e => ({...e, from:c}))), ...set.lang.map(e => ({...e, from:null}))];
+const vFindEdit = (set, id) => set.contra.flatMap(c => c.edits).find(e => e.id === id) || set.lang.find(e => e.id === id);
+function vEditHow(set, doc){
+  const d = set.docs[doc]; if (!d) return 'none';
+  if (d.src === 'app') return 'app';
+  if (d.src === 'paste') return 'paste';
+  if (d.src === 'upload' && (d.kind === 'docx' || d.kind === 'pptx')) return 'copy';
+  return 'manual';
+}
+function vApplyEdit(set, e){
+  const how = vEditHow(set, e.doc);
+  if (how === 'app'){
+    const c = S.critiques.find(x => x.id === set.docs[e.doc].ref); if (!c) return 'failed';
+    const fields = c.form === 'aau'
+      ? [...AAU_B, ...AAU_8].map(s => [c.b[s.k] ||= {}, 'text']).concat(c.refs.map(r => [r, 'text']), AAU_INFO.map(f => [c.info, f.k]), AAU_A.map(a => [c.partA[a.k] ||= {}, 'note']))
+      : CRIT_SECTIONS.map(s => [c.sections[s.key] ||= {}, 'text']).concat(Object.keys(c.citation).map(k => [c.citation, k]));
+    for (const [o, k] of fields){ const t = o[k] || '', at = vLocate(t, e.find); if (at){ o[k] = t.slice(0, at[0]) + e.replace + t.slice(at[1]); return 'applied'; } }
+    return 'failed';
+  }
+  if (how === 'paste'){
+    for (const u of set.docs[e.doc].units){ const at = vLocate(u.text, e.find); if (at){ u.text = u.text.slice(0, at[0]) + e.replace + u.text.slice(at[1]); set.docs[e.doc].at = Date.now(); return 'applied'; } }
+    return 'failed';
+  }
+  if (how === 'copy') return vFound(set, e.doc, e.find) ? 'queued' : 'failed';
+  return 'manual';
+}
+const vFileName = s => String(s).replace(/[—–]/g, '-').replace(/[\\/:*?"<>|]+/g, '').replace(/\s+/g, ' ').trim().slice(0, 90);
+const xmlUnesc = s => s.replace(/&(lt|gt|amp|quot|apos|#\d+|#x[0-9a-f]+);/gi, (m, k) => ({lt:'<', gt:'>', amp:'&', quot:'"', apos:"'"}[k.toLowerCase()] || (k[1] === 'x' || k[1] === 'X' ? String.fromCodePoint(parseInt(k.slice(2), 16)) : String.fromCodePoint(+k.slice(1)))));
+// replace words inside one paragraph of Word/PowerPoint XML, touching only the text runs (fonts, colours and layout stay).
+// Only the characters that really change are rewritten, so a bold or coloured word keeps its formatting.
+function vReplaceXml(x, ns, find, repl){
+  const pRe = new RegExp(`<${ns}:p[ >][\\s\\S]*?</${ns}:p>`, 'g'), tRe = new RegExp(`(<${ns}:t(?:\\s[^>]*)?>)([^<]*)(</${ns}:t>)`, 'g');
+  let m;
+  while ((m = pRe.exec(x))){
+    const seg = m[0], nodes = []; let t, pos = 0;
+    while ((t = tRe.exec(seg))){ const text = xmlUnesc(t[2]); nodes.push({i:t.index, len:t[0].length, open:t[1], close:t[3], text, s:pos}); pos += text.length; }
+    const joined = nodes.map(n => n.text).join(''), at = nodes.length ? vLocate(joined, find) : null; if (!at) continue;
+    let [a, z] = at; const old = joined.slice(a, z); let pre = 0, suf = 0;
+    while (pre < old.length && pre < repl.length && old[pre] === repl[pre]) pre++;
+    while (suf < old.length - pre && suf < repl.length - pre && old[old.length - 1 - suf] === repl[repl.length - 1 - suf]) suf++;
+    a += pre; z -= suf; const ins = repl.slice(pre, repl.length - suf);
+    if (a === z && !ins) return x;                                       // nothing actually changes
+    let touched = nodes.filter(n => n.s < z && n.s + n.text.length > a);
+    if (!touched.length) touched = nodes.filter(n => a >= n.s && a <= n.s + n.text.length).slice(0, 1);   // a pure insertion
+    let out = '', last = 0;
+    touched.forEach((n, k) => {
+      const before = k === 0 ? n.text.slice(0, Math.max(0, a - n.s)) : '', after = z < n.s + n.text.length ? n.text.slice(Math.max(0, z - n.s)) : '';
+      const nt = before + (k === 0 ? ins : '') + after;
+      let open = n.open; if (ns === 'w' && !/xml:space=/.test(open) && /^\s|\s$/.test(nt)) open = open.replace(/>$/, ' xml:space="preserve">');
+      out += seg.slice(last, n.i) + open + xmlEsc(nt) + n.close; last = n.i + n.len;
+    });
+    return x.slice(0, m.index) + out + seg.slice(last) + x.slice(m.index + seg.length);
+  }
+  return null;
+}
+async function pptxSlidePaths(zip){
+  const pres = xmlDoc(await zip.text('ppt/presentation.xml')), rels = await relsOf(zip, 'ppt/presentation.xml');
+  return byNS(pres, 'p', 'sldId').map(s => (rels.find(r => r.id === s.getAttributeNS(NS.r, 'id')) || {}).target).filter(Boolean);
+}
+async function vCorrectedCopy(set, doc, use){
+  const d = set.docs[doc], buf = await IDB.get(`v:${set.id}:${doc}`);
+  if (!buf) return alert('The original file is not stored in this browser any more — upload it again to make a corrected copy.');
+  const queued = vAllEdits(set).filter(e => e.doc === doc && e.state === 'queued');
+  if (!queued.length) return toast('No accepted corrections are waiting for this file');
+  const zip = await readZip(buf), isP = d.kind === 'pptx', ns = isP ? 'a' : 'w';
+  const targets = zip.names.filter(n => isP ? /^ppt\/(slides\/slide|notesSlides\/notesSlide)\d+\.xml$/.test(n) : /^word\/(document|header\d*|footer\d*|footnotes|endnotes)\.xml$/.test(n));
+  const order = isP ? await pptxSlidePaths(zip) : [], xml = {}, changed = new Set(), done = [], missed = [];
+  for (const n of targets) xml[n] = await zip.text(n);
+  for (const e of queued){
+    const sn = isP && /slide\s*(\d+)/i.exec(e.loc || ''), first = sn ? order[+sn[1] - 1] : null;
+    let ok = false;
+    for (const n of first ? [first, ...targets.filter(x => x !== first)] : targets){ if (xml[n] == null) continue; const r = vReplaceXml(xml[n], ns, e.find, e.replace); if (r){ xml[n] = r; changed.add(n); ok = true; break; } }
+    (ok ? done : missed).push(e);
+  }
+  const te = new TextEncoder(), files = [];
+  for (const n of zip.names){ if (n.endsWith('/')) continue; files.push({name:n, data:changed.has(n) ? te.encode(xml[n]) : await zip.bytes(n)}); }
+  const blob = zipStore(files, isP ? 'application/vnd.openxmlformats-officedocument.presentationml.presentation' : 'application/vnd.openxmlformats-officedocument.wordprocessingml.document');
+  const name = vFileName(d.name.replace(/(\.\w+)$/, '') + ' (corrected)') + '.' + d.kind;
+  done.forEach(e => { const real = vFindEdit(set, e.id); if (real){ real.state = 'copied'; real.file = name; } });
+  missed.forEach(e => { const real = vFindEdit(set, e.id); if (real) real.state = 'failed'; });
+  if (use && done.length){            // the corrected copy becomes the document that is checked from now on
+    const nb = await blob.arrayBuffer();
+    set.docs[doc] = {src:'upload', name, kind:d.kind, units:isP ? await pptxUnits(await readZip(nb)) : await docxUnits(await readZip(nb)), at:Date.now(), from:d.name};
+    await IDB.put(`v:${set.id}:${doc}`, nb);
+  }
+  save(); RENDER.verify();
+  if (!use) await saveFile(name, blob, `Saved ${name}`);
+  if (missed.length) alert(`${done.length} correction${done.length === 1 ? '' : 's'} made. ${missed.length} could not be found word for word in the file (the text may be split across a line break or a text box) — make ${missed.length === 1 ? 'it' : 'them'} by hand; ${missed.length === 1 ? 'it is' : 'they are'} marked “Do this by hand”.`);
+  else if (use) toast('Now checking the corrected copy — re-run the verification (step 7)');
+}
+
+/* --- the final quality-assurance report (A–G) --- */
+function vReadiness(set, VV){
+  const cur = V_ITEMS.filter(it => vCur(set, it.key, VV)), stale = V_ITEMS.filter(it => set.checks[it.key] && set.checks[it.key].status && !vCur(set, it.key, VV));
+  const st = s => cur.filter(it => set.checks[it.key].status === s).length;
+  const passed = cur.filter(it => vOk(set.checks[it.key].status));
+  const unconfirmed = passed.filter(it => set.checks[it.key].by === 'claude' && !set.checks[it.key].confirmed).length;
+  const all = vVerOf(VV, V_ALL), rowsCur = V_MATRIX.filter(r => set.matrix[r] && set.matrix[r].ver === all), rowsOk = rowsCur.filter(r => vOk(set.matrix[r].status));
+  const open = set.contra.filter(c => c.status === 'open').length, missingDocs = V_DOCS.filter(d => !set.docs[d.k]).map(d => d.t.toLowerCase());
+  const full = !missingDocs.length && passed.length === V_ITEMS.length && !unconfirmed && rowsOk.length === V_MATRIX.length && !open;
+  const left = [];
+  if (missingDocs.length) left.push(`add the ${missingDocs.join(' and the ')}`);
+  if (cur.length < V_ITEMS.length) left.push(`${V_ITEMS.length - cur.length} checklist item${V_ITEMS.length - cur.length === 1 ? '' : 's'} not checked on the current versions${stale.length ? ` (${stale.length} need a re-check because a document changed)` : ''}`);
+  if (st('fix') + st('partial')) left.push(`${st('fix') + st('partial')} item${st('fix') + st('partial') === 1 ? '' : 's'} need correction or are only partially aligned`);
+  if (st('unverified')) left.push(`${st('unverified')} item${st('unverified') === 1 ? ' is' : 's are'} Not Verified`);
+  if (unconfirmed) left.push(`${unconfirmed} item${unconfirmed === 1 ? '' : 's'} verified by Claude still need your confirmation`);
+  if (rowsOk.length < V_MATRIX.length) left.push(`${V_MATRIX.length - rowsOk.length} matrix row${V_MATRIX.length - rowsOk.length === 1 ? '' : 's'} not verified on the current versions`);
+  if (open) left.push(`${open} open contradiction${open === 1 ? '' : 's'}`);
+  return {cur:cur.length, stale:stale.length, verified:st('verified'), fix:st('fix'), partial:st('partial'), unverified:st('unverified'), na:st('na'), unconfirmed, passed:passed.length,
+    rowsCur:rowsCur.length, rowsOk:rowsOk.length, open, full, left,
+    msg:full ? `Complete comparison: all ${V_ITEMS.length} checklist items and all ${V_MATRIX.length} matrix rows are verified (or not applicable) on the current versions of the three documents, every result is confirmed by you, and no contradictions are open.`
+      : `The comparison is not complete, so the documents cannot yet be called fully consistent. Still to do: ${left.join('; ')}.`};
+}
+const vItemState = (set, it, VV) => {
+  const r = set.checks[it.key];
+  if (!r || !r.status) return 'Not checked yet';
+  if (!vCur(set, it.key, VV)) return `Needs re-check — a document changed (was ${vLabel(r.status)})`;
+  const who = r.by === 'me' ? 'checked by you' : r.confirmed ? 'checked by Claude, confirmed by you' : 'checked by Claude — not yet confirmed by you';
+  if (r.status === 'verified') return `${r.corrected ? 'Corrected and re-verified' : 'Verified'} (${who})`;
+  if (r.status === 'na') return `Not applicable (${who})`;
+  if (r.status === 'unverified') return `Unresolved — Not Verified (${who})`;
+  return `Unresolved — ${vLabel(r.status)} (${who})`;
+};
+function vReport(set){
+  const VV = vVers(set), R = vReadiness(set, VV), all = vVerOf(VV, V_ALL), S2 = [];
+  const docsLine = V_DOCS.map(d => `${d.t}: ${set.docs[d.k] ? `${vDocName(set, d.k)} (version ${VV[d.k]})` : 'not provided'}`);
+  const ov = set.overall && set.overall.text ? [`${set.overall.by === 'me' ? 'Written by you' : `Written by Claude${set.overall.ver !== all ? ' on an earlier version of the documents' : ''} — check it against the paper`}:`, set.overall.text] : ['No overall assessment yet — run the citations & evaluation stage, or write your own in the QA report.'];
+  S2.push({h:'A. Overall Consistency Assessment', p:[...docsLine, '', R.msg, '', ...ov]});
+  const C = set.contra.map((c, i) => [`${i + 1}. ${c.topic} — ${c.severity}${c.type ? `, ${c.type}` : ''} — ${c.status === 'open' ? 'OPEN' : c.status === 'fixed' ? 'Corrected' : c.status === 'not' ? 'Judged not a contradiction' : c.status}${c.by === 'claude' ? ' (found by Claude — check it)' : ' (added by you)'}`,
+    ...c.statements.map(s => `   ${vDocT(s.doc)}, ${s.loc || 'location not given'}: “${s.quote}”${s.found === false ? ' [not found word for word — check]' : ''}`),
+    `   Why: ${c.explain || '—'}`, `   Evidence from the original paper: ${c.evidence || 'Not Verified'}`, `   Recommended correction: ${c.fix || '—'}`, ...(c.note ? [`   Your note: ${c.note}`] : [])].join('\n'));
+  S2.push({h:'B. Identified Contradictions', p:C.length ? C : [set.stages.contra ? 'No contradictions were found in the last contradiction check' + (set.stages.contra.ver !== vVerKey(set) ? ' — but a document has changed since, so run it again.' : '.') : 'The contradiction check has not been run yet.']});
+  const L = set.lang.map((x, i) => `${i + 1}. [${vDocT(x.doc)}, ${x.loc || '—'}] (${x.kind === 'factual' ? 'verified factual correction' : 'suggested editorial improvement'}${x.type ? `, ${x.type}` : ''}${x.state ? `, ${vEditState(x)}` : ''})\n   Original: “${x.find}”\n   Improved: “${x.replace}”${x.why ? `\n   Why: ${x.why}` : ''}`);
+  const T = set.terms.filter(t => !t.consistent).map(t => `Term “${t.term}” — paper: ${t.paper || '—'}; critique: ${t.critique || '—'}; slides: ${t.pres || '—'}${t.note ? ` (${t.note})` : ''}`);
+  S2.push({h:'C. Language and Terminology Corrections', p:L.length || T.length ? [...L, ...T] : [set.stages.lang ? 'No language corrections were suggested.' : 'The language check has not been run yet.']});
+  S2.push({h:'D. Missing or Incomplete Information', p:set.missing.length ? set.missing.map((m, i) => `${i + 1}. [${vDocT(m.doc)}] ${m.what}${m.where ? ` — add it: ${m.where}` : ''}${m.why ? ` (${m.why})` : ''}`).concat(set.unsupported.map(u => `Unsupported claim [${vDocT(u.doc)}, ${u.loc || '—'}]: “${u.quote}” — needs ${u.needs || 'evidence'}`)) : [set.stages.cites ? 'Nothing important was found missing.' : 'This check has not been run yet.']});
+  S2.push({h:'E. Strengths of the Current Work', p:set.strengths.length ? set.strengths.map(s => `• ${s}`) : ['Not assessed yet.']});
+  const pr = set.priorities || {};
+  S2.push({h:'F. Priority Improvements', p:[['critical', 'Critical — factual errors, major contradictions or unsupported conclusions'], ['important', 'Important — missing information, weak academic arguments or misleading wording'], ['minor', 'Minor — grammar, formatting, terminology and presentation']]
+    .map(([k, t]) => `${t}:\n${(pr[k] || []).length ? pr[k].map(x => `   • ${x}`).join('\n') : '   (none listed)'}`)
+    .concat(set.contra.some(c => c.status === 'open') ? [`Still open from the contradiction check: ${set.contra.filter(c => c.status === 'open').map(c => `${c.topic} (${c.severity})`).join('; ')}`] : [])});
+  S2.push({h:'G. Final Verification Checklist', p:V_SECTIONS.map(sec => `${sec.t}\n${sec.items.map((t, i) => { const it = V_ITEMS.find(x => x.key === `${sec.k}.${i + 1}`); return `   ${it.key} ${t}\n        → ${vItemState(set, it, VV)}`; }).join('\n')}`)});
+  const matrix = V_MATRIX.map(r => { const m = set.matrix[r]; return [r, m ? m.paper : '', m ? m.critique : '', m ? m.pres : '', m ? (m.ver === all ? vLabel(m.status) : `Needs re-check (was ${vLabel(m.status)})`) + (m.by === 'claude' ? ' · Claude' : ' · you') : 'Not checked', m ? m.fix : '']; });
+  return {secs:S2, matrix, R};
+}
+const vEditState = e => ({applied:'applied', queued:'accepted — goes into the corrected copy', copied:`made in ${e.file || 'the corrected copy'}`, rejected:'rejected', manual:'do this by hand', failed:'not found word for word — do this by hand'}[e.state] || 'waiting for your decision');
+function vReportText(set){
+  const r = vReport(set), M = ['7. FINAL THREE-DOCUMENT CONSISTENCY MATRIX', ...r.matrix.map(m => `${m[0]}\n   Original paper: ${m[1] || '—'}\n   Written critique: ${m[2] || '—'}\n   Presentation: ${m[3] || '—'}\n   Status: ${m[4]}\n   Required correction: ${m[5] || '—'}`)];
+  return [`FINAL ACADEMIC VERIFICATION & CONSISTENCY REPORT${set.example ? ' (DEMO — not a real study)' : ''}`, set.name || '', `Generated by ScholarPath on ${new Date().toLocaleString()} — findings marked as Claude's must be checked against the original paper.`, '',
+    ...r.secs.slice(0, 1).flatMap(s => [s.h.toUpperCase(), ...s.p, '']), ...M, '', ...r.secs.slice(1).flatMap(s => [s.h.toUpperCase(), ...s.p, ''])].join('\n');
+}
+function vReportDocx(set){
+  const r = vReport(set), P = [];
+  const H = t => wP(wR(t, {b:true, sz:28, serif:true, color:'1F3A6B'}), {before:320, after:120, keep:true, border:true});
+  const para = t => String(t).split('\n').map(l => wP(wR(l), {after:60}));
+  P.push(wP(wR('Final Academic Verification & Consistency Report', {b:true, sz:36, serif:true}), {align:'center', after:120}));
+  if (set.name) P.push(wP(wR(set.name, {sz:22}), {align:'center', after:60}));
+  P.push(wP(wR(`Generated by ScholarPath on ${new Date().toLocaleDateString()}. Findings marked as Claude's must be checked against the original paper.`, {i:true, sz:18, color:'5B6476'}), {align:'center', after:240}));
+  if (set.example) P.push(wP(wR('Demo — not a real study', {i:true, color:'8A5A12'}), {align:'center'}));
+  r.secs.forEach((s, i) => {
+    P.push(H(s.h)); s.p.forEach(t => P.push(...para(t)));
+    if (i === 0){ P.push(H('Final Three-Document Consistency Matrix'), wTableN(['Research component', 'Original paper', 'Written critique', 'Presentation', 'Status', 'Required correction'], r.matrix, [1300, 1700, 1700, 1500, 1100, 1726])); }
+  });
+  return docxPackage(`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><w:document xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"><w:body>${P.join('')}<w:sectPr><w:pgSz w:w="11906" w:h="16838"/><w:pgMar w:top="1134" w:right="1134" w:bottom="1134" w:left="1134" w:header="567" w:footer="567" w:gutter="0"/></w:sectPr></w:body></w:document>`);
+}
+function wTableN(head, rows, widths){
+  const b = ['top', 'left', 'bottom', 'right', 'insideH', 'insideV'].map(s => `<w:${s} w:val="single" w:sz="4" w:space="0" w:color="BFBFBF"/>`).join('');
+  const cell = (w, text, o={}) => `<w:tc><w:tcPr><w:tcW w:w="${w}" w:type="dxa"/>${o.fill ? `<w:shd w:val="clear" w:color="auto" w:fill="${o.fill}"/>` : ''}</w:tcPr>${wP(wR(text || '—', {b:o.b, sz:17}), {before:40, after:40})}</w:tc>`;
+  return `<w:tbl><w:tblPr><w:tblW w:w="${widths.reduce((a, b) => a + b, 0)}" w:type="dxa"/><w:tblBorders>${b}</w:tblBorders><w:tblLayout w:type="fixed"/></w:tblPr><w:tblGrid>${widths.map(w => `<w:gridCol w:w="${w}"/>`).join('')}</w:tblGrid>` +
+    `<w:tr><w:trPr><w:tblHeader/></w:trPr>${head.map((h, i) => cell(widths[i], h, {b:true, fill:'E7EDF7'})).join('')}</w:tr>` +
+    rows.map(r => `<w:tr>${r.map((v, i) => cell(widths[i], v, {b:i === 0})).join('')}</w:tr>`).join('') + '</w:tbl>';
+}
+
+/* --- the demo: the Paper Reader's demo text, with a short critique and slides that contain deliberate errors --- */
+function demoVerifySet(){
+  const at = Date.now();
+  return Object.assign(newVerifySet(), {id:'ex-verify-1', example:true, name:'Demo — try the checks (not a real study)', docs:{
+    paper:{src:'reader', ref:'ex-reader-1'},
+    critique:{src:'paste', kind:'paste', at, name:'Demo critique — written for ScholarPath, with deliberate errors', units:[
+      {loc:'Section 1 · Summary of the Paper', text:'The paper describes a study in which 30 secondary-school students used an AI writing assistant for four weeks. Their drafts and interviews were analysed to understand how they used the feedback.'},
+      {loc:'Section 4 · Research Design & Methodology', text:'Students submitted three drafts of an argumentative essay. Each change between drafts was coded as accepted unchanged, adapted or ignored, and all of the students were interviewed about their decisions.'},
+      {loc:'Section 5 · Results & Discussion', text:'Most grammar suggestions were accepted unchanged, while suggestions about organisation and argument were usually ignored. This suggests that AI feedback helps with surface accuracy but not with deeper writing skills.'},
+      {loc:'Section 8(b). Weaknesses', text:'The sample is small and comes from one school, and there is no comparison group, so the findings cannot be generalised to other schools.'},
+      {loc:'Section 8(c). Future Work', text:'A future study should include more students from several schools and a comparison group that does not use the AI tool.'}]},
+    pres:{src:'paste', kind:'paste', at, name:'Demo slides — written for ScholarPath, with deliberate errors', units:[
+      {loc:'Slide 1', text:'How students use AI feedback on their writing — a critique (demo)'},
+      {loc:'Slide 2', text:'The study\n• 20 students · 4 weeks\n• 3 drafts of an argumentative essay\n• Interviews with 8 students'},
+      {loc:'Slide 3', text:'Key finding\n• AI feedback proves that students’ writing skills improve'},
+      {loc:'Slide 4', text:'Weaknesses\n• Small sample from one school\n• No comparison group'},
+      {loc:'Slide 5', text:'Future work\n• More students and several schools\n• A comparison group'}]}
+  }});
+}
+
+/* --- the page --- */
+const V_VIEWS = [['flow', 'Workflow'], ['check', 'Checklist'], ['matrix', 'Matrix'], ['contra', 'Contradictions'], ['fix', 'Corrections'], ['evidence', 'Evidence & terms'], ['report', 'QA report']];
+const vWho = r => r.by === 'me' ? '<span class="chip tag">you</span>' : r.confirmed ? '<span class="chip tag">Claude · confirmed by you</span>' : '<span class="chip">by Claude — check it</span>';
+const vStatusOpts = cur => V_STATUS.map(([k, l]) => `<option value="${k}" ${k === (cur || '') ? 'selected' : ''}>${l}</option>`).join('');
+const vStageCur = (set, k) => !!set.stages[k] && set.stages[k].ver === vVerKey(set);
+const vWhen = t => new Date(t).toLocaleString([], {dateStyle:'medium', timeStyle:'short'});
+function vUnitWord(set, k){
+  const U = vUnits(set, k), n = U.filter(u => /^Slide \d+$/.test(u.loc)).length;
+  if (k === 'pres') return n ? pl(n, 'slide') + (U.length > n ? ` (+ ${pl(U.length - n, 'note or chart', 'notes and charts')})` : '') : pl(U.length, 'part');
+  if (U.length && /^p\. \d+$/.test(U[0].loc)) return pl(U.length, 'page');
+  return pl(U.length, k === 'paper' ? 'paragraph' : 'part');
+}
+RENDER.verify = () => {
+  const V = S.verify;
+  if (!V.sets.length) V.sets.push(Object.assign(newVerifySet(), {name:'My verification'}));
+  const set = vSet(); V.active = set.id;
+  const VV = vVers(set), R = vReadiness(set, VV), view = V_VIEWS.some(v => v[0] === V.view) ? V.view : 'flow';
+  if (!set.auto || set.auto.ver !== vVerKey(set)) vAuto(set);
+  const E = vAllEdits(set), counts = {check:`${R.cur}/${V_ITEMS.length}`, matrix:`${R.rowsCur}/${V_MATRIX.length}`, contra:R.open || '', fix:E.filter(e => !e.state).length || ''};
+  const part = partOf('verifying');
+  $('#panel-verify').innerHTML = `
+  <div class="page-head"><div class="eyebrow">Part ${part.no} · ${part.label} — Step ${part.no}.1: ${esc(part.steps[0].label)}</div><h1>Final Academic Verification &amp; Consistency Checklist</h1>
+  <p>Check your <b>written critique</b> and your <b>presentation</b> against the <b>original research paper</b>, which is the source of truth. Use it whenever you upload, revise or finalise a document. Each check remembers which version of the documents it was made on, and asks for a re-check when one of them changes.</p></div>
+  <div class="card v-setbar">
+    <label class="f" for="vSetSel">Verification</label>
+    <select id="vSetSel">${V.sets.map(s => `<option value="${s.id}" ${s.id === set.id ? 'selected' : ''}>${s.example ? '[Demo] ' : ''}${esc(clip(s.name || 'Untitled verification', 80))}</option>`).join('')}</select>
+    ${exampleBadge(set)}
+    <span class="row v-setbtns"><button class="btn sm" data-act="v-new">${icon('plus')}New</button><button class="btn sm" data-act="v-rename">${icon('pen')}Rename</button><button class="btn sm ghost danger" data-act="v-del">${icon('trash')}Delete</button></span>
+  </div>
+  ${set.example ? `<p class="ai-note small">${icon('sparkle')} <b>Demo:</b> the ScholarPath demo text, with a short critique and five slides that contain <b>deliberate errors</b>, so you can see how the checks work. None of it is a real study. Press <b>New</b> to check your own documents.</p>` : ''}
+  <div class="v-docs">${V_DOCS.map(d => vDocCard(set, d, VV)).join('')}</div>
+  ${vScoreHTML(R)}
+  <div class="v-views" role="tablist" aria-label="Verification views">${V_VIEWS.map(([k, l]) => `<button role="tab" class="v-view ${k === view ? 'on' : ''}" aria-selected="${k === view}" data-act="v-view" data-view="${k}">${l}${counts[k] ? ` <span class="v-count">${counts[k]}</span>` : ''}</button>`).join('')}</div>
+  <div id="vRun"></div>
+  <div class="v-body">${V_VIEW[view](set, VV, R)}</div>`;
+  vRenderRun();
+};
+function vDocCard(set, d, VV){
+  const doc = set.docs[d.k], U = doc ? vUnits(set, d.k) : [];
+  const src = !doc ? '' : {reader:'from Paper Reader', app:'from Critique Studio — follows your edits', builder:'from Presentation Builder — follows your critique', paste:'pasted text', upload:`uploaded ${String(doc.kind || '').toUpperCase()}`}[doc.src] || '';
+  const opts = d.k === 'paper' ? S.reader.papers.map(p => [`reader:${p.id}`, (p.example ? '[Demo] ' : '') + (p.title || p.name)])
+    : d.k === 'critique' ? S.critiques.map(c => [`app:${c.id}`, (c.example ? '[Example] ' : '') + (critTitle(c) || 'Untitled critique')])
+    : S.critiques.map(c => [`builder:${c.id}`, `Slide outline of ${c.example ? 'the example critique' : `“${critTitle(c) || 'Untitled critique'}”`}`]);
+  const cur = doc && ['reader', 'app', 'builder'].includes(doc.src) ? `${doc.src}:${doc.ref}` : '';
+  const accept = {paper:'.pdf,application/pdf,.txt', critique:'.docx,.pdf,.txt,.md', pres:'.pptx,.pdf,.txt'}[d.k];
+  const upl = {paper:'Upload PDF', critique:'Upload Word / PDF', pres:'Upload PowerPoint / PDF'}[d.k];
+  return `<section class="card v-doc ${doc ? 'has' : ''}" aria-label="${d.t}">
+    <div class="v-doc-head"><span class="v-doc-no">${doc ? icon('check') : d.no}</span><div><h3>${d.no}. ${d.t}</h3><p class="small muted">${d.sub}</p></div></div>
+    ${doc ? `<div class="v-doc-file"><b>${esc(clip(vDocName(set, d.k), 90))}</b><span class="small muted">${U.length ? vUnitWord(set, d.k) : 'no text found'} · ${src} · version <code>${VV[d.k]}</code></span>${doc.from ? `<span class="small muted">Corrected copy of ${esc(doc.from)}</span>` : ''}</div>
+      <details class="v-doc-text"><summary class="small">See the text ScholarPath reads</summary><div class="output v-units">${U.slice(0, 300).map(u => `<b>[${esc(u.loc)}]</b> ${esc(clip(u.text.replace(/\s+/g, ' '), 600))}`).join('\n\n') || '(empty)'}</div></details>`
+    : `<p class="small muted v-doc-empty">Not added yet.</p>`}
+    ${doc ? '<details class="v-doc-change"><summary class="small">Change or remove</summary>' : ''}<div class="v-doc-add">
+      ${opts.length ? `<select data-vsrc="${d.k}" aria-label="${d.t}: choose from ScholarPath"><option value="">${d.k === 'pres' ? 'Use a ScholarPath slide outline…' : 'Choose from ScholarPath…'}</option>${opts.map(([v, l]) => `<option value="${v}" ${v === cur ? 'selected' : ''}>${esc(clip(l, 70))}</option>`).join('')}</select>` : ''}
+      <label class="btn sm">${icon('upload')}${upl}<input type="file" hidden data-vfile="${d.k}" accept="${accept}"></label>
+      <button class="btn sm" data-act="v-paste" data-doc="${d.k}">Paste</button>
+      ${doc ? `<button class="btn sm ghost" data-act="v-doc-clear" data-doc="${d.k}" aria-label="Remove the ${d.t.toLowerCase()}">${icon('x')}Remove</button>` : ''}
+    </div>${doc ? '</details>' : ''}
+  </section>`;
+}
+function vScoreHTML(R){
+  const box = (n, l, cls='') => `<div class="v-stat ${cls}"><b>${n}</b><span>${l}</span></div>`;
+  return `<div class="card v-score ${R.full ? 'ok' : ''}">
+    <div class="v-stats">${box(`${R.cur}/${V_ITEMS.length}`, 'checklist items checked')}${box(R.verified, 'verified', R.verified ? 'ok' : '')}${box(R.fix + R.partial, 'need correction or partly aligned', R.fix + R.partial ? 'bad' : '')}${box(R.unverified, 'not verified', R.unverified ? 'warn' : '')}${box(R.open, 'open contradictions', R.open ? 'bad' : '')}${box(R.stale, 'need a re-check', R.stale ? 'warn' : '')}</div>
+    <p class="v-verdict small">${icon(R.full ? 'check' : 'clock')}<span>${esc(R.msg)}</span></p></div>`;
+}
+const vRunBtn = (stages, label, cls='') => `<button class="btn sm ${cls}" data-act="v-run" data-stages="${stages}" data-v-ai ${aiReady() ? '' : 'disabled title="Claude runs these checks on the published ScholarPath page"'}>${icon('sparkle')}${label}</button>`;
+const vGo = (view, label) => `<button class="btn sm" data-act="v-view" data-view="${view}">${label}</button>`;
+
+const V_VIEW = {
+  flow:(set, VV, R) => {
+    const sec = ks => { const it = V_ITEMS.filter(x => ks.includes(x.sec.k)); return [it.filter(x => vCur(set, x.key, VV)).length, it.length]; };
+    const E = vAllEdits(set), waiting = E.filter(e => !e.state).length, open = R.open;
+    const st = (done, some) => done ? 'done' : some ? 'part' : 'todo', lbl = {done:'Done', part:'In progress', todo:'Not started'};
+    const [a2, b2] = sec(['s2']), [a3, b3] = sec(['s3']), [a4, b4] = sec(['s1', 's4', 's5', 's6']);
+    const paperN = set.docs.paper ? vUnits(set, 'paper').length : 0, ranOnce = Object.keys(set.stages).length > 0;
+    const steps = [
+      {s:st(paperN > 0, false), t:set.docs.paper ? `The paper is loaded (${vUnitWord(set, 'paper')}). Every check is measured against it.` : 'Add the original paper above — it is the source of truth.',
+        a:set.docs.paper && set.docs.paper.src === 'reader' ? `<button class="btn sm" data-act="v-open-reader">${icon('book')}Read it in Paper Reader</button>` : ''},
+      {s:st(a2 === b2, a2), t:`${a2} of ${b2} items in section 2 checked on the current versions.${set.docs.critique ? '' : ' Add your critique first.'}`, a:vRunBtn('matrix', 'Run steps 2, 3 and 5 with Claude') + vGo('check', 'Open the checklist')},
+      {s:st(a3 === b3, a3), t:set.docs.pres ? `${a3} of ${b3} items in section 3 checked on the current versions.` : 'Add your presentation above (a .pptx, a PDF of the slides, or the slide outline from Presentation Builder).', a:vGo('matrix', 'Open the matrix')},
+      {s:st(a4 === b4, a4), t:`${a4} of ${b4} items in sections 1, 4, 5 and 6 checked. Contradictions ${vStageCur(set, 'contra') ? 'checked' : 'not yet checked'}, language ${vStageCur(set, 'lang') ? 'checked' : 'not yet checked'}, citations ${vStageCur(set, 'cites') ? 'checked' : 'not yet checked'} on these versions.`, a:vRunBtn('contra,lang,cites', 'Run step 4 with Claude') + vGo('evidence', 'Automatic checks')},
+      {s:st(R.cur === V_ITEMS.length && R.rowsCur === V_MATRIX.length, R.cur + R.rowsCur), t:`${R.cur} of ${V_ITEMS.length} checklist items and ${R.rowsCur} of ${V_MATRIX.length} matrix rows checked on the current versions.`, a:vGo('check', 'Checklist') + vGo('matrix', 'Matrix')},
+      {s:st(ranOnce && !open && !waiting, ranOnce && (E.length || set.contra.length)), t:`${pl(open, 'contradiction')} open · ${pl(waiting, 'suggested correction')} waiting for your decision (${E.filter(e => !e.state && e.kind === 'factual').length} factual, ${E.filter(e => !e.state && e.kind !== 'factual').length} editorial).`, a:vGo('contra', 'Contradictions') + vGo('fix', 'Corrections')},
+      {s:st(R.full, set.runs.length > 1), t:R.full ? 'Everything is re-checked on the final versions.' : 'After you correct anything, run the checks again so no new contradictions slip in — then read the QA report.', a:vRunBtn('matrix,contra,lang,cites', 'Re-check everything with Claude') + vGo('report', 'QA report')}
+    ];
+    const stRow = s => { const cur = vStageCur(set, s.k), when = set.stages[s.k];
+      return `<tr><td><b>${esc(s.label)}</b><div class="small muted">${when ? `${cur ? 'Checked on these versions' : 'Checked on an earlier version — run again'} · ${vWhen(when.at)}` : 'Not run yet'}</div></td>
+        <td class="v-stage-act">${vRunBtn(s.k, 'Run')}<button class="btn sm ghost" data-act="v-copy-prompt" data-stage="${s.k}">${icon('copy')}Copy prompt</button><button class="btn sm ghost" data-act="v-paste-reply" data-stage="${s.k}">Paste reply</button></td></tr>`; };
+    return `<section class="card"><h3>The verification workflow</h3><p class="small muted">Follow these seven steps whenever you upload, revise or finalise the paper, the critique or the slides.</p>
+      <ol class="v-steps">${steps.map((s, i) => `<li class="v-step ${s.s}"><span class="v-step-no">${s.s === 'done' ? icon('check') : i + 1}</span><div><div class="v-step-top"><b>Step ${i + 1}: ${esc(V_WORKFLOW[i])}</b><span class="pill v-pill-${s.s}">${lbl[s.s]}</span></div><p class="small muted">${esc(s.t)}</p>${s.a ? `<div class="row">${s.a}</div>` : ''}</div></li>`).join('')}</ol></section>
+    <section class="card"><div class="output-head"><div><h3 style="margin:0">Check with Claude</h3><p class="small muted" style="margin:4px 0 0">${aiReady() ? 'Claude reads all three documents and follows the twelve rules below. It takes a few minutes. Treat every result as Claude’s and check it against the paper.' : 'Claude runs these checks on the published ScholarPath page. Here you can <b>copy a stage’s prompt</b> into a Claude chat, then <b>paste the reply</b> back, or check every item yourself.'}</p></div>${vRunBtn('matrix,contra,lang,cites', 'Run the full verification', 'primary')}</div>
+      <div class="v-table-wrap"><table class="v-tbl v-stages"><tbody>${V_STAGES.map(stRow).join('')}</tbody></table></div></section>
+    <section class="card"><h3>Mandatory verification rules</h3><ol class="v-rules">${V_RULES.map(r => `<li>${esc(r)}</li>`).join('')}</ol>
+      <p class="small muted" style="margin:8px 0 0">Every prompt sent to Claude includes these rules. Nothing is marked as checked unless it has actually been checked.</p></section>
+    ${set.runs.length ? `<section class="card"><h3>Check history</h3><ul class="v-runs">${set.runs.map((r, i) => { const prev = set.runs[i + 1], changed = prev ? V_DOCS.filter(d => (r.ver || {})[d.k] !== (prev.ver || {})[d.k]).map(d => d.t.toLowerCase()) : [];
+      const d = (k, l) => r.before[k] !== r.after[k] ? `${l} ${r.before[k]} → ${r.after[k]}` : '';
+      return `<li><b>${vWhen(r.at)}</b> · ${r.stages.map(k => (V_STAGES.find(s => s.k === k) || {}).short || k).join(', ')} · ${r.by === 'claude' ? 'Claude' : 'pasted reply'}${changed.length ? `<div class="small muted">Changed since the check before: ${changed.join(', ')}</div>` : ''}<div class="small">${[d('verified', 'verified'), d('fix', 'need correction'), d('partial', 'partly aligned'), d('unverified', 'not verified'), d('open', 'open contradictions')].filter(Boolean).join(' · ') || 'No change in the counts'}</div></li>`; }).join('')}</ul></section>` : ''}`;
+  },
+  check:(set, VV) => V_SECTIONS.map(sec => {
+    const items = V_ITEMS.filter(it => it.sec === sec), n = items.filter(it => vCur(set, it.key, VV)).length, pass = items.filter(it => vCur(set, it.key, VV) && vOk(set.checks[it.key].status)).length;
+    return `<section class="card v-sec" id="v-${sec.k}"><div class="v-sec-head"><h3>${esc(sec.t)}</h3><span class="small muted">${n} of ${items.length} checked · ${pass} verified or not applicable</span></div>
+      ${sec.k === 's4' ? `<p class="small muted">The full details of each contradiction are in <a href="#" data-act="v-view" data-view="contra">Contradictions</a>: the exact statements, where they are, why they conflict, the evidence from the paper and the correction.</p>` : ''}
+      ${items.map(it => vItemHTML(set, it, VV)).join('')}</section>`;
+  }).join('') + `<p class="small muted">An item counts as checked only when its status was set on the current version of the documents it covers. Claude’s results stay marked as Claude’s until you confirm them.</p>`,
+  matrix:(set, VV) => {
+    const all = vVerOf(VV, V_ALL), txt = vReport(set).matrix.map(m => `${m[0]}\n  Original paper: ${m[1] || '—'}\n  Written critique: ${m[2] || '—'}\n  Presentation: ${m[3] || '—'}\n  Status: ${m[4]}\n  Required correction: ${m[5] || '—'}`).join('\n\n');
+    return `<section class="card"><div class="output-head"><div><h3 style="margin:0">7. Final Three-Document Consistency Matrix</h3><p class="small muted" style="margin:4px 0 0">One row for each research component, compared across the three documents.</p></div><span class="row">${vRunBtn('matrix', 'Fill with Claude')}${copyBtn('#vMatrixText', 'Copy table')}</span></div>
+      <p class="small v-legend">${['Verified: accurate and consistent', 'Needs Correction: an error or contradiction was found', 'Partially Aligned: accurate but incomplete or potentially misleading', 'Not Verified: there is not enough evidence', 'Not Applicable: does not apply to the document'].map(t => `<span>${esc(t)}</span>`).join('')}</p>
+      <div class="v-table-wrap"><table class="v-matrix"><thead><tr><th>Research component</th><th>Original paper</th><th>Written critique</th><th>Presentation</th><th>Status</th><th>Required correction</th></tr></thead><tbody>
+      ${V_MATRIX.map(row => { const m = set.matrix[row], cur = !!m && m.ver === all;
+        return `<tr class="st-${cur ? m.status || 'none' : 'none'} ${m && !cur ? 'stale' : ''}"><th scope="row">${row}</th>
+          <td data-l="Original paper">${m ? esc(m.paper) || '—' : '<span class="muted">Not checked yet</span>'}</td><td data-l="Written critique">${m ? esc(m.critique) || '—' : ''}</td><td data-l="Presentation">${m ? esc(m.pres) || '—' : ''}</td>
+          <td data-l="Status"><select class="status-select" data-vmx="${esc(row)}" aria-label="Status: ${row}">${vStatusOpts(cur ? m.status : '')}</select>${cur ? vWho(m) : ''}${m && !cur ? `<span class="small v-stale-msg">Needs a re-check (was ${vLabel(m.status)})</span>` : ''}</td>
+          <td data-l="Required correction">${m ? esc(m.fix) || '—' : ''} <button class="btn sm ghost" data-act="v-mx-edit" data-row="${esc(row)}" aria-label="Edit the ${row} row">${icon('pen')}Edit</button>${m && m.claude && cur ? `<div class="small muted">Claude suggested: ${vLabel(m.claude.status)}${m.claude.fix ? ` — ${esc(m.claude.fix)}` : ''}</div>` : ''}</td></tr>`; }).join('')}
+      </tbody></table></div><pre hidden id="vMatrixText">${esc(txt)}</pre></section>`;
+  },
+  contra:set => {
+    const open = set.contra.filter(c => c.status === 'open'), closed = set.contra.filter(c => c.status !== 'open'), ran = set.stages.contra;
+    return `<section class="card"><div class="output-head"><div><h3 style="margin:0">4. Contradiction Detection</h3><p class="small muted" style="margin:4px 0 0">For every contradiction: the exact statement from each document, its location, why they conflict, the evidence from the original paper and the recommended correction. A contradiction is closed only when you explain how it was resolved.</p></div>
+      <span class="row">${vRunBtn('contra', 'Find contradictions with Claude')}<button class="btn sm" data-act="v-c-add">${icon('plus')}Add one yourself</button>${set.contra.length ? copyBtn('#vContraText', 'Copy all') : ''}</span></div>
+      <p class="small muted" style="margin:0">${ran ? `Last checked ${vWhen(ran.at)}${vStageCur(set, 'contra') ? ' on these versions.' : ' — a document has changed since, so check again.'}` : 'Not checked yet.'}</p></section>
+    ${open.length ? open.map(c => vContraHTML(set, c)).join('') : `<div class="empty">${ran && vStageCur(set, 'contra') ? 'No open contradictions on these versions.' : 'No contradictions recorded yet.'}</div>`}
+    ${closed.length ? `<h3 class="v-subhead">Resolved (${closed.length})</h3>${closed.map(c => vContraHTML(set, c)).join('')}` : ''}
+    <pre hidden id="vContraText">${esc(vReport(set).secs[1].p.join('\n\n'))}</pre>`;
+  },
+  fix:set => {
+    const E = vAllEdits(set), fact = E.filter(e => e.kind === 'factual'), edit = E.filter(e => e.kind !== 'factual');
+    const files = V_DOCS.filter(d => d.k !== 'paper' && vEditHow(set, d.k) === 'copy').map(d => { const q = E.filter(e => e.doc === d.k && e.state === 'queued').length, doc = set.docs[d.k];
+      return `<div class="v-file"><div><b>${esc(doc.name)}</b><div class="small muted">${pl(q, 'accepted correction')} waiting. ScholarPath changes only the words; the design, fonts and layout stay the same.</div></div>
+        <span class="row"><button class="btn sm primary" data-act="v-copyfile" data-doc="${d.k}" ${q ? '' : 'disabled'}>${icon('download')}Download corrected copy</button><button class="btn sm" data-act="v-copyuse" data-doc="${d.k}" ${q ? '' : 'disabled'}>${icon('refresh')}Check the corrected copy next</button></span></div>`; }).join('');
+    const how = V_DOCS.filter(d => d.k !== 'paper' && set.docs[d.k]).map(d => `<li><b>${d.t}:</b> ${{app:'corrections are made straight in your critique in Critique Studio.', paste:'corrections change the pasted text here — copy them into your own file too.', copy:'accepted corrections go into a corrected copy of your file (below).', manual:set.docs[d.k].src === 'builder' ? 'the slide outline is built from your critique, so correct the critique (or your own slides).' : 'ScholarPath cannot edit this file, so make the changes yourself — use “Copy new wording”.'}[vEditHow(set, d.k)]}</li>`).join('');
+    return `<section class="card"><h3>Step 6 · Corrections</h3><p class="small muted"><b>Verified factual corrections</b> come from the contradiction check and were compared with the paper. <b>Suggested editorial improvements</b> are language and style changes: accept only the ones you agree with, so your own writing style stays. Nothing changes until you press Apply or Accept.</p>
+      ${how ? `<ul class="small v-how">${how}</ul>` : ''}${files}<div class="row">${vRunBtn('lang', 'Check language & terminology with Claude')}</div></section>
+    <h3 class="v-subhead">Verified factual corrections (${fact.length})</h3>
+    ${fact.length ? fact.map(e => `<div class="card v-fixcard">${e.from ? `<div class="small muted">From contradiction: <b>${esc(e.from.topic)}</b></div>` : ''}${vEditHTML(set, e)}</div>`).join('') : '<div class="empty">None yet.</div>'}
+    <h3 class="v-subhead">Suggested editorial improvements (${edit.length})</h3>
+    ${edit.length ? edit.map(e => `<div class="card v-fixcard">${vEditHTML(set, e)}</div>`).join('') : `<div class="empty">${set.stages.lang ? 'No language changes were suggested.' : 'Run the language check to get suggestions.'}</div>`}`;
+  },
+  evidence:set => {
+    const A = set.auto || {numbers:[], strong:[], presOnly:[]}, miss = A.numbers.filter(n => !n.inPaper.length), presNew = A.numbers.filter(n => n.doc === 'pres' && n.inPaper.length && n.inCritique === false);
+    const tbl = (head, rows) => rows.length ? `<div class="v-table-wrap"><table class="v-tbl"><thead><tr>${head.map(h => `<th>${h}</th>`).join('')}</tr></thead><tbody>${rows.join('')}</tbody></table></div>` : '';
+    const where = (doc, loc) => `<b>${vDocT(doc).replace('Written research ', '').replace('PowerPoint ', '')}</b><div class="small muted">${esc(loc || '—')}</div>`;
+    const mark = (ctx, w) => esc(ctx).replace(new RegExp(esc(w).replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'i'), m => `<mark class="v-mark">${m}</mark>`);
+    return `<section class="card"><div class="output-head"><div><h3 style="margin:0">5. Citations, references &amp; evidence</h3><p class="small muted" style="margin:4px 0 0">${set.stages.cites ? `Checked by Claude ${vWhen(set.stages.cites.at)}${vStageCur(set, 'cites') ? '' : ' — a document has changed since'}. Check each result against the paper.` : 'Not checked yet.'}</p></div>${vRunBtn('cites', 'Check with Claude')}</div>
+      ${tbl(['Where', 'Citation', 'Statement it supports', 'Status', 'Why'], set.cites.map(c => `<tr><td>${where(c.doc, c.loc)}</td><td>${esc(c.cite)}</td><td>${esc(c.claim)}</td><td><span class="pill v-p-${c.status}">${vLabel(c.status)}</span></td><td class="small">${esc(c.note)}</td></tr>`)) || '<p class="small muted">No citation results yet.</p>'}
+      ${set.unsupported.length ? `<h4>Claims that need a citation or evidence</h4>${tbl(['Where', 'Claim', 'What it needs'], set.unsupported.map(u => `<tr><td>${where(u.doc, u.loc)}</td><td>“${esc(u.quote)}”${u.found === false ? ' <span class="v-warn small">not found word for word</span>' : ''}</td><td>${esc(u.needs)}</td></tr>`))}` : ''}
+      ${set.missing.length ? `<h4>Missing or incomplete information</h4>${tbl(['Document', 'What is missing', 'Where to add it', 'Why'], set.missing.map(m => `<tr><td>${where(m.doc, '')}</td><td>${esc(m.what)}</td><td>${esc(m.where)}</td><td class="small">${esc(m.why)}</td></tr>`))}` : ''}</section>
+    <section class="card"><h3>Terminology across the documents</h3>
+      ${tbl(['Term', 'Original paper', 'Written critique', 'Presentation', ''], set.terms.map(t => `<tr class="${t.consistent ? '' : 'v-row-bad'}"><td><b>${esc(t.term)}</b></td><td>${esc(t.paper)}</td><td>${esc(t.critique)}</td><td>${esc(t.pres)}</td><td>${t.consistent ? '<span class="pill v-p-verified">Consistent</span>' : `<span class="pill v-p-fix">Inconsistent</span><div class="small">${esc(t.note)}</div>`}</td></tr>`)) || `<p class="small muted">${set.stages.lang ? 'No key terms were listed.' : 'The language check lists the key terms and how each document uses them.'}</p>`}</section>
+    <section class="card"><h3>Automatic checks</h3><p class="small muted">ScholarPath runs these checks itself, without Claude, every time a document changes. They point you to things worth checking. They never mark a checklist item as verified.</p>
+      <h4>Numbers in the critique and slides that are not in the paper (${miss.length})</h4>
+      ${tbl(['Where', 'Number', 'In context'], miss.map(n => `<tr><td>${where(n.doc, n.loc)}</td><td><b>${esc(n.shown)}</b></td><td class="small">…${mark(n.ctx, n.shown)}…</td></tr>`)) || `<p class="small v-okk">${A.numbers.length ? `All ${pl(A.numbers.length, 'number')} also appear in the paper. Check that each one is used with the same meaning.` : 'No numbers found in the critique or slides.'}</p>`}
+      ${presNew.length ? `<h4>Numbers on the slides that are not in the critique (${presNew.length})</h4>${tbl(['Slide', 'Number', 'In context', 'In the paper'], presNew.map(n => `<tr><td>${esc(n.loc)}</td><td><b>${esc(n.shown)}</b></td><td class="small">…${mark(n.ctx, n.shown)}…</td><td class="small">${esc(n.inPaper.join(', '))}</td></tr>`))}` : ''}
+      <h4>Strong or causal wording (${A.strong.length})</h4>
+      ${tbl(['Where', 'Wording', 'Check'], A.strong.slice(0, 60).map(s => `<tr><td>${where(s.doc, s.loc)}</td><td class="small">…${mark(s.ctx, s.word)}…</td><td class="small">Does the paper’s evidence support “${esc(s.word)}”? Correlation is not causation.</td></tr>`)) || '<p class="small muted">None found.</p>'}
+      ${A.presOnly.length ? `<h4>Citations on the slides that are not in the critique (${A.presOnly.length})</h4>${tbl(['Slide', 'Citation'], A.presOnly.map(c => `<tr><td>${esc(c.loc)}</td><td>${esc(c.key)}</td></tr>`))}` : ''}</section>`;
+  },
+  report:set => {
+    const r = vReport(set), all = vVerOf(vVers(set), V_ALL), ov = set.overall || {};
+    return `<section class="card v-report"><div class="output-head"><div><h3 style="margin:0">8. Final Quality-Assurance Report</h3><p class="small muted" style="margin:4px 0 0">Built from the checks above${set.example ? ' (demo)' : ''}. Copy it, or download it as a Word document.</p></div>
+      <span class="row"><button class="btn sm" data-act="v-rep-copy">${icon('copy')}Copy</button><button class="btn sm primary" data-act="v-rep-docx">${icon('download')}Word (.docx)</button></span></div>
+      <div class="v-verdict-box ${r.R.full ? 'ok' : ''}">${icon(r.R.full ? 'check' : 'clock')}<span>${esc(r.R.msg)}</span></div>
+      <section class="v-rsec"><h4>${r.secs[0].h}</h4>${r.secs[0].p.slice(0, 3).map(t => `<p class="v-pre small">${esc(t)}</p>`).join('')}
+        <label class="f" for="vOverall">Overall assessment ${ov.text ? (ov.by === 'me' ? '<span class="chip tag">yours</span>' : `<span class="chip">by Claude — check it</span>${ov.ver !== all ? ' <span class="small v-stale-msg">written on an earlier version</span>' : ''}`) : ''}</label>
+        <textarea id="vOverall" data-voverall rows="6" placeholder="How accurately do the critique and the presentation reflect the original paper? (Run the citations & evaluation check for Claude’s view, or write your own.)">${esc(ov.text || '')}</textarea></section>
+      <section class="v-rsec"><h4>Consistency matrix</h4><div class="v-table-wrap"><table class="v-tbl"><thead><tr><th>Component</th><th>Status</th><th>Required correction</th></tr></thead><tbody>${r.matrix.map(m => `<tr><td><b>${esc(m[0])}</b></td><td>${esc(m[4])}</td><td class="small">${esc(m[5] || '—')}</td></tr>`).join('')}</tbody></table></div></section>
+      ${r.secs.slice(1).map(s => `<section class="v-rsec"><h4>${s.h}</h4>${s.p.map(t => `<p class="v-pre">${esc(t)}</p>`).join('')}</section>`).join('')}
+    </section>`;
+  }
+};
+function vItemHTML(set, it, VV){
+  const r = set.checks[it.key], cur = vCur(set, it.key, VV), st = cur ? r.status : '', n = it.key.slice(1);
+  return `<div class="v-item st-${st || 'none'} ${r && r.status && !cur ? 'stale' : ''}">
+    <div class="v-item-top"><span class="v-key">${n}</span><p class="v-item-t">${esc(it.t)}</p>
+      <div class="v-item-ctl"><select class="status-select" data-vcheck="${it.key}" aria-label="Status of item ${n}">${vStatusOpts(st)}</select>${cur ? vWho(r) : ''}
+      ${cur && r.by === 'claude' && !r.confirmed ? `<button class="btn sm" data-act="v-confirm" data-key="${it.key}">${icon('check')}I checked this</button>` : ''}</div></div>
+    ${r && r.status && !cur ? `<p class="small v-stale-msg">${icon('refresh')}Needs a re-check: a document changed after this was marked “${vLabel(r.status)}”.</p>` : ''}
+    ${r && r.note ? `<p class="small v-note"><b>${r.noteBy === 'claude' ? 'Claude’s evidence' : 'Note'}:</b> ${esc(r.note)}</p>` : ''}
+    ${r && r.claude && cur ? `<p class="small v-note"><b>Claude suggested:</b> ${vLabel(r.claude.status)}${r.claude.note ? ` — ${esc(r.claude.note)}` : ''}</p>` : ''}
+    <input class="input v-mine" data-vmine="${it.key}" value="${esc(r ? r.mine || '' : '')}" placeholder="Your evidence or note (page, section, slide)" aria-label="Your note for item ${n}">
+  </div>`;
+}
+function vContraHTML(set, c){
+  const stl = {open:'Open', fixed:'Corrected', not:'Not a contradiction'}[c.status] || c.status;
+  return `<article class="card v-contra sev-${c.severity} ${c.status !== 'open' ? 'closed' : ''}">
+    <div class="v-contra-head"><span class="v-sev">${esc(c.severity)}</span><h4>${esc(c.topic)}</h4>${c.type ? `<span class="chip">${esc(c.type)}</span>` : ''}${c.by === 'claude' ? '<span class="chip">by Claude — check it</span>' : '<span class="chip tag">added by you</span>'}<span class="pill">${stl}</span></div>
+    <div class="v-quotes">${c.statements.map(s => `<figure class="v-quote d-${s.doc || 'x'}"><figcaption class="small"><b>${vDocT(s.doc)}</b> · ${esc(s.loc || 'location not given')}${s.found === false ? ' · <span class="v-warn">not found word for word — check it</span>' : s.found ? ' · <span class="v-okk">found in the document</span>' : ''}</figcaption><blockquote>“${esc(s.quote)}”</blockquote></figure>`).join('') || '<p class="small muted">No statements recorded.</p>'}</div>
+    <dl class="v-dl"><dt>Why this is a contradiction</dt><dd>${esc(c.explain) || '—'}</dd><dt>Evidence from the original paper</dt><dd>${esc(c.evidence) || 'Not Verified'}</dd><dt>Recommended correction</dt><dd>${esc(c.fix) || '—'}</dd></dl>
+    ${c.edits.length ? `<div class="v-edits"><div class="small muted">Wording change${c.edits.length > 1 ? 's' : ''} for this correction (verified factual correction):</div>${c.edits.map(e => vEditHTML(set, e)).join('')}</div>` : ''}
+    ${c.note ? `<p class="small v-note"><b>${c.status === 'not' ? 'Why it is not a contradiction' : c.status === 'fixed' ? 'How it was corrected' : 'Note'}:</b> ${esc(c.note)}</p>` : ''}
+    <div class="row v-contra-act">${c.status === 'open' ? `<button class="btn sm primary" data-act="v-c-resolve" data-id="${c.id}" data-how="fixed">${icon('check')}Mark as corrected…</button><button class="btn sm" data-act="v-c-resolve" data-id="${c.id}" data-how="not">Not a contradiction…</button>` : `<button class="btn sm" data-act="v-c-reopen" data-id="${c.id}">Reopen</button>`}${c.by === 'me' ? `<button class="btn sm ghost danger" data-act="v-c-del" data-id="${c.id}">${icon('trash')}Delete</button>` : ''}</div>
+  </article>`;
+}
+function vEditHTML(set, e){
+  const how = vEditHow(set, e.doc), d = set.docs[e.doc] || {};
+  const go = how === 'app' ? 'Apply to my critique' : how === 'paste' ? 'Apply to the pasted text' : how === 'copy' ? `Accept for the corrected ${d.kind === 'pptx' ? 'PowerPoint' : 'Word'} copy` : 'I will change it myself';
+  const act = e.state ? `<span class="pill v-es-${e.state}">${esc(vEditState(e))}</span>${e.state !== 'copied' ? `<button class="btn sm ghost" data-act="v-e-undo" data-id="${e.id}">Undo</button>` : ''}`
+    : `<button class="btn sm ${how === 'manual' || how === 'none' ? '' : 'primary'}" data-act="v-e-apply" data-id="${e.id}">${icon('check')}${go}</button><button class="btn sm ghost" data-act="v-e-reject" data-id="${e.id}">Reject</button>`;
+  return `<div class="v-edit"><div class="small"><b>${vDocT(e.doc)}</b>${e.loc ? ` · ${esc(e.loc)}` : ''}${e.type ? ` · ${esc(e.type)}` : ''}${e.found === false ? ' · <span class="v-warn">the original wording was not found word for word</span>' : ''}</div>
+    <div class="v-diff"><del>${esc(e.find)}</del><span aria-hidden="true">→</span><ins>${esc(e.replace)}</ins></div>
+    ${e.why ? `<div class="small muted">${esc(e.why)}</div>` : ''}
+    <div class="row">${act}<button class="btn sm ghost" data-act="v-e-copy" data-id="${e.id}">${icon('copy')}Copy new wording</button></div></div>`;
+}
+
+function vStartStatus(){
+  const set = vSet(); if (!set) return 'Not started';
+  const R = vReadiness(set, vVers(set));
+  return R.full ? 'Complete — every check verified' : `${R.cur} of ${V_ITEMS.length} checks done${R.open ? ` · ${pl(R.open, 'open contradiction')}` : ''}`;
+}
+
+/* --- events --- */
+function vRerender(sel){                          // keep the place on the page when a control re-draws it
+  const y = scrollY; RENDER.verify(); scrollTo(0, y); if (sel) $(sel)?.focus();
+}
+function vPasteDialog(which){
+  const set = vSet(), d = V_DOCS.find(x => x.k === which);
+  const hint = {paper:'Paste the full text of the paper. Add page markers such as [p. 3] at the start of each page to get page numbers in the results.', critique:'Paste your whole critique. Leave a blank line between paragraphs.', pres:'Paste the text of your slides. Start each slide with “Slide 1”, “Slide 2” … so the results can name the slide.'}[which];
+  openDialog(`Paste the ${d.t.toLowerCase()}`, `<p class="small muted">${hint}</p>
+    <div class="field"><label class="f" for="v-pn">Name</label><input class="input" id="v-pn" name="name" value="${esc(set.docs[which] && set.docs[which].src === 'paste' ? set.docs[which].name : '')}" placeholder="${which === 'paper' ? 'The paper’s title' : which === 'critique' ? 'e.g. My critique — final draft' : 'e.g. My slides — version 2'}"></div>
+    <div class="field"><label class="f" for="v-pt">Text *</label><textarea id="v-pt" name="text" required style="min-height:260px">${esc(set.docs[which] && set.docs[which].src === 'paste' ? set.docs[which].units.map(u => which === 'pres' ? `${u.loc}\n${u.text}` : /^p\. /.test(u.loc) ? `[${u.loc}]\n${u.text}` : u.text).join('\n\n') : '')}</textarea></div>`, f => {
+      const units = textUnits(f.text, which === 'pres'); if (!units.length) return false;
+      set.docs[which] = {src:'paste', kind:'paste', name:f.name.trim() || `Pasted ${d.t.toLowerCase()}`, units, at:Date.now()};
+      if (which === 'paper' && !set.name) set.name = f.name.trim();
+      save(); RENDER.verify(); toast(`${d.t}: ${pl(units.length, which === 'pres' ? 'slide' : 'part')} added`);
+    }, 'Use this text');
+}
+function vNameDialog(set, isNew){
+  openDialog(isNew ? 'New verification' : 'Rename this verification', `<div class="field"><label class="f" for="v-name">Name *</label><input class="input" id="v-name" name="name" required value="${esc(isNew ? '' : set.name)}" placeholder="e.g. Critique of Buolamwini & Gebru (2018) — final check"></div>
+    ${isNew ? '<p class="small muted">Each verification keeps its own three documents, checklist, matrix and report, so you can check more than one critique.</p>' : ''}`, f => {
+      const name = f.name.trim(); if (!name) return false;
+      if (isNew){ const s = Object.assign(newVerifySet(), {name}); S.verify.sets.unshift(s); S.verify.active = s.id; S.verify.view = 'flow'; } else set.name = name;
+      save(); RENDER.verify(); toast(isNew ? 'New verification ready — add the three documents' : 'Renamed');
+    }, isNew ? 'Create' : 'Save');
+}
+const V_ACTIONS = {
+  'v-view': el => { S.verify.view = el.dataset.view; save(); RENDER.verify(); $('#panel-verify .v-views')?.scrollIntoView({block:'nearest'}); },
+  'v-new': () => vNameDialog(null, true),
+  'v-rename': () => vNameDialog(vSet(), false),
+  'v-del': () => { const set = vSet(); if (!confirm(`Delete “${set.name || 'this verification'}” and all its checks? The documents themselves stay in ScholarPath.`)) return;
+    S.verify.sets = S.verify.sets.filter(s => s !== set); ['critique', 'pres'].forEach(k => IDB.del(`v:${set.id}:${k}`)); S.verify.active = (S.verify.sets[0] || {}).id || ''; save(); RENDER.verify(); toast('Verification deleted'); },
+  'v-paste': el => vPasteDialog(el.dataset.doc),
+  'v-doc-clear': el => { const set = vSet(), k = el.dataset.doc; if (!confirm(`Remove the ${vDocT(k).toLowerCase()} from this verification? Its checks will need a re-check.`)) return; set.docs[k] = null; IDB.del(`v:${set.id}:${k}`); save(); RENDER.verify(); },
+  'v-open-reader': () => { const set = vSet(); S.reader.active = set.docs.paper.ref; S.reader.view = 'paras'; goStep('critiquing', 0); scrollTo({top:0}); },
+  'v-run': el => vRunStages(vSet(), el.dataset.stages.split(',')),
+  'v-stop': () => vRun && vRun.ctl.abort(),
+  'v-copy-prompt': el => { const set = vSet(); if (!set.docs.paper) return toast('Add the original paper first'); copyText(vPrompt(set, el.dataset.stage), 'Prompt copied — paste it into a Claude chat, then paste the reply back here'); },
+  'v-paste-reply': el => { const set = vSet(), st = V_STAGES.find(s => s.k === el.dataset.stage);
+    openDialog(`Paste Claude’s reply — ${st.short}`, `<p class="small muted">Paste the whole JSON reply Claude gave to the copied prompt. It is recorded as Claude’s result for the current versions of the documents.</p><div class="field"><label class="f" for="v-rp">Reply *</label><textarea id="v-rp" name="reply" required style="min-height:240px;font-family:var(--mono);font-size:12px"></textarea></div>`, f => {
+      const res = vParseReply(f.reply); if (!res){ alert('This is not a JSON reply. Copy Claude’s whole answer (it starts with { ).'); return false; }
+      const before = vSnapshot(set), out = vApply(set, st.k, res, 'claude'); vLogRun(set, before, [st.k], 'paste'); save(); RENDER.verify();
+      toast(`Read ${pl(out.checks, 'checklist result')}${out.rows != null ? `, ${pl(out.rows, 'matrix row')}` : ''}${out.contra != null ? `, ${pl(out.contra, 'contradiction')}` : ''}${out.lang != null ? `, ${pl(out.lang, 'correction')}` : ''}`);
+    }, 'Read the reply'); },
+  'v-confirm': el => { const set = vSet(), r = set.checks[el.dataset.key]; if (r){ r.confirmed = true; save(); vRerender(`[data-vcheck="${el.dataset.key}"]`); } },
+  'v-mx-edit': el => { const set = vSet(), row = el.dataset.row, m = set.matrix[row] || {}, all = vVerOf(vVers(set), V_ALL);
+    const ta = (k, l, ph) => `<div class="field"><label class="f" for="vm-${k}">${l}</label><textarea id="vm-${k}" name="${k}" style="min-height:70px" placeholder="${ph}">${esc(m[k] || '')}</textarea></div>`;
+    openDialog(`Matrix · ${row}`, ta('paper', 'Original paper', 'What the paper actually says — with page or section') + ta('critique', 'Written critique', 'The matching statement — with section') + ta('pres', 'Presentation', 'Slide number and what it says') +
+      `<div class="field"><label class="f" for="vm-st">Status</label><select id="vm-st" name="status">${vStatusOpts(m.ver === all ? m.status : '')}</select></div>` + ta('fix', 'Required correction', 'What to change, and where'), f => {
+        if (!f.status){ alert('Choose a status — or Cancel to leave the row unchecked.'); return false; }
+        set.matrix[row] = {paper:f.paper.trim(), critique:f.critique.trim(), pres:f.pres.trim(), fix:f.fix.trim(), status:f.status, by:'me', ver:all, at:Date.now()}; save(); vRerender();
+      }); },
+  'v-c-add': () => { const set = vSet(), all = vVerOf(vVers(set), V_ALL);
+    const q = (k, l) => `<div class="fields-2"><div class="field"><label class="f" for="vc-${k}q">${l} — exact statement</label><textarea id="vc-${k}q" name="${k}q" style="min-height:60px"></textarea></div><div class="field"><label class="f" for="vc-${k}l">Location</label><input class="input" id="vc-${k}l" name="${k}l" placeholder="${k === 'pres' ? 'Slide 4' : k === 'paper' ? 'p. 6, Sec. IV' : 'Section 5'}"></div></div>`;
+    openDialog('Add a contradiction', `<div class="field"><label class="f" for="vc-t">What conflicts? *</label><input class="input" id="vc-t" name="topic" required placeholder="e.g. Sample size"></div>
+      <div class="field"><label class="f" for="vc-s">Severity</label><select id="vc-s" name="severity"><option value="critical">Critical — factual error or major contradiction</option><option value="important" selected>Important — misleading or incomplete</option><option value="minor">Minor</option></select></div>
+      ${q('paper', 'Original paper')}${q('critique', 'Written critique')}${q('pres', 'Presentation')}
+      <div class="field"><label class="f" for="vc-e">Why they conflict</label><textarea id="vc-e" name="explain" style="min-height:60px"></textarea></div>
+      <div class="field"><label class="f" for="vc-v">Evidence from the original paper</label><textarea id="vc-v" name="evidence" style="min-height:60px" placeholder="Quote the paper, with the page"></textarea></div>
+      <div class="field"><label class="f" for="vc-f">Recommended correction</label><textarea id="vc-f" name="fix" style="min-height:60px"></textarea></div>`, f => {
+        const statements = V_ALL.filter(k => f[k + 'q'].trim()).map(k => ({doc:k, loc:f[k + 'l'].trim(), quote:f[k + 'q'].trim(), found:vFound(set, k, f[k + 'q'])}));
+        set.contra.unshift({id:uid(), by:'me', at:Date.now(), ver:all, status:'open', note:'', topic:f.topic.trim(), type:'', severity:f.severity, statements, explain:f.explain.trim(), evidence:f.evidence.trim(), fix:f.fix.trim(), edits:[]});
+        S.verify.view = 'contra'; save(); RENDER.verify(); toast('Contradiction added');
+      }, 'Add'); },
+  'v-c-resolve': el => { const set = vSet(), c = set.contra.find(x => x.id === el.dataset.id), how = el.dataset.how; if (!c) return;
+    openDialog(how === 'fixed' ? 'Mark as corrected' : 'Not a contradiction', `<p class="small muted">${how === 'fixed' ? 'Say what you changed, and where. Then run the checks again (step 7) so no new contradictions slip in.' : 'Explain why these statements do not conflict — for example, a reasonable difference in academic interpretation, or an omission that does not change the meaning.'}</p>
+      <div class="field"><label class="f" for="vc-n">${how === 'fixed' ? 'How it was corrected' : 'Why it is not a contradiction'} *</label><textarea id="vc-n" name="note" required style="min-height:90px">${esc(c.note)}</textarea></div>`, f => {
+        if (!f.note.trim()) return false; c.status = how; c.note = f.note.trim(); c.closedAt = Date.now(); save(); vRerender(); toast(how === 'fixed' ? 'Marked as corrected — re-check when you are ready' : 'Recorded, with your explanation');
+      }, how === 'fixed' ? 'Mark as corrected' : 'Save'); },
+  'v-c-reopen': el => { const c = vSet().contra.find(x => x.id === el.dataset.id); if (c){ c.status = 'open'; save(); vRerender(); } },
+  'v-c-del': el => { const set = vSet(); if (!confirm('Delete this contradiction?')) return; set.contra = set.contra.filter(x => x.id !== el.dataset.id); save(); vRerender(); },
+  'v-e-apply': el => { const set = vSet(), e = vFindEdit(set, el.dataset.id); if (!e) return;
+    const res = vApplyEdit(set, e); e.state = res === 'failed' ? 'failed' : res; save(); vRerender();
+    toast({applied:'Changed — the checks on this document now need a re-check', queued:'Accepted — it goes into the corrected copy', manual:'Noted — make this change in your own file', failed:'The original words were not found exactly — make this change by hand'}[e.state]); },
+  'v-e-reject': el => { const e = vFindEdit(vSet(), el.dataset.id); if (e){ e.state = 'rejected'; save(); vRerender(); } },
+  'v-e-undo': el => { const set = vSet(), e = vFindEdit(set, el.dataset.id); if (!e) return;
+    if (e.state === 'applied' && vApplyEdit(set, {doc:e.doc, find:e.replace, replace:e.find}) !== 'applied') alert('The changed words were edited again since, so they could not be put back automatically.');
+    e.state = ''; save(); vRerender(); },
+  'v-e-copy': el => { const e = vFindEdit(vSet(), el.dataset.id); if (e) copyText(e.replace, 'New wording copied'); },
+  'v-copyfile': el => vCorrectedCopy(vSet(), el.dataset.doc, false).catch(err => alert('Could not make the corrected copy. ' + (err && err.message || ''))),
+  'v-copyuse': el => { if (confirm('Make the corrected copy and check it from now on? (Download it too, from “Download corrected copy”, before you change anything else.)')) vCorrectedCopy(vSet(), el.dataset.doc, true).catch(err => alert('Could not make the corrected copy. ' + (err && err.message || ''))); },
+  'v-rep-copy': () => copyText(vReportText(vSet()), 'Report copied'),
+  'v-rep-docx': () => { const set = vSet(); saveFile(vFileName(`Verification report - ${set.name || 'ScholarPath'}`) + '.docx', vReportDocx(set), 'Report saved as a Word document'); }
+};
+function vChange(t){
+  if (t.id === 'vSetSel'){ S.verify.active = t.value; save(); RENDER.verify(); return true; }
+  if (t.dataset.vsrc){ if (!t.value) return true;
+    const set = vSet(), [src, ref] = t.value.split(':'); set.docs[t.dataset.vsrc] = {src, ref, at:Date.now()};
+    if (t.dataset.vsrc === 'paper' && !set.name){ const p = S.reader.papers.find(x => x.id === ref); set.name = p ? p.title || p.name : ''; }
+    save(); RENDER.verify(); toast(`${vDocT(t.dataset.vsrc)} added`); return true; }
+  if (t.dataset.vfile && t.files[0]){
+    const set = vSet(), which = t.dataset.vfile, file = t.files[0]; t.value = ''; toast(`Reading ${file.name}…`);
+    vLoadFile(set, which, file).then(n => { if (which === 'paper' && !set.name) set.name = file.name.replace(/\.\w+$/, ''); save(); RENDER.verify(); toast(`${vDocT(which)}: ${vUnitWord(set, which)} read`); })
+      .catch(err => alert('Could not read this file. ' + (err && err.message || '')));
+    return true; }
+  if (t.dataset.vcheck){ const set = vSet(), key = t.dataset.vcheck, prev = set.checks[key] || {};
+    if (!t.value){ if (prev.mine) set.checks[key] = {mine:prev.mine}; else delete set.checks[key]; }
+    else set.checks[key] = {status:t.value, note:prev.note || '', noteBy:prev.noteBy || '', mine:prev.mine || '', by:'me', confirmed:true, ver:vItemVer(vVers(set), key), at:Date.now(),
+      corrected:t.value === 'verified' && (!!prev.corrected || ['fix', 'partial'].includes(prev.status))};
+    save(); vRerender(`[data-vcheck="${key}"]`); return true; }
+  if (t.dataset.vmx){ const set = vSet(), row = t.dataset.vmx, prev = set.matrix[row] || {}, all = vVerOf(vVers(set), V_ALL);
+    if (!t.value) delete set.matrix[row]; else set.matrix[row] = {paper:prev.paper || '', critique:prev.critique || '', pres:prev.pres || '', fix:prev.fix || '', status:t.value, by:'me', ver:all, at:Date.now()};
+    save(); vRerender(`[data-vmx="${row}"]`); return true; }
+  return false;
+}
+function vInput(t){
+  if (t.dataset.vmine){ const set = vSet(), k = t.dataset.vmine; (set.checks[k] ||= {}).mine = t.value; save(); return true; }
+  if (t.dataset.voverall !== undefined){ const set = vSet(); set.overall = {text:t.value, by:'me', ver:vVerOf(vVers(set), V_ALL), at:Date.now()}; save(); return true; }
+  return false;
+}
+
 /* ---------- 6. My Progress ---------- */
 RENDER.progress = () => {
   const done = S.critiques.filter(critDone).length;
@@ -3615,7 +4782,7 @@ RENDER.progress = () => {
   const linked = S.papers.filter(p => findIdea(p.ideaId)).length;
   const colors = {Idea:'var(--violet)', Exploring:'var(--accent)', Drafting:'var(--warn)', Done:'var(--ok)'};
   const maxS = Math.max(1, ...STATUSES.map(s => S.ideas.filter(i => i.status===s).length));
-  const examples = S.ideas.some(x=>x.example) || S.papers.some(x=>x.example) || S.critiques.some(x=>x.example);
+  const examples = S.ideas.some(x=>x.example) || S.papers.some(x=>x.example) || S.critiques.some(x=>x.example) || S.verify.sets.some(x => x.example);
   const stat = (ic, n, lbl, sub, tab) => `<button class="card stat" data-act="tab" data-tab="${tab}" style="text-align:left;cursor:pointer;font:inherit;color:inherit">
     <span class="stat-ico">${icon(ic)}</span><span class="stat-num">${n}</span><span class="stat-lbl">${lbl}</span><span class="small muted">${sub}</span></button>`;
   $('#panel-progress').innerHTML = `
@@ -3645,6 +4812,11 @@ RENDER.progress = () => {
 
   <div class="card" style="margin-top:16px"><h3>Paper Reader</h3>
     ${S.reader.papers.length ? S.reader.papers.map(p => { const t = p.paras.filter(isReadable), d = t.filter(x => (x.idea||'').trim() || (x.simple||'').trim()).length; return `<div class="bar-row" style="grid-template-columns:1fr 90px 60px"><span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(p.title || p.name)}${p.example?' <span class="badge-example">Demo</span>':''}</span><span class="bar"><span style="width:${t.length ? d/t.length*100 : 0}%;background:var(--ok)"></span></span><b>${d}/${t.length} ¶</b></div>`; }).join('') : '<p class="muted">No papers read yet.</p>'}
+  </div>
+
+  <div class="card" style="margin-top:16px"><h3>Final verification</h3>
+    ${S.verify.sets.length ? S.verify.sets.map(v => { const R = vReadiness(v, vVers(v)); return `<div class="bar-row" style="grid-template-columns:1fr 90px 92px"><span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(v.name || 'Untitled verification')}${v.example ? ' <span class="badge-example">Demo</span>' : ''}</span><span class="bar"><span style="width:${R.cur / V_ITEMS.length * 100}%;background:${R.full ? 'var(--ok)' : 'var(--accent)'}"></span></span><b>${R.cur}/${V_ITEMS.length}${R.open ? ` · ${R.open}⚠` : ''}</b></div>`; }).join('') : '<p class="muted">No verification yet.</p>'}
+    <p class="small muted" style="margin:6px 0 0">Checklist items checked on the current versions of the documents${S.verify.sets.some(v => v.contra.some(c => c.status === 'open')) ? '; ⚠ = open contradictions' : ''}.</p>
   </div>
 
   <div class="section-title"><h2>Your data</h2></div>
@@ -3812,11 +4984,12 @@ const ACTIONS = {
     saveFile(`scholarpath-backup-${today()}.json`, new Blob([JSON.stringify(S, null, 2)], {type:'application/json'}), 'Backup saved');
   },
   'clear-examples': () => {
-    if (!confirm('Remove the example idea, papers, critique, figure review and demo reading? Your own work is kept.')) return;
+    if (!confirm('Remove the example idea, papers, critique, figure review, demo reading and demo verification? Your own work is kept.')) return;
     S.ideas = S.ideas.filter(x => !x.example); S.papers = S.papers.filter(x => !x.example); S.critiques = S.critiques.filter(x => !x.example);
     S.figlab.reviews = S.figlab.reviews.filter(x => !x.example); if (!S.figlab.reviews.some(r => r.id === S.figlab.active)) S.figlab.active = S.figlab.reviews[0]?.id || '';
     S.reader.papers = S.reader.papers.filter(x => !x.example); if (!S.reader.papers.some(p => p.id === S.reader.active)) S.reader.active = S.reader.papers[0]?.id || '';
     if (!S.critiques.some(c => c.id === S.activeCrit)) S.activeCrit = S.critiques[0]?.id;
+    S.verify.sets = S.verify.sets.filter(x => !x.example); if (!S.verify.sets.some(v => v.id === S.verify.active)) S.verify.active = S.verify.sets[0]?.id || '';
     save(); RENDER.progress(); toast('Examples removed');
   },
   'add-examples': () => {
@@ -3825,6 +4998,7 @@ const ACTIONS = {
     if (!S.critiques.some(c => c.id === 'ex-crit-aau')) S.critiques.push(exampleAau());
     if (!S.reader.papers.some(p => p.id === 'ex-reader-1')) S.reader.papers.push(demoReaderPaper());
     if (!S.figlab.reviews.some(r => r.id === 'ex-fig-1')) S.figlab.reviews.push(exampleFigure());
+    if (!S.verify.sets.some(v => v.id === 'ex-verify-1')) S.verify.sets.push(demoVerifySet());
     save(); RENDER.progress(); toast('Examples added');
   },
   reset: () => {
@@ -3832,6 +5006,7 @@ const ACTIONS = {
     const theme = S.theme; S = seedState(); S.theme = theme; S.ui.tab = 'progress'; save(); showTab('progress'); toast('ScholarPath reset');
   }
 };
+Object.assign(ACTIONS, V_ACTIONS);
 document.addEventListener('click', e => {
   const el = e.target.closest('[data-act]'); if (!el || el.disabled) return;
   const fn = ACTIONS[el.dataset.act]; if (!fn) return;
@@ -3848,6 +5023,7 @@ document.addEventListener('keydown', e => {
 });
 document.addEventListener('input', e => {
   const t = e.target, c = () => activeCrit();
+  if (vInput(t)) return;
   if (t.dataset.chatIn){ t.style.height = 'auto'; t.style.height = Math.min(t.scrollHeight + 2, 160) + 'px'; return; }
   if (t.dataset.fl){ const r = activeFig(); r[t.dataset.fl] = t.value; save(); updateExplain(); return; }
   if (t.dataset.fb){ S.figlab.build.chart[t.dataset.fb] = t.value; save(); updateBuild(); return; }
@@ -3877,6 +5053,7 @@ document.addEventListener('input', e => {
 });
 document.addEventListener('change', e => {
   const t = e.target;
+  if (vChange(t)) return;
   if (t.dataset.fl === 'critId'){ RENDER.figlab(); return; }
   if (t.id === 'flScanCrit'){ S.figlab.scanCrit = t.value; save(); RENDER.figlab(); return; }
   if (t.dataset.fsel !== undefined){ figScan.items[+t.dataset.fsel].sel = t.checked; const n = figScan.items.filter(i => i.sel).length;
@@ -3953,7 +5130,7 @@ document.addEventListener('change', e => {
         if (!d || !Array.isArray(d.ideas) || !Array.isArray(d.papers) || !Array.isArray(d.critiques)) throw new Error('bad');
         if (!confirm('Replace your current ScholarPath data with this backup?')) return;
         S = Object.assign(seedState(), d); S.ui = Object.assign(seedState().ui, d.ui, {tab:'progress'});
-        S.writing = Object.assign(seedState().writing, d.writing); S.pres = Object.assign(seedState().pres, d.pres); S.reader = Object.assign({papers:[], active:'', view:'paras'}, d.reader); S.figlab = Object.assign(seedState().figlab, d.figlab);
+        S.writing = Object.assign(seedState().writing, d.writing); S.pres = Object.assign(seedState().pres, d.pres); S.reader = Object.assign({papers:[], active:'', view:'paras'}, d.reader); S.figlab = Object.assign(seedState().figlab, d.figlab); S.verify = Object.assign(seedState().verify, d.verify);
         save(); applyTheme(); showTab('progress'); toast('Backup restored');
       } catch { alert('That file is not a valid ScholarPath backup.'); }
     };

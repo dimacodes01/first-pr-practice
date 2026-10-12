@@ -7,7 +7,7 @@
 | **Owner** | Dima Alkharraz — English teacher (Grade 5, Al Nahdha Charter School, Abu Dhabi) and Master's student in Artificial Intelligence |
 | **Course it serves** | Al Ain University — Advanced Research Methods (0106112) |
 | **What it is** | A research companion for master's students and early researchers who read, critique and write academic papers |
-| **Code** | `index.html` (single file, ~3,800 lines, vanilla JS, no build step) + `vendor/pdfjs/` |
+| **Code** | `index.html` (single file, ~5,100 lines, vanilla JS, no build step) + `vendor/pdfjs/` |
 | **Repository** | `dimacodes01/first-pr-practice`, branch `claude/scholarpath-research-app-jabga7` |
 | **Published page** | https://claude.ai/artifact/RQWX4dnGb7W68zTghnoLvz (private to the owner until shared) |
 | **First version (v1)** | https://claude.ai/artifact/5SBbxDnL3oV9XHyWgNwarW |
@@ -27,6 +27,7 @@ These override everything else. Check every change against them.
 6. **Examples are always labelled** "Example" or "Demo", and illustrative content is never presented as a real paper.
 7. **Every generated output has a Copy button.** Everything works on a phone. Light and dark mode. No login. Everything is saved in the browser.
 8. **Claude's output is always marked** ("by Claude — check it") and the user is reminded to verify it against the paper.
+9. **Nothing is marked as checked unless it has actually been checked and verified** (Part 4). The original paper is the source of truth, a contradiction is never resolved silently, and the documents are never called fully consistent before the complete comparison is done (see 5.9).
 
 ---
 
@@ -46,8 +47,9 @@ These override everything else. Check every change against them.
 | Concern | How |
 |---|---|
 | Structure | One `index.html`: CSS, then markup (header, tab bar, one `<section class="panel">` per tab), then one script in an IIFE. Each tab has `RENDER.<tab>()`; events use delegation via `data-act="…"` → `ACTIONS[...]`, plus `input` / `change` handlers keyed on `data-*` attributes. |
-| Saved data | `localStorage['scholarpath.v1']` holds one state object `S` (ideas, papers, critiques, writing, reader, figlab, pres, ui, theme). Saved with a 250 ms debounce. Missing keys are filled from `seedState()` (forward compatible). |
-| Pictures | Figure crops and page images are stored in **IndexedDB** (`scholarpath` → store `img`), because they are too big for localStorage. Keys: `<reviewId>:crop`, `<reviewId>:page`, `<paperId>:<figId>:crop`. Not included in the JSON backup. |
+| Saved data | `localStorage['scholarpath.v1']` holds one state object `S` (ideas, papers, critiques, writing, reader, figlab, pres, verify, ui, theme). Saved with a 250 ms debounce. Missing keys are filled from `seedState()` (forward compatible). |
+| Pictures | Figure crops and page images are stored in **IndexedDB** (`scholarpath` → store `img`), because they are too big for localStorage. Keys: `<reviewId>:crop`, `<reviewId>:page`, `<paperId>:<figId>:crop`. The original bytes of an uploaded Word or PowerPoint file in Part 4 are kept as `v:<setId>:critique` / `v:<setId>:pres`, to make corrected copies. Not included in the JSON backup. |
+| Office files | Part 4 reads `.docx` and `.pptx` itself: a small zip reader (`readZip`, using the browser's `DecompressionStream('deflate-raw')`) and `DOMParser`. Corrected copies are re-zipped with `zipStore` (stored, uncompressed). |
 | PDFs | **pdf.js 3.11.174**, loaded from `vendor/pdfjs/` and falling back to cdnjs. Text is extracted in the browser; nothing is uploaded. |
 | Claude (AI) | Only on the published claude.ai page: `window.claude.use('sample')`, using the **viewer's own Claude account** (consent is asked on the first call). In the plain file there is no AI; every AI feature has a manual alternative. |
 | Downloads | On claude.ai: `window.claude.use('downloads')` (the viewer confirms each save). Elsewhere: a normal download link. |
@@ -56,20 +58,21 @@ These override everything else. Check every change against them.
 
 ---
 
-## 4. How the app is organised: three parts
+## 4. How the app is organised: four parts
 
-Since 12 October 2026 the app is presented as a **journey in three parts**, in the order the owner works (her request: *first writing a research paper and everything that helps, second building a critique, last the presentation*).
+Since 12 October 2026 the app is presented as a **journey**, in the order the owner works (her request: *first writing a research paper and everything that helps, second building a critique, last the presentation*). Part 4, the final verification, was added the same day as a permanent quality-control step.
 
 | Part | Steps (in order) | Tab used |
 |---|---|---|
-| **Start** | The journey at a glance: three part cards with every step and its progress | `start` |
+| **Start** | The journey at a glance: four part cards with every step and its progress | `start` |
 | **1 · Write a paper** | 1.1 Writing path → 1.2 Find literature → 1.3 Ideas & reading list → 1.4 Figures & tables | `write`, `hub`, `ideas`, `figlab` (build mode) |
 | **2 · Critique a paper** | 2.1 Read the paper → 2.2 Explain the figures → 2.3 Write the critique | `reader` (paragraphs), `figlab` (explain mode), `critique` |
 | **3 · Present** | 3.1 Build the slides → 3.2 Prepare for questions | `present`, `reader` (questions view) |
+| **4 · Verify** | 4.1 Final verification & consistency | `verify` |
 | **My Progress** | Overview, backup and restore | `progress` |
 
 - **Navigation:** a parts row (pills) and a numbered steps row (1.1 › 1.2 › …). Each page's eyebrow says "Part 1 · Write a paper — Step 1.2: Find literature". **Previous / Next** buttons at the bottom of every step lead through the whole journey (the end of part 1 leads to part 2, and so on). Each part remembers its last open step.
-- **Addresses:** `#start`, `#writing/1` … `#writing/4`, `#critiquing/1` … `/3`, `#presenting/1` … `/2`, `#progress`. Old addresses (`#reader`, `#figlab`, `#critique`, …) still work and are rewritten.
+- **Addresses:** `#start`, `#writing/1` … `#writing/4`, `#critiquing/1` … `/3`, `#presenting/1` … `/2`, `#verifying`, `#progress`. Old addresses (`#reader`, `#figlab`, `#critique`, …) still work and are rewritten.
 - **Writing path → helpful tools:** each writing step links to the steps that help with it (e.g. *Find the gap* → Find literature, Read a key paper in simple English; *Results* → Build your figures).
 - **Figure Lab** has no mode switch any more: step 1.4 opens build mode and step 2.2 opens explain mode, each with a link to the other.
 - **Code:** `PARTS` defines parts and steps; `goStep(part, i)` opens a step; `showTab(tab)` (used throughout) finds the matching step with `stepFor`. `route()` reads the address. The header is sticky only at 720px and wider, and `--hdr` holds its height for sticky toolbars.
@@ -156,6 +159,35 @@ Since 12 October 2026 the app is presented as a **journey in three parts**, in t
 - Key Findings adds one figure from Figure Lab per main result.
 - Copyable outline.
 
+### 5.9 Final Academic Verification & Consistency Checklist (step 4.1)
+The owner's request (12 Oct 2026): compare **(1) the original research paper** (the primary source of truth), **(2) the written critique** and **(3) the PowerPoint presentation**; verify every factual statement against the paper; never mark a checklist item as complete unless it has actually been checked; make it a **permanent quality-control component**, used whenever a document is uploaded, revised or finalised. Her checklist items, the 12 mandatory rules and the 7 workflow steps are used **word for word** (`V_SECTIONS`, `V_RULES`, `V_WORKFLOW`).
+
+**Documents** (one card each). Each can come from ScholarPath or from a file:
+| Document | From ScholarPath | Upload / paste |
+|---|---|---|
+| Original paper | a Paper Reader paper (by page) | PDF (by page) · paste (add `[p. 3]` markers for pages) |
+| Written critique | a Critique Studio critique (follows your edits; located by form section) | Word `.docx` (by heading and paragraph) · PDF · `.txt` · paste |
+| Presentation | the Presentation Builder outline of a critique | PowerPoint `.pptx` (slide text in presentation order, speaker notes, chart data) · PDF of the slides · paste (`Slide 1 …`) |
+
+Every document is turned into location-tagged pieces (`p. 4`, `Section 4 · Research Design & Methodology`, `Slide 6`, `Slide 6 notes`). A **version** (a hash of the text) is shown on each card.
+
+**Never marked as checked unless checked.** Every checklist item, matrix row and run remembers the versions of the documents it was made on. When a document changes, those results show **"Needs a re-check"** and stop counting. Statuses: *Not checked* (default) · Verified · Needs Correction · Partially Aligned · Not Verified · Not Applicable. Results by Claude are labelled "by Claude — check it" until the user presses **I checked this**. If the user sets an item, Claude never overwrites it on the same versions; its view is shown as "Claude suggested".
+
+**Views**
+- **Workflow:** Steps 1–7 with a computed status (Done / In progress / Not started) and the action for each; *Check with Claude* (run all, or one stage; **Copy prompt** and **Paste reply** as the fallback without Claude); the 12 mandatory rules; a check history (what changed between runs, e.g. "need correction 5 → 1").
+- **Checklist:** §1–§6 (51 items), each with status, who checked it, Claude's evidence and the user's own note.
+- **Matrix:** §7, 13 components × Original paper / Written critique / Presentation / Status / Required correction. Editable; copyable. Cards on a phone.
+- **Contradictions:** §4. Each gives the exact statement from each document with its location (and whether the quote was found word for word in that document), why they conflict, the evidence from the paper and the recommended correction. A contradiction closes only with an explanation: *Mark as corrected…* or *Not a contradiction…* (e.g. a reasonable difference in interpretation). Contradictions can be added by hand.
+- **Corrections (step 6):** *Verified factual corrections* (from the contradiction check) are kept apart from *Suggested editorial improvements* (language). Nothing changes until the user presses Apply/Accept. ScholarPath critique → changed in place; pasted text → changed here; **Word/PowerPoint upload → a corrected copy** where only the changed characters of the text runs are rewritten (fonts, colours, layout, charts and every other file part stay identical); the copy can become the checked document ("Check the corrected copy next"). Builder outline or PDF → "change it yourself" with Copy new wording. Undo for applied changes.
+- **Evidence & terms:** §5 citation checks, claims that need evidence, missing information, terminology across the three documents, and **automatic checks** (no AI): numbers in the critique and slides that are not in the paper (spelled-out numbers count; years, page/figure/slide/citation numbers and counts under 10 are skipped), numbers on slides that are not in the critique, strong or causal wording, citations on slides that are not in the critique. Automatic checks never mark an item as verified.
+- **QA report:** §8 A–G (overall assessment — editable; contradictions; language corrections original → improved; missing information; strengths; priorities Critical / Important / Minor; final checklist showing verified / corrected and re-verified / unresolved / not checked / needs re-check), with the matrix. Copy, or Word (.docx) export with a 6-column matrix table.
+
+**Claude** runs four stages (`V_STAGES`): matrix + §2/§3 (complex tier), contradictions + §4 (complex), language + terminology + §1 (default), citations, missing information, strengths, overall assessment and priorities + §5/§6 (complex). Every prompt includes the three documents, the 12 rules and the instruction to quote exactly. Text sent is capped (paper ~140,000 characters, critique 40,000, slides 30,000, under 200 KB in total); if anything is cut the prompt says so and asks for "Not Verified".
+
+**Fully consistent?** The report says so only when all three documents are present, all 51 items and 13 matrix rows are Verified or Not Applicable **on the current versions**, every Claude result is confirmed by the user, and no contradiction is open. Otherwise it lists what is still to do.
+
+**Code:** `S.verify = {sets:[…], active, view}`; a set holds `docs`, `checks`, `matrix`, `contra`, `lang`, `terms`, `cites`, `unsupported`, `missing`, `strengths`, `overall`, `priorities`, `stages`, `auto`, `runs`. Main functions: `vUnits`, `vVers`, `vPrompt`, `vApply`, `vRunStages`, `vApplyEdit`, `vReplaceXml`, `vCorrectedCopy`, `vReadiness`, `vReport`, `RENDER.verify`, `V_ACTIONS`, `vChange`, `vInput`.
+
 ### 5.8 My Progress
 - Ideas, papers logged, critiques completed, **figures reviewed**, writing steps; bars by status; critique completion; writing path; Paper Reader progress.
 - Backup and restore (JSON), remove or add examples, reset.
@@ -170,6 +202,7 @@ Since 12 October 2026 the app is presented as a **journey in three parts**, in t
 | Critique Studio | AAU critique of *Gender Shades* | Real paper; references unverified on purpose |
 | Paper Reader | "Demo: How students use AI feedback…" — 6 paragraphs with simple versions, Arabic, a demo Fig. 1 and questions | **Written for ScholarPath — not a real study** |
 | Figure Lab | Example review "Fig. 3" and chart-builder data | Illustrative |
+| Verify (Part 4) | "Demo — try the checks": the Paper Reader demo text, a 5-part demo critique and 5 demo slides with **deliberate errors** (30 vs twenty students; "all" vs eight interviewed; "proves" on a slide). Nothing is pre-checked | **Written for ScholarPath — not a real study** |
 
 ---
 
@@ -181,7 +214,9 @@ Since 12 October 2026 the app is presented as a **journey in three parts**, in t
 - **PDF page numbers** are the PDF's own pages, not the journal's printed numbers.
 - **Voices** depend on the device. Some voices don't report word positions, so Continue then restarts at the sentence.
 - **AI features** need the published claude.ai page and use the viewer's Claude account. They are not available in the plain file.
-- **Pictures and data** are stored in the browser only. The JSON backup excludes the pictures.
+- **Pictures and data** are stored in the browser only. The JSON backup excludes the pictures and the original Word/PowerPoint files of Part 4.
+- **Word and PowerPoint (Part 4):** reading compressed files needs `DecompressionStream` (Chrome/Edge 80+, Safari 16.4+, Firefox 113+). Text in pictures, SmartArt and embedded objects is not read. A correction is made only when the old words sit inside one paragraph (not across a line break or two text boxes); otherwise it is marked "do this by hand". Chart data is read but not changed. Corrected copies are stored uncompressed, so they are larger than the original (they open normally).
+- **Verification limits:** very long documents are cut before they are sent to Claude (the prompt says so, and those parts become "Not Verified"). External references can only be checked against the paper, so they are "Not Verified" unless the paper cites them. The automatic number check is a pointer, not proof: a number found in the paper may still be used with a different meaning.
 
 ---
 
@@ -193,6 +228,8 @@ Headless Chromium (Playwright) scripts, with stand-ins for Claude (`window.claud
 - read-aloud: voice choice, pause/continue at the exact word, continue after reload, sentence skip;
 - the Word export opens in python-docx; the matplotlib code runs and exports at 3.5 in / 600 dpi;
 - **word preservation:** 20 generated two-column papers (indented and spaced paragraphs) with figures interrupting paragraphs (mid-sentence, between sentences, at column tops) and a table. Every word of every paragraph is compared with the original. Result: no word lost; every paragraph whole in indented papers.
+
+- **Part 4 (verification):** the demo set; a stand-in Claude for all four stages (checks, matrix, contradictions with exact-quote checks, language, citations); applying corrections and the re-check marking every affected item "Needs a re-check"; resolving a contradiction requires an explanation; the pasted-reply fallback (and a bad reply is refused); the A–G report and its Word export (opens in python-docx with a 6-column matrix). Real files made with python-pptx and python-docx: slides read in presentation order (not file order) with notes and chart data; Word headings and runs joined; corrected copies open in python-pptx/python-docx, only the edited slide/document part changes, and bold/colour formatting stays. All seven views at 1280 and 390 px, light and dark, without horizontal scrolling.
 
 The scripts lived in the session's scratch area. **Next step:** add them to `tests/` so they can be re-run.
 
@@ -213,6 +250,7 @@ The scripts lived in the session's scratch area. **Next step:** add them to `tes
 | 2026-10-10 | Reader: figures and tables kept out of the reading, explained in Figure Lab |
 | 2026-10-10 | Reader: whole paragraphs and every word kept around figures |
 | 2026-10-12 | Reorganised as a journey: Start page, Part 1 Write → Part 2 Critique → Part 3 Present, Previous/Next, helpful-tool links in the writing path |
+| 2026-10-12 | Part 4 · Verify: Final Academic Verification & Consistency Checklist — paper vs critique vs slides, version-aware checklist (51 items), consistency matrix, contradictions, corrections (incl. corrected Word/PowerPoint copies), automatic checks, QA report A–G with Word export |
 
 ---
 
@@ -224,3 +262,4 @@ The scripts lived in the session's scratch area. **Next step:** add them to `tes
 - OCR for scanned PDFs; detection of sub-section headings ("A. Participants").
 - Include figure pictures in the backup (zip), and sync between devices.
 - An Arabic interface option for the whole app.
+- Part 4: read text inside PowerPoint pictures (OCR) and SmartArt; let a correction span two paragraphs; compare two versions of the same document side by side.

@@ -10,9 +10,10 @@ ScholarPath is a research companion web app built for **Dima Alkharraz** (Englis
 - Figures and tables are not part of the Paper Reader's reading. They are shown as pictures and explained in Figure Lab.
 - Label all example content. Put a Copy button on every generated output. Keep it working on phones, in light and dark mode. No login.
 - Mark Claude-generated text as Claude's, and remind the user to check it against the paper.
+- Part 4 · Verify: the original paper is the source of truth; never mark a check as done unless it was actually checked on the current document versions; never resolve a contradiction silently; never call the documents fully consistent before the complete comparison (spec §5.9).
 
 ## Code
-- The app is a journey in three parts (Write a paper → Critique a paper → Present), plus Start and My Progress; see spec §4. `PARTS` lists the steps; `goStep` / `showTab` / `route` handle navigation.
+- The app is a journey in four parts (Write a paper → Critique a paper → Present → Verify), plus Start and My Progress; see spec §4. Part 4 (`verify` tab) is described in spec §5.9. `PARTS` lists the steps; `goStep` / `showTab` / `route` handle navigation.
 - `index.html` is the whole app: CSS, markup and one script in an IIFE. Each tab has a `RENDER.<tab>()`. Events use `data-act` → `ACTIONS`, plus `input` / `change` handlers keyed on `data-*`.
 - State lives in `localStorage['scholarpath.v1']` (`S`), and figure pictures in IndexedDB (`scholarpath` / `img`).
 - `vendor/pdfjs/` holds pdf.js 3.11.174 (with a cdnjs fallback).
