@@ -627,6 +627,8 @@ select.pl-rate{width:auto;min-height:36px;padding:4px 30px 4px 10px;font:600 13p
 @media(max-width:480px){.pl-t svg.i,.pl-name{display:none}.pl-reads::before{content:none}.pl-reads{color:var(--heading)}.pl-btn[data-v="0"]{display:none}.pl-main{gap:4px 6px}.pl-play{width:44px;height:44px}.rd-p.sel .rd-flags{display:none}}
 .rd-assist{position:sticky;top:var(--hdr,72px);height:calc(100vh - var(--hdr,72px));overflow:auto;overscroll-behavior:contain;border-left:1px solid var(--line);background:var(--surface);scrollbar-width:thin}
 .rd-assist:focus{outline:none}
+.rd-assist{transition:box-shadow .25s var(--ease)}
+.rd-assist.flash{box-shadow:inset 0 0 0 3px color-mix(in srgb,var(--accent) 50%,transparent)}   /* Study pressed while the panel is already in view */
 .as-head{display:flex;align-items:flex-start;gap:8px;padding:20px 20px 6px}
 .as-what{flex:1;min-width:0;display:flex;flex-direction:column;gap:4px}
 .as-what b{font:600 15px/1.4 var(--sans);color:var(--heading)}
@@ -7265,7 +7267,8 @@ const ACTIONS = {
     const paper = rPaper(), id = el.dataset.id, p = paper && paper.paras.find(x => x.id === id); if (p && isReadable(p)) rdSelect(id);
     const t = $('#para-' + id); if (t){ t.scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block:'center'}); t.classList.add('flash'); setTimeout(() => t.classList.remove('flash'), 1400); } },
   'rp-sel': (el, e) => { if (e.target.closest('button, a, summary, details, input, textarea, select, label')) return; const s = getSelection(); if (s && !s.isCollapsed && s.toString().trim()) return; rdSelect(el.dataset.id); },
-  'rp-tools': el => rdSelect(el.dataset.id, {tab:el.dataset.tab || (S.reader.as === 'paper' ? 'explain' : S.reader.as || 'explain'), open:true}),
+  'rp-tools': el => { rdSelect(el.dataset.id, {tab:el.dataset.tab || (S.reader.as === 'paper' ? 'explain' : S.reader.as || 'explain'), open:true});
+    const a = $('#rdAssist'); if (a && !rdDrawer()){ a.classList.add('flash'); clearTimeout(a._flash); a._flash = setTimeout(() => a.classList.remove('flash'), 900); } },
   'rp-as': el => { S.reader.as = el.dataset.tab; save(); renderAssist(); $('#as-tab-' + el.dataset.tab)?.focus(); },
   'rp-assist-close': () => { rdAssistOpen(false); const sel = rPaper() && rdSel(rPaper()); $(`#para-${sel && sel.id} .rd-study`)?.focus(); },
   'rp-mode': el => { S.reader.mode = MODE_PARTS[el.dataset.v] ? el.dataset.v : 'orig'; save();
