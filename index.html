@@ -7,7 +7,7 @@
 <meta name="description" content="ScholarPath — a research companion for master's students and early researchers: find literature, organise ideas, critique papers, write and present.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800&family=IBM+Plex+Sans+Arabic:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800&family=IBM+Plex+Sans+Arabic:wght@400;500;600&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap" rel="stylesheet">
 <style>
 /* ScholarPath design system — friendly school-platform look (13 Oct 2026, from the owner's own school platform):
    a dark-blue top bar, a dark slate sidebar with a white tile for the current page, a light blue-grey background,
@@ -516,175 +516,362 @@ textarea.simple-box{min-height:80px;font-size:15px;line-height:1.7}
 .flow-fig .para-no svg{width:13px;height:13px}
 
 
-/* Research Reader: outline · document · study panel, with the player docked under the reading */
+/* Research Reader (2.1): workspace bar · outline · the paper · study panel · audio bar, in three modes — Read, Study, Compare.
+   Its own palette (the owner's academic navy): navy #102B50, deep navy #0B1F3A, academic blue #2563A6, warm white #FAFAF8,
+   soft grey #F1F4F7; small grey text uses #5B6B80 (the owner's slate #64748B is 4.3:1 on soft grey, just under AA). */
 body[data-tab="reader"] main{max-width:none;padding:0}
 svg.i.fill{fill:currentColor;stroke:none}
-.rd-top{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px 16px;padding:12px 32px;border-bottom:1px solid var(--line)}
-.rd-top-l,.rd-top-r{display:flex;flex-wrap:wrap;align-items:center;gap:8px;min-width:0}
-.rd-top-l{flex:1 1 300px}
-.rd-sel{flex:1 1 240px;width:100%;min-width:0;max-width:460px}
+#panel-reader{container:reader / inline-size;
+  --r-navy:#102B50; --r-deep:#0B1F3A; --r-blue:#2563A6; --r-paper:#FAFAF8; --r-gray:#F1F4F7; --r-panel:#FFFFFF; --r-line:#E2E8F0; --r-sel:#EAF0F8; --r-hover:#F2F6FB;
+  --accent:#2563A6; --accent-hover:#1D4E85; --accent-soft:#E6EEF8; --accent-ink:#FFFFFF; --focus:#2563A6; --muted:#5B6B80; --heading:#102B50; --ink:#1F2937;
+  --r-modebg:#102B50; --r-modeink:#FFFFFF; --r-shadow:0 8px 24px rgba(11,31,58,.10); --r-hl:#FDE68A; --r-hl-ink:#1F2937;
+  --asw:384px; --olw:264px; --measure:700px;
+  --read:"Source Serif 4","Iowan Old Style",Charter,Georgia,"Times New Roman",serif;
+  background:var(--r-paper);color:var(--ink)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) #panel-reader{
+  --r-navy:#C9DCF5; --r-paper:#121A23; --r-gray:#0E151D; --r-panel:#17212C; --r-line:#263445; --r-sel:#1A2A3E; --r-hover:#16212D;
+  --accent:#8DB8EE; --accent-hover:#B3D0F5; --accent-soft:#1D3350; --accent-ink:#0B1F3A; --focus:#8DB8EE; --muted:#9FB0C3; --heading:#EEF3F8; --ink:#E5EBF1;
+  --r-modebg:#8DB8EE; --r-modeink:#0B1F3A; --r-shadow:0 8px 24px rgba(0,0,0,.4); --r-hl:#5B4A12; --r-hl-ink:#FFF7D6}}
+:root[data-theme="dark"] #panel-reader{
+  --r-navy:#C9DCF5; --r-paper:#121A23; --r-gray:#0E151D; --r-panel:#17212C; --r-line:#263445; --r-sel:#1A2A3E; --r-hover:#16212D;
+  --accent:#8DB8EE; --accent-hover:#B3D0F5; --accent-soft:#1D3350; --accent-ink:#0B1F3A; --focus:#8DB8EE; --muted:#9FB0C3; --heading:#EEF3F8; --ink:#E5EBF1;
+  --r-modebg:#8DB8EE; --r-modeink:#0B1F3A; --r-shadow:0 8px 24px rgba(0,0,0,.4); --r-hl:#5B4A12; --r-hl-ink:#FFF7D6}
+::highlight(rd-concept){background-color:var(--r-hl,#FDE68A);color:var(--r-hl-ink,#1F2937)}
 .rd-empty{padding:48px 40px;max-width:760px}
-#panel-reader{container:reader / inline-size}
-.rd{display:grid;grid-template-columns:248px minmax(0,1fr) 352px;grid-template-areas:"ol doc as";align-items:start}
-.rd.no-outline{grid-template-columns:64px minmax(0,1fr) 352px}
-.rd-outline{grid-area:ol}.rd-doc{grid-area:doc}.rd-assist{grid-area:as}
-.rd-outline{position:sticky;top:var(--hdr,72px);max-height:calc(100vh - var(--hdr,72px));overflow:auto;overscroll-behavior:contain;border-right:1px solid var(--line);padding:16px 14px 24px;scrollbar-width:thin}
-.rd-outline-sum{list-style:none;display:flex;align-items:center;gap:8px;cursor:pointer;font:600 12px var(--sans);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);padding:8px 10px;border-radius:8px;min-height:40px}
-.rd-outline-sum::-webkit-details-marker{display:none}
-.rd-outline-sum:hover{background:var(--surface-2);color:var(--ink)}
-.rd-outline-sum .chev{margin-left:auto;width:16px;height:16px;transform:rotate(90deg);transition:transform .2s var(--ease)}
-.rd-outline:not([open]) .rd-outline-sum .chev{transform:rotate(-90deg)}
-.rd.no-outline .rd-outline{padding:16px 10px}
-.rd.no-outline .rd-outline-sum{justify-content:center;padding:8px 0}
-.rd.no-outline .rd-outline-sum span,.rd.no-outline .rd-outline-sum .chev{display:none}
-.rd-find{position:relative;margin:10px 0 6px}
-.rd-find > svg.i{position:absolute;left:12px;top:12px;width:16px;height:16px;color:var(--muted)}
-.rd-find .input{padding-left:36px;min-height:40px;font-size:14px}
-.rd-find-n{margin:4px 8px 6px}
-.rd-hit{display:block;padding:8px 10px;border-radius:8px;font-size:13px;line-height:1.45;color:var(--ink);text-decoration:none}
-.rd-hit:hover{background:var(--surface-2);color:var(--ink)}
-.rd-hit b{color:var(--gold-ink);font-weight:600}
-.rd-hit mark{font-weight:600}
-.rd-toc{list-style:none;margin:8px 0 0;padding:0;display:flex;flex-direction:column;gap:2px}
-.rd-toc-sec{display:flex;flex-direction:column;gap:2px;padding:8px 10px;border-radius:8px;text-decoration:none;color:var(--ink);font-size:14px;line-height:1.35}
-.rd-toc-sec:hover{background:var(--surface-2);color:var(--ink)}
-.rd-toc-sec.on{background:var(--surface);box-shadow:inset 0 0 0 1px var(--line);color:var(--heading);font-weight:600}
-.rd-toc-m{font-size:12px;color:var(--muted);font-weight:400}
-.rd-toc-fig{display:flex;align-items:center;gap:6px;padding:4px 10px 4px 20px;font-size:13px;color:var(--muted);text-decoration:none;border-radius:6px}
-.rd-toc-fig:hover{background:var(--surface-2);color:var(--ink)}
-.rd-toc-fig svg.i{width:14px;height:14px}
-.rd-pos{border-top:1px solid var(--line);margin-top:16px;padding:16px 10px 0;display:flex;flex-direction:column;gap:8px}
-.rd-doc{min-width:0;padding:32px 48px 24px;display:flex;flex-direction:column}
-.rd-doc > *{width:100%;max-width:720px;margin-inline:auto}
-.rd-head{display:flex;flex-direction:column;gap:12px;padding-bottom:20px;border-bottom:1px solid var(--line)}
-textarea.rd-title{font:400 30px/1.3 var(--serif);color:var(--heading);letter-spacing:-.012em;border:1px solid transparent;background:transparent;padding:2px 8px;margin:0 -9px;resize:none;min-height:0;overflow:hidden;border-radius:8px;box-shadow:none}
-textarea.rd-title:hover{border-color:var(--line)}
-textarea.rd-title:focus{border-color:var(--focus);background:var(--surface)}
-@media(max-width:620px){textarea.rd-title{font-size:24px}}
-.rd-modes{display:flex;flex-wrap:wrap;gap:6px}
-.rd-sec{font:600 12px var(--sans);letter-spacing:.09em;text-transform:uppercase;color:var(--muted);margin:32px 0 6px}
-.rd-p{position:relative;padding:12px 16px 16px;margin:0 -17px 4px;border:1px solid transparent;border-radius:12px;transition:background-color .16s,border-color .16s;scroll-margin-top:calc(var(--hdr,72px) + 24px)}
-.rd-p:hover{background:color-mix(in srgb,var(--surface) 65%,transparent)}
-.rd-p.sel{background:var(--surface);border-color:var(--line)}
-.rd-p .para-head,.figure-card .para-head{display:flex;align-items:center;gap:8px;min-height:32px;margin-bottom:4px;flex-wrap:nowrap}
-.rd-loc{font-size:12px;color:var(--muted);min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.rd-flags{display:none;gap:4px;flex-wrap:wrap}
-.rd-p.sel .rd-flags{display:inline-flex}
-.rd-flags span{font:500 11px var(--sans);color:var(--muted);background:var(--surface-2);padding:1px 8px;border-radius:999px}
-.rd-acts{display:inline-flex;align-items:center;gap:2px;opacity:0;transition:opacity .16s;flex:none}
-.rd-p:hover .rd-acts,.rd-p.sel .rd-acts,.rd-p:focus-within .rd-acts,.figure-card .rd-acts{opacity:1}
-@media(hover:none){.rd-acts{opacity:1}}
-.rd-study span{font-size:13px}
-.rd-p .orig-full,.rd-alt{font:400 17px/1.8 var(--serif);color:var(--ink);background:none;padding:0;border-radius:0;margin:0;overflow-wrap:break-word}
-.rd-p.front .orig-full{font:400 15px/1.6 var(--sans);color:var(--muted)}
-.rd-peek{margin-top:10px}
-.rd-peek summary{cursor:pointer;font-size:13px;color:var(--muted);width:max-content}
-.rd-peek .orig-full{font-size:15px;color:var(--muted);margin-top:8px}
-.rd-ar{font:400 18px/1.95 var(--arabic);text-align:right;background:var(--surface-2);border-radius:10px;padding:12px 16px;margin-top:14px;color:var(--ink)}
-.rd-missing{font-size:13px;color:var(--muted);margin:10px 0 0}
+/* workspace bar */
+.rd-bar{position:sticky;top:var(--hdr,72px);z-index:31;display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr) auto;grid-template-areas:"l c r m";align-items:center;gap:10px 14px;padding:10px 20px;background:var(--r-panel);border-bottom:1px solid var(--r-line)}
+.rd-bar-l{grid-area:l;display:flex;align-items:center;gap:6px;min-width:0}
+.rd-bar-c{grid-area:c;display:flex;justify-content:center}
+.rd-bar-r{grid-area:r;display:contents}
+.rd-bar-r > .rd-seg{grid-area:r;justify-self:end}
+.rd-bar-r > .rd-more{grid-area:m}
+.rd-bar-r > .rd-as-btn{grid-area:m;justify-self:start}
+.rd-bar-r > .rd-more{justify-self:end}
+.rd-bar{grid-template-columns:minmax(0,1fr) auto minmax(0,1fr) 88px}
+.rd-as-btn[aria-expanded="true"]{background:var(--accent-soft);color:var(--accent)}
+@container reader (min-width:900px){.rd-bar[data-mode="study"] .rd-as-btn{visibility:hidden}}
+.rd-bar-t{font:800 15px var(--sans);color:var(--heading)}
+.rd-sel{flex:1 1 auto;min-width:0;max-width:340px;min-height:38px;font:600 14px var(--sans);border-color:var(--r-line);background-color:var(--r-panel)}
+.rd-ol-btn[aria-expanded="true"]{background:var(--accent-soft);color:var(--accent)}
+.rd-seg{display:inline-flex;align-items:center;gap:2px;padding:3px;background:var(--r-gray);border:1px solid var(--r-line);border-radius:10px;max-width:100%}
+.rd-seg button{appearance:none;border:0;background:transparent;color:var(--muted);font:700 13.5px var(--sans);padding:0 13px;min-height:34px;border-radius:7px;display:inline-flex;align-items:center;justify-content:center;gap:6px;cursor:pointer;white-space:nowrap;transition:background-color .18s,color .18s,box-shadow .18s}
+.rd-seg button:hover{color:var(--heading)}
+.rd-seg button svg.i{width:16px;height:16px}
+.rd-langseg button[aria-pressed="true"]{background:var(--r-panel);color:var(--heading);box-shadow:0 1px 2px rgba(11,31,58,.14),0 0 0 1px var(--r-line)}
+.rd-modeseg button[aria-pressed="true"]{background:var(--r-modebg);color:var(--r-modeink)}
+.rd-seg-lbl{font:700 12px var(--sans);color:var(--muted);padding:0 6px 0 8px;white-space:nowrap}
+.menu-sep{height:1px;background:var(--line);margin:6px 4px}
+label.menu-item{cursor:pointer}
+.rd-aibar:empty{display:none}
+.rd-aibar{padding:8px 20px;background:var(--accent-soft);border-bottom:1px solid var(--r-line)}
+@container reader (max-width:1099px){
+  .rd-bar{grid-template-columns:auto minmax(0,1fr) 88px;grid-template-areas:"l l m" "c r r";padding:8px 16px}
+  .rd-bar-c{justify-content:flex-start}
+}
+@container reader (max-width:699px){
+  .rd-bar{position:static;grid-template-columns:minmax(0,1fr) 88px;grid-template-areas:"l m" "c c" "r r";padding:8px 12px}
+  .rd-bar-r > .rd-seg,.rd-bar-c .rd-seg{justify-self:stretch;display:flex}
+  .rd-bar-c{display:block}
+  .rd-seg button{flex:1 1 0;padding:0 6px;font-size:13px}
+  .rd-seg-lbl{display:none}
+  .rd-sel{max-width:none}
+}
+/* the three layouts */
+.rd{display:grid;grid-template-columns:minmax(0,1fr);grid-template-areas:"doc";align-items:start;min-height:calc(100vh - var(--hdr,72px) - var(--rdtop,0px) - var(--rdpl,0px))}
+.rd-doc{grid-area:doc;min-width:0}
+.rd-outline{display:none;grid-area:ol;flex-direction:column;gap:10px;background:var(--r-gray);padding:14px 14px 24px;overflow:auto;overscroll-behavior:contain;scrollbar-width:thin;
+  position:fixed;z-index:30;top:calc(var(--hdr,72px) + var(--rdtop,0px));bottom:var(--rdplf,var(--rdpl,0px));left:var(--rdleft,0px);width:min(300px,86vw);border-right:1px solid var(--r-line);box-shadow:var(--r-shadow);animation:rdSlideL .22s var(--ease)}
+.rd[data-ol] .rd-outline{display:flex}
+.rd-assist{grid-area:as;background:var(--r-panel);overflow:auto;overscroll-behavior:contain;scrollbar-width:thin;
+  position:fixed;z-index:30;top:calc(var(--hdr,72px) + var(--rdtop,0px));bottom:var(--rdplf,var(--rdpl,0px));right:0;width:min(var(--asw),100vw);border-left:1px solid var(--r-line);box-shadow:var(--r-shadow);transform:translateX(105%);visibility:hidden;transition:transform .28s var(--ease),visibility 0s .28s}
+.rd.as-open .rd-assist{transform:none;visibility:visible;transition:transform .28s var(--ease)}
+.rd-assist:focus{outline:none}
+.rd-assist.flash{box-shadow:inset 0 0 0 3px color-mix(in srgb,var(--accent) 50%,transparent)}
+.rd-scrim{position:fixed;left:0;right:0;top:calc(var(--hdr,72px) + var(--rdtop,0px));bottom:var(--rdplf,var(--rdpl,0px));z-index:25;background:rgba(11,31,58,.32);opacity:0;pointer-events:none;transition:opacity .2s}
+.rd.modal .rd-scrim{opacity:1;pointer-events:auto}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .rd-scrim{background:rgba(0,0,0,.5)}}
+:root[data-theme="dark"] .rd-scrim{background:rgba(0,0,0,.5)}
+.rd.as-shift .rd-doc{padding-right:calc(var(--asw) + 24px)}
+@keyframes rdSlideL{from{transform:translateX(-16px);opacity:0}to{transform:none;opacity:1}}
+@keyframes rdFade{from{opacity:0}to{opacity:1}}
+/* docked outline (wide enough) */
+@container reader (min-width:1000px){
+  .rd[data-mode="read"][data-ol]{grid-template-columns:var(--olw) minmax(0,1fr);grid-template-areas:"ol doc"}
+  .rd[data-mode="read"] .rd-outline{position:sticky;top:calc(var(--hdr,72px) + var(--rdtop,0px));height:calc(100vh - var(--hdr,72px) - var(--rdtop,0px) - var(--rdplf,var(--rdpl,0px)));z-index:1;width:auto;left:auto;bottom:auto;box-shadow:none;animation:none}
+}
+@container reader (min-width:1180px){
+  .rd[data-mode="compare"][data-ol]{grid-template-columns:var(--olw) minmax(0,1fr);grid-template-areas:"ol doc"}
+  .rd[data-mode="compare"] .rd-outline,.rd[data-mode="study"] .rd-outline{position:sticky;top:calc(var(--hdr,72px) + var(--rdtop,0px));height:calc(100vh - var(--hdr,72px) - var(--rdtop,0px) - var(--rdplf,var(--rdpl,0px)));z-index:1;width:auto;left:auto;bottom:auto;box-shadow:none;animation:none}
+  .rd[data-mode="study"][data-ol]{grid-template-columns:var(--olw) minmax(0,1fr) var(--asw);grid-template-areas:"ol doc as"}
+}
+/* Study: the panel sits beside the paper */
+@container reader (min-width:900px){
+  .rd[data-mode="study"]{grid-template-columns:minmax(0,1fr) var(--asw);grid-template-areas:"doc as"}
+  .rd[data-mode="study"] .rd-assist{position:sticky;top:calc(var(--hdr,72px) + var(--rdtop,0px));height:calc(100vh - var(--hdr,72px) - var(--rdtop,0px) - var(--rdplf,var(--rdpl,0px)));z-index:1;width:auto;right:auto;bottom:auto;transform:none;visibility:visible;box-shadow:none;transition:none}
+  .rd[data-mode="study"] .as-close{display:none}
+}
+@container reader (min-width:900px) and (max-width:1179px){.rd[data-mode="study"]{--asw:340px}}
+/* the paper */
+.rd-doc{padding:32px 56px 56px;display:flex;flex-direction:column;align-items:center;transition:padding .28s var(--ease)}
+.rd-doc > *{width:100%;max-width:var(--measure)}
+.rd-view{animation:rdFade .2s var(--ease)}
+.rd-head{display:flex;flex-direction:column;gap:8px;padding-bottom:18px;margin-bottom:6px;border-bottom:1px solid var(--r-line)}
+textarea.rd-title{font:600 30px/1.25 var(--read);color:var(--heading);letter-spacing:-.01em;border:1px solid transparent;background:transparent;padding:2px 8px;margin:0 -9px;resize:none;min-height:0;overflow:hidden;border-radius:8px;box-shadow:none}
+textarea.rd-title:hover{border-color:var(--r-line)}
+textarea.rd-title:focus{border-color:var(--focus);background:var(--r-panel)}
+.rd-meta{display:flex;flex-wrap:wrap;align-items:center;gap:6px 14px;margin:0;font-size:13px;color:var(--muted)}
+.rd-claude{display:inline-flex;align-items:center;gap:5px}
+.rd-claude svg.i{width:14px;height:14px}
+.rd-claude.on{color:var(--ok)}
+.rd-h{font:600 1.32rem/1.35 var(--read);color:var(--heading);margin:1.9em 0 .7em;letter-spacing:-.005em}
+.rd-pg{display:flex;align-items:center;gap:12px;margin:1.5em 0 1.1em;color:var(--muted);font:700 11px var(--sans);letter-spacing:.1em;text-transform:uppercase}
+.rd-pg::before,.rd-pg::after{content:"";flex:1;height:1px;background:var(--r-line)}
+#panel-reader .rd-p{position:relative;margin:0 -16px 1em;padding:8px 16px;border:0;border-radius:10px;background:transparent;box-shadow:none;transition:background-color .2s;scroll-margin-top:calc(var(--hdr,72px) + var(--rdtop,0px) + 24px);scroll-margin-bottom:calc(var(--rdpl,0px) + 24px)}
+#panel-reader .rd-p:hover{background:var(--r-hover)}
+#panel-reader .rd-p.sel{background:var(--r-sel)}
+#panel-reader .rd-p::before{content:"";position:absolute;left:0;top:10px;bottom:10px;width:3px;border-radius:3px;background:transparent;transition:background-color .2s}
+#panel-reader .rd-p.sel::before{background:var(--accent)}
+#panel-reader .rd-p.speaking::before{background:var(--r-navy)}
+#panel-reader .rd-p.flash{box-shadow:0 0 0 3px color-mix(in srgb,var(--accent) 40%,transparent)}
+.rd-p .orig-full,.rd-p .rd-alt{font:400 18px/1.75 var(--read);color:var(--ink);background:none;padding:0;border-radius:0;margin:0;overflow-wrap:break-word;box-shadow:none}
+.rd-p .speaking-part{box-shadow:none}
+#panel-reader mark.tts-now{background:var(--r-hl);color:var(--r-hl-ink);box-shadow:0 0 0 2px var(--r-hl);border-radius:3px}
+.rd-no{position:absolute;left:-36px;top:11px;min-width:30px;padding:2px 4px;border:0;background:none;border-radius:6px;font:700 12px/1.4 var(--sans);font-variant-numeric:tabular-nums;color:var(--muted);text-align:right;cursor:pointer}
+.rd-no:hover{color:var(--accent);background:var(--accent-soft)}
+.rd-p.sel .rd-no{color:var(--accent)}
+.rd-ar{font:400 19px/2 var(--arabic);text-align:right;color:var(--ink)}
+.rd-ar-main{margin:0}
+.rd-peek{margin-top:8px}
+.rd-peek summary{cursor:pointer;font:600 13px var(--sans);color:var(--muted);width:max-content}
+.rd-peek .orig-full{font-size:15.5px;color:var(--muted);margin-top:8px}
+.rd-missing{font-size:13px;color:var(--muted);margin:8px 0 0}
 .linkish{appearance:none;border:0;background:none;padding:0;font:inherit;color:var(--accent);text-decoration:underline;text-underline-offset:3px;cursor:pointer}
-.figure-card{margin:12px 0 16px;padding:16px;border:1px solid var(--line);border-radius:12px;background:var(--surface)}
-.figure-card .fig-shot{border-radius:8px}
-.rd-fine{margin:28px auto 0}
+.rd-fine{margin:36px auto 0}
 .rd-fine svg.i{width:14px;height:14px;vertical-align:-2px}
-.rd-player{position:sticky;bottom:16px;z-index:8;margin-top:20px}
-.rd-player{container:player / inline-size}
-@container player (max-width:660px){.pl-more .hide-sm{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}.btn.pl-more{width:36px;padding:0}.pl .pl-now{flex-basis:96px}.pl .pl-name{display:none}.pl .pl-reads::before{content:none}.pl .pl-reads{color:var(--heading)}}
-.pl{background:var(--surface);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow-lg);overflow:hidden}
-.pl-off{padding:14px 18px}
-.pl-main{display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px;padding:10px 12px 10px 18px}
-.pl-now{flex:1 1 120px;min-width:0;display:flex;flex-direction:column;gap:1px}
-.pl-t{display:flex;align-items:center;gap:6px;min-width:0;font:600 13px var(--sans);color:var(--heading)}
-.pl-name{flex:none}
-.pl-t svg.i{width:16px;height:16px;color:var(--gold-ink)}
-.pl-reads{font-weight:500;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
-.pl-reads::before{content:"· "}
-.tts-status{font-size:12px;color:var(--muted);font-weight:400;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.pl.playing .tts-status{color:var(--ink)}
-.pl-ctl{display:flex;align-items:center;gap:2px}
-.pl-btn{appearance:none;width:40px;height:40px;border:0;border-radius:8px;background:transparent;color:var(--heading);display:grid;place-items:center;cursor:pointer;transition:background-color .16s}
-.pl-btn:hover:not(:disabled){background:var(--surface-2)}
+/* title page: folded, every word kept */
+.rd-front{margin:18px 0 6px;border:1px solid var(--r-line);border-radius:10px;background:var(--r-panel)}
+.rd-front > summary{list-style:none;display:flex;flex-wrap:wrap;align-items:center;gap:4px 12px;padding:10px 14px;cursor:pointer;border-radius:10px}
+.rd-front > summary::-webkit-details-marker{display:none}
+.rd-front > summary:hover{background:var(--r-hover)}
+.rd-front-t{display:inline-flex;align-items:center;gap:8px;font:700 14px var(--sans);color:var(--heading)}
+.rd-front-t svg.i{width:16px;height:16px;color:var(--muted)}
+.rd-front-m{font-size:12.5px;color:var(--muted)}
+.rd-front .chev{margin-left:auto;width:16px;height:16px;color:var(--muted);transition:transform .2s}
+.rd-front[open] .chev{transform:rotate(180deg)}
+.rd-front-in{padding:4px 14px 12px;display:flex;flex-direction:column;gap:2px}
+.rd-front-p{display:grid;grid-template-columns:40px minmax(0,1fr) auto;align-items:start;gap:8px;margin:0;padding:4px 0}
+.rd-front-no{font:700 11.5px/1.9 var(--sans);color:var(--muted)}
+#panel-reader .rd-front-p .orig-full{font:400 14px/1.6 var(--sans);color:var(--muted);background:none;padding:0;margin:0}
+.rd-front-acts{opacity:.6}
+.rd-front-p:hover .rd-front-acts,.rd-front-p:focus-within .rd-front-acts{opacity:1}
+/* figures and tables: a picture with its caption, explained in Figure Lab */
+#panel-reader .rd-fig{margin:1.4em 0 1.6em;padding:0;border:0;background:none}
+.rd-fig .fig-shot{border-color:var(--r-line);border-radius:10px;padding:10px;margin:0}
+.rd-fig .fig-cap{font:400 15px/1.55 var(--read);color:var(--ink);margin:10px 0 6px}
+.rd-fig .fig-done{margin:0 0 6px}
+.rd-fig-acts{display:flex;align-items:center;flex-wrap:wrap;gap:6px 10px}
+.rd-fig-acts .spacer{flex:1}
+/* the toolbar of the selected paragraph: it stays in view while the paragraph is on screen */
+.rd-ctx{position:sticky;bottom:calc(var(--rdplf,var(--rdpl,0px)) + 12px);z-index:6;display:flex;align-items:center;flex-wrap:wrap;gap:4px 10px;margin:12px 0 2px;padding:5px 6px 5px 12px;background:var(--r-panel);border:1px solid var(--r-line);border-radius:12px;box-shadow:var(--r-shadow);animation:rdFade .18s var(--ease);cursor:default}
+.rd-ctx-loc{font:700 12.5px var(--sans);color:var(--heading);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
+.rd-ctx-sec{font-weight:600;color:var(--muted)}
+.rd-ctx-btns{display:flex;flex-wrap:wrap;align-items:center;gap:2px;margin-left:auto}
+.rd-cb{appearance:none;border:0;background:none;display:inline-flex;align-items:center;gap:6px;min-height:36px;padding:0 10px;border-radius:8px;font:700 13px var(--sans);color:var(--heading);cursor:pointer;transition:background-color .15s}
+.rd-cb:hover{background:var(--r-gray)}
+.rd-cb svg.i{width:16px;height:16px;color:var(--accent)}
+.rd-doc,.cmp-col{container:doc / inline-size}
+@container doc (max-width:680px){.rd-ctx-sec{display:none}.rd-cb{padding:0 7px;gap:5px}.rd-ctx{gap:4px 6px}}
+@container doc (max-width:470px){
+  .rd-cb{padding:0;width:40px;justify-content:center}
+  .rd-cb span{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+}
+@container reader (max-width:1099px){.rd-doc{padding:28px 40px 48px}}
+@container reader (max-width:699px){
+  .rd-doc{padding:20px 16px 40px}
+  textarea.rd-title{font-size:24px}
+  #panel-reader .rd-p{margin:0 -10px .9em -12px;padding:8px 10px 8px 30px}
+  .rd-no{left:4px;top:11px;min-width:22px;padding:2px;text-align:center;font-size:11px}
+  .rd-p .orig-full,.rd-p .rd-alt{font-size:17px}
+}
+/* the outline */
+.rd-ol-head{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:0 2px}
+.rd-find{position:relative}
+.rd-find > svg.i{position:absolute;left:12px;top:12px;width:16px;height:16px;color:var(--muted)}
+.rd-find .input{padding-left:36px;min-height:40px;font-size:14px;background:var(--r-panel);border-color:var(--r-line)}
+.rd-find-n{margin:2px 6px 4px}
+.rd-hit{display:block;padding:7px 10px;border-radius:8px;font-size:13px;line-height:1.45;color:var(--ink);text-decoration:none}
+.rd-hit:hover{background:var(--r-panel);color:var(--ink)}
+.rd-hit b{color:var(--accent);font-weight:700}
+.rd-hit mark{font-weight:600}
+.rd-toc{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:1px}
+.rd-toc-row{display:flex;align-items:stretch;gap:2px}
+.rd-toc-sec{flex:1;min-width:0;display:flex;flex-direction:column;gap:1px;padding:7px 10px;border-radius:8px;text-decoration:none;color:var(--ink);font-size:14px;line-height:1.35;border-left:3px solid transparent}
+.rd-toc-sec:hover{background:var(--r-panel);color:var(--ink)}
+.rd-toc li.on > .rd-toc-row .rd-toc-sec{background:var(--r-panel);color:var(--heading);font-weight:700;border-left-color:var(--accent)}
+.rd-toc-t{overflow-wrap:anywhere}
+.rd-toc-m{font-size:12px;color:var(--muted);font-weight:500}
+.rd-toc-x{appearance:none;border:0;background:none;display:inline-flex;align-items:center;gap:3px;padding:0 8px;border-radius:8px;color:var(--muted);font:700 12px var(--sans);cursor:pointer;min-width:40px;justify-content:center}
+.rd-toc-x:hover{background:var(--r-panel);color:var(--heading)}
+.rd-toc-x svg.i{width:14px;height:14px}
+.rd-toc-x[aria-expanded="true"]{color:var(--accent)}
+.rd-toc-figs{display:flex;flex-direction:column;padding:2px 0 4px 16px}
+.rd-toc-figs[hidden]{display:none}
+.rd-toc-fig{display:flex;align-items:center;gap:6px;padding:5px 10px;font-size:13px;color:var(--muted);text-decoration:none;border-radius:6px}
+.rd-toc-fig:hover{background:var(--r-panel);color:var(--ink)}
+.rd-toc-fig svg.i{width:14px;height:14px}
+.rd-pos{border-top:1px solid var(--r-line);margin-top:auto;padding:14px 4px 0;display:flex;flex-direction:column;gap:10px}
+.rd-prog{display:flex;flex-direction:column;gap:5px}
+.rd-prog-t{display:flex;align-items:baseline;gap:5px;font-size:13px;color:var(--ink)}
+.rd-prog-t span:first-child{flex:1}
+.rd-prog .progress{height:5px;background:var(--r-line)}
+.rd-prog .progress span{background:var(--accent)}
+/* Compare */
+.rd[data-mode="compare"] .rd-doc{padding:0;align-items:stretch}
+.rd[data-mode="compare"] .rd-doc > *{max-width:none}
+.cmp{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);grid-template-rows:auto minmax(0,1fr);height:calc(100vh - var(--hdr,72px) - var(--rdtop,0px) - var(--rdpl,0px));height:calc(100dvh - var(--hdr,72px) - var(--rdtop,0px) - var(--rdpl,0px));min-height:360px}
+.cmp-head{grid-column:1 / -1;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:0;border-bottom:1px solid var(--r-line);background:var(--r-panel)}
+.cmp-hc{display:flex;flex-wrap:wrap;align-items:center;gap:6px 12px;padding:10px 24px 10px 52px;min-width:0}
+.cmp-hc + .cmp-hc{border-left:1px solid var(--r-line);padding-left:24px}
+.cmp-lbl{font:800 12px var(--sans);letter-spacing:.09em;text-transform:uppercase;color:var(--heading)}
+.cmp-miss{font-size:12.5px;color:var(--muted)}
+.cmp-sync{display:inline-flex;align-items:center;gap:6px;margin-left:auto;font:600 13px var(--sans);color:var(--ink);cursor:pointer;min-height:32px}
+.cmp-sync input{width:18px;height:18px;accent-color:var(--accent)}
+.cmp-col{overflow:auto;overscroll-behavior:contain;min-height:0;padding:12px 28px max(56px,calc(100% - 140px)) 52px;scrollbar-width:thin}   /* room after the last paragraph, so any paragraph can be lined up at the top */
+.cmp-col:focus-visible{outline:2px solid var(--focus);outline-offset:-2px}
+#cmpR{border-left:1px solid var(--r-line);background:var(--r-panel)}
+#cmpR[dir="rtl"]{padding:12px 52px max(56px,calc(100% - 140px)) 28px}
+#cmpR[dir="rtl"] .rd-no{left:auto;right:-38px;text-align:left}
+#panel-reader .cmp-p{margin:0 -14px .9em;padding:8px 14px}
+.cmp-p .orig-full,.cmp-p .rd-alt{font-size:17px;line-height:1.7}
+.cmp-p .rd-ar-main{font:400 19px/2 var(--arabic);text-align:right;color:var(--ink)}
+.cmp-p .rd-no{left:-42px;font-size:11.5px}
+.cmp .rd-h{font-size:1.12rem;margin:1.4em 0 .6em}
+.cmp .rd-ctx{bottom:10px}
+.cmp-fig{display:flex;align-items:center;flex-wrap:wrap;gap:6px 10px;margin:.4em 0 1em;padding:10px 12px;border:1px dashed var(--r-line);border-radius:10px;font-size:13.5px;color:var(--muted)}
+.cmp-fig svg.i{width:16px;height:16px}
+.cmp-fig b{color:var(--heading)}
+.cmp-stack{display:block;height:auto;padding:0 16px 32px}
+.cmp-stack .cmp-head{display:flex;flex-wrap:wrap;align-items:center;gap:6px 12px;margin:0 -16px 6px;padding:10px 16px}
+.cmp-stack .cmp-ver{margin-top:-.6em;border-left:3px solid var(--r-line);border-radius:0 10px 10px 0;background:var(--r-panel)}
+.cmp-stack .cmp-ver .rd-no{display:none}
+/* study panel */
+.as-head{display:flex;align-items:flex-start;gap:6px;padding:18px 16px 6px 20px}
+.as-what{flex:1;min-width:0;display:flex;flex-direction:column;gap:3px}
+.as-what b{font:700 15px/1.4 var(--sans);color:var(--heading)}
+.as-nav{display:flex;gap:2px}
+.as-tabs{display:flex;gap:0;padding:4px 10px 0;border-bottom:1px solid var(--r-line);overflow-x:auto;scrollbar-width:none;position:sticky;top:0;background:var(--r-panel);z-index:2}
+.as-tab{appearance:none;flex:1 0 auto;border:0;background:none;height:42px;padding:0 8px;font:700 13px var(--sans);color:var(--muted);border-bottom:2px solid transparent;margin-bottom:-1px;cursor:pointer;white-space:nowrap;transition:color .16s,border-color .16s}
+.as-tab:hover{color:var(--heading)}
+.as-tab[aria-selected="true"]{color:var(--accent);border-bottom-color:var(--accent)}
+.as-body{padding:18px 20px 28px;display:flex;flex-direction:column;gap:20px;animation:rdFade .16s var(--ease)}
+.as-sec{display:flex;flex-direction:column;gap:8px;min-width:0}
+.as-sec-h{display:flex;align-items:center;gap:6px;min-height:28px}
+.as-sec-h .label{margin:0}
+.as-sec-x{display:inline-flex;align-items:center;gap:4px;margin-left:auto}
+.as-sec-x .chip{letter-spacing:0;text-transform:none;white-space:nowrap}
+.as-sec > .linkish{align-self:flex-start}
+.as-text{margin:0;font:400 15.5px/1.6 var(--sans);color:var(--ink)}
+.as-edit-link{align-self:flex-start}
+textarea.as-edit{width:100%;font:400 15px/1.65 var(--sans);color:var(--ink);background:var(--r-gray);border:1px solid transparent;border-radius:10px;padding:10px 12px;resize:none;min-height:0;box-shadow:none;margin:0}
+textarea.as-edit:hover{border-color:var(--r-line)}
+textarea.as-edit:focus{background:var(--r-panel);border-color:var(--focus)}
+#panel-reader textarea.simple-box{min-height:0}
+.as-none{display:flex;flex-direction:column;align-items:flex-start;gap:8px;margin:0;font-size:14px;color:var(--muted)}
+.as-acts{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.as-busy{display:flex;gap:8px;align-items:center;font-size:14px;color:var(--muted);padding:10px 0}
+.as-terms{margin:0}
+.as-terms dt{font-weight:700;font-size:14px;color:var(--heading)}
+.as-terms dd{margin:2px 0 10px;font-size:14px;line-height:1.55}
+.as-deeper{align-self:flex-start}
+.as-listen .as-acts .btn{min-height:34px}
+.as-ar-text{font:400 17px/1.95 var(--arabic);color:var(--ink);background:var(--r-gray);border-radius:10px;padding:10px 14px}
+#panel-reader textarea.ar-text{background:var(--r-gray);border-color:transparent}
+#panel-reader textarea.ar-text:focus{background:var(--r-panel);border-color:var(--focus)}
+.as-gloss{width:100%;border-collapse:collapse;font-size:14px}
+.as-gloss td{padding:7px 4px;border-bottom:1px solid var(--r-line);vertical-align:top}
+.as-gloss td[lang="ar"]{font-family:var(--arabic);font-size:15px;text-align:right}
+.as-chips{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:6px}
+.as-chips li{display:inline-flex;align-items:center;gap:2px;padding:2px 4px 2px 10px;border-radius:999px;background:var(--r-hl);color:var(--r-hl-ink);font:600 13px var(--sans)}
+.as-chip-x{appearance:none;border:0;background:none;width:26px;height:26px;border-radius:999px;display:grid;place-items:center;cursor:pointer;color:inherit}
+.as-chip-x:hover{background:rgba(0,0,0,.08)}
+.as-chip-x svg.i{width:13px;height:13px}
+.as-add{display:flex;gap:6px}
+.as-add .input{min-height:38px;font-size:14px}
+.as-more{border-top:1px solid var(--r-line);padding-top:12px}
+.as-more summary{cursor:pointer;font:700 13px var(--sans);color:var(--heading)}
+.as-more[open] summary{margin-bottom:10px}
+.as-link{display:grid;grid-template-columns:1fr;gap:8px}
+.as-saved{display:flex;align-items:center;gap:6px;margin:0;font-size:12.5px;color:var(--muted)}
+.as-saved svg.i{width:14px;height:14px;color:var(--ok)}
+.as-note{background:var(--r-gray);border-radius:12px;padding:14px 16px}
+.as-src{display:grid;grid-template-columns:auto 1fr;gap:4px 14px;margin:0;font-size:14px}
+.as-src dt{color:var(--muted);font-weight:600}
+.as-src dd{margin:0;color:var(--ink)}
+.as-quote{margin:0;padding:10px 14px;border-left:3px solid var(--accent);background:var(--r-gray);border-radius:0 10px 10px 0;font:400 15px/1.65 var(--read);color:var(--ink);max-height:280px;overflow:auto}
+.as-around{appearance:none;display:flex;flex-direction:column;gap:3px;text-align:left;width:100%;padding:9px 12px;border:1px solid var(--r-line);border-radius:10px;background:var(--r-panel);font:400 13.5px/1.5 var(--sans);color:var(--ink);cursor:pointer}
+.as-around:hover{background:var(--r-hover)}
+.as-around b{font-size:12px;color:var(--accent)}
+.as-whole{display:flex;flex-direction:column;gap:18px;border-top:1px solid var(--r-line);padding-top:16px}
+.as-whole-h{font:800 12px var(--sans);letter-spacing:.09em;text-transform:uppercase;color:var(--heading);margin:0}
+.rd-assist .chat{margin-top:0;background:var(--r-gray);border-color:var(--r-line)}
+.rd-assist .chat-msgs{max-height:none}
+.as-close{display:inline-flex}
+/* the audio bar along the bottom */
+.rd-player{position:sticky;bottom:0;z-index:32;background:var(--r-panel);border-top:1px solid var(--r-line);box-shadow:0 -6px 18px rgba(11,31,58,.06)}
+.pl{position:relative}
+.pl-off{padding:12px 20px}
+.pl-track{position:absolute;top:-1px;left:0;right:0;height:2px;background:transparent;pointer-events:none}
+.pl-track span{display:block;height:100%;background:var(--accent);transition:width .3s var(--ease)}
+.pl-main{display:flex;align-items:center;gap:6px 16px;padding:8px 12px 8px 20px;min-height:62px}
+.pl-ctl{display:flex;align-items:center;gap:2px;flex:none}
+.pl-btn{appearance:none;width:40px;height:40px;border:0;border-radius:8px;background:transparent;color:var(--heading);display:grid;place-items:center;cursor:pointer;transition:background-color .16s;flex:none}
+.pl-btn:hover:not(:disabled){background:var(--r-gray)}
 .pl-btn:disabled{opacity:.35;cursor:default}
 .pl-btn svg.i{width:19px;height:19px}
-.pl-play{appearance:none;width:48px;height:48px;border-radius:999px;border:0;background:var(--accent);color:var(--accent-ink);display:grid;place-items:center;cursor:pointer;margin:0 4px;transition:background-color .16s}
+.pl-btn[aria-expanded="true"].pl-more{background:var(--accent-soft);color:var(--accent)}
+.pl-play{appearance:none;width:46px;height:46px;border-radius:999px;border:0;background:var(--accent);color:var(--accent-ink);display:grid;place-items:center;cursor:pointer;margin:0 4px;transition:background-color .16s}
 .pl-play:hover{background:var(--accent-hover)}
-.pl-play svg.i{width:22px;height:22px}
-.pl-right{flex:0 0 auto;display:flex;justify-content:flex-end;align-items:center;gap:8px;margin-left:auto}
-select.pl-rate{width:auto;min-height:36px;padding:4px 30px 4px 10px;font:600 13px var(--sans);background-position:right 8px center}
-.pl-track{height:3px;background:var(--surface-2)}
-.pl-track span{display:block;height:100%;background:var(--c-blue);transition:width .3s var(--ease)}
-.pl-more-in{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));border-top:1px solid var(--line);background:var(--bg)}
+.pl-play svg.i{width:21px;height:21px}
+.pl-now{flex:1 1 auto;min-width:0;display:flex;flex-direction:column;gap:1px}
+.tts-status{font:700 13.5px var(--sans);color:var(--heading);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pl.playing .tts-status{color:var(--accent)}
+.pl-sec{display:flex;align-items:center;gap:5px;font-size:12px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
+.pl-sec svg.i{width:13px;height:13px;flex:none}
+.pl-right{display:flex;align-items:center;gap:6px;flex:none}
+select.pl-sel{width:auto;min-height:36px;padding:4px 28px 4px 10px;font:700 13px var(--sans);border-radius:8px;border-color:var(--r-line);background-color:var(--r-panel);background-position:right 8px center}
+.pl-minbtn{color:var(--muted)}
+.pl-min .pl-main{min-height:46px;padding-top:3px;padding-bottom:3px}
+.pl-min .pl-right,.pl-min .pl-sec,.pl-min .pl-stop{display:none}
+.pl-min .pl-play{width:36px;height:36px}
+.pl-min .pl-play svg.i{width:17px;height:17px}
+.pl-more-in{position:absolute;bottom:calc(100% + 8px);right:12px;width:min(780px,calc(100% - 24px));max-height:min(62vh,540px);overflow:auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));background:var(--r-panel);border:1px solid var(--r-line);border-radius:14px;box-shadow:var(--shadow-lg);animation:rdFade .16s var(--ease)}
 .pl-more-in[hidden]{display:none}
-.pl-more-in{position:relative}
 .pl-close{position:absolute;top:8px;right:8px;z-index:1}
+.pl-grp{padding:14px 18px;display:flex;flex-direction:column;align-items:flex-start;gap:10px;border-right:1px solid var(--r-line);min-width:0}
 .pl-grp:first-of-type{padding-right:44px}
-.pl-pick{gap:6px}
-.pl-warn{display:flex;gap:6px;align-items:flex-start;color:var(--warn)}
-.pl-warn svg.i{width:16px;height:16px;margin-top:2px;flex:none}
-.rd-ar-main{margin-top:0;font-size:19px;line-height:2}
-.pl-grp{padding:14px 18px;display:flex;flex-direction:column;align-items:flex-start;gap:10px;border-right:1px solid var(--line);min-width:0}
 .pl-grp:last-child{border-right:0}
 .pl-grp .row{gap:6px}
-@media(max-width:700px){.pl-grp{border-right:0;border-bottom:1px solid var(--line)}.pl-main{padding:8px 10px 8px 14px}.pl .pl-now{flex-basis:100%}}
-@media(max-width:480px){.pl-t svg.i,.pl-name{display:none}.pl-reads::before{content:none}.pl-reads{color:var(--heading)}.pl-btn[data-v="0"]{display:none}.pl-main{gap:4px 6px}.pl-play{width:44px;height:44px}.rd-p.sel .rd-flags{display:none}}
-.rd-assist{position:sticky;top:var(--hdr,72px);height:calc(100vh - var(--hdr,72px));overflow:auto;overscroll-behavior:contain;border-left:1px solid var(--line);background:var(--surface);scrollbar-width:thin}
-.rd-assist:focus{outline:none}
-.rd-assist{transition:box-shadow .25s var(--ease)}
-.rd-assist.flash{box-shadow:inset 0 0 0 3px color-mix(in srgb,var(--accent) 50%,transparent)}   /* Study pressed while the panel is already in view */
-.as-head{display:flex;align-items:flex-start;gap:8px;padding:20px 20px 6px}
-.as-what{flex:1;min-width:0;display:flex;flex-direction:column;gap:4px}
-.as-what b{font:600 15px/1.4 var(--sans);color:var(--heading)}
-.as-close{display:none}
-.as-tabs{display:flex;gap:0;padding:6px 8px 0;border-bottom:1px solid var(--line);overflow-x:auto;scrollbar-width:none;position:sticky;top:0;background:var(--surface);z-index:2}
-.as-tab{appearance:none;flex:1 0 auto;border:0;background:none;height:40px;padding:0 6px;font:500 13px var(--sans);color:var(--muted);border-bottom:2px solid transparent;margin-bottom:-1px;cursor:pointer;white-space:nowrap;transition:color .16s,border-color .16s}
-.as-tab:hover{color:var(--ink)}
-.as-tab[aria-selected="true"]{color:var(--accent);border-bottom-color:var(--accent)}
-.as-body{padding:20px;display:flex;flex-direction:column;gap:22px}
-.as-sec{display:flex;flex-direction:column;gap:8px;min-width:0}
-.as-sec .simple-box{margin:0}
-.as-terms{margin:0}
-.as-terms dt{font-weight:600;font-size:14px;color:var(--heading)}
-.as-terms dd{margin:2px 0 10px;font-size:14px;line-height:1.55}
-.as-link{display:grid;grid-template-columns:1fr;gap:8px}
-.as-stack{display:flex;flex-wrap:wrap;gap:8px}
-.as-empty{border:1.5px dashed var(--line-strong);border-radius:12px;padding:16px}
-.rd-assist .listen{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
-.rd-assist .listen > .small{display:inline-flex;align-items:center;gap:5px;margin-right:2px}
-.rd-assist .chat{margin-top:0;background:var(--bg)}
-.rd-assist .part-lbl,.rd-assist label.f.idea-lbl{font:600 12px var(--sans);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:0;display:flex;flex-wrap:wrap;align-items:center;gap:6px}
-.rd-assist .part-lbl > svg.i,.rd-assist label.f.idea-lbl > svg.i{display:none}
-.rd-assist .part-lbl .chip,.rd-assist .idea-lbl .chip{letter-spacing:0;text-transform:none}
-.rd-assist .listen{padding-bottom:4px}
-.rd-assist .listen > .small{flex-basis:100%;font:600 12px var(--sans);letter-spacing:.08em;text-transform:uppercase}
-.rd-assist .listen > .small svg.i{display:none}
-.rd-assist .chat-msgs{max-height:none}
-.rd-scrim{display:none}
-@container reader (max-width:1279px){.rd{grid-template-columns:224px minmax(0,1fr) 320px}.rd.no-outline{grid-template-columns:64px minmax(0,1fr) 320px}.rd-doc{padding:28px 32px 24px}}
-@container reader (max-width:1099px){
-  .rd,.rd.no-outline{grid-template-columns:minmax(0,1fr) 320px;grid-template-areas:"ol as" "doc as"}
-  .rd-outline{position:static;max-height:none;border-right:0;border-bottom:1px solid var(--line);padding:6px 16px}
-  .rd.no-outline .rd-outline{padding:6px 16px}
-  .rd.no-outline .rd-outline-sum{justify-content:flex-start;padding:8px 10px}
-  .rd.no-outline .rd-outline-sum span,.rd.no-outline .rd-outline-sum .chev{display:inline}
-  .rd-outline[open] .rd-outline-in{max-width:720px;margin:0 auto 12px}
-  .rd-outline-sum{max-width:720px;margin:0 auto}
-  .rd-assist{grid-row:1 / span 2}
+.pl-warn{display:flex;gap:6px;align-items:flex-start;color:var(--warn)}
+.pl-warn svg.i{width:16px;height:16px;margin-top:2px;flex:none}
+@container reader (max-width:799px){.pl-grp{border-right:0;border-bottom:1px solid var(--r-line)}}
+@container reader (max-width:699px){
+  .pl-main{flex-wrap:wrap;padding:6px 8px 8px 12px;gap:4px 8px}
+  .pl-now{order:2;flex:1 1 140px}
+  .pl-ctl{order:1}
+  .pl-minbtn{order:3}
+  .pl-right{order:4;flex:1 1 100%;justify-content:space-between}
+  .pl-sec{display:none}
+  .pl-stop{display:none}
+  .pl-more-in{right:8px;width:calc(100% - 16px)}
 }
-@container reader (max-width:899px){
-  .rd,.rd.no-outline{display:block}
-  .rd-top{padding:12px 16px}
-  .rd-outline{padding:6px 12px}
-  .rd-doc{padding:20px 20px 16px}
-  .rd-assist{position:fixed;top:0;right:0;bottom:0;height:auto;width:min(420px,100vw);z-index:40;border-left:1px solid var(--line);transform:translateX(100%);visibility:hidden;transition:transform .25s var(--ease),visibility 0s .25s;box-shadow:var(--shadow-lg)}
-  .rd.as-open .rd-assist{transform:none;visibility:visible;transition:transform .25s var(--ease)}
-  .rd-scrim{display:block;position:fixed;inset:0;z-index:39;background:rgba(10,15,25,.45);opacity:0;pointer-events:none;transition:opacity .2s}
-  .rd.as-open .rd-scrim{opacity:1;pointer-events:auto}
-  .as-close{display:inline-flex}
-  .rd-p{margin:0 -12px 4px;padding:10px 12px 14px}
-  .rd-study span{display:inline}
+@media (pointer:coarse){
+  .rd-seg button{min-height:40px}
+  .rd-cb{min-height:42px}
+  .pl-btn{width:44px;height:44px}
+  .rd-no{min-height:30px}
+  .rd-toc-sec{padding-top:9px;padding-bottom:9px}
 }
-@container reader (min-width:900px){.rd-study span{display:none}}
-@media(max-width:620px){.rd-doc{padding:16px 16px 12px}.rd-top-r .seg{order:-1;flex:1 1 100%}}
+@media (prefers-reduced-motion:reduce){#panel-reader *,#panel-reader *::before{animation:none!important;transition:none!important}}
 details.menu{position:relative;display:inline-block}
 details.menu > summary{list-style:none}
 details.menu > summary::-webkit-details-marker{display:none}
@@ -1212,6 +1399,7 @@ dialog::backdrop{background:rgba(10,15,25,.45);backdrop-filter:blur(2px)}
 .dlg-foot{display:flex;justify-content:flex-end;gap:8px;padding:16px 24px;border-top:1px solid var(--line)}
 .toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%) translateY(16px);background:var(--heading);color:var(--bg);padding:11px 18px;border-radius:12px;font-weight:500;font-size:14px;opacity:0;pointer-events:none;transition:opacity .2s var(--ease),transform .2s var(--ease);z-index:100;display:flex;gap:8px;align-items:center;max-width:calc(100vw - 32px);box-shadow:var(--shadow-lg)}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+html[data-tab="reader"] .toast{bottom:calc(var(--rdplf-doc,0px) + 16px)}   /* above the reader's audio bar */
 .sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 
 @media(prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
@@ -1277,6 +1465,11 @@ const ICONS = {                                                   // Lucide icon
   cap:'<path d="M21.42 10.922a1 1 0 0 0-.019-1.838L12.83 5.18a2 2 0 0 0-1.66 0L2.6 9.08a1 1 0 0 0 0 1.832l8.57 3.908a2 2 0 0 0 1.66 0z"/><path d="M22 10v6"/><path d="M6 12.5V16a6 3 0 0 0 12 0v-3.5"/>',
   maximize:'<path d="M8 3H5a2 2 0 0 0-2 2v3"/><path d="M21 8V5a2 2 0 0 0-2-2h-3"/><path d="M3 16v3a2 2 0 0 0 2 2h3"/><path d="M16 21h3a2 2 0 0 0 2-2v-3"/>',
   minimize:'<path d="M8 3v3a2 2 0 0 1-2 2H3"/><path d="M21 8h-3a2 2 0 0 1-2-2V3"/><path d="M3 16h3a2 2 0 0 1 2 2v3"/><path d="M16 21v-3a2 2 0 0 1 2-2h3"/>',
+  bookopen:'<path d="M12 7v14"/><path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"/>',
+  columns:'<rect width="18" height="18" x="3" y="3" rx="2"/><path d="M12 3v18"/>',
+  chevu:'<path d="m18 15-6-6-6 6"/>',
+  chevl:'<path d="m15 18-6-6 6-6"/>',
+  route:'<circle cx="6" cy="19" r="3"/><path d="M9 19h8.5a3.5 3.5 0 0 0 0-7h-11a3.5 3.5 0 0 1 0-7H15"/><circle cx="18" cy="5" r="3"/>',
   library:'<path d="m16 6 4 14"/><path d="M12 6v14"/><path d="M8 8v12"/><path d="M4 4v16"/>',
   bulb:'<path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/>',
   clip:'<rect width="8" height="4" x="8" y="2" rx="1" ry="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="m9 14 2 2 4-4"/>',
@@ -1817,8 +2010,9 @@ function renderTabs(){                                           // the sidebar 
     : `<span class="crumb-part">Workspace</span>${icon('chevr', 'crumb-sep')}<span class="cur" aria-current="page">${esc(cur.label)}</span>`;
 }
 const mqSide = window.matchMedia('(max-width:1023px)');
+const sideMode = () => S.ui.tab === 'reader' ? (S.ui.sideReader || 'mini') : S.ui.side;   // the reader starts with the sidebar as icons, so the paper gets the width
 function applySide(){                                            // wide screens: full (248 px) or icons only (72 px); small screens: a drawer
-  const app = $('#app'), mini = S.ui.side === 'mini', drawer = mqSide.matches;
+  const app = $('#app'), mini = sideMode() === 'mini', drawer = mqSide.matches;
   app.classList.toggle('collapsed', mini);
   const b = $('#sideToggle'), lbl = mini ? 'Expand the sidebar' : 'Collapse the sidebar';
   b.innerHTML = icon(mini ? 'panelopen' : 'panel'); b.title = lbl; b.setAttribute('aria-label', lbl); b.setAttribute('aria-expanded', String(!mini));
@@ -1862,7 +2056,7 @@ function showTab(id, push=true){                                 // used all ove
 function openTab(id, push){
   if (id !== 'reader' && TTS.playing) ttsPause();          // keeps the place for Continue
   S.ui.tab = id; save();
-  document.body.dataset.tab = id; document.documentElement.dataset.tab = id;
+  document.body.dataset.tab = id; document.documentElement.dataset.tab = id; applySide();
   if ($('#app').classList.contains('side-open')) sideDrawer(false, false);
   renderTabs();
   for (const t of TABS) $('#panel-'+t.id).hidden = t.id !== id;
@@ -3424,7 +3618,7 @@ document.addEventListener('selectionchange', () => {                    // remem
   if (ae && /TEXTAREA|INPUT/.test(ae.tagName) && panel.contains(ae) && ae.selectionEnd > ae.selectionStart){ text = ae.value.slice(ae.selectionStart, ae.selectionEnd); node = ae; }
   else { const sel = getSelection(); if (sel && !sel.isCollapsed){ text = sel.toString(); node = sel.anchorNode && (sel.anchorNode.nodeType === 1 ? sel.anchorNode : sel.anchorNode.parentElement); } }
   if (!text.trim() || !node || !panel.contains(node)) return;
-  const card = node.closest('.para'); TTS.sel = {text, pid:card ? card.id.replace(/^para-/, '') : ''};
+  const card = node.closest('[data-pid]'); TTS.sel = {text, pid:card ? card.dataset.pid : ''};
   const b = $('#ttsSelBtn'); if (b){ b.disabled = false; b.title = 'Read the selected text: “' + clip(text.replace(/\s+/g, ' '), 80) + '”'; }
 });
 // speak any text (voice previews, the pronunciation list, the professor's questions); keeps your place in the paper
@@ -3445,7 +3639,8 @@ function ttsMark(c, scroll){
   if (c.part === 'ev'){ const s = $(`#evLeft [data-cid="${c.pid}"]`); if (s){ s.classList.add('speaking'); if (scroll || c.segStart === 0) s.scrollIntoView({block:'nearest'}); } return; }
   const paper = rPaper();
   if (TTS.playing && TTS.ctx && TTS.ctx.follow && paper && rdSelId(paper) !== c.pid && isReadable(paper.paras.find(x => x.id === c.pid) || {}) && !$('#rdAssist')?.contains(document.activeElement)) rdSelect(c.pid);
-  const card = $('#para-' + c.pid); if (!card) return;
+  $('#cmp-' + c.pid)?.classList.add('speaking');
+  const card = $('#para-' + c.pid); if (!card){ rdHighlights(); return; }
   card.classList.add('speaking');
   const part = c.part === 'orig' ? $('#po-' + c.pid) : c.part === 'idea' ? ($('#pv-' + c.pid) || $('#rs-' + c.pid) || $('#ri-' + c.pid)) : c.part === 'ar' ? ($('#pa-' + c.pid) || $('#ra-' + c.pid)) : null;
   if (part){
@@ -3455,14 +3650,15 @@ function ttsMark(c, scroll){
       part.dataset.marked = t; part.innerHTML = esc(t.slice(0, a)) + '<mark class="tts-now">' + esc(t.slice(a, b)) + '</mark>' + esc(t.slice(b));
     }
   }
-  if (scroll) (part || card).scrollIntoView({behavior:'smooth', block:'center'});
+  rdHighlights();
+  if (scroll){ const col = (part || card).closest('.cmp-col'); if (col){ const r = (part || card).getBoundingClientRect(), b = col.getBoundingClientRect(); if (r.top < b.top || r.bottom > b.bottom) col.scrollBy({top:r.top - b.top - 60, behavior:'smooth'}); } else (part || card).scrollIntoView({behavior:'smooth', block:'center'}); }
 }
 const voiceBadge = v => { const t = voiceTier(v); return `<span class="vq vq-${t}" title="${TIER[t][1]}">${TIER[t][0]}</span>`; };
 function ttsVoiceSummary(){
   const en = pickVoice('en').v, ar = pickVoice('ar').v, acc = en && EN_ACCENTS.find(a => a.k === enAccentOf(en));
   return `${en ? `${acc ? `<span class="acc-code" title="${acc.t}">${acc.flag}</span>` : ''}${esc(voiceName(en))} ${voiceBadge(en)}` : 'no English voice'} · <span lang="ar">${ar ? `${esc(voiceName(ar))} ${voiceBadge(ar)}` : 'no Arabic voice'}</span>`;
 }
-function ttsBarHTML(){                                           // the read-aloud player: playback in front, voice and reading settings folded away
+function ttsBarHTML(){                                           // the audio bar along the bottom of the reader: it never covers the text column
   if (!TTS.ok) return '<div class="pl pl-off"><span class="small muted">Read-aloud is not supported in this browser.</span></div>';
   const paper = rPaper(), mark = paper && (S.reader.marks || {})[paper.id], c = TTS.list[TTS.i];
   const parts = MODE_PARTS[rdMode()], arVoice = !!pickVoice('ar').v;
@@ -3471,33 +3667,37 @@ function ttsBarHTML(){                                           // the read-alo
   const where = TTS.playing && c ? c : paused ? (live ? TTS.list[TTS.i] : mark) : null;
   const startP = paper && rdSel(paper), startN = startP ? paraNo(paper, startP.id) : 1, isFirst = !startP || startP === paper.paras.find(isReadable);
   const whereTxt = where && paper ? (where.part === 'sel' ? 'your selection' : `¶${paraNo(paper, where.pid)} · ${PART_LABEL[where.part]}${where.missing ? ` (${MISSING_SAID[where.missing]})` : ''}`) : '';
-  const rate = S.reader.rate || 1, vol = S.reader.volume ?? 1, has = !!TTS.list.length || !!mark, open = !!S.reader.playerOpen;
+  const wp = where && paper && where.pid && paper.paras.find(x => x.id === where.pid), sec = (wp || startP || {}).section || '';
+  const rate = S.reader.rate || 1, vol = S.reader.volume ?? 1, has = !!TTS.list.length || !!mark, open = !!S.reader.playerOpen, min = !!S.reader.plMin;
   const pct = TTS.list.length ? Math.round((TTS.i + (TTS.playing ? .5 : 0)) / TTS.list.length * 100) : 0;
   const vocTodo = parts.ar && paper && aiReady() ? paper.paras.filter(p => isReadable(p) && (p.ar || '').trim() && !arVocOf(p)).length : 0;
   const status = TTS.playing ? `Reading ${whereTxt}` : paused ? `Paused at ${whereTxt}${!live && mark && mark.at ? ` · ${new Date(mark.at).toLocaleString([], {dateStyle:'short', timeStyle:'short'})}` : ''}` : `Ready to read ${isFirst ? 'from the beginning' : `from ¶${startN}`}`;
-  return `<div class="pl ${TTS.playing ? 'playing' : ''}" role="group" aria-label="Read aloud">
-    <div class="pl-main">
-      <div class="pl-now"><span class="pl-t">${icon('headphones')}<span class="pl-name">Read aloud</span><span class="pl-reads" title="What the player reads. It follows the text shown above the paper; change it in Settings.">${partsLabel(parts)}</span></span><span class="tts-status" aria-live="polite">${status}</span></div>
-      <div class="pl-ctl" role="group" aria-label="Playback">
-        <button class="pl-btn" data-act="tts-skip" data-v="-1" title="Previous sentence" aria-label="Previous sentence" ${has ? '' : 'disabled'}>${icon('skipb')}</button>
-        ${TTS.playing ? `<button class="pl-play" data-act="tts-pause" title="Pause" aria-label="Pause">${icon('pause', 'fill')}</button>`
-          : paused ? `<button class="pl-play" data-act="tts-continue" title="Continue from ${esc(whereTxt)}" aria-label="Continue from ${esc(whereTxt)}">${icon('play', 'fill')}</button>` : `<button class="pl-play" data-act="tts-all" title="${isFirst ? 'Play from the beginning' : `Play from ¶${startN}`}" aria-label="${isFirst ? 'Play from the beginning' : `Play from ¶${startN}`}">${icon('play', 'fill')}</button>`}
-        <button class="pl-btn" data-act="tts-skip" data-v="1" title="Next sentence" aria-label="Next sentence" ${has ? '' : 'disabled'}>${icon('skipf')}</button>
-        <button class="pl-btn" data-act="tts-skip" data-v="0" title="Replay this sentence" aria-label="Replay this sentence" ${has ? '' : 'disabled'}>${icon('refresh')}</button>
-        <button class="pl-btn" data-act="tts-stop" title="Stop and forget the place" aria-label="Stop and forget the place" ${TTS.playing || paused ? '' : 'disabled'}>${icon('stop')}</button>
-      </div>
-      <div class="pl-right">
-        <label class="sr-only" for="ttsRate">Speed</label><select id="ttsRate" class="pl-rate" title="Speed">${TTS_RATES.map(r => `<option value="${r}" ${rate === r ? 'selected' : ''}>${r === 1 ? '1.0' : r}×</option>`).join('')}</select>
-        <button class="btn sm pl-more" data-act="tts-panel" aria-expanded="${open}" aria-controls="plMore" title="Voice and reading settings">${icon('sliders')}<span class="hide-sm">Settings</span></button>
-      </div>
-    </div>
+  const playBtn = TTS.playing ? `<button class="pl-play" data-act="tts-pause" title="Pause" aria-label="Pause">${icon('pause', 'fill')}</button>`
+    : paused ? `<button class="pl-play" data-act="tts-continue" title="Continue from ${esc(whereTxt)}" aria-label="Continue from ${esc(whereTxt)}">${icon('play', 'fill')}</button>`
+    : `<button class="pl-play" data-act="tts-all" title="${isFirst ? 'Play from the beginning' : `Play from ¶${startN}`}" aria-label="${isFirst ? 'Play from the beginning' : `Play from ¶${startN}`}">${icon('play', 'fill')}</button>`;
+  return `<div class="pl ${TTS.playing ? 'playing' : ''} ${min ? 'pl-min' : ''}" role="region" aria-label="Read aloud">
     <div class="pl-track" aria-hidden="true"><span style="width:${pct}%"></span></div>
-    <div class="pl-more-in" id="plMore" ${open ? '' : 'hidden'}>
+    <div class="pl-main">
+      <div class="pl-ctl" role="group" aria-label="Playback">
+        <button class="pl-btn" data-act="tts-para-skip" data-v="-1" title="Previous paragraph" aria-label="Previous paragraph">${icon('skipb')}</button>
+        ${playBtn}
+        <button class="pl-btn" data-act="tts-para-skip" data-v="1" title="Next paragraph" aria-label="Next paragraph">${icon('skipf')}</button>
+        <button class="pl-btn pl-stop" data-act="tts-stop" title="Stop and forget the place" aria-label="Stop and forget the place" ${TTS.playing || paused ? '' : 'disabled'}>${icon('stop')}</button>
+      </div>
+      <div class="pl-now"><span class="tts-status" aria-live="polite">${status}</span><span class="pl-sec">${icon('headphones')}${esc(clip(sec, 60))}</span></div>
+      <div class="pl-right">
+        <label class="sr-only" for="ttsVer">Version read aloud</label><select id="ttsVer" class="pl-sel" title="Version read aloud — the same as the version shown">${RD_MODES.map(([k, l]) => `<option value="${k}" ${rdMode() === k ? 'selected' : ''}>${l}</option>`).join('')}</select>
+        <label class="sr-only" for="ttsRate">Speed</label><select id="ttsRate" class="pl-sel pl-rate" title="Speed">${TTS_RATES.map(r => `<option value="${r}" ${rate === r ? 'selected' : ''}>${r === 1 ? '1.0' : r}×</option>`).join('')}</select>
+        <button class="pl-btn pl-voice" data-act="tts-voices" title="Voices and accents" aria-label="Voices and accents">${icon('volume')}</button>
+        <button class="pl-btn pl-more" data-act="tts-panel" aria-expanded="${open}" aria-controls="plMore" title="More audio settings" aria-label="More audio settings">${icon('sliders')}</button>
+      </div>
+      <button class="pl-btn pl-minbtn" data-act="tts-min" aria-expanded="${!min}" title="${min ? 'Show the whole audio bar' : 'Make the audio bar smaller'}" aria-label="${min ? 'Show the whole audio bar' : 'Make the audio bar smaller'}">${icon(min ? 'chevu' : 'chevd')}</button>
+    </div>
+    <div class="pl-more-in" id="plMore" role="group" aria-label="Audio settings" ${open ? '' : 'hidden'}>
       <button class="btn ghost sm icon pl-close" data-act="tts-panel" aria-label="Close the settings" title="Close">${icon('x')}</button>
       <div class="pl-grp"><span class="label">Playback</span>
-        <div class="row pl-pick" role="group" aria-label="What to hear"><span class="small muted">Hear</span>${RD_MODES.map(([k, l]) => `<button class="fchip sm-chip" data-act="rp-mode" data-v="${k}" aria-pressed="${rdMode() === k}">${l}</button>`).join('')}</div>
-        <p class="small muted" style="margin:0">One version at a time. The paper above shows the same version.</p>
         <div class="row tts-scope"><span class="small muted">Play only</span><button class="btn sm" id="ttsSelBtn" data-act="tts-sel" ${TTS.sel ? '' : 'disabled'} title="Select text in the paper, then press here">Selection</button><button class="btn sm" data-act="tts-para" title="Read the current paragraph">Paragraph</button><button class="btn sm" data-act="tts-section" title="Read the whole section">Section</button>${paused && !TTS.playing ? `<button class="btn sm ghost" data-act="tts-restart" title="Start again from the beginning">From the start</button>` : ''}</div>
+        <div class="row"><span class="small muted">Sentence</span><button class="btn sm icon" data-act="tts-skip" data-v="-1" title="Previous sentence" aria-label="Previous sentence" ${has ? '' : 'disabled'}>${icon('chevl')}</button><button class="btn sm icon" data-act="tts-skip" data-v="0" title="Replay this sentence" aria-label="Replay this sentence" ${has ? '' : 'disabled'}>${icon('refresh')}</button><button class="btn sm icon" data-act="tts-skip" data-v="1" title="Next sentence" aria-label="Next sentence" ${has ? '' : 'disabled'}>${icon('chevr')}</button></div>
         <p class="small muted" style="margin:0">Listening to one paragraph, a section or your selection keeps your place in the paper.</p></div>
       <div class="pl-grp"><span class="label">Voice</span>
         <div class="small tts-voices">${ttsVoiceSummary()}</div>
@@ -3513,6 +3713,26 @@ function ttsBarHTML(){                                           // the read-alo
   </div>`;
 }
 function renderTtsBar(){ const el = $('#ttsBar'); if (el) el.innerHTML = ttsBarHTML(); evListenUI(); }
+function ttsSkipPara(dir){                                        // previous / next paragraph; when nothing is loaded, it moves the selection so Play starts there
+  const paper = rPaper(); if (!paper) return;
+  if (!ttsRestore()){
+    const list = paper.paras.filter(isReadable), sel = rdSel(paper), k = list.indexOf(sel), nx = list[Math.max(0, Math.min(list.length - 1, k + dir))];
+    if (nx && nx !== sel){ rdSelect(nx.id, {reveal:true}); }
+    else toast(dir > 0 ? 'This is the last paragraph' : 'This is the first paragraph');
+    return;
+  }
+  const L = TTS.list, cur = L[TTS.i]; if (!cur) return;
+  let start = TTS.i; while (start > 0 && L[start - 1].pid === cur.pid) start--;
+  let to;
+  if (dir > 0){ to = TTS.i; while (to < L.length && L[to].pid === cur.pid) to++; if (to >= L.length) return toast('This is the last paragraph'); }
+  else if (start === 0) to = 0;
+  else { to = start - 1; const pid = L[to].pid; while (to > 0 && L[to - 1].pid === pid) to--; }
+  TTS.i = to; TTS.char = 0;
+  if (TTS.playing){ ttsHalt(); ttsSpeak(true); return; }
+  ttsSaveMark();
+  const p = paper.paras.find(x => x.id === L[to].pid); if (p && isReadable(p)) rdSelect(p.id, {reveal:true});
+  renderTtsBar();
+}
 
 /* --- Voices & accents --- */
 function ttsDevice(){
@@ -3630,7 +3850,7 @@ Reply with only a JSON array, one object per paragraph in the same order: [{"id"
 function arBlock(p){
   const has = (p.ar || '').trim(), open = has || arOpen.has(p.id);
   if (!open) return '';
-  return `<label class="f idea-lbl" for="ra-${p.id}" style="margin-top:12px">${icon('book')}Arabic translation <span class="chip">${p.arSrc === 'me' ? 'mine' : p.arSrc === 'demo' ? 'demo' : has ? 'by Claude — check it' : 'type or paste'}</span></label>
+  return `${asHead('Arabic translation', `<span class="chip">${p.arSrc === 'me' ? 'mine' : p.arSrc === 'demo' ? 'demo' : has ? 'by Claude — check it' : 'type or paste'}</span>${has ? copyIcon('#ra-' + p.id, 'Copy the Arabic translation') : ''}`, 'ra-' + p.id)}
     <textarea id="ra-${p.id}" data-rp="ar" data-id="${p.id}" dir="rtl" lang="ar" rows="3" class="ar-text" placeholder="اكتب أو الصق الترجمة العربية هنا">${esc(p.ar || '')}</textarea>
     ${has ? (arVocOf(p) ? `<details class="ar-voc small"><summary>${icon('check')}Vowel marks for listening are ready <span class="chip">by Claude — check it</span></summary><p class="small muted">The voice reads this copy. It has exactly the same letters as your translation — only vowel marks are added, and the translation above is not changed.</p><div class="ar-voc-text" dir="rtl" lang="ar">${esc(arVocOf(p))}</div></details>`
       : aiReady() ? `<button class="btn sm ghost ar-voc-btn" data-act="rp-voc-one" data-id="${p.id}" data-ai-btn>${icon('sparkle')}Add vowel marks for clearer listening</button>` : '') : ''}`;
@@ -3674,8 +3894,10 @@ Base your answers on the paper content below. If the paper does not say somethin
     return `${rules}\n\nPaper: "${paper.title}"\n\nPaper content (paragraph number, section, page):\n${body}`;
   }
   const p = paper.paras.find(x => x.id === scope), n = paraNo(paper, scope), i = n - 1;
-  const near = paper.paras.slice(Math.max(0, i - 2), i + 3).filter(x => x !== p && isReadable(x)).map(x => `¶${paraNo(paper, x.id)}: ${ideaOf(x) || clip(x.text, 300)}`).join('\n');
-  return `${rules}\n\nPaper: "${paper.title}"\nThe student is asking about ¶${n} (section: ${p.section}${p.page ? `, page ${p.page}` : ''}).\n\nOriginal paragraph:\n${p.text}\n\n${simpleOf(p) ? `Simple version: ${simpleOf(p)}\n\n` : ''}${ideaOf(p) ? `Main idea: ${ideaOf(p)}\n\n` : ''}Nearby paragraphs, for context:\n${near || '(none)'}`;
+  const near = paper.paras.slice(Math.max(0, i - 2), i + 3).filter(x => x !== p && isReadable(x) && x.section !== p.section).map(x => `¶${paraNo(paper, x.id)}: ${ideaOf(x) || clip(x.text, 300)}`).join('\n');
+  const sec = paper.paras.filter(x => x !== p && isReadable(x) && x.section === p.section).map(x => `¶${paraNo(paper, x.id)}: ${clip(x.text, 900)}`).join('\n').slice(0, 7000);
+  const start = paper.paras.filter(isReadable).slice(0, 2).filter(x => x !== p && x.section !== p.section).map(x => `¶${paraNo(paper, x.id)} (${x.section}): ${clip(x.text, 1200)}`).join('\n');
+  return `${rules}\n\nPaper: "${paper.title}"\nThe student is asking about ¶${n} (section: ${p.section}${p.page ? `, page ${p.page}` : ''}).\n\nOriginal paragraph:\n${p.text}\n\n${simpleOf(p) ? `Simple version: ${simpleOf(p)}\n\n` : ''}${ideaOf(p) ? `Main idea: ${ideaOf(p)}\n\n` : ''}The rest of this section (${p.section}):\n${sec || '(no other paragraphs)'}\n\nNearby paragraphs in other sections:\n${near || '(none)'}\n\n${start ? `The start of the paper, for the big picture:\n${start}\n\n` : ''}In a follow-up, build on what you already said in this conversation instead of repeating it.`;
 }
 async function chatSend(scope, text){
   const paper = rPaper(); text = (text || '').trim();
@@ -3707,87 +3929,150 @@ function setChatBusy(scope, busy){
 }
 
 /* --- Rendering --- */
+// Three reading modes: Read (the paper on its own, tools on demand), Study (outline · paper · study panel), Compare (the original beside a version)
+const RD_LAYOUTS = [['read', 'Read', 'bookopen', 'Read: the paper on its own, with tools when you need them'], ['study', 'Study', 'panelright', 'Study: the paper with the study panel beside it'], ['compare', 'Compare', 'columns', 'Compare: the original beside the Simple English or Arabic version']];
+const rdLayout = () => ['read', 'study', 'compare'].includes(S.reader.layout) ? S.reader.layout : 'read';
+const rdCmpWith = () => S.reader.cmpWith === 'ar' ? 'ar' : 'simple';
+const rdOlOpen = () => !!(S.reader.ol || {})[rdLayout()];
+const rdStacked = () => ($('#panel-reader')?.clientWidth || innerWidth) < 700;      // phones: Compare puts each version under its original
+let rdCmpStacked = null;
 RENDER.reader = () => {
-  const papers = S.reader.papers;
   const paper = rPaper(); if (paper) S.reader.active = paper.id;
+  const asWasOpen = !!$('#rd.as-open'), asTop = $('#rdAssist')?.scrollTop || 0;      // a redraw (e.g. when Claude finishes) keeps the study panel open
   const view = S.reader.view || 'paras';
-  const aiChip = aiReady() ? `<span class="chip ok-chip">${icon('sparkle')}Claude is on</span>` : `<span class="chip" title="Simple versions, translations and answers from Claude need the published ScholarPath page on claude.ai">${icon('sparkle')}Claude off · write your own</span>`;
-  $('#panel-reader').innerHTML = `
-  <div class="rd-top">
-    <div class="rd-top-l">
-      ${papers.length ? `<label class="sr-only" for="rpSel">Choose paper</label><select id="rpSel" class="rd-sel">${papers.map(p => `<option value="${p.id}" ${paper && p.id===paper.id?'selected':''}>${esc((p.example?'[Demo] ':'') + clip(p.title || p.name, 70))}</option>`).join('')}</select>` : ''}
-      ${aiChip}
-    </div>
-    <div class="rd-top-r">
-      ${paper ? `<div class="seg" role="group" aria-label="View">${[['paras','Paragraphs'],['flow','Idea flow'],['questions','Questions']].map(([k,l]) => `<button data-act="rp-view" data-v="${k}" aria-pressed="${view===k}">${l}</button>`).join('')}</div>` : ''}
-      <label class="btn ${paper ? '' : 'primary'}" for="rpFile" style="cursor:pointer">${icon('upload')}<span class="hide-sm">Upload PDF</span></label>
-      <input type="file" id="rpFile" accept="application/pdf,.pdf" hidden>
-      <button class="btn" data-act="rp-paste">${icon('clip')}<span class="hide-sm">Paste text</span></button>
-      ${paper ? `<details class="menu"><summary class="btn icon" aria-label="More actions for this paper" title="More">${icon('more')}</summary>
-        <div class="menu-pop"><button class="menu-item danger" data-act="rp-del">${icon('trash')}Delete this paper and my notes</button></div></details>` : ''}
-    </div>
-  </div>
+  $('#panel-reader').innerHTML = `${rdBarHTML(paper, view)}<div id="aiBar" class="rd-aibar"></div>
   ${paper ? readerBody(paper, view) : `<div class="rd-empty"><div class="page-head" style="margin:0"><h1>Research Reader</h1>
     <p>Upload a paper and read it paragraph by paragraph: the original text, a simple English version, an Arabic translation, read-aloud and questions to Claude.</p></div>
+    <div class="row" style="margin-top:16px"><label class="btn primary" for="rpFile" style="cursor:pointer">${icon('upload')}Upload a PDF</label><button class="btn" data-act="rp-paste">${icon('clip')}Paste text</button></div>
     <p class="small muted" style="margin:16px 0 0">PDF text is extracted inside your browser. Every word is kept, the reference list is skipped, and figures stay as pictures for Figure Lab.</p></div>`}`;
   renderAiBar();
   $$('#panel-reader textarea[data-rp], #rpTitle').forEach(grow);
   if (TTS.playing) ttsMark(TTS.list[TTS.i], false);
   loadReaderFigs();
-  rdAssistInert();
+  rdAfterRender();
+  if (asWasOpen && paper && rdDrawer()){ rdAssistOpen(true, false); const a = $('#rdAssist'); if (a) a.scrollTop = asTop; }
 };
 const RD_MODES = [['orig', 'Original'], ['simple', 'Simple English'], ['ar', 'Arabic']];     // one version at a time: what is shown is what is read
+function rdBarHTML(paper, view){                                  // the workspace bar: outline · paper · reading mode · version · more
+  const file = '<input type="file" id="rpFile" accept="application/pdf,.pdf" hidden>';
+  if (!paper) return `<div class="rd-bar" id="rdBar"><div class="rd-bar-l"><span class="rd-bar-t">Research Reader</span></div><div class="rd-bar-r">${file}</div></div>`;
+  const lay = rdLayout(), mode = rdMode(), w = rdCmpWith(), ol = rdOlOpen();
+  const seg = (label, items, cls = '') => `<div class="rd-seg ${cls}" role="group" aria-label="${label}">${items}</div>`;
+  const center = view === 'paras'
+    ? seg('Reading mode', RD_LAYOUTS.map(([k, l, ic, t]) => `<button data-act="rp-layout" data-v="${k}" aria-pressed="${lay === k}" title="${t}">${icon(ic)}<span>${l}</span></button>`).join(''), 'rd-modeseg')
+    : `<button class="btn sm" data-act="${view === 'questions' ? 'goto' : 'rp-view'}" ${view === 'questions' ? 'data-part="critiquing" data-i="0"' : 'data-v="paras"'}>${icon('back')}Back to the paper</button>`;
+  const right = view !== 'paras' ? '' : lay === 'compare'
+    ? seg('Compare the original with', `<span class="rd-seg-lbl" aria-hidden="true">Original vs</span>${[['simple', 'Simple English'], ['ar', 'Arabic']].map(([k, l]) => `<button data-act="rp-cmp" data-v="${k}" aria-pressed="${w === k}">${l}</button>`).join('')}`, 'rd-langseg')
+    : seg('Version shown', RD_MODES.map(([k, l]) => `<button data-act="rp-mode" data-v="${k}" aria-pressed="${mode === k}">${l}</button>`).join(''), 'rd-langseg');
+  return `<div class="rd-bar" id="rdBar" data-mode="${view === 'paras' ? lay : 'read'}">
+    <div class="rd-bar-l">${view === 'paras' ? `<button class="btn ghost icon rd-ol-btn" data-act="rp-outline" aria-controls="rdOutline" aria-expanded="${ol}" aria-label="${ol ? 'Hide' : 'Show'} the outline" title="${ol ? 'Hide' : 'Show'} the outline">${icon('list')}</button>` : ''}
+      <label class="sr-only" for="rpSel">Paper</label><select id="rpSel" class="rd-sel" title="Choose a paper">${S.reader.papers.map(p => `<option value="${p.id}" ${p.id === paper.id ? 'selected' : ''}>${esc((p.example ? '[Demo] ' : '') + clip(p.title || p.name, 70))}</option>`).join('')}</select></div>
+    <div class="rd-bar-c">${center}</div>
+    <div class="rd-bar-r">${right}
+      <button class="btn ghost icon rd-as-btn" data-act="rp-assist-toggle" aria-controls="rdAssist" aria-expanded="false" aria-label="Study panel: explain, Arabic, notes, Ask Claude, paper tools" title="Study panel">${icon('panelright')}</button>
+      <details class="menu rd-more"><summary class="btn ghost icon" aria-label="More: add a paper, idea flow, questions" title="More">${icon('more')}</summary><div class="menu-pop">
+        <label class="menu-item" for="rpFile">${icon('upload')}Upload a PDF</label>
+        <button class="menu-item" data-act="rp-paste">${icon('clip')}Paste text</button>
+        <div class="menu-sep" role="separator"></div>
+        <button class="menu-item" data-act="rp-view" data-v="flow">${icon('route')}Idea flow</button>
+        <button class="menu-item" data-act="rp-view" data-v="questions">${icon('quest')}Presentation questions</button>
+        <div class="menu-sep" role="separator"></div>
+        <button class="menu-item danger" data-act="rp-del">${icon('trash')}Delete this paper and my notes</button></div></details>${file}</div>
+  </div>`;
+}
 function readerBody(paper, view){
-  const text = paper.paras.filter(isReadable), mode = rdMode();
-  const pages = (paper.pages || []).length;
+  const lay = view === 'paras' ? rdLayout() : 'read', ol = view === 'paras' && rdOlOpen();
+  const text = paper.paras.filter(isReadable), pages = (paper.pages || []).length;
   return `
-  <div class="rd ${S.ui.outline === false ? 'no-outline' : ''}" id="rd">
-    <details class="rd-outline" id="rdOutline" ${S.ui.outline !== false && rdWide() ? 'open' : ''}>
-      <summary class="rd-outline-sum" title="Show or hide the outline">${icon('list')}<span>Outline</span>${icon('chevd', 'chev')}</summary>
-      <div class="rd-outline-in">
-        <div class="rd-find"><label class="sr-only" for="rdFind">Search in this paper</label>${icon('search')}<input class="input" id="rdFind" type="search" placeholder="Search in this paper" autocomplete="off"></div>
-        <div id="rdFindOut" aria-live="polite"></div>
-        <nav id="rdToc" aria-label="Sections of the paper">${tocHTML(paper)}</nav>
-        <div class="rd-pos"><span class="label">Reading progress</span>
-          <span class="small"><b id="rpDone">${text.filter(simpleOf).length}</b> of ${text.length} paragraphs have a simple version</span>
-          <div class="progress" id="rpProg"><span style="width:${text.length ? text.filter(simpleOf).length / text.length * 100 : 0}%"></span></div></div>
-      </div>
-    </details>
-    <div class="rd-doc">
-      <header class="rd-head">
-        <div class="row">${paper.example ? '<span class="chip">Demo text · not a real study</span>' : ''}<span class="small muted">${[pages ? pl(pages, 'page') : '', pl(text.length, 'paragraph'), paper.example ? 'written for ScholarPath to show a finished reading' : ''].filter(Boolean).join(' · ')}</span></div>
+  <div class="rd" id="rd" data-mode="${lay}" ${ol ? 'data-ol' : ''}>
+    ${view === 'paras' ? `<aside class="rd-outline" id="rdOutline" aria-label="Outline of the paper">${outlineHTML(paper)}</aside>` : ''}
+    <div class="rd-doc" id="rdDoc">
+      ${lay === 'compare' ? '' : `<header class="rd-head">
         <label class="sr-only" for="rpTitle">Paper title</label>
         <textarea id="rpTitle" class="rd-title" rows="1" placeholder="Paper title" spellcheck="false">${esc(paper.title)}</textarea>
-        ${view === 'paras' ? `<div class="rd-modes" role="group" aria-label="Text shown">${RD_MODES.map(([k, l]) => `<button class="fchip" data-act="rp-mode" data-v="${k}" aria-pressed="${mode === k}" ${k === 'ar' ? 'lang="en" title="The Arabic translation (the original stays one click away)"' : ''}>${l}</button>`).join('')}</div>` : ''}
-        <div id="aiBar"></div>
-      </header>
-      <div id="rpView">${view === 'flow' ? flowView(paper) : view === 'questions' ? questionsView(paper) : parasView(paper)}</div>
-      <p class="small muted rd-fine">Splitting a PDF into paragraphs is automatic and not always perfect: use <i>Merge with next paragraph</i> in a paragraph's ${icon('more')} menu to join a broken one. The reference list is skipped.</p>
-      <div class="rd-player" id="ttsBar">${ttsBarHTML()}</div>
+        <p class="rd-meta">${paper.example ? '<span class="chip">Demo text · not a real study</span>' : ''}<span>${[pages ? pl(pages, 'page') : '', pl(text.length, 'paragraph')].filter(Boolean).join(' · ')}</span>
+          <span class="rd-claude ${aiReady() ? 'on' : ''}" title="${aiReady() ? 'Claude can write simple versions, translations and answers' : 'Simple versions, translations and answers from Claude need the published ScholarPath page on claude.ai'}">${icon('sparkle')}${aiReady() ? 'Claude is on' : 'Claude off · write your own'}</span></p>
+      </header>`}
+      <div id="rpView" class="rd-view">${rdViewHTML(paper, view)}</div>
+      ${lay === 'compare' || view !== 'paras' ? '' : `<p class="small muted rd-fine">Splitting a PDF into paragraphs is automatic and not always perfect: select a broken paragraph and use <i>Merge with next paragraph</i> in its ${icon('more')} menu. The reference list is skipped.</p>`}
     </div>
     <aside class="rd-assist" id="rdAssist" aria-label="Study panel" tabindex="-1">${assistHTML(paper)}</aside>
-    <div class="rd-scrim" data-act="rp-assist-close" aria-hidden="true"></div>
+    <div class="rd-scrim" data-act="rp-scrim" aria-hidden="true"></div>
   </div>
+  <div class="rd-player" id="ttsBar">${ttsBarHTML()}</div>
   <pre class="sr-only" id="rpNotes" aria-hidden="true">${esc(readingNotes(paper))}</pre>`;
 }
-function tocHTML(paper){                                          // the outline: sections in reading order, figures under their section
-  const sel = rdSel(paper), groups = []; let last = null;
-  paper.paras.forEach(p => {
-    if (p.kind === 'front') return;
-    if (p.section !== last){ groups.push({sec:p.section, items:[]}); last = p.section; }
-    groups[groups.length - 1].items.push(p);
-  });
-  return `<ol class="rd-toc">${groups.map(g => {
-    const ps = g.items.filter(isReadable), first = g.items[0], on = sel && g.items.some(x => x.id === sel.id);
+function rdViewHTML(paper, view = S.reader.view || 'paras'){
+  if (view === 'flow') return flowView(paper);
+  if (view === 'questions') return questionsView(paper);
+  return rdLayout() === 'compare' ? compareView(paper) : parasView(paper);
+}
+function rdRenderView(){                                          // the text area only (version or comparison changed): panels and audio stay
+  const paper = rPaper(), v = $('#rpView'); if (!paper || !v) return;
+  v.innerHTML = rdViewHTML(paper);
+  loadReaderFigs(); cmpBind();
+  if (TTS.playing) ttsMark(TTS.list[TTS.i], false); else rdHighlights();
+}
+function outlineHTML(paper){
+  return `<div class="rd-ol-head"><span class="label">Outline</span><button class="btn ghost icon sm" data-act="rp-outline" aria-label="Hide the outline" title="Hide the outline">${icon('x')}</button></div>
+    <div class="rd-find"><label class="sr-only" for="rdFind">Search in this paper</label>${icon('search')}<input class="input" id="rdFind" type="search" placeholder="Search in this paper" autocomplete="off"></div>
+    <div id="rdFindOut" aria-live="polite"></div>
+    <nav id="rdToc" aria-label="Sections of the paper">${tocHTML(paper)}</nav>
+    <div class="rd-pos" id="rdPos">${progressHTML(paper)}</div>`;
+}
+const rdReach = paper => Math.min((S.reader.reach || {})[paper.id] || 0, paper.paras.filter(isReadable).length);
+function rdReachAt(paper, id){                                    // the furthest paragraph reached: by reading, selecting or listening
+  const k = paper.paras.filter(isReadable).findIndex(p => p.id === id) + 1;
+  if (k > rdReach(paper)){ (S.reader.reach ||= {})[paper.id] = k; save(); const el = $('#rdPos'); if (el) el.innerHTML = progressHTML(paper); }
+}
+function progressHTML(paper){
+  const text = paper.paras.filter(isReadable), n = text.length, done = text.filter(simpleOf).length, ar = text.filter(p => (p.ar || '').trim()).length, r = rdReach(paper);
+  const bar = (v, l, id = '') => `<div class="rd-prog"><div class="rd-prog-t"><span>${l}</span><b ${id ? `id="${id}"` : ''}>${v}</b><span class="muted">of ${n}</span></div><div class="progress" ${id ? `id="${id}Bar"` : ''}><span style="width:${n ? v / n * 100 : 0}%"></span></div></div>`;
+  return `<span class="label">Reading progress</span>${bar(r, 'Read so far')}${bar(done, 'Simple versions', 'rpDone')}${ar ? bar(ar, 'Arabic translations') : ''}`;
+}
+const tocOpen = new Map();                                         // sections whose figures and tables you opened or closed in the outline
+let rdSpyId = null, rdSpySec = null;
+function tocHTML(paper){                                          // the outline: sections in reading order (from the paper itself), figures under their section
+  const groups = []; let last = null;
+  paper.paras.forEach(p => { if (p.kind === 'front') return; if (p.section !== last){ groups.push({sec:p.section, items:[]}); last = p.section; } groups[groups.length - 1].items.push(p); });
+  const cur = (rdSpyId && paper.paras.some(x => x.id === rdSpyId)) ? rdSpyId : (rdSel(paper) || {}).id;
+  const front = paper.paras.filter(p => p.kind === 'front'), fn = front.map(x => paraNo(paper, x.id));
+  return `<ol class="rd-toc">${front.length ? `<li><div class="rd-toc-row"><a href="#para-${front[0].id}" class="rd-toc-sec" data-act="rp-jump" data-id="${front[0].id}"><span class="rd-toc-t">Title page</span><span class="rd-toc-m">¶${fn[0]}${fn.length > 1 ? `–${fn[fn.length - 1]}` : ''}</span></a></div></li>` : ''}
+    ${groups.map(g => {
+    const ps = g.items.filter(isReadable), figs = g.items.filter(isFigure), first = g.items[0], on = g.items.some(x => x.id === cur);
     const nos = ps.map(x => paraNo(paper, x.id)), range = nos.length ? (nos.length > 1 ? `¶${nos[0]}–${nos[nos.length - 1]}` : `¶${nos[0]}`) : '';
-    return `<li><a href="#para-${first.id}" class="rd-toc-sec ${on ? 'on' : ''}" data-act="rp-jump" data-id="${first.id}" ${on ? 'aria-current="location"' : ''}><span class="rd-toc-t">${esc(g.sec)}</span><span class="rd-toc-m">${range}${first.page ? ` · p. ${first.page}` : ''}</span></a>
-      ${g.items.filter(isFigure).map(f => `<a href="#para-${f.id}" class="rd-toc-fig" data-act="rp-jump" data-id="${f.id}">${icon('image')}${esc(f.label || 'Figure')}</a>`).join('')}</li>`;
+    const open = figs.length && (tocOpen.has(g.sec) ? tocOpen.get(g.sec) : on);
+    return `<li class="${on ? 'on' : ''}"><div class="rd-toc-row">
+      <a href="#para-${first.id}" class="rd-toc-sec" data-act="rp-jump" data-id="${first.id}" ${on ? 'aria-current="location"' : ''}><span class="rd-toc-t">${esc(g.sec)}</span><span class="rd-toc-m">${range}${first.page ? ` · p. ${first.page}` : ''}</span></a>
+      ${figs.length ? `<button class="rd-toc-x" data-act="rp-toc-x" data-sec="${esc(g.sec)}" aria-expanded="${!!open}" aria-label="${open ? 'Hide' : 'Show'} the ${figs.length === 1 ? 'figure or table' : figs.length + ' figures and tables'} in ${esc(g.sec)}">${icon('image')}<span>${figs.length}</span></button>` : ''}</div>
+      ${figs.length ? `<div class="rd-toc-figs" ${open ? '' : 'hidden'}>${figs.map(f => `<a href="#para-${f.id}" class="rd-toc-fig" data-act="rp-jump" data-id="${f.id}">${icon('image')}${esc(f.label || 'Figure')}</a>`).join('')}</div>` : ''}</li>`;
   }).join('')}</ol>`;
 }
-function parasView(paper){
-  let last = null;
-  return paper.paras.map(p => { const h = p.section !== last ? `<h2 class="rd-sec">${esc(p.section)}</h2>` : ''; last = p.section; return h + paraCard(paper, p); }).join('') ||
-    '<div class="empty">No paragraphs were found. If this is a scanned PDF, try <b>Paste text</b> instead.</div>';
+function rdTocRefresh(){
+  const paper = rPaper(), t = $('#rdToc'); if (!paper || !t) return;
+  t.innerHTML = tocHTML(paper);
+  const ol = $('#rdOutline'), li = $('#rdToc li.on');
+  if (ol && li && ol.scrollHeight > ol.clientHeight){ const r = li.getBoundingClientRect(), o = ol.getBoundingClientRect(); if (r.top < o.top + 90 || r.bottom > o.bottom - 24) ol.scrollTop += r.top - o.top - 120; }
+}
+function parasView(paper){                                        // the paper as one continuous document: headings, page breaks, paragraphs, figures
+  const out = []; let lastSec = null, lastPage = null, front = [];
+  const flush = () => { if (front.length){ out.push(frontBlock(paper, front)); front = []; } };
+  for (const p of paper.paras){
+    if (p.kind === 'front'){ front.push(p); continue; }
+    flush();
+    if (p.page && lastPage && p.page !== lastPage) out.push(`<div class="rd-pg" aria-hidden="true"><span>Page ${p.page}</span></div>`);
+    if (p.page) lastPage = p.page;
+    if (p.section !== lastSec){ out.push(`<h2 class="rd-h" dir="auto">${esc(p.section)}</h2>`); lastSec = p.section; }
+    out.push(paraCard(paper, p));
+  }
+  flush();
+  return out.join('') || '<div class="empty">No paragraphs were found. If this is a scanned PDF, try <b>Paste text</b> instead.</div>';
+}
+function frontLine(paper, p){ return `<div class="para rd-front-p" id="para-${p.id}" data-pid="${p.id}"><span class="rd-front-no">¶${paraNo(paper, p.id)}</span><div class="orig-full" id="po-${p.id}" dir="auto">${esc(p.text)}</div><span class="rd-front-acts">${paraMenu(paper, p)}</span></div>`; }
+function frontBlock(paper, list){                                 // title, authors and journal details: kept word for word, folded away
+  const a = paraNo(paper, list[0].id), b = paraNo(paper, list[list.length - 1].id);
+  return `<details class="rd-front"><summary><span class="rd-front-t">${icon('file')}Title page and publication details</span><span class="rd-front-m">¶${a}${b > a ? `–${b}` : ''} · not summarised or read aloud</span>${icon('chevd', 'chev')}</summary>
+    <div class="rd-front-in">${list.map(p => frontLine(paper, p)).join('')}</div></details>`;
 }
 const rdSelId = paper => (S.reader.sels || {})[paper.id];
 function rdSel(paper){ const id = rdSelId(paper); return paper.paras.find(p => p.id === id && isReadable(p)) || paper.paras.find(isReadable); }
@@ -3795,121 +4080,407 @@ let rdCardT = 0;
 function rdCardSoon(p){ clearTimeout(rdCardT); rdCardT = setTimeout(() => refreshCards([p]), 350); }   // the paper shows what you type in the study panel
 function paraMenu(paper, p){
   const n = paraNo(paper, p.id);
-  return `<details class="menu"><summary class="btn ghost sm icon" aria-label="More actions for ¶${n}" title="More">${icon('more')}</summary><div class="menu-pop">
+  return `<details class="menu"><summary class="btn ghost sm icon" aria-label="More actions for ${isFigure(p) ? esc(p.label || 'this figure') : '¶' + n}" title="More">${icon('more')}</summary><div class="menu-pop">
     ${!isFigure(p) && p.kind !== 'front' && aiReady() ? `<button class="menu-item" data-act="rp-sum-one" data-id="${p.id}" data-ai-btn>${icon('sparkle')}${simpleOf(p) ? 'Simplify again with Claude' : 'Simplify with Claude'}</button>` : ''}
     ${isFigure(p) ? '' : `<button class="menu-item" data-act="rp-merge" data-id="${p.id}">${icon('link')}Merge with next paragraph</button>`}
     <button class="menu-item danger" data-act="rp-drop" data-id="${p.id}">${icon('trash')}${isFigure(p) ? 'Remove this figure marker' : 'Remove this paragraph'}</button></div></details>`;
 }
+function paraBody(p){                                             // the version chosen above the paper; the original never changes and stays one click away
+  const mode = rdMode(), simple = simpleOf(p), ar = (p.ar || '').trim();
+  const orig = `<div class="orig-full" id="po-${p.id}" dir="auto">${esc(p.text)}</div>`;
+  const missing = (what, tab) => `<p class="rd-missing">No ${what} yet — the original is shown. <button class="linkish" data-act="rp-tools" data-id="${p.id}" data-tab="${tab}">Add one in the study panel</button></p>`;
+  if (mode === 'simple') return simple ? `<div class="rd-alt" id="pv-${p.id}" dir="auto">${esc(simple)}</div><details class="rd-peek"><summary>Show the original text</summary>${orig}</details>` : orig + missing('simple version', 'explain');
+  if (mode === 'ar') return ar ? `<div class="rd-ar rd-ar-main" id="pa-${p.id}" dir="rtl" lang="ar">${esc(p.ar)}</div><details class="rd-peek"><summary>Show the original text</summary>${orig}</details>` : orig + missing('Arabic translation', 'arabic');
+  return orig;
+}
 function paraCard(paper, p){
   if (isFigure(p)) return figureCard(paper, p);
-  const n = paraNo(paper, p.id);
-  if (p.kind === 'front') return `<article class="para rd-p front" id="para-${p.id}" data-pid="${p.id}">
-    <div class="para-head"><span class="para-no">¶${n}</span><span class="rd-loc">Title, authors and affiliations — not summarised</span><span class="spacer"></span><span class="rd-acts">${paraMenu(paper, p)}</span></div>
-    <div class="orig-full" id="po-${p.id}" dir="auto">${esc(p.text)}</div></article>`;
-  const mode = rdMode(), simple = simpleOf(p), ar = (p.ar || '').trim(), sel = rdSel(paper);
-  const flags = [simple ? 'Simple' : '', ideaOf(p) ? 'Main idea' : '', ar ? 'Arabic' : '', p.mine ? 'Note' : ''].filter(Boolean);
-  const orig = `<div class="orig-full" id="po-${p.id}" dir="auto">${esc(p.text)}</div>`;
-  const missing = (what, tab) => `<p class="rd-missing">No ${what} yet. <button class="linkish" data-act="rp-tools" data-id="${p.id}" data-tab="${tab}">Add one in the study panel</button></p>`;
-  const body = mode === 'simple' ? (simple ? `<div class="rd-alt" id="pv-${p.id}" dir="auto">${esc(simple)}</div><details class="rd-peek"><summary>Show the original text</summary>${orig}</details>` : orig + missing('simple version', 'explain'))
-    : mode === 'ar' ? (ar ? `<div class="rd-ar rd-ar-main" id="pa-${p.id}" dir="rtl" lang="ar">${esc(p.ar)}</div><details class="rd-peek"><summary>Show the original text</summary>${orig}</details>` : orig + missing('Arabic translation', 'arabic'))
-    : orig;
-  return `<article class="para rd-p ${sel && sel.id === p.id ? 'sel' : ''}" id="para-${p.id}" data-pid="${p.id}" data-act="rp-sel" data-id="${p.id}">
-    <div class="para-head">
-      <span class="para-no">¶${n}</span><span class="rd-loc">${p.page ? `p. ${p.page} · ` : ''}${esc(p.section)}${p.kind === 'caption' ? ' · figure/table' : ''}</span>
-      ${flags.length ? `<span class="rd-flags" aria-label="Done for this paragraph">${flags.map(f => `<span>${f}</span>`).join('')}</span>` : ''}
-      <span class="spacer"></span>
-      <span class="rd-acts">
-        ${TTS.ok ? `<button class="btn ghost sm icon" data-act="tts-one" data-id="${p.id}" data-part="from" title="Listen from here" aria-label="Listen from ¶${n} to the end">${icon('play')}</button>` : ''}
-        <button class="btn ghost sm rd-study" data-act="rp-tools" data-id="${p.id}" aria-controls="rdAssist" title="Simple version, Arabic, notes and Ask Claude">${icon('panelright')}<span>Study</span></button>
-        ${paraMenu(paper, p)}
-      </span>
-    </div>
-    ${body}
+  if (p.kind === 'front') return frontLine(paper, p);
+  const n = paraNo(paper, p.id), sel = rdSel(paper), on = !!sel && sel.id === p.id;
+  return `<article class="para rd-p ${on ? 'sel' : ''}" id="para-${p.id}" data-pid="${p.id}" data-act="rp-sel" data-id="${p.id}">
+    <button class="rd-no" dir="ltr" data-act="rp-pick" data-id="${p.id}" aria-label="Select ¶${n}${p.page ? `, page ${p.page}` : ''}" title="¶${n}${p.page ? ` · page ${p.page}` : ''}">${n}</button>
+    ${paraBody(p)}${on ? ctxBar(paper, p) : ''}
   </article>`;
+}
+function ctxBar(paper, p){                                        // the small toolbar under the selected paragraph
+  const n = paraNo(paper, p.id);
+  const b = (tab, ic, l) => `<button class="rd-cb" data-act="rp-tools" data-id="${p.id}" data-tab="${tab}" aria-controls="rdAssist">${icon(ic)}<span>${l}</span></button>`;
+  return `<div class="rd-ctx" role="toolbar" aria-label="Tools for ¶${n}">
+    <span class="rd-ctx-loc">¶${n}${p.page ? ` · p. ${p.page}` : ''}<span class="rd-ctx-sec"> · ${esc(clip(p.section || '', 36))}</span></span>
+    <span class="rd-ctx-btns">${b('explain', 'bulb', 'Explain')}${b('arabic', 'lang', 'Translate')}${b('notes', 'note', 'Notes')}${b('ask', 'sparkle', 'Ask Claude')}
+    ${TTS.ok ? `<button class="rd-cb" data-act="tts-one" data-id="${p.id}" data-part="from" aria-label="Listen from ¶${n}" title="Listen from here">${icon('play')}<span>Listen</span></button>` : ''}
+    ${paraMenu(paper, p)}</span>
+  </div>`;
+}
+/* --- Compare: the original beside the Simple English or Arabic version, paragraph by paragraph --- */
+function compareView(paper){
+  const w = rdCmpWith(), sel = rdSel(paper), items = paper.paras.filter(p => isReadable(p) || isFigure(p));
+  const label = w === 'ar' ? 'Arabic' : 'Simple English', has = p => w === 'ar' ? (p.ar || '').trim() : simpleOf(p);
+  const missing = items.filter(p => isReadable(p) && !has(p)).length;
+  rdCmpStacked = rdStacked();
+  const tools = `${missing ? `<span class="cmp-miss">${missing} of ${items.filter(isReadable).length} paragraphs have no ${w === 'ar' ? 'Arabic translation' : 'simple version'} yet</span>` : ''}
+    ${missing && aiReady() ? `<button class="btn sm" data-act="${w === 'ar' ? 'rp-ar-all' : 'rp-sum-all'}" data-ai-btn>${icon('sparkle')}${w === 'ar' ? 'Translate' : 'Simplify'} ${missing < items.filter(isReadable).length ? 'the rest' : 'all'} with Claude</button>` : ''}`;
+  let last = null;
+  if (rdCmpStacked){                                               // one column: each paragraph, then its version
+    const rows = [];
+    for (const p of items){
+      if (p.section !== last){ rows.push(`<h2 class="rd-h" dir="auto">${esc(p.section)}</h2>`); last = p.section; }
+      rows.push(isFigure(p) ? cmpFig(paper, p) : cmpCell(paper, p, 'orig', sel) + cmpCell(paper, p, w, sel));
+    }
+    return `<div class="cmp cmp-stack" id="cmp" data-with="${w}"><div class="cmp-head"><span class="cmp-lbl">Original, then ${label}</span>${tools}</div>${rows.join('')}</div>`;
+  }
+  const L = [], R = [];
+  for (const p of items){
+    if (p.section !== last){ const h = `<h2 class="rd-h" dir="auto">${esc(p.section)}</h2>`; L.push(h); R.push(h); last = p.section; }
+    if (isFigure(p)){ L.push(cmpFig(paper, p)); continue; }
+    L.push(cmpCell(paper, p, 'orig', sel)); R.push(cmpCell(paper, p, w, sel));
+  }
+  return `<div class="cmp" id="cmp" data-with="${w}">
+    <div class="cmp-head">
+      <div class="cmp-hc"><span class="cmp-lbl">Original</span><label class="cmp-sync"><input type="checkbox" id="cmpSync" ${S.reader.cmpSync !== false ? 'checked' : ''}><span>Keep the columns in step</span></label></div>
+      <div class="cmp-hc"><span class="cmp-lbl">${label}</span>${tools}</div>
+    </div>
+    <div class="cmp-col" id="cmpL" data-side="L" tabindex="0" role="region" aria-label="Original text">${L.join('')}</div>
+    <div class="cmp-col" id="cmpR" data-side="R" tabindex="0" role="region" aria-label="${label}" ${w === 'ar' ? 'dir="rtl" lang="ar"' : ''}>${R.join('')}</div>
+  </div>`;
+}
+function cmpCell(paper, p, kind, sel){
+  const n = paraNo(paper, p.id), on = !!sel && sel.id === p.id, simple = simpleOf(p), ar = (p.ar || '').trim();
+  const none = (what, act, tab) => `<p class="rd-missing">No ${what} yet. <button class="linkish" data-act="rp-tools" data-id="${p.id}" data-tab="${tab}">Add one</button></p>`;
+  const body = kind === 'orig' ? `<div class="orig-full" id="po-${p.id}" dir="auto">${esc(p.text)}</div>`
+    : kind === 'simple' ? (simple ? `<div class="rd-alt" id="pv-${p.id}" dir="auto">${esc(simple)}</div>` : none('simple version', 'rp-sum-one', 'explain'))
+    : (ar ? `<div class="rd-ar-main" id="pa-${p.id}" dir="rtl" lang="ar">${esc(p.ar)}</div>` : none('Arabic translation', 'rp-ar-one', 'arabic'));
+  const ver = kind !== 'orig';
+  return `<article class="para rd-p cmp-p ${ver ? 'cmp-ver' : ''} ${on ? 'sel' : ''}" id="${ver ? 'cmp-' : 'para-'}${p.id}" data-pid="${p.id}" data-act="rp-sel" data-id="${p.id}" ${ver && kind === 'ar' ? 'dir="rtl"' : ''}>
+    <button class="rd-no" dir="ltr" data-act="rp-pick" data-id="${p.id}" aria-label="Select ¶${n}${ver ? ` (${kind === 'ar' ? 'Arabic' : 'Simple English'})` : ''}" title="¶${n}">¶${n}</button>
+    ${body}${on && !ver ? ctxBar(paper, p) : ''}</article>`;
+}
+function cmpFig(paper, f){
+  return `<div class="para cmp-fig" id="para-${f.id}" data-pid="${f.id}">${icon('image')}<span><b>${esc(f.label || 'Figure')}</b> ${esc(clip(f.caption || f.text || '', 110))}</span>
+    <button class="btn sm ghost" data-act="rp-fig-open" data-id="${f.id}">Explain in Figure Lab</button></div>`;
+}
+let cmpDriver = null, cmpRaf = 0;
+function cmpBind(){                                               // keep the columns in step, paragraph by paragraph (not pixel by pixel)
+  const L = $('#cmpL'), R = $('#cmpR'); if (!L || !R) return;
+  for (const col of [L, R]){
+    for (const ev of ['pointerdown', 'wheel', 'touchstart', 'keydown', 'focusin']) col.addEventListener(ev, () => { cmpDriver = col; }, {passive:true});
+    col.addEventListener('scroll', () => {
+      if (cmpDriver !== col) return;
+      cancelAnimationFrame(cmpRaf); cmpRaf = requestAnimationFrame(() => { if (S.reader.cmpSync !== false) cmpFollow(col); rdSpy(); });
+    }, {passive:true});
+  }
+}
+function cmpTopPara(col){                                          // the paragraph at the top of a column, and how much of it is above the reading line
+  const line = col.getBoundingClientRect().top + 12;
+  for (const el of col.querySelectorAll('[data-pid]')){ const r = el.getBoundingClientRect(); if (r.bottom > line + 28) return {el, pid:el.dataset.pid, frac:Math.max(0, Math.min(1, (line - r.top) / Math.max(1, r.height)))}; }
+  return null;
+}
+function cmpMatch(to, from, el){                                   // the same paragraph in the other column (figures exist only in the original: use the next paragraph)
+  let x = el;
+  while (x){ const m = to.querySelector(`[data-pid="${x.dataset.pid}"]`); if (m) return {m, x}; x = x.nextElementSibling; while (x && !x.dataset.pid) x = x.nextElementSibling; }
+  return null;
+}
+function cmpFollow(from){
+  const to = from.id === 'cmpL' ? $('#cmpR') : $('#cmpL'); if (!to) return;
+  const a = cmpTopPara(from); if (!a) return;
+  const hit = cmpMatch(to, from, a.el); if (!hit) return;
+  const frac = hit.x === a.el ? a.frac : 0, line = to.getBoundingClientRect().top + 12, r = hit.m.getBoundingClientRect();
+  to.scrollTop += r.top + frac * r.height - line;
+}
+function cmpAlign(id, again = true){                               // a paragraph chosen in one column: bring its partner level with it (again once the page has settled)
+  const L = $('#cmpL'), R = $('#cmpR'); if (!L || !R || S.reader.cmpSync === false) return;
+  if (again) requestAnimationFrame(() => cmpAlign(id, false));
+  const a = L.querySelector(`[data-pid="${id}"]`), b = R.querySelector(`[data-pid="${id}"]`); if (!a || !b) return;
+  const from = cmpDriver === R ? R : L, to = from === L ? R : L, x = from === L ? a : b, y = from === L ? b : a;
+  to.scrollTop += (y.getBoundingClientRect().top - to.getBoundingClientRect().top) - (x.getBoundingClientRect().top - from.getBoundingClientRect().top);
+}
+/* --- keeping your place: the paragraph at the top of the reading area survives every change of mode or version --- */
+const rdLine = () => (parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--hdr')) || 72) + (parseFloat($('#panel-reader')?.style.getPropertyValue('--rdtop')) || 0) + 16;
+function rdAnchor(){
+  const paper = rPaper(); if (!paper) return null;
+  const L = $('#cmpL');
+  if (L){ const a = cmpTopPara(L); if (a) return {pid:a.pid, off:a.el.getBoundingClientRect().top - L.getBoundingClientRect().top - 12}; }
+  const line = rdLine(), sel = rdSel(paper), sEl = sel && $('#para-' + sel.id);
+  if (sEl){ const r = sEl.getBoundingClientRect(); if (r.top >= line - 4 && r.top < innerHeight * .6) return {pid:sel.id, off:r.top - line}; }
+  for (const el of $$('#rpView .para[data-pid]')){ const r = el.getBoundingClientRect(); if (r.bottom > line + 28) return {pid:el.dataset.pid, off:r.top - line}; }
+  return null;
+}
+function rdRestore(a){
+  if (!a) return;
+  const go = () => {
+    const L = $('#cmpL');
+    if (L){ const el = L.querySelector(`[data-pid="${a.pid}"]`); if (el){ L.scrollTop += el.getBoundingClientRect().top - L.getBoundingClientRect().top - 12 - Math.max(-40, Math.min(a.off, 0)); cmpFollow(L); } window.scrollTo(0, 0); return; }
+    const el = $(`#rpView [data-pid="${a.pid}"]`); if (!el) return;
+    if (el.closest('details') && !el.closest('details').open) el.closest('details').open = true;
+    window.scrollBy(0, el.getBoundingClientRect().top - rdLine() - a.off);
+  };
+  go(); requestAnimationFrame(go);
+}
+function rdReveal(id){                                            // bring a paragraph into view if it is not already
+  const L = $('#cmpL'), el = (L && L.querySelector(`[data-pid="${id}"]`)) || $('#para-' + id); if (!el) return;
+  if (el.closest('details') && !el.closest('details').open) el.closest('details').open = true;
+  const smooth = matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth';
+  if (L && L.contains(el)){ const r = el.getBoundingClientRect(), c = L.getBoundingClientRect(); if (r.top < c.top || r.top > c.bottom - 80){ L.scrollBy({top:r.top - c.top - 40, behavior:smooth}); setTimeout(() => cmpFollow(L), 400); } return; }
+  const r = el.getBoundingClientRect(), pl = parseFloat($('#panel-reader')?.style.getPropertyValue('--rdpl')) || 0;
+  if (r.top < rdLine() || r.top > innerHeight - pl - 80) el.scrollIntoView({behavior:smooth, block:'center'});
+}
+function rdBarEdge(){ const panel = $('#panel-reader'), pl = $('#ttsBar'); if (!panel || panel.hidden || !pl) return; const v = Math.max(0, Math.round(innerHeight - pl.getBoundingClientRect().top)) + 'px'; panel.style.setProperty('--rdplf', v); document.documentElement.style.setProperty('--rdplf-doc', v); }
+let rdSpyRaf = 0;
+function rdSpy(){                                                 // which section you are reading: the outline follows, and your progress is kept
+  const paper = rPaper(), panel = $('#panel-reader'); if (!paper || !panel || panel.hidden || (S.reader.view || 'paras') !== 'paras') return;
+  let el = null;
+  const L = $('#cmpL');
+  if (L){ const a = cmpTopPara(L); el = a && a.el; }
+  else { const line = rdLine(); for (const x of $$('#rpView .rd-p:not(.cmp-ver)')){ if (x.getBoundingClientRect().bottom > line + 28){ el = x; break; } } }
+  if (!el || el.dataset.pid === rdSpyId) return;
+  rdSpyId = el.dataset.pid;
+  const p = paper.paras.find(x => x.id === rdSpyId); if (!p) return;
+  if (isReadable(p)) rdReachAt(paper, p.id);
+  if (p.section !== rdSpySec){ rdSpySec = p.section; rdTocRefresh(); }
+}
+window.addEventListener('scroll', () => { cancelAnimationFrame(rdSpyRaf); rdSpyRaf = requestAnimationFrame(() => { rdBarEdge(); rdSpy(); }); }, {passive:true});
+/* --- sizes the panels depend on: the workspace bar and the audio bar --- */
+let rdRO = null;
+function rdMeasure(){
+  const panel = $('#panel-reader'); if (!panel || panel.hidden) return;
+  const bar = $('#rdBar'), pl = $('#ttsBar');
+  panel.style.setProperty('--rdtop', (bar && getComputedStyle(bar).position === 'sticky' ? bar.offsetHeight : 0) + 'px');
+  panel.style.setProperty('--rdpl', (pl ? pl.offsetHeight : 0) + 'px');
+  panel.style.setProperty('--rdleft', Math.max(0, panel.getBoundingClientRect().left) + 'px');
+  rdBarEdge();
+  const t = $('#rpTitle'); if (t && t.offsetWidth !== +t.dataset.w){ t.dataset.w = t.offsetWidth; grow(t); }
+  if (rdLayout() === 'compare' && (S.reader.view || 'paras') === 'paras' && rdCmpStacked !== null && rdCmpStacked !== rdStacked()){ const a = rdAnchor(); rdRenderView(); rdRestore(a); }
+  rdAssistInert();
+}
+function rdAfterRender(){
+  if (window.ResizeObserver){
+    rdRO ||= new ResizeObserver(() => requestAnimationFrame(rdMeasure));
+    rdRO.disconnect(); ['#rdBar', '#ttsBar', '#panel-reader'].forEach(s => { const el = $(s); if (el) rdRO.observe(el); });
+  }
+  rdMeasure(); cmpBind(); rdHighlights(); rdSpyId = null; rdSpy();
+  if (document.fonts && document.fonts.status !== 'loaded') document.fonts.ready.then(() => $$('#panel-reader textarea[data-rp], #rpTitle').forEach(grow));   // the reading font changes the heights
+}
+/* --- concepts the student marks: highlighted in the paragraph without changing a single character (CSS Custom Highlight API) --- */
+function rdHighlights(){
+  if (!window.CSS || !CSS.highlights || typeof Highlight !== 'function') return;
+  const paper = rPaper(), panel = $('#panel-reader'), ranges = [];
+  if (paper && panel && !panel.hidden) for (const p of paper.paras){
+    const cs = (p.concepts || []).map(c => String(c).trim().toLowerCase()).filter(c => c.length > 1); if (!cs.length) continue;
+    for (const el of [$('#po-' + p.id), $('#pv-' + p.id)]){
+      if (!el) continue;
+      const nodes = [], w = document.createTreeWalker(el, NodeFilter.SHOW_TEXT); let s = '';
+      for (let n; (n = w.nextNode());){ nodes.push([n, s.length]); s += n.nodeValue; }
+      if (!nodes.length) continue;
+      const at = pos => { for (let k = nodes.length - 1; k >= 0; k--) if (pos >= nodes[k][1]) return [nodes[k][0], Math.min(pos - nodes[k][1], nodes[k][0].nodeValue.length)]; return [nodes[0][0], 0]; };
+      const low = s.toLowerCase();
+      for (const c of cs){ let i = 0; while ((i = low.indexOf(c, i)) >= 0){ const r = document.createRange(), a = at(i), b = at(i + c.length); r.setStart(a[0], a[1]); r.setEnd(b[0], b[1]); ranges.push(r); i += c.length; } }
+    }
+  }
+  CSS.highlights.set('rd-concept', new Highlight(...ranges));
 }
 /* --- Study panel: everything for the selected paragraph, one tab at a time --- */
 const AS_TABS = [['explain', 'Explain'], ['arabic', 'Arabic'], ['notes', 'Notes'], ['ask', 'Ask Claude'], ['paper', 'Paper']];
 function assistHTML(paper){
   const p = rdSel(paper), tab = S.reader.as || 'explain', n = p ? paraNo(paper, p.id) : 0;
-  return `<div class="as-head"><div class="as-what"><span class="label">${tab === 'paper' ? 'Whole paper' : 'Selected paragraph'}</span>
-      <b>${tab === 'paper' ? esc(clip(paper.title || paper.name, 70)) : p ? `¶${n} · ${esc(p.section)}${p.page ? ` · p. ${p.page}` : ''}` : '—'}</b></div>
-      <button class="btn ghost icon as-close" data-act="rp-assist-close" aria-label="Close the study panel">${icon('x')}</button></div>
+  const list = paper.paras.filter(isReadable), k = p ? list.indexOf(p) : -1;
+  return `<div class="as-head">
+      <div class="as-what"><span class="label">Selected paragraph</span><b>${p ? `¶${n} · ${esc(p.section)}${p.page ? ` · p. ${p.page}` : ''}` : '—'}</b></div>
+      ${p ? `<div class="as-nav" role="group" aria-label="Move to another paragraph"><button class="btn ghost icon sm" data-act="rp-step" data-v="-1" aria-label="Previous paragraph" title="Previous paragraph" ${k > 0 ? '' : 'disabled'}>${icon('chevl')}</button><button class="btn ghost icon sm" data-act="rp-step" data-v="1" aria-label="Next paragraph" title="Next paragraph" ${k < list.length - 1 ? '' : 'disabled'}>${icon('chevr')}</button></div>` : ''}
+      <button class="btn ghost icon sm as-close" data-act="rp-assist-close" aria-label="Close the study panel" title="Close">${icon('x')}</button></div>
     <div class="as-tabs" role="tablist" aria-label="Study tools">${AS_TABS.map(([k, l]) => `<button role="tab" class="as-tab" id="as-tab-${k}" aria-selected="${k === tab}" aria-controls="asBody" tabindex="${k === tab ? 0 : -1}" data-act="rp-as" data-tab="${k}">${l}</button>`).join('')}</div>
     <div class="as-body" id="asBody" role="tabpanel" aria-labelledby="as-tab-${tab}">${assistBody(paper, p, tab)}</div>`;
 }
+const asHead = (label, extra = '', forId = '') => `<div class="as-sec-h">${forId ? `<label class="label" for="${forId}">${label}</label>` : `<span class="label">${label}</span>`}<span class="as-sec-x">${extra}</span></div>`;
+const srcChip = (src, has) => src === 'me' ? '<span class="chip tag">mine</span>' : src === 'demo' ? '<span class="chip">demo</span>' : has ? '<span class="chip">by Claude — check it</span>' : '';
+const copyIcon = (target, label = 'Copy') => `<button class="btn ghost icon sm" data-act="copy" data-target="${target}" aria-label="${label}" title="${label}">${icon('copy')}</button>`;
 function listenRow(p, n){
-  return `<div class="listen" role="group" aria-label="Listen to ¶${n}"><span class="small muted">${icon('volume')}Listen</span>
-    <button class="btn sm" data-act="tts-one" data-id="${p.id}" data-part="orig">Original</button>
-    <button class="btn sm" data-act="tts-one" data-id="${p.id}" data-part="idea" title="${simpleOf(p) ? 'Listen to the simple version' : 'Write the simple version, then listen'}">Simple</button>
-    ${(p.ar || '').trim() ? `<button class="btn sm" data-act="tts-one" data-id="${p.id}" data-part="ar">Arabic</button>` : ''}
-    <button class="btn sm ghost" data-act="tts-one" data-id="${p.id}" data-part="section" title="Read this whole section, using the parts chosen in the player settings">Section</button>
-    <button class="btn sm ghost" data-act="tts-one" data-id="${p.id}" data-part="from" title="Read from here to the end, using the parts chosen in the player settings">${icon('play')}From here</button></div>`;
+  return `<div class="as-sec as-listen"><span class="label">Listen to ¶${n}</span><div class="as-acts" role="group" aria-label="Listen to ¶${n}">
+    <button class="btn sm" data-act="tts-one" data-id="${p.id}" data-part="orig">${icon('play')}Original</button>
+    <button class="btn sm" data-act="tts-one" data-id="${p.id}" data-part="idea" title="${simpleOf(p) ? 'Listen to the simple version' : 'Write the simple version, then listen'}">${icon('play')}Simple</button>
+    ${(p.ar || '').trim() ? `<button class="btn sm" data-act="tts-one" data-id="${p.id}" data-part="ar">${icon('play')}Arabic</button>` : ''}
+    <button class="btn sm ghost" data-act="tts-one" data-id="${p.id}" data-part="section" title="Read this whole section in the version shown">Whole section</button></div></div>`;
 }
 function assistBody(paper, p, tab){
-  if (tab === 'paper') return rdPaperTools(paper);
   if (!p) return '<p class="small muted">There are no paragraphs to study yet.</p>';
-  const n = paraNo(paper, p.id), paras = paper.paras;
-  if (tab === 'explain') return `${TTS.ok ? listenRow(p, n) : ''}
-    <div class="as-sec">${simpleBlock(p)}</div>
-    <div class="as-sec"><label class="f idea-lbl" for="ri-${p.id}">${icon('bulb')}Main idea in one or two sentences ${p.src === 'ai' ? '<span class="chip">by Claude — check it</span>' : p.src === 'me' ? '<span class="chip tag">mine</span>' : ''}</label>
-    <textarea id="ri-${p.id}" data-rp="idea" data-id="${p.id}" rows="2" placeholder="What is this paragraph saying? Write it simply, in 1–2 sentences.">${esc(p.idea)}</textarea>
-    ${p.aiIdea ? `<div class="ai-alt"><span class="small"><b>Claude’s version:</b> ${esc(p.aiIdea)}</span><button class="btn sm" data-act="rp-use-ai" data-id="${p.id}">Use this</button></div>` : ''}</div>
-    ${(p.terms || []).length ? `<div class="as-sec"><span class="label">Key terms</span><dl class="as-terms">${p.terms.map(t => `<dt>${esc(t.term)}</dt><dd>${esc(t.meaning)}</dd>`).join('')}</dl></div>` : ''}`;
-  if (tab === 'arabic'){
-    const has = (p.ar || '').trim(), block = arBlock(p);
-    return `${has && TTS.ok ? `<div class="listen"><button class="btn sm" data-act="tts-one" data-id="${p.id}" data-part="ar">${icon('play')}Listen in Arabic</button></div>` : ''}
-      ${block ? `<div class="as-sec">${block}</div>` : `<div class="as-empty"><p class="small muted" style="margin:0 0 10px">No Arabic translation for ¶${n} yet. The English original is never changed.</p>
-        <div class="row">${aiReady() ? `<button class="btn sm primary" data-act="rp-ar-one" data-id="${p.id}" data-ai-btn>${icon('sparkle')}Translate with Claude</button>` : ''}<button class="btn sm" data-act="rp-ar-open" data-id="${p.id}">${icon('plus')}Type or paste my own</button></div></div>`}`;
-  }
-  if (tab === 'notes'){
-    const earlier = paras.slice(0, paras.indexOf(p)).filter(x => !isFigure(x)), linked = p.link.to && paras.find(x => x.id === p.link.to);
-    return `<div class="as-sec"><label class="f" for="rm-${p.id}">My memory hook</label><input class="input" id="rm-${p.id}" data-rp="mine" data-id="${p.id}" value="${esc(p.mine)}" placeholder="A keyword, example or picture that helps you remember"></div>
-      <div class="as-sec"><span class="f">How ¶${n} connects to an earlier paragraph</span><div class="as-link">
-        <select data-rp="rel" data-id="${p.id}" aria-label="Relation">${RELS.map(([v,l]) => `<option value="${v}" ${v===p.link.rel?'selected':''}>${l}</option>`).join('')}</select>
-        <select data-rp="to" data-id="${p.id}" aria-label="Earlier paragraph">${['<option value="">no link</option>', ...earlier.map(e => `<option value="${e.id}" ${e.id===p.link.to?'selected':''}>¶${paraNo(paper, e.id)} ${esc(clip(ideaOf(e) || e.text, 42))}</option>`)].join('')}</select></div>
-        ${linked ? `<a href="#para-${linked.id}" class="small link-line" data-act="rp-jump" data-id="${linked.id}">${esc(relLabel(p.link.rel) || 'linked to')} ¶${paraNo(paper, linked.id)}: ${esc(clip(ideaOf(linked) || linked.text, 70))}</a>` : ''}</div>
-      <p class="small muted" style="margin:0">Your notes go into <b>Copy reading notes</b> under Whole paper, and into the idea flow.</p>`;
-  }
+  const n = paraNo(paper, p.id);
+  if (tab === 'explain') return explainTab(paper, p, n);
+  if (tab === 'arabic') return arabicTab(paper, p, n);
+  if (tab === 'notes') return notesTab(paper, p, n);
+  if (tab === 'paper') return sourceTab(paper, p, n);
   if (tab === 'ask') return aiReady() ? chatPanel(paper, p.id)
-    : `<div class="as-empty"><p class="small" style="margin:0 0 6px"><b>Ask Claude about ¶${n}</b></p><p class="small muted" style="margin:0">Questions to Claude work on the published ScholarPath page on claude.ai. Every answer is marked as Claude’s, so you can check it against the paper.</p></div>`;
+    : `<div class="as-note"><p class="small" style="margin:0 0 6px"><b>Ask Claude about ¶${n}</b></p><p class="small muted" style="margin:0">Questions to Claude work on the published ScholarPath page on claude.ai. Claude reads this paragraph, its section and the paper, and every answer is marked as Claude’s so you can check it against the text.</p></div>`;
   return '';
+}
+function explainTab(paper, p, n){
+  const idea = ideaOf(p), terms = p.terms || [];
+  return `${simpleBlock(p)}
+    <div class="as-sec">${asHead('Main idea', `${srcChip(p.src, !!idea)}${idea ? copyIcon('#rix-' + p.id, 'Copy the main idea') : ''}`)}
+      ${idea ? `<p class="as-text" id="rix-${p.id}">${esc(idea)}</p><button class="linkish small as-edit-link" data-act="rp-edit-idea" data-id="${p.id}">Edit it in Notes</button>`
+        : `<p class="as-none">No main idea yet. <button class="linkish" data-act="rp-edit-idea" data-id="${p.id}">Write it in Notes</button></p>`}</div>
+    ${terms.length ? `<div class="as-sec">${asHead('Key terms')}<dl class="as-terms">${terms.map(t => `<dt>${esc(t.term)}</dt><dd>${esc(t.meaning)}</dd>`).join('')}</dl></div>` : ''}
+    ${aiReady() ? `<div class="as-sec"><button class="btn sm as-deeper" data-act="rp-deeper" data-id="${p.id}" data-ai-btn>${icon('sparkle')}Explain in more depth</button></div>` : ''}
+    ${TTS.ok ? listenRow(p, n) : ''}`;
+}
+function simpleBlock(p){
+  const has = simpleOf(p), open = has || simOpen.has(p.id);
+  const head = asHead('Simple English', `${srcChip(p.simpleSrc, has)}${has ? copyIcon('#rs-' + p.id, 'Copy the simple version') : ''}`, open && !simBusy.has(p.id) ? 'rs-' + p.id : '');
+  if (simBusy.has(p.id)) return `<div class="as-sec">${head}<div class="as-busy" id="rs-${p.id}"><span class="spin" aria-hidden="true"></span> Claude is rewriting this paragraph in simple English…</div></div>`;
+  if (open) return `<div class="as-sec">${head}<textarea id="rs-${p.id}" data-rp="simple" data-id="${p.id}" class="as-edit simple-box" rows="3" placeholder="Rewrite the paragraph in your own simple words…">${esc(p.simple || '')}</textarea>
+    ${p.aiSimple ? `<div class="ai-alt"><span class="small"><b>Claude’s version:</b> ${esc(p.aiSimple)}</span><button class="btn sm" data-act="rp-use-ai-simple" data-id="${p.id}">Use this</button></div>` : ''}</div>`;
+  return `<div class="as-sec">${head}<div class="as-none"><span>No simple version yet.</span><span class="as-acts">
+    ${aiReady() ? `<button class="btn sm primary" data-act="rp-sum-one" data-id="${p.id}" data-ai-btn>${icon('sparkle')}Write it with Claude</button>` : ''}
+    <button class="btn sm" data-act="rp-simple-open" data-id="${p.id}">${icon('pen')}Write my own</button></span></div></div>`;
+}
+function arabicTab(paper, p, n){
+  const has = (p.ar || '').trim(), exp = (p.arExp || '').trim(), terms = p.arTerms || [];
+  return `<div class="as-sec">${has || arOpen.has(p.id) ? arBlock(p) : `${asHead('Arabic translation')}<div class="as-none"><span>No Arabic translation for ¶${n} yet. The English original is never changed.</span><span class="as-acts">
+      ${aiReady() ? `<button class="btn sm primary" data-act="rp-ar-one" data-id="${p.id}" data-ai-btn>${icon('sparkle')}Translate with Claude</button>` : ''}<button class="btn sm" data-act="rp-ar-open" data-id="${p.id}">${icon('plus')}Type or paste my own</button></span></div>`}
+      ${has && TTS.ok ? `<span class="as-acts"><button class="btn sm" data-act="tts-one" data-id="${p.id}" data-part="ar">${icon('play')}Listen in Arabic</button></span>` : ''}</div>
+    ${exp ? `<div class="as-sec">${asHead('Explanation in Arabic', `<span class="chip">by Claude — check it</span>${copyIcon('#rx-' + p.id, 'Copy the Arabic explanation')}`)}<div class="as-ar-text" id="rx-${p.id}" dir="rtl" lang="ar">${esc(exp)}</div>
+        ${aiReady() ? `<button class="linkish small" data-act="rp-arexp" data-id="${p.id}" data-ai-btn>Explain again</button>` : ''}</div>`
+      : aiReady() ? `<div class="as-sec">${asHead('Explanation in Arabic')}<div class="as-none"><span>A short explanation of ¶${n} in Arabic, with its key terms in English and Arabic.</span><span class="as-acts"><button class="btn sm" data-act="rp-arexp" data-id="${p.id}" data-ai-btn>${icon('sparkle')}Explain in Arabic</button></span></div></div>` : ''}
+    ${terms.length ? `<div class="as-sec">${asHead('Key terms · English and Arabic', copyIcon('#rt-' + p.id, 'Copy the key terms'))}<table class="as-gloss" id="rt-${p.id}"><tbody>${terms.map(t => `<tr><td lang="en">${esc(t.en)}</td><td dir="rtl" lang="ar">${esc(t.ar)}</td></tr>`).join('')}</tbody></table></div>` : ''}`;
+}
+function notesTab(paper, p, n){
+  const paras = paper.paras, earlier = paras.slice(0, paras.indexOf(p)).filter(x => !isFigure(x)), linked = p.link.to && paras.find(x => x.id === p.link.to), cs = p.concepts || [];
+  return `<div class="as-sec">${asHead('Main idea in my words', srcChip(p.src, !!ideaOf(p)), 'ri-' + p.id)}
+      <textarea id="ri-${p.id}" data-rp="idea" data-id="${p.id}" class="as-edit" rows="2" placeholder="What is this paragraph saying? One or two sentences.">${esc(p.idea)}</textarea>
+      ${p.aiIdea ? `<div class="ai-alt"><span class="small"><b>Claude’s version:</b> ${esc(p.aiIdea)}</span><button class="btn sm" data-act="rp-use-ai" data-id="${p.id}">Use this</button></div>` : ''}</div>
+    <div class="as-sec">${asHead('My notes', '', 'rn-' + p.id)}
+      <textarea id="rn-${p.id}" data-rp="notes" data-id="${p.id}" class="as-edit" rows="3" placeholder="A short summary, a question for class, how this links to your critique…">${esc(p.notes || '')}</textarea></div>
+    <div class="as-sec">${asHead('Important concepts', '', 'rc-' + p.id)}
+      ${cs.length ? `<ul class="as-chips">${cs.map((c, i) => `<li><span>${esc(c)}</span><button class="as-chip-x" data-act="rp-concept-del" data-id="${p.id}" data-i="${i}" aria-label="Remove “${esc(c)}”" title="Remove">${icon('x')}</button></li>`).join('')}</ul>` : ''}
+      <div class="as-add"><input class="input" id="rc-${p.id}" data-concept="${p.id}" placeholder="Add a word or phrase" autocomplete="off"><button class="btn sm" data-act="rp-concept-add" data-id="${p.id}">Add</button></div>
+      <button class="linkish small" data-act="rp-concept-sel" data-id="${p.id}">Add the words I selected in ¶${n}</button>
+      ${cs.length && window.CSS && CSS.highlights ? '<p class="small muted" style="margin:0">Your concepts are highlighted in the paragraph.</p>' : ''}</div>
+    <div class="as-sec">${asHead('Memory hook', '', 'rm-' + p.id)}<input class="input" id="rm-${p.id}" data-rp="mine" data-id="${p.id}" value="${esc(p.mine)}" placeholder="A keyword, example or picture that helps you remember"></div>
+    <details class="as-more" ${linked ? 'open' : ''}><summary>How ¶${n} connects to an earlier paragraph</summary><div class="as-link">
+      <select data-rp="rel" data-id="${p.id}" aria-label="Relation">${RELS.map(([v, l]) => `<option value="${v}" ${v === p.link.rel ? 'selected' : ''}>${l}</option>`).join('')}</select>
+      <select data-rp="to" data-id="${p.id}" aria-label="Earlier paragraph">${['<option value="">no link</option>', ...earlier.map(e => `<option value="${e.id}" ${e.id === p.link.to ? 'selected' : ''}>¶${paraNo(paper, e.id)} ${esc(clip(ideaOf(e) || e.text, 42))}</option>`)].join('')}</select></div>
+      ${linked ? `<a href="#para-${linked.id}" class="small link-line" data-act="rp-jump" data-id="${linked.id}">${esc(relLabel(p.link.rel) || 'linked to')} ¶${paraNo(paper, linked.id)}: ${esc(clip(ideaOf(linked) || linked.text, 70))}</a>` : ''}</details>
+    <p class="as-saved" id="asSaved" aria-live="polite">${icon('check')}<span>Saved in this browser · part of <b>Copy reading notes</b> under Paper</span></p>`;
+}
+function sourceTab(paper, p, n){
+  const list = paper.paras.filter(isReadable), k = list.indexOf(p), prev = list[k - 1], next = list[k + 1], pdf = (paper.pages || []).length, all = paper.paras.filter(x => !isFigure(x));
+  const ref = `${paper.title || paper.name}, ¶${n}, ${p.section}${p.page ? `, ${pdf ? 'PDF page' : 'page'} ${p.page}` : ''}`;
+  return `<div class="as-sec">${asHead('Where it is in the paper')}
+      <dl class="as-src"><dt>Paragraph</dt><dd>¶${n} of ${all.length ? paraNo(paper, all[all.length - 1].id) : n}</dd><dt>Section</dt><dd>${esc(p.section)}</dd><dt>Page</dt><dd>${p.page ? `${pdf ? 'PDF page' : 'Page'} ${p.page}` : 'Not known'}</dd></dl>
+      <span class="as-acts"><button class="btn sm" data-act="rp-jump" data-id="${p.id}">${icon('eye')}Show in the paper</button><button class="btn sm" data-act="copy" data-target="#asRef">${icon('copy')}Copy reference</button></span>
+      <pre class="sr-only" id="asRef">${esc(ref)}</pre></div>
+    <div class="as-sec">${asHead('Original paragraph', copyIcon('#asOrig', 'Copy the original paragraph'))}<blockquote class="as-quote" id="asOrig" dir="auto">${esc(p.text)}</blockquote></div>
+    ${prev || next ? `<div class="as-sec">${asHead('Around it')}${[prev, next].filter(Boolean).map(x => `<button class="as-around" data-act="rp-pick" data-id="${x.id}"><b>¶${paraNo(paper, x.id)} · ${x === prev ? 'before' : 'after'}</b><span>${esc(clip(ideaOf(x) || x.text, 150))}</span></button>`).join('')}</div>` : ''}
+    <div class="as-whole"><h3 class="as-whole-h">Whole paper</h3>${rdPaperTools(paper)}</div>`;
 }
 function rdPaperTools(paper){
   const text = paper.paras.filter(isReadable), done = text.filter(simpleOf).length, todo = text.filter(p => !simpleOf(p) || !ideaOf(p)), noAr = text.filter(p => !(p.ar || '').trim()).length;
-  return `<div class="as-sec"><span class="label">Simple versions</span><span class="small"><b>${done}</b> of ${text.length} paragraphs</span>
+  return `<div class="as-sec">${asHead('Simple versions')}<span class="small"><b>${done}</b> of ${text.length} paragraphs</span>
       <div class="progress"><span style="width:${text.length ? done / text.length * 100 : 0}%"></span></div>
-      ${aiReady() && (todo.length || noAr) ? `<div class="row">${todo.length ? `<button class="btn sm primary" data-act="rp-sum-all" data-ai-btn>${icon('sparkle')}Simplify ${done ? 'the rest' : 'all'} with Claude</button>` : ''}${noAr ? `<button class="btn sm" data-act="rp-ar-all" data-ai-btn>${icon('sparkle')}Translate ${noAr < text.length ? 'the rest' : 'all'} to Arabic</button>` : ''}</div>` : ''}</div>
-    <div class="as-sec"><span class="label">Use your reading</span><div class="as-stack">
+      ${aiReady() && (todo.length || noAr) ? `<span class="as-acts">${todo.length ? `<button class="btn sm primary" data-act="rp-sum-all" data-ai-btn>${icon('sparkle')}Simplify ${done ? 'the rest' : 'all'} with Claude</button>` : ''}${noAr ? `<button class="btn sm" data-act="rp-ar-all" data-ai-btn>${icon('sparkle')}Translate ${noAr < text.length ? 'the rest' : 'all'} to Arabic</button>` : ''}</span>` : ''}</div>
+    <div class="as-sec">${asHead('Use your reading')}<span class="as-acts">
       ${copyBtn('#rpNotes', 'Copy reading notes')}
       <button class="btn sm" data-act="rp-to-crit">${icon('clip')}Use in Critique</button>
-      <button class="btn sm" data-act="rp-evidence" title="Where did each statement of your critique come from?">${icon('link')}Trace my evidence</button></div></div>
-    <div class="as-sec"><span class="label">Ask Claude about this paper</span>
+      <button class="btn sm" data-act="rp-evidence" title="Where did each statement of your critique come from?">${icon('link')}Trace my evidence</button></span></div>
+    <div class="as-sec">${asHead('Ask Claude about this paper')}
       ${aiReady() ? chatPanel(paper, 'paper') : '<p class="small muted" style="margin:0">Questions about the whole paper (the method, the results, what your professor might ask) work on the published ScholarPath page on claude.ai.</p>'}</div>`;
 }
 function renderAssist(){
   const paper = rPaper(), el = $('#rdAssist'); if (!paper || !el) return;
+  const top = el.scrollTop;
   el.innerHTML = assistHTML(paper);
   $$('#rdAssist textarea[data-rp]').forEach(grow);
   if (aiRun) $$('#rdAssist [data-ai-btn]').forEach(b => b.disabled = true);
   const box = $('#rdAssist .chat-msgs'); if (box) box.scrollTop = box.scrollHeight;
+  el.scrollTop = top;
 }
 const rdDrawer = () => { const a = $('#rdAssist'); return !!a && getComputedStyle(a).position === 'fixed'; };
-const rdWide = () => ($('#panel-reader')?.clientWidth || innerWidth) >= 1100;
-function rdAssistInert(){ const a = $('#rdAssist'), rd = $('#rd'); if (!a || !rd) return; if (!rdDrawer()) rd.classList.remove('as-open'); a.inert = rdDrawer() && !rd.classList.contains('as-open'); }
+const rdOlOverlay = () => { const o = $('#rdOutline'); return !!o && getComputedStyle(o).position === 'fixed'; };
+function rdAssistInert(){ const a = $('#rdAssist'), rd = $('#rd'); if (!a || !rd) return; if (!rdDrawer()) rd.classList.remove('as-open'); a.inert = rdDrawer() && !rd.classList.contains('as-open'); rdModal(); }
+function rdModal(){                                               // a panel either covers the paper (dimmed behind it) or the paper moves aside for it
+  const rd = $('#rd'), panel = $('#panel-reader'); if (!rd || !panel) return;
+  const w = panel.clientWidth, lay = rdLayout(), ol = rd.hasAttribute('data-ol'), asOpen = rd.classList.contains('as-open');
+  const asModal = asOpen && (lay === 'read' ? (w < 1000 || (ol && w < 1300)) : w < 1100);
+  rd.classList.toggle('modal', asModal || (ol && rdOlOverlay()));
+  rd.classList.toggle('as-shift', asOpen && lay === 'read' && !asModal);
+}
 function rdAssistOpen(open, focus=true){
   const rd = $('#rd'); if (!rd) return;
+  if (open && rd.hasAttribute('data-ol') && rdOlOverlay()) rdOutline(false, false);
   rd.classList.toggle('as-open', open && rdDrawer()); rdAssistInert();
+  $('#rdBar .rd-as-btn')?.setAttribute('aria-expanded', String(rd.classList.contains('as-open')));
   if (open && focus) setTimeout(() => ($('#rdAssist .as-tab[aria-selected="true"]') || $('#rdAssist'))?.focus(), 30);
 }
+function rdOutline(open, focus=true){                             // show or hide the outline in this mode (remembered per mode)
+  const rd = $('#rd'); if (!rd) return;
+  (S.reader.ol ||= {})[rdLayout()] = open; save();
+  rd.toggleAttribute('data-ol', open);
+  if (open && rdOlOverlay()) rd.classList.remove('as-open');
+  $$('#panel-reader [data-act="rp-outline"].rd-ol-btn').forEach(b => { b.setAttribute('aria-expanded', String(open)); const l = `${open ? 'Hide' : 'Show'} the outline`; b.setAttribute('aria-label', l); b.title = l; });
+  rdAssistInert();
+  if (open) rdTocRefresh();
+  if (focus) setTimeout(() => (open ? $('#rdFind') : $('#rdBar .rd-ol-btn'))?.focus(), 30);
+}
 window.addEventListener('resize', () => rdAssistInert());
-function rdSelect(id, {tab, open} = {}){
+document.addEventListener('pointerdown', e => {                    // the audio settings close when you tap anywhere else
+  if (!S.reader.playerOpen || !e.target.closest || e.target.closest('#ttsBar, dialog')) return;
+  const m = $('#plMore'); if (!m || m.hidden) return;
+  S.reader.playerOpen = false; save(); renderTtsBar();
+}, true);
+function rdSelect(id, {tab, open, reveal} = {}){
   const paper = rPaper(); if (!paper) return;
+  const p = paper.paras.find(x => x.id === id); if (!p || !isReadable(p)) return;
   (S.reader.sels ||= {})[paper.id] = id; if (tab) S.reader.as = tab; save();
-  $$('#panel-reader .rd-p.sel').forEach(e => e.classList.remove('sel')); $('#para-' + id)?.classList.add('sel');
+  $$('#panel-reader .rd-p.sel').forEach(e => e.classList.remove('sel'));
+  $$('#rpView .rd-ctx').forEach(e => e.remove());
+  const card = $('#para-' + id); if (card){ card.classList.add('sel'); if (card.classList.contains('rd-p')) card.insertAdjacentHTML('beforeend', ctxBar(paper, p)); }
+  $('#cmp-' + id)?.classList.add('sel');
+  rdReachAt(paper, id);
   renderAssist();
-  const toc = $('#rdToc'); if (toc) toc.innerHTML = tocHTML(paper);
   if (!TTS.playing) renderTtsBar();
   if (open) rdAssistOpen(true);
+  if (reveal) rdReveal(id);
+}
+function rdSetMode(v, fromPlayer){                                // the version shown (and read aloud): Original, Simple English or Arabic
+  const a = rdAnchor();
+  S.reader.mode = MODE_PARTS[v] ? v : 'orig'; save();
+  $$('#panel-reader [data-act="rp-mode"]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.v === S.reader.mode)));
+  if (rdLayout() !== 'compare' && (S.reader.view || 'paras') === 'paras'){ rdRenderView(); rdRestore(a); }
+  const now = TTS.playing && ttsMain(TTS.ctx) && TTS.list[TTS.i]; if (now) ttsPlayAll(now.pid); else renderTtsBar();
+  if (fromPlayer) $('#ttsVer')?.focus();
+}
+function rdConceptAdd(id, text){                                  // an important concept for this paragraph (highlighted in the text, never changing it)
+  const paper = rPaper(), p = paper && paper.paras.find(x => x.id === id); text = String(text || '').replace(/\s+/g, ' ').trim().slice(0, 80);
+  if (!p) return; if (!text) return $('#rc-' + id)?.focus();
+  p.concepts ||= [];
+  if (!p.concepts.some(c => c.toLowerCase() === text.toLowerCase())) p.concepts.push(text);
+  save(); renderAssist(); rdHighlights(); const n = $('#rpNotes'); if (n) n.textContent = readingNotes(paper); $('#rc-' + id)?.focus();
+}
+let rdSavedT = 0;
+function rdSaved(){                                               // the Notes tab says that typing is saved
+  const el = $('#asSaved span'); if (!el) return;
+  el.textContent = 'Saving…'; clearTimeout(rdSavedT);
+  rdSavedT = setTimeout(() => { const e2 = $('#asSaved span'); if (e2) e2.textContent = `Saved in this browser · ${new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})}`; }, 450);
+}
+const DEEPER_Q = 'Explain this paragraph in more depth for a master’s student: its key concepts, how it fits the study, and what each technical term means here.';
+async function explainArabic(paper, p){                            // a short Arabic explanation and an English–Arabic list of terms (Claude, marked as Claude's)
+  if (!aiReady() || aiRun || !p) return;
+  const ctl = new AbortController(); aiRun = {ctl, label:'Explaining ¶' + paraNo(paper, p.id) + ' in Arabic'}; renderAiBar();
+  try {
+    const r = await AI.json(`You help an Arabic-speaking master's student understand one paragraph of a research paper.
+Write a short explanation of the paragraph in clear Modern Standard Arabic (3–5 sentences): what it says and why it matters in the study. Explain only what the paragraph says: do not add findings, numbers, names or citations that are not in it.
+Then list up to 6 important technical terms that appear in the paragraph, each with an accurate Arabic equivalent.
+Paper: "${paper.title}"
+Section: ${p.section}
+Paragraph:
+${p.text.slice(0, 5000)}
+
+Reply with only JSON: {"explanation":"...","terms":[{"en":"...","ar":"..."}]}`, {signal:ctl.signal, modelTier:'default'});
+    if (r && typeof r.explanation === 'string' && r.explanation.trim()){
+      p.arExp = r.explanation.trim();
+      p.arTerms = (Array.isArray(r.terms) ? r.terms : []).filter(t => t && t.en && t.ar).slice(0, 8).map(t => ({en:String(t.en).trim(), ar:String(t.ar).trim()}));
+      save();
+    } else toast('Claude did not return an explanation — please try again');
+  } catch (e){ if (e && e.code !== 'cancelled') alert(aiError(e)); }
+  finally { aiRun = null; renderAiBar(); renderAssist(); }
 }
 let rdFindT = 0;
 function rdFind(q){                                               // search in this paper: words in the original, simple or Arabic text
@@ -3921,32 +4492,20 @@ function rdFind(q){                                               // search in t
     return `<a href="#para-${p.id}" class="rd-hit" data-act="rp-jump" data-id="${p.id}"><b>${isFigure(p) ? esc(p.label || 'Figure') : '¶' + paraNo(paper, p.id)}</b> <span dir="auto">${a ? '…' : ''}${esc(t.slice(a, i))}<mark>${esc(t.slice(i, i + q.length))}</mark>${esc(t.slice(i + q.length, i + q.length + 60))}…</span></a>`;
   }).join('')}`;
 }
-function simpleBlock(p){
-  const has = simpleOf(p), chip = p.simpleSrc === 'me' ? '<span class="chip tag">mine</span>' : p.simpleSrc === 'demo' ? '<span class="chip">demo</span>' : has ? '<span class="chip">by Claude — check it</span>' : '';
-  const head = `<label class="part-lbl simple-lbl" for="rs-${p.id}">${icon('sparkle')}Simple English version ${chip}</label>`;
-  if (simBusy.has(p.id)) return head + `<div class="simple-box simple-busy" id="rs-${p.id}"><span class="spin" aria-hidden="true"></span> Claude is rewriting this paragraph in simple English…</div>`;
-  if (has || simOpen.has(p.id)) return head + `<textarea id="rs-${p.id}" data-rp="simple" data-id="${p.id}" class="simple-box" rows="3" placeholder="Rewrite the paragraph in your own simple words…">${esc(p.simple || '')}</textarea>
-    ${p.aiSimple ? `<div class="ai-alt"><span class="small"><b>Claude’s version:</b> ${esc(p.aiSimple)}</span><button class="btn sm" data-act="rp-use-ai-simple" data-id="${p.id}">Use this</button></div>` : ''}`;
-  return head + `<div class="simple-box simple-empty"><span class="small muted">No simple version yet.</span>
-    ${aiReady() ? `<button class="btn sm primary" data-act="rp-sum-one" data-id="${p.id}" data-ai-btn>${icon('sparkle')}Write it with Claude</button>` : ''}
-    <button class="btn sm" data-act="rp-simple-open" data-id="${p.id}">${icon('pen')}Write my own</button></div>`;
-}
 let readerFigURLs = [];
 const figReviewOf = (paper, f) => S.figlab.reviews.find(r => r.srcKey === paper.id + ':' + f.id);
-function figureCard(paper, f){
+function figureCard(paper, f){                                     // a figure or table: its picture and caption, explained in Figure Lab (never read aloud)
   if (!f.label){ const m = (f.text || '').match(/^(fig(?:ure)?\.?|table)\s*([\dIVX]+)[.:]?\s*/i); if (m){ f.label = /^t/i.test(m[1]) ? `Table ${m[2]}` : `Fig. ${m[2]}`; f.caption = f.text.slice(m[0].length); } else f.caption = f.text; }
   const r = figReviewOf(paper, f), table = f.figKind === 'table' || /^table/i.test(f.label || '');
-  return `<article class="para figure-card" id="para-${f.id}">
-    <div class="para-head"><span class="para-no">${icon('image')}${esc(f.label || 'Figure')}</span>
-      <span class="rd-loc">${f.page ? `p. ${f.page} · ` : ''}${table ? 'table' : 'figure'} · shown as a picture, not read aloud</span><span class="spacer"></span>
-      <span class="rd-acts">${paraMenu(paper, f)}</span></div>
+  return `<figure class="para figure-card rd-fig" id="para-${f.id}" data-pid="${f.id}">
     ${f.img ? `<div class="fig-shot"><img data-figkey="${paper.id}:${f.id}" alt="${esc(f.label || 'Figure')} from page ${f.page || ''} of the paper"></div>`
       : f.demo ? `<div class="fig-shot demo-fig">${miniPreview('stacked')}<div class="small muted">Demo figure (illustration)</div></div>`
       : `<p class="small muted">${table ? 'Table' : 'Figure'} here${f.page ? ` (page ${f.page})` : ''} — no picture is available${paper.pages.length ? '' : ' for pasted text'}.</p>`}
-    ${f.caption ? `<p class="fig-cap"><b>${esc(f.label || '')}.</b> ${esc(f.caption)}</p>` : ''}
+    <figcaption class="fig-cap"><b>${esc(f.label || (table ? 'Table' : 'Figure'))}.</b> ${esc(f.caption || '')}</figcaption>
     ${r && (r.pattern || r.importance) ? `<p class="small fig-done">${icon('check')}<span><b>Explained in Figure Lab:</b> ${esc(clip(r.pattern || r.importance, 160))}</span></p>` : ''}
-    <div class="row"><button class="btn sm primary" data-act="rp-fig-open" data-id="${f.id}">${icon('image')}${r && (r.ai || r.pattern) ? 'Open its explanation in Figure Lab' : 'Explain it in Figure Lab'}</button></div>
-  </article>`;
+    <div class="rd-fig-acts"><button class="btn sm" data-act="rp-fig-open" data-id="${f.id}">${icon('image')}${r && (r.ai || r.pattern) ? 'Open its explanation in Figure Lab' : 'Explain it in Figure Lab'}</button>
+      <span class="small muted">${table ? 'Table' : 'Figure'}${f.page ? ` · p. ${f.page}` : ''} · shown as a picture, not read aloud</span><span class="spacer"></span>${paraMenu(paper, f)}</div>
+  </figure>`;
 }
 async function loadReaderFigs(){
   readerFigURLs.forEach(u => URL.revokeObjectURL(u)); readerFigURLs = [];
@@ -3978,7 +4537,10 @@ async function openFigureInLab(paper, f){
 }
 function refreshCards(list){
   const paper = rPaper(); if (!paper || S.ui.tab !== 'reader') return;
-  if ((S.reader.view || 'paras') === 'paras') list.forEach(p => { const el = $('#para-' + p.id); if (el) el.outerHTML = paraCard(paper, p); });
+  if ((S.reader.view || 'paras') === 'paras'){
+    if (rdLayout() === 'compare'){ const sel = rdSel(paper); list.forEach(p => { if (!isReadable(p)) return; const a = $('#para-' + p.id), b = $('#cmp-' + p.id); if (a) a.outerHTML = cmpCell(paper, p, 'orig', sel); if (b) b.outerHTML = cmpCell(paper, p, rdCmpWith(), sel); }); }
+    else list.forEach(p => { const el = $('#para-' + p.id); if (el) el.outerHTML = paraCard(paper, p); });
+  }
   const sel = rdSel(paper), f = document.activeElement, a = $('#rdAssist'), typing = a && a.contains(f) && /INPUT|TEXTAREA|SELECT/.test(f.tagName);
   if (sel && list.some(p => p.id === sel.id) || S.reader.as === 'paper'){
     if (typing && sel){ [['#rs-', 'simple'], ['#ri-', 'idea']].forEach(([q, k]) => { const box = $(q + sel.id); if (box && box !== f && box.tagName === 'TEXTAREA') box.value = sel[k] || ''; }); }
@@ -3986,10 +4548,9 @@ function refreshCards(list){
   }
   if (list.some(isFigure)) loadReaderFigs();
   const text = paper.paras.filter(isReadable), done = text.filter(simpleOf).length;
-  const pr = $('#rpProg span'); if (pr) pr.style.width = (text.length ? done / text.length * 100 : 0) + '%';
-  const cnt = $('#rpDone'); if (cnt) cnt.textContent = done;
+  const pos = $('#rdPos'); if (pos) pos.innerHTML = progressHTML(paper);
   const notes = $('#rpNotes'); if (notes) notes.textContent = readingNotes(paper);
-  if (TTS.playing) ttsMark(TTS.list[TTS.i], false);
+  if (TTS.playing) ttsMark(TTS.list[TTS.i], false); else rdHighlights();
 }
 function flowView(paper){
   const items = paper.paras.filter(p => isReadable(p) || isFigure(p));
@@ -4038,6 +4599,8 @@ function readingNotes(paper){
     const to = p.link.to && paper.paras.find(x => x.id === p.link.to);
     L.push(`¶${paraNo(paper, p.id)}${p.page ? ` (p. ${p.page})` : ''}: ${ideaOf(p) || '—'}${to ? `  [${relLabel(p.link.rel) || 'linked to'} ¶${paraNo(paper, to.id)}]` : ''}`);
     if (p.mine) L.push(`   Memory hook: ${p.mine}`);
+    if ((p.notes || '').trim()) L.push(`   My notes: ${p.notes.trim().replace(/\n+/g, ' / ')}`);
+    if ((p.concepts || []).length) L.push(`   Important concepts: ${p.concepts.join(', ')}`);
     (p.terms||[]).forEach(t => L.push(`   • ${t.term}: ${t.meaning}`));
   });
   return L.join('\n');
@@ -7161,7 +7724,7 @@ const ACTIONS = {
   step: el => { goStep(el.dataset.part, +el.dataset.i); window.scrollTo({top:0}); },
   goto: el => { goStep(el.dataset.part, +el.dataset.i); window.scrollTo({top:0}); },
   'nav-group': el => { const nav = (S.ui.navOpen ||= {}); nav[el.dataset.part] = el.getAttribute('aria-expanded') !== 'true'; save(); renderTabs(); $(`#parts [data-act="nav-group"][data-part="${el.dataset.part}"]`)?.focus(); },
-  'side-toggle': () => { S.ui.side = S.ui.side === 'mini' ? 'full' : 'mini'; save(); applySide(); measureHeader(); },
+  'side-toggle': () => { const k = S.ui.tab === 'reader' ? 'sideReader' : 'side'; S.ui[k] = sideMode() === 'mini' ? 'full' : 'mini'; save(); applySide(); measureHeader(); rdMeasure(); },
   'side-open': () => sideDrawer(true),
   'dash-open': el => { if (TTS.playing) ttsPause(); S.reader.active = el.dataset.id; S.reader.view = 'paras'; save(); goStep('critiquing', 0); window.scrollTo({top:0}); },
   'dash-upload': () => { goStep('critiquing', 0); $('#rpFile')?.click(); },
@@ -7175,7 +7738,7 @@ const ACTIONS = {
     applyFs();
   },
   theme: () => { S.theme = {auto:'light', light:'dark', dark:'auto'}[S.theme] || 'auto'; applyTheme(); save(); toast({auto:'Theme follows your system', light:'Light mode', dark:'Dark mode'}[S.theme]); },
-  copy: el => { const t = $(el.dataset.target); if (t) copyText(t.textContent); },
+  copy: el => { const t = $(el.dataset.target); if (t) copyText(/^(TEXTAREA|INPUT)$/.test(t.tagName) ? t.value : t.tagName === 'TABLE' ? t.innerText : t.textContent); },
   search: () => { const r = buildSearch(); if (!r) return; window.open(r.url, '_blank', 'noopener'); if (r.db.note) copyText(r.q, 'Query copied — paste it into Web of Science'); },
   'fl-scan-all': el => { if (!figScan) return; figScan.items.forEach(i => i.sel = el.dataset.v === '1'); RENDER.figlab(); },
   'fl-scan-go': el => { if (!figScan || figRun) return; const sel = figScan.items.filter(i => i.sel); if (sel.length) figRunItems(sel, el.dataset.v === 'ai'); },
@@ -7278,21 +7841,48 @@ const ACTIONS = {
     const paper = rPaper(), i = paper.paras.findIndex(x => x.id === el.dataset.id), a = paper.paras[i], b = paper.paras[i+1];
     if (!b) return toast('This is the last paragraph');
     a.text += ' ' + b.text; a.idea = [a.idea, b.idea].filter(x => x && x.trim()).join(' '); a.terms = [...(a.terms||[]), ...(b.terms||[])].slice(0,4);
+    a.notes = [a.notes, b.notes].filter(x => x && x.trim()).join('\n'); a.concepts = [...new Set([...(a.concepts || []), ...(b.concepts || [])])];
     paper.paras.splice(i+1, 1); paper.paras.forEach(x => { if (x.link.to === b.id) x.link.to = x === a ? '' : a.id; });
     save(); RENDER.reader(); $('#para-' + a.id)?.scrollIntoView({block:'center'});
   },
   'rp-drop': el => { const paper = rPaper(); if (!confirm('Remove this paragraph from your reading?')) return; const id = el.dataset.id; paper.paras = paper.paras.filter(x => x.id !== id); paper.paras.forEach(x => { if (x.link.to === id) x.link = {to:'', rel:''}; }); save(); RENDER.reader(); },
   'rp-jump': (el, e) => { e.preventDefault(); if ((S.reader.view||'paras') !== 'paras'){ S.reader.view = 'paras'; RENDER.reader(); }
     const paper = rPaper(), id = el.dataset.id, p = paper && paper.paras.find(x => x.id === id); if (p && isReadable(p)) rdSelect(id);
-    const t = $('#para-' + id); if (t){ t.scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block:'center'}); t.classList.add('flash'); setTimeout(() => t.classList.remove('flash'), 1400); } },
-  'rp-sel': (el, e) => { if (e.target.closest('button, a, summary, details, input, textarea, select, label')) return; const s = getSelection(); if (s && !s.isCollapsed && s.toString().trim()) return; rdSelect(el.dataset.id); },
-  'rp-tools': el => { rdSelect(el.dataset.id, {tab:el.dataset.tab || (S.reader.as === 'paper' ? 'explain' : S.reader.as || 'explain'), open:true});
-    const a = $('#rdAssist'); if (a && !rdDrawer()){ a.classList.add('flash'); clearTimeout(a._flash); a._flash = setTimeout(() => a.classList.remove('flash'), 900); } },
+    if ($('#rd')?.hasAttribute('data-ol') && rdOlOverlay()) rdOutline(false, false);
+    const L = $('#cmpL'), t = (L && L.querySelector(`[data-pid="${id}"]`)) || $('#para-' + id);
+    if (t){ const d = t.closest('details'); if (d) d.open = true;
+      if (L && L.contains(t)){ L.scrollBy({top:t.getBoundingClientRect().top - L.getBoundingClientRect().top - 24}); cmpFollow(L); }
+      else t.scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block:'center'});
+      t.classList.add('flash'); setTimeout(() => t.classList.remove('flash'), 1400); } },
+  'rp-sel': (el, e) => { if (e.target.closest('button, a, summary, details, input, textarea, select, label')) return; const s = getSelection(); if (s && !s.isCollapsed && s.toString().trim()) return;
+    const col = el.closest('.cmp-col'); if (col) cmpDriver = col; rdSelect(el.dataset.id); if (col) cmpAlign(el.dataset.id); },
+  'rp-pick': el => { const id = el.dataset.id, inAs = !!el.closest('#rdAssist'), col = el.closest('.cmp-col'); if (col) cmpDriver = col;
+    rdSelect(id, {reveal:true}); if ($('#cmpL')) cmpAlign(id); if (!inAs) setTimeout(() => $(`#para-${id} .rd-ctx .rd-cb`)?.focus(), 30); },
+  'rp-step': el => { const paper = rPaper(), list = paper.paras.filter(isReadable), nx = list[list.indexOf(rdSel(paper)) + (+el.dataset.v)]; if (!nx) return;
+    rdSelect(nx.id, {reveal:true}); if ($('#cmpL')) cmpAlign(nx.id); ($(`#rdAssist [data-act="rp-step"][data-v="${el.dataset.v}"]:not(:disabled)`) || $('#rdAssist [data-act="rp-step"]:not(:disabled)'))?.focus(); },
+  'rp-tools': el => { rdSelect(el.dataset.id, {tab:el.dataset.tab || S.reader.as || 'explain', open:true});
+    const a = $('#rdAssist'); if (a && !rdDrawer()){ a.classList.add('flash'); clearTimeout(a._flash); a._flash = setTimeout(() => a.classList.remove('flash'), 900); $('#as-tab-' + (S.reader.as || 'explain'))?.focus(); } },
   'rp-as': el => { S.reader.as = el.dataset.tab; save(); renderAssist(); $('#as-tab-' + el.dataset.tab)?.focus(); },
-  'rp-assist-close': () => { rdAssistOpen(false); const sel = rPaper() && rdSel(rPaper()); $(`#para-${sel && sel.id} .rd-study`)?.focus(); },
-  'rp-mode': el => { S.reader.mode = MODE_PARTS[el.dataset.v] ? el.dataset.v : 'orig'; save();
-    const now = TTS.playing && ttsMain(TTS.ctx) && TTS.list[TTS.i]; if (now) ttsPlayAll(now.pid); else renderTtsBar();
-    if (el.closest('#ttsBar')) $(`#ttsBar [data-act="rp-mode"][data-v="${S.reader.mode}"]`)?.focus(); const paper = rPaper(); $('#rpView').innerHTML = parasView(paper); $$('#panel-reader [data-act="rp-mode"]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.v === S.reader.mode))); loadReaderFigs(); if (TTS.playing) ttsMark(TTS.list[TTS.i], false); },
+  'rp-assist-close': () => { rdAssistOpen(false); const sel = rPaper() && rdSel(rPaper()); ($(`#para-${sel && sel.id} .rd-ctx .rd-cb`) || $('#rdBar .rd-modeseg [aria-pressed="true"]'))?.focus(); },
+  'rp-scrim': () => { const rd = $('#rd'); if (rd?.classList.contains('as-open')) ACTIONS['rp-assist-close'](); if (rd?.hasAttribute('data-ol') && rdOlOverlay()) rdOutline(false); },
+  'rp-outline': () => rdOutline(!$('#rd')?.hasAttribute('data-ol')),
+  'rp-assist-toggle': () => { const rd = $('#rd'); if (!rd) return; if (rd.classList.contains('as-open')) return ACTIONS['rp-assist-close']();
+    if ((S.reader.view || 'paras') !== 'paras' && S.reader.as !== 'paper'){ S.reader.as = 'paper'; save(); renderAssist(); }
+    if (rdDrawer()) rdAssistOpen(true); else { const a = $('#rdAssist'); a.classList.add('flash'); clearTimeout(a._flash); a._flash = setTimeout(() => a.classList.remove('flash'), 900); $('#as-tab-' + (S.reader.as || 'explain'))?.focus(); } },
+  'rp-toc-x': el => { const sec = el.dataset.sec; tocOpen.set(sec, el.getAttribute('aria-expanded') !== 'true'); rdTocRefresh(); [...$$('#rdToc .rd-toc-x')].find(b => b.dataset.sec === sec)?.focus(); },
+  'rp-layout': el => { const v = el.dataset.v; if (v === rdLayout()) return; const a = rdAnchor(); S.reader.layout = v; save(); chatOpen = null; $('#rd')?.classList.remove('as-open');
+    RENDER.reader(); rdRestore(a); $(`#rdBar [data-act="rp-layout"][data-v="${v}"]`)?.focus(); },
+  'rp-cmp': el => { const a = rdAnchor(); S.reader.cmpWith = el.dataset.v === 'ar' ? 'ar' : 'simple'; save();
+    $$('#rdBar [data-act="rp-cmp"]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.v === S.reader.cmpWith))); rdRenderView(); rdRestore(a); },
+  'rp-edit-idea': el => { S.reader.as = 'notes'; save(); renderAssist(); $('#ri-' + el.dataset.id)?.focus(); },
+  'rp-deeper': el => { const id = el.dataset.id; S.reader.as = 'ask'; save(); renderAssist(); chatSend(id, DEEPER_Q); },
+  'rp-arexp': el => { const paper = rPaper(); explainArabic(paper, paper.paras.find(x => x.id === el.dataset.id)); },
+  'rp-concept-add': el => rdConceptAdd(el.dataset.id, $('#rc-' + el.dataset.id)?.value),
+  'rp-concept-del': el => { const paper = rPaper(), p = paper.paras.find(x => x.id === el.dataset.id); if (!p) return; (p.concepts ||= []).splice(+el.dataset.i, 1); save(); renderAssist(); rdHighlights(); $('#rpNotes').textContent = readingNotes(paper); $('#rc-' + p.id)?.focus(); },
+  'rp-concept-sel': el => { const id = el.dataset.id, s = TTS.sel; if (!s || s.pid !== id || !s.text.trim()) return toast(`Select some words in ¶${paraNo(rPaper(), id)} of the paper first, then press this again`); rdConceptAdd(id, s.text); },
+  'tts-para-skip': el => ttsSkipPara(+el.dataset.v),
+  'tts-min': () => { S.reader.plMin = !S.reader.plMin; if (S.reader.plMin) S.reader.playerOpen = false; save(); renderTtsBar(); $('#ttsBar [data-act="tts-min"]')?.focus(); },
+  'rp-mode': el => rdSetMode(el.dataset.v, !!el.closest('#ttsBar')),
   'tts-panel': () => { S.reader.playerOpen = !S.reader.playerOpen; save(); renderTtsBar(); $('#ttsBar [data-act="tts-panel"]')?.focus(); },
   'rp-to-crit': () => {
     const paper = rPaper(); let c = activeCrit();
@@ -7384,9 +7974,14 @@ document.addEventListener('keydown', e => {
   if (e.target.id === 'q' && e.key === 'Enter'){ e.preventDefault(); ACTIONS.search(); }
   if (e.target.dataset.chatIn && e.key === 'Enter' && !e.shiftKey && !e.isComposing){ e.preventDefault(); const sc = e.target.dataset.chatIn; const q = e.target.value; e.target.value = ''; chatSend(sc, q); }
   if (e.key === 'Escape' && $('#app').classList.contains('side-open')){ e.preventDefault(); sideDrawer(false); }
-  if (e.key === 'Escape' && $('#rd.as-open')){ e.preventDefault(); ACTIONS['rp-assist-close'](); }
-  else if (e.key === 'Escape' && S.reader.playerOpen && e.target.closest('#ttsBar')){ e.preventDefault(); ACTIONS['tts-panel'](); }
-  if (e.key === 'Escape' && e.target.closest('details.menu[open]')){ const d = e.target.closest('details.menu'); d.open = false; d.querySelector('summary').focus(); }
+  if (e.key === 'Escape' && !$('#app').classList.contains('side-open')){            // one thing at a time: a menu, the audio settings, the study panel, the outline
+    const menu = e.target.closest && e.target.closest('details.menu[open]');
+    if (menu){ e.preventDefault(); menu.open = false; menu.querySelector('summary').focus(); }
+    else if (S.reader.playerOpen && e.target.closest('#ttsBar')){ e.preventDefault(); ACTIONS['tts-panel'](); }
+    else if ($('#rd.as-open')){ e.preventDefault(); ACTIONS['rp-assist-close'](); }
+    else if ($('#rd[data-ol]') && rdOlOverlay()){ e.preventDefault(); rdOutline(false); }
+  }
+  if (e.target.dataset.concept && e.key === 'Enter' && !e.isComposing){ e.preventDefault(); rdConceptAdd(e.target.dataset.concept, e.target.value); }
   if (e.target.classList.contains('as-tab') && /^(ArrowRight|ArrowLeft|Home|End)$/.test(e.key)){
     e.preventDefault(); const k = AS_TABS.findIndex(([t]) => t === e.target.dataset.tab), n = AS_TABS.length;
     const to = e.key === 'Home' ? 0 : e.key === 'End' ? n - 1 : (k + (e.key === 'ArrowRight' ? 1 : -1) + n) % n;
@@ -7404,9 +7999,10 @@ document.addEventListener('input', e => {
   if (t.dataset.fcap){ S.figlab.build.cap[t.dataset.fcap] = t.value; save(); updateBuild(); return; }
   if (t.dataset.rp === 'simple'){ const para = rPaper().paras.find(x => x.id === t.dataset.id); if (para){ para.simple = t.value; para.simpleSrc = t.value.trim() ? 'me' : ''; save(); grow(t); const d = $('#rpDone'); if (d) d.textContent = rPaper().paras.filter(x => isReadable(x) && simpleOf(x)).length; if (rdMode() === 'simple') rdCardSoon(para); } return; }
   if (t.dataset.rp === 'ar'){ const para = rPaper().paras.find(x => x.id === t.dataset.id); if (para){ para.ar = t.value; para.arSrc = 'me'; save(); grow(t); if (rdMode() === 'ar') rdCardSoon(para); } return; }
-  if (t.dataset.rp === 'idea' || t.dataset.rp === 'mine'){
+  if (t.dataset.rp === 'idea' || t.dataset.rp === 'mine' || t.dataset.rp === 'notes'){
     const para = rPaper().paras.find(x => x.id === t.dataset.id); if (!para) return;
-    if (t.dataset.rp === 'idea'){ para.idea = t.value; para.src = t.value.trim() ? 'me' : ''; grow(t); } else para.mine = t.value;
+    if (t.dataset.rp === 'idea'){ para.idea = t.value; para.src = t.value.trim() ? 'me' : ''; grow(t); } else if (t.dataset.rp === 'notes'){ para.notes = t.value; grow(t); } else para.mine = t.value;
+    rdSaved();
     save(); const n = $('#rpNotes'); if (n) n.textContent = readingNotes(rPaper()); return;
   }
   if (t.id === 'rdFind'){ clearTimeout(rdFindT); rdFindT = setTimeout(() => rdFind(t.value), 150); return; }
@@ -7452,6 +8048,8 @@ document.addEventListener('change', e => {
     save(); refreshCards([para]); return;
   }
   if (t.id === 'rpSel'){ if (TTS.playing) ttsPause(); chatOpen = null; S.reader.active = t.value; save(); RENDER.reader(); return; }
+  if (t.id === 'ttsVer'){ rdSetMode(t.value, true); return; }
+  if (t.id === 'cmpSync'){ S.reader.cmpSync = t.checked; save(); if (t.checked){ const L = $('#cmpL'); if (L) cmpFollow(L); } return; }
   if (t.id === 'ttsRate' || t.id === 'ttsVol'){ S.reader[t.id === 'ttsRate' ? 'rate' : 'volume'] = +t.value; save(); if (TTS.playing){ ttsHalt(); ttsSpeak(false); } return; }
   if (t.dataset.ttsopt){ const k = t.dataset.ttsopt; S.reader[k] = k === 'cites' ? (t.checked ? 'skip' : 'read') : t.checked; save(); if (TTS.playing){ ttsHalt(); ttsSpeak(false); } return; }
   if (t.id === 'ttsVoiceEn' || t.id === 'ttsVoiceAr'){ S.reader[t.id === 'ttsVoiceEn' ? 'voiceEn' : 'voiceAr'] = t.value; save(); if (TTS.playing){ ttsHalt(); ttsSpeak(false); } else renderTtsBar(); return; }
@@ -7513,8 +8111,7 @@ document.addEventListener('change', e => {
   }
 });
 window.addEventListener('hashchange', () => route(location.hash));
-document.addEventListener('toggle', e => { if (e.target.id === 'vDocsWrap'){ S.ui.docsOpen = e.target.open; save(); const a = e.target.querySelector('.v-docs-act'); if (a) a.firstChild.textContent = e.target.open ? 'Hide documents' : 'Manage documents'; }
-  if (e.target.id === 'rdOutline' && rdWide()){ S.ui.outline = e.target.open; save(); $('#rd')?.classList.toggle('no-outline', !e.target.open); } }, true);
+document.addEventListener('toggle', e => { if (e.target.id === 'vDocsWrap'){ S.ui.docsOpen = e.target.open; save(); const a = e.target.querySelector('.v-docs-act'); if (a) a.firstChild.textContent = e.target.open ? 'Hide documents' : 'Manage documents'; } }, true);
 
 /* ---------- Boot ---------- */
 $('.brand-mark').innerHTML = icon('cap');
@@ -7523,6 +8120,7 @@ $('.menu-btn').innerHTML = icon('menu');
 $('.side-close').innerHTML = icon('x');
 applySide();
 S.critiques.forEach(fixCrit);
+if (S.reader){ if (!['read', 'study', 'compare'].includes(S.reader.layout)) S.reader.layout = 'read'; S.reader.ol ||= {read:false, study:false, compare:false}; }
 if (S.reader && S.reader.partsV !== 3){ if (S.reader.mode === 'both') S.reader.mode = 'ar'; delete S.reader.ttsParts; S.reader.partsV = 3; save(); }   // the version shown decides what is read
 applyTheme(); applyFs();
 route(location.hash);
