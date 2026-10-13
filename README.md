@@ -15,6 +15,8 @@ Nothing yet — it's a sandbox for practicing git and GitHub.
 
 ## ScholarPath
 
+> **ScholarPath is becoming a public website** on GitHub Pages, free and open to any student: https://dimacodes01.github.io/first-pr-practice/ (live once Pages is switched on — see [spec §11](docs/SCHOLARPATH_SPEC.md)). On the website the Claude features work by copy and paste: ScholarPath shows the prompt, you paste it into your own Claude chat, and paste the reply back. [About & privacy](about.html).
+
 **Full project specification: [`docs/SCHOLARPATH_SPEC.md`](docs/SCHOLARPATH_SPEC.md)** — requirements, rules, design, architecture, limitations and change log. Notes for Claude sessions: [`CLAUDE.md`](CLAUDE.md). Live page: https://claude.ai/artifact/RQWX4dnGb7W68zTghnoLvz
 
 `index.html` is **ScholarPath**, a single-page research companion for master's students and early researchers.
@@ -28,7 +30,7 @@ Open the file in any modern browser. It needs no install, build step or login, a
    - **Mac:** `Start-ScholarPath-Mac.command` (the first time, right-click it and choose **Open**, because macOS blocks downloaded scripts)
 3. Your browser opens **http://localhost:8000/index.html**. Keep the small black window open while you use ScholarPath, and close it when you finish.
 
-The localhost address only works while that window is open. The starters need Python; without it they open `index.html` straight from the folder instead, which works the same. Claude features (simple versions, translations, Ask Claude, figure explanations) need the published claude.ai page; everything else works locally. Work saved on localhost is separate from the claude.ai page: use **My Progress → Back up** and restore to move it.
+The localhost address only works while that window is open. The starters need Python; without it they open `index.html` straight from the folder instead, which works the same. Claude features (simple versions, translations, Ask Claude, figure explanations) run directly on the published claude.ai page; on localhost and the website they work by copy and paste. Work saved on localhost is separate from the claude.ai page: use **My Progress → Back up** and restore to move it.
 
 The app is organised as a journey in four parts: **1 · Write a paper** (writing path, find literature, ideas & reading list, figures & tables), **2 · Critique a paper** (read the paper, explain the figures, write the AAU critique, trace where each statement comes from), **3 · Present** (build the slides, prepare for questions) and **4 · Verify & defend** (the final academic verification and consistency checklist, then the professor questions and a mock professor), plus a Dashboard (*Your Research Workspace*: a progress summary, this week's calendar of the steps you opened, continue researching, your library and the research tools) and My Progress.
 
@@ -51,3 +53,7 @@ The look (since 13 Oct 2026) is a friendly school-platform design, like the owne
 The app opens with one example idea, two example papers and an example AAU-form critique of *Gender Shades* (2018), all clearly labelled. You can remove them from **My Progress**.
 
 `vendor/pdfjs/` holds pdf.js 3.11.174 (Apache-2.0, see its LICENSE) so PDFs can be read without a CDN (figure crops are kept in the browser's IndexedDB); the app falls back to cdnjs if the folder is missing. `vendor/pptxgenjs/` holds PptxGenJS 4.0.1 (MIT, see its LICENSE), which makes the PowerPoint in step 3.1 in the browser; it falls back to jsDelivr.
+
+### Checking the site
+
+`PLAYWRIGHT_BROWSERS_PATH=/opt/pw-browsers node tests/site-check.js` serves the folder like GitHub Pages and checks every step at four widths in light and dark, the website pages and files, and the copy-prompt bridge.

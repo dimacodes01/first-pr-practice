@@ -9,6 +9,7 @@
 | **What it is** | A research companion for master's students and early researchers who read, critique and write academic papers |
 | **Code** | `index.html` (single file, ~8,800 lines, vanilla JS, no build step) + `vendor/pdfjs/` + `vendor/pptxgenjs/` |
 | **Repository** | `dimacodes01/first-pr-practice`, branch `claude/scholarpath-research-app-jabga7` |
+| **Website (planned home)** | GitHub Pages, open to any student — https://dimacodes01.github.io/first-pr-practice/ once switched on (see §11) |
 | **Published page** | https://claude.ai/artifact/RQWX4dnGb7W68zTghnoLvz (private to the owner until shared) |
 | **First version (v1)** | https://claude.ai/artifact/5SBbxDnL3oV9XHyWgNwarW |
 | **Built** | 9–10 October 2026, in one Claude Code conversation |
@@ -295,7 +296,7 @@ Every prompt contains the three documents, her ten adaptation rules (word for wo
 - **Voices** depend on the device and browser; ScholarPath cannot make a robotic voice natural, only choose the best one available and tell the user how to get better ones. Natural voices in Edge need an internet connection. Some voices don't report word positions, so Continue then restarts at the sentence. Real audio quality (naturalness, accents, Arabic fluency) can only be judged by listening on the owner's devices — the automated tests use a stand-in speech engine.
 - **No premium voice service:** neural cloud services (Azure, Google Cloud, ElevenLabs, OpenAI) would need an API key kept on a server, cost money per character, and may not be reachable from the claude.ai page. Not integrated (the owner asked for pricing and setup first).
 - **Dialects:** no Arabic voice speaks a dialect from Standard Arabic text; regional voices are offered as speakers' accents only. Mixed-language switching depends on the engine honouring queued utterances; a very short switch (one Arabic word such as "و" between English terms) is still a separate utterance.
-- **AI features** need the published claude.ai page and use the viewer's Claude account. They are not available in the plain file.
+- **AI features** run directly only on the claude.ai page (the viewer's own Claude account). On the website, localhost and the plain file they work by copy and paste (§11): one round trip per request, so long jobs (translating a whole paper, Part 4 checks, professor questions) mean several rounds. Pictures for Figure Lab must be attached to the Claude chat by hand.
 - **Pictures and data** are stored in the browser only. The JSON backup excludes the pictures and the original Word/PowerPoint files of Part 4.
 - **Word and PowerPoint (Part 4):** reading compressed files needs `DecompressionStream` (Chrome/Edge 80+, Safari 16.4+, Firefox 113+). Text in pictures, SmartArt and embedded objects is not read. A correction is made only when the old words sit inside one paragraph (not across a line break or two text boxes); otherwise it is marked "do this by hand". Chart data is read but not changed. Corrected copies are stored uncompressed, so they are larger than the original (they open normally).
 - **Evidence mapping:** precision depends on how well the PDF's text was extracted; a quotation that the PDF splits differently (e.g. across a page) may not match word for word and is then treated as not verified (the safe side). Claude's classification (direct / paraphrase / interpretation) is a judgement to check; only the quotations and locations are verified mechanically. Papers read before 12 Oct 2026 have no stored PDF, so the PDF-page view is unavailable for them (re-upload to enable it). Printed page numbers are shown only when the student sets the first printed page.
@@ -335,6 +336,7 @@ The scripts lived in the session's scratch area. **Next step:** add them to `tes
 
 | Date | Change |
 |---|---|
+| 2026-10-13 | **Becoming a public website** (GitHub Pages, open to any student): copy-prompt bridge so every Claude feature works off claude.ai; About & privacy page; 404 page; icon, app manifest and link-preview picture; robots.txt and .nojekyll; `tests/site-check.js` |
 | 2026-10-09 | v1: six tabs, light/dark, localStorage, examples |
 | 2026-10-09 | AAU Paper Critique Form (0106112), PDF evidence search, AI prompt, Word export |
 | 2026-10-09 | Paper Reader: paragraphs, main ideas, links, idea flow, presentation questions |
@@ -360,11 +362,35 @@ The scripts lived in the session's scratch area. **Next step:** add them to `tes
 
 ## 10. Ideas for next steps
 
-- Merge the branch into `main` (pull request) so `main` holds the current app.
-- Move the test scripts into `tests/` with a one-line run command.
+- Merge the branch into `main` (pull request) so `main` holds the current app, and switch on GitHub Pages (§11).
+- Self-host the three fonts (Nunito, IBM Plex Sans Arabic, Source Serif 4) so the website makes no request to Google; then update `about.html`.
+- Real AI on the website (a small server holding an API key, or each student's own key) — only after the owner agrees to the cost and setup (§11).
 - Split `index.html` into modules (one file per tab) once it grows further.
 - OCR for scanned PDFs; detection of sub-section headings ("A. Participants").
 - Include figure pictures in the backup (zip), and sync between devices.
 - An Arabic interface option for the whole app.
 - Read aloud: if the owner wants studio-quality voices on every device, a small server (holding an Azure or Google Cloud key) could create audio for ScholarPath — only after she agrees to the cost and setup (see the reply of 12 Oct 2026).
 - Part 4: read text inside PowerPoint pictures (OCR) and SmartArt; let a correction span two paragraphs; compare two versions of the same document side by side.
+
+---
+
+## 11. Becoming a public website (from 13 October 2026)
+
+The owner decided ScholarPath will become **a public website on GitHub Pages, open to any student**, and asked that every change from now on keeps that in mind. Her choices (13 Oct 2026): host on **GitHub Pages**; Claude features by **copy-prompt for now** (free; real AI later); audience **any student**, so the site needs clear About, privacy and help.
+
+**What a website needs, and where it is**
+
+| Need | How ScholarPath meets it |
+|---|---|
+| Static hosting, no build | Everything is plain files with relative paths; `.nojekyll` makes GitHub serve them as they are |
+| Claude without claude.ai | `AI_BRIDGE` in `index.html`: the same interface as the claude.ai capability, so all 15 Claude calls work unchanged. Each request opens *Ask Claude*: three numbered steps, **Copy the prompt**, **Open Claude** (claude.ai/new in a new tab), *Show the prompt*, the pictures to attach (Figure Lab) with *Save picture* and an "I attached…" tick, a box for the reply, **Use this reply**. JSON replies may be wrapped in ```` ```json ```` or surrounded by text; an unreadable reply keeps the window open with a hint; Cancel stops the whole run; multi-request runs show "request N". ScholarPath itself sends nothing anywhere. |
+| No login, private by design | Work stays in localStorage / IndexedDB on the device (unchanged); `about.html` says exactly what leaves the device: Google Fonts requests, browser voices, Chrome's speech recognition for voice typing, CDN fallbacks for the PDF and PowerPoint libraries, and database search links |
+| About & privacy | `about.html` (linked from the sidebar footer): what ScholarPath is, who made it, privacy in one paragraph (English and Arabic), where work is kept, how the Claude features work, outside services, using ScholarPath with integrity. Not affiliated with AAU or Anthropic. |
+| Wrong addresses | `404.html` (GitHub Pages serves it for unknown paths) — links to `/first-pr-practice/` |
+| Icon, install, link previews | `assets/icon.svg`, PNG icons (192, 512, maskable, Apple touch), `assets/site.webmanifest`, theme colour, `og:` and Twitter tags with `assets/social-preview.png` (1200 × 630) |
+| Search engines | `robots.txt` allows everything; `<meta name="description">` |
+| Checks | `tests/site-check.js` |
+
+**Switching the website on (owner, once):** merge the branch into `main` (pull request), then on GitHub: repository **Settings → Pages → Build and deployment → Source: Deploy from a branch → Branch: `main`, folder `/ (root)` → Save**. The address appears there within a few minutes.
+
+**Optional later:** rename the repository to `scholarpath` (address becomes …github.io/scholarpath/ — then update the `og:` tags and `404.html`); a custom domain; self-hosted fonts; real AI through a small server with an API key (costs money per use; only after the owner agrees) or students' own keys; an Arabic interface; a contact or feedback link (the owner hasn't chosen one).

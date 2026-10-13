@@ -4,6 +4,14 @@ ScholarPath is a research companion web app built for **Dima Alkharraz** (Englis
 
 **Read `docs/SCHOLARPATH_SPEC.md` first.** It is the full specification: every requirement, rule, decision and known limitation.
 
+## ScholarPath is becoming a public website (owner's decision, 13 Oct 2026)
+Build every change for **a public website on GitHub Pages, open to any student** (spec §11), not only for the claude.ai page:
+- It must work as plain static files from any folder of a web address: relative paths only, no build step, no server, no login.
+- Claude features on the website use the **copy-prompt bridge** (`AI_BRIDGE`): never call Claude directly from the page and never put an API key in the code. On claude.ai the real capability is used automatically. New Claude features must go through `AI(…)` / `AI.json(…)` so they work in both places.
+- Keep `about.html` (About & privacy) true: if a change sends anything off the device or adds an outside service, update it in the same commit.
+- New pages share the icon, theme colour and tokens; link previews come from the `og:` tags in `index.html` (absolute address — update if the site moves).
+- Run `tests/site-check.js` before every commit.
+
 ## Hard rules (from the owner)
 - Never invent academic content (findings, numbers, references, DOIs, IDs). Use labelled placeholders.
 - Never delete or move a word of an uploaded paper. A paragraph interrupted by a figure stays one block, and the figure goes after it.
@@ -20,17 +28,19 @@ ScholarPath is a research companion web app built for **Dima Alkharraz** (Englis
 - `index.html` is the whole app: CSS, markup and one script in an IIFE. Each tab has a `RENDER.<tab>()`. Events use `data-act` → `ACTIONS`, plus `input` / `change` handlers keyed on `data-*`.
 - State lives in `localStorage['scholarpath.v1']` (`S`), and figure pictures in IndexedDB (`scholarpath` / `img`).
 - `vendor/pdfjs/` holds pdf.js 3.11.174 (with a cdnjs fallback); `vendor/pptxgenjs/` holds PptxGenJS 4.0.1 (jsDelivr fallback), loaded only when step 3.1 generates a PowerPoint (`presPptx`). Step 3.1 is spec §5.7: an added critique (`S.pres.upload`), outlines per source (`S.pres.outlines`, `presDeck()`), Claude's prompt `presPrompt`, the no-Claude `presFromSections`.
-- Claude runs only on the published page, via `window.claude.use('sample')`. Every AI feature needs a manual fallback.
+- Claude: on the claude.ai page `AI` is `window.claude.use('sample')`; everywhere else (the website, localhost, the plain file) `AI` is `AI_BRIDGE`, the copy-prompt bridge with the same interface (`AI(turns, opts)`, `AI.json(prompt, opts)`, `AI.limits()`), which shows the prompt in `#aiBridge`, takes the pasted reply and parses its JSON. Cancel rejects with code `cancelled` and stops every later request with the same AbortSignal; unticked "I attached the pictures" rejects with `images_unavailable` (Figure Lab then uses its text-only path). `aiReady()` is therefore true on the website.
 - Match the existing style: plain functions, template strings, `esc()` for every user value, CSS tokens on `:root`.
 
 ## Before committing
 - Check the script compiles: extract the `<script>` from `index.html` and run `new Function(js)` in Node.
+- Run `PLAYWRIGHT_BROWSERS_PATH=/opt/pw-browsers NODE_PATH=$(npm root -g) node tests/site-check.js` (serves the folder like GitHub Pages; every step at four widths in light and dark, the website pages and files, and a click-through of the copy-prompt bridge). It must end with "All checks passed".
 - Run the app in Chromium (Playwright; `PLAYWRIGHT_BROWSERS_PATH=/opt/pw-browsers`). Check every tab for page errors, at 1440, 1280, 1024 and 390 px wide, light and dark, without horizontal scrolling. The reader's layout depends on the space next to the sidebar (container queries), so also check it with the sidebar collapsed.
 - If PDF reading changed, re-run the word-preservation check (spec §8): every word of every paragraph must survive.
 
 ## Publishing
+- **Website (main home from now on):** GitHub Pages from the repository root (`index.html`, `about.html`, `404.html`, `assets/`, `vendor/`, `robots.txt`, `.nojekyll`). Address: https://dimacodes01.github.io/first-pr-practice/ once Pages is switched on (spec §11 has the steps). `404.html` uses the `/first-pr-practice/` path — change it with the `og:` tags if the repository is renamed or a custom domain is added.
 - Published page: https://claude.ai/artifact/RQWX4dnGb7W68zTghnoLvz
-- Publish `index.html` with the supporting files `vendor/pdfjs/pdf.min.js`, `vendor/pdfjs/pdf.worker.min.js` and `vendor/pptxgenjs/pptxgen.bundle.js`, and the capabilities `{"sample": {"images": true}, "downloads": true}`.
+- claude.ai page: publish `index.html` with the supporting files `vendor/pdfjs/pdf.min.js`, `vendor/pdfjs/pdf.worker.min.js`, `vendor/pptxgenjs/pptxgen.bundle.js`, `about.html` and the files in `assets/`, and the capabilities `{"sample": {"images": true}, "downloads": true}`.
 - Work on branch `claude/scholarpath-research-app-jabga7`. Commit and push after each change, with an attribution footer.
 
 ## Owner's preferences

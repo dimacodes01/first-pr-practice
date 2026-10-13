@@ -5,6 +5,23 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>ScholarPath</title>
 <meta name="description" content="ScholarPath — a research companion for master's students and early researchers: find literature, organise ideas, critique papers, write and present.">
+<meta name="theme-color" content="#0D2B55">
+<meta name="color-scheme" content="light dark">
+<meta name="application-name" content="ScholarPath">
+<link rel="icon" href="assets/icon.svg" type="image/svg+xml">
+<link rel="icon" href="assets/icon-192.png" sizes="192x192" type="image/png">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<link rel="manifest" href="assets/site.webmanifest">
+<!-- Link previews (WhatsApp, Teams, LinkedIn, X). og:url and og:image are absolute: update them if the website address changes (spec §11). -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="ScholarPath">
+<meta property="og:title" content="ScholarPath — research companion">
+<meta property="og:description" content="Read, critique, write and present research papers, step by step. Free, no login; your work stays in your browser. English and Arabic.">
+<meta property="og:url" content="https://dimacodes01.github.io/first-pr-practice/">
+<meta property="og:image" content="https://dimacodes01.github.io/first-pr-practice/assets/social-preview.png">
+<meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="ScholarPath — read, critique, write and present research papers, step by step">
+<meta name="twitter:card" content="summary_large_image">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800&family=IBM+Plex+Sans+Arabic:wght@400;500;600&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap" rel="stylesheet">
@@ -1419,6 +1436,13 @@ dialog::backdrop{background:rgba(10,15,25,.45);backdrop-filter:blur(2px)}
 .dlg-head{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:18px 24px;border-bottom:1px solid var(--line)}
 .dlg-head h3{margin:0}
 .dlg-body{padding:20px 24px}
+dialog.ai-bridge{width:min(720px,calc(100vw - 24px));overflow:auto}
+.aib-steps{margin:0 0 14px;padding-left:20px;display:grid;gap:4px}
+.aib-actions{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:0 0 12px}
+.aib-prompt{margin:0 0 14px}.aib-prompt pre{max-height:200px;overflow:auto;white-space:pre-wrap;word-break:break-word;background:var(--surface-2);border-radius:var(--radius-sm);padding:10px 12px;font:12px/1.5 var(--mono);margin:8px 0 0}
+.aib-imgs{display:flex;flex-wrap:wrap;gap:12px;margin:0 0 10px}.aib-imgs figure{margin:0;display:grid;gap:6px;justify-items:start}.aib-imgs img{max-width:150px;max-height:110px;border:1px solid var(--line);border-radius:var(--radius-sm);background:#fff}
+.aib-check{display:flex;gap:8px;align-items:center;margin:0 0 14px}
+.aib-err{color:var(--danger);margin:8px 0 0}
 .dlg-foot{display:flex;justify-content:flex-end;gap:8px;padding:16px 24px;border-top:1px solid var(--line)}
 .toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%) translateY(16px);background:var(--heading);color:var(--bg);padding:11px 18px;border-radius:12px;font-weight:500;font-size:14px;opacity:0;pointer-events:none;transition:opacity .2s var(--ease),transform .2s var(--ease);z-index:100;display:flex;gap:8px;align-items:center;max-width:calc(100vw - 32px);box-shadow:var(--shadow-lg)}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
@@ -1441,7 +1465,7 @@ html[data-tab="reader"] .toast{bottom:calc(var(--rdplf-doc,0px) + 16px)}   /* ab
     <button class="side-btn side-close" data-act="side-close" aria-label="Close the menu"></button>
   </div>
   <nav class="side-nav" id="parts" aria-label="Main"></nav>
-  <div class="side-foot">Everything is saved in this browser only. <a href="#progress" data-act="part" data-part="progress">Back up in My Progress</a></div>
+  <div class="side-foot">Everything is saved in this browser only. <a href="#progress" data-act="part" data-part="progress">Back up in My Progress</a><br><a href="about.html">About &amp; privacy</a></div>
 </aside>
 <div class="side-scrim" data-act="side-close" aria-hidden="true"></div>
 <div class="work">
@@ -1474,6 +1498,7 @@ html[data-tab="reader"] .toast{bottom:calc(var(--rdplf-doc,0px) + 16px)}   /* ab
 </div>
 
 <dialog id="dlg"><form method="dialog" id="dlgForm"></form></dialog>
+<dialog id="aiBridge" class="ai-bridge" aria-label="Ask Claude"></dialog>
 <dialog id="voiceDlg" class="voice-dialog" aria-label="Voices and accents"></dialog>
 <dialog id="evDlg" class="voice-dialog" aria-label="PDF page"></dialog>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
@@ -3137,10 +3162,86 @@ async function addReaderPaper(name, title, res, file){
   RENDER.reader(); toast(`${np} paragraphs ready${nf ? ` · ${nf} figure${nf === 1 ? '' : 's'}/table${nf === 1 ? '' : 's'} set aside for Figure Lab` : ''}`);
 }
 
+/* --- Copy-prompt bridge: Claude features on the ScholarPath website (no claude.ai) ---
+   Same interface as the claude.ai capability (AI(turns, opts) and AI.json(prompt, opts)), so every feature works unchanged.
+   Each request opens a window with the prompt, Copy, Open Claude and a box for the reply. ScholarPath sends nothing anywhere itself.
+   Cancel rejects with code 'cancelled' and stops every later request of the same run (same AbortSignal). Pictures (Figure Lab)
+   count as sent only when the student ticks that they attached them; otherwise 'images_unavailable' sends the run down the text-only path. */
+const AI_BRIDGE = (() => {
+  const stopped = new WeakSet(), counts = new WeakMap();
+  const err = (code, msg) => Object.assign(new Error(msg || code), {code});
+  function readJSON(raw){
+    let t = String(raw || '').trim().replace(/^\s*```(?:json)?\s*/i, '').replace(/\s*```\s*$/, '').trim();
+    try { return JSON.parse(t); } catch {}
+    const a = Math.min(...['{','['].map(c => { const i = t.indexOf(c); return i < 0 ? Infinity : i; }));
+    if (a === Infinity) throw err('invalid_json');
+    const close = t[a] === '{' ? '}' : ']', b = t.lastIndexOf(close);
+    if (b <= a) throw err('invalid_json');
+    try { return JSON.parse(t.slice(a, b + 1)); } catch { throw err('invalid_json'); }
+  }
+  function ask({prompt, json, images, signal}){
+    if (signal && stopped.has(signal)) return Promise.reject(err('cancelled'));
+    if (signal && signal.aborted) return Promise.reject(err('cancelled'));
+    const n = signal ? (counts.get(signal) || 0) + 1 : 1; if (signal) counts.set(signal, n);
+    const dlg = $('#aiBridge'); if (dlg.open) dlg.close();
+    const urls = (images || []).map(b => URL.createObjectURL(b));
+    return new Promise((resolve, reject) => {
+      let done = false;
+      const finish = (fn, v) => { if (done) return; done = true; urls.forEach(u => URL.revokeObjectURL(u)); if (signal) signal.removeEventListener('abort', onAbort); if (dlg.open) dlg.close(); fn(v); };
+      const onAbort = () => finish(reject, err('cancelled'));
+      if (signal) signal.addEventListener('abort', onAbort);
+      dlg.innerHTML = `<form method="dialog" class="aib">
+        <div class="dlg-head"><h3>Ask Claude${n > 1 ? ` · request ${n}` : ''}</h3><button type="button" class="btn ghost icon" data-aib="cancel" aria-label="Cancel">${icon('x')}</button></div>
+        <div class="dlg-body">
+          <ol class="aib-steps small">
+            <li><b>Copy the prompt</b> below.</li>
+            <li><b>Open Claude</b> in a new tab, start a new chat and paste it${urls.length ? `, <b>attaching the ${urls.length} picture${urls.length === 1 ? '' : 's'}</b> shown here` : ''}.</li>
+            <li><b>Copy Claude’s whole reply</b> and paste it in the box, then press <b>Use this reply</b>.</li>
+          </ol>
+          <div class="aib-actions"><button type="button" class="btn primary" data-aib="copy">${icon('copy')}Copy the prompt</button><a class="btn" href="https://claude.ai/new" target="_blank" rel="noopener">${icon('ext')}Open Claude</a><span class="small muted">${prompt.length.toLocaleString()} characters</span></div>
+          <details class="aib-prompt"><summary class="small">Show the prompt</summary><pre>${esc(prompt)}</pre></details>
+          ${urls.length ? `<div class="aib-imgs">${urls.map((u, i) => `<figure><img src="${u}" alt="Picture ${i + 1} for Claude"><a class="btn sm" href="${u}" download="scholarpath-picture-${i + 1}.png">${icon('download')}Save picture ${i + 1}</a></figure>`).join('')}</div>
+            <label class="aib-check small"><input type="checkbox" name="attached"> I attached ${urls.length === 1 ? 'this picture' : 'these pictures'} to my message to Claude</label>` : ''}
+          <label class="f" for="aib-reply">Claude’s reply</label>
+          <textarea id="aib-reply" name="reply" style="min-height:140px" placeholder="Paste Claude’s whole reply here"></textarea>
+          <p class="small aib-err" role="alert" hidden></p>
+          <p class="small muted" style="margin:8px 0 0">On the ScholarPath website, Claude features work by copy and paste: ScholarPath sends nothing to Claude or anywhere else. The reply is marked as Claude’s — check it against the paper.</p>
+        </div>
+        <div class="dlg-foot"><button type="button" class="btn" data-aib="cancel">Cancel</button><button type="submit" class="btn primary">${icon('check')}Use this reply</button></div>
+      </form>`;
+      const form = $('form', dlg), errEl = $('.aib-err', dlg);
+      $$('[data-aib="cancel"]', dlg).forEach(b => b.onclick = () => { if (signal) stopped.add(signal); finish(reject, err('cancelled')); });
+      $('[data-aib="copy"]', dlg).onclick = () => copyText(prompt, 'Prompt copied — paste it into a new Claude chat');
+      dlg.oncancel = e => { e.preventDefault(); if (signal) stopped.add(signal); finish(reject, err('cancelled')); };
+      form.onsubmit = e => {
+        e.preventDefault();
+        const reply = form.reply.value.trim();
+        const show = m => { errEl.textContent = m; errEl.hidden = false; };
+        if (!reply) return show('Paste Claude’s reply first.');
+        if (urls.length && !form.attached.checked) return finish(reject, err('images_unavailable'));
+        if (!json) return finish(resolve, {text:reply, truncated:false});
+        try { finish(resolve, readJSON(reply)); }
+        catch { show('This doesn’t look like the JSON reply ScholarPath asked for. Copy Claude’s whole reply (from the first { or [ to the last } or ]) and try again, or ask Claude to answer with the JSON only.'); }
+      };
+      dlg.showModal();
+      $('[data-aib="copy"]', dlg).focus();
+    });
+  }
+  const turnsPrompt = turns => {
+    const [ctx, ...rest] = turns, last = rest.length ? rest[rest.length - 1] : null;
+    const conv = rest.slice(0, -1).map(m => `${m.role === 'assistant' ? 'Claude' : 'Student'}: ${m.content}`).join('\n\n');
+    return `${ctx ? ctx.content : ''}${conv ? `\n\nConversation so far:\n${conv}` : ''}${last ? `\n\nThe student now asks:\n${last.content}\n\nAnswer the student.` : ''}`;
+  };
+  const fn = (turns, opts={}) => ask({prompt:turnsPrompt(turns), json:false, signal:opts.signal});
+  fn.json = (prompt, opts={}) => ask({prompt:`${prompt}\n\nReply with the JSON only, with no other text.`, json:true, images:opts.images, signal:opts.signal});
+  fn.limits = async () => ({images:{maxCount:4}});
+  fn.bridge = true;
+  return fn;
+})();
 /* --- Claude (sample capability), only where the viewer provides it --- */
 const capUse = n => (window.claude && typeof window.claude.use === 'function') ? Promise.resolve(window.claude.use(n)).catch(() => null) : Promise.resolve(null);
 let AI = null, aiOff = false, aiRun = null;
-capUse('sample').then(fn => { AI = fn; if (fn && S.ui.tab === 'reader') RENDER.reader(); if (fn && S.ui.tab === 'figlab') RENDER.figlab(); if (fn && S.ui.tab === 'verify') RENDER.verify(); if (fn && S.ui.tab === 'defend') RENDER.defend(); if (fn && S.ui.tab === 'evidence') RENDER.evidence(); if (fn && S.ui.tab === 'present') RENDER.present(); });
+capUse('sample').then(fn => { AI = fn || AI_BRIDGE; if (fn && S.ui.tab === 'reader') RENDER.reader(); if (fn && S.ui.tab === 'figlab') RENDER.figlab(); if (fn && S.ui.tab === 'verify') RENDER.verify(); if (fn && S.ui.tab === 'defend') RENDER.defend(); if (fn && S.ui.tab === 'evidence') RENDER.evidence(); if (fn && S.ui.tab === 'present') RENDER.present(); });
 const aiReady = () => !!AI && !aiOff;
 function aiError(e){
   const code = e && e.code;
