@@ -2112,7 +2112,8 @@ for (const k of Object.keys(base)) if (S[k] === undefined) S[k] = base[k];
 S.ui = Object.assign({}, base.ui, S.ui);
 S.writing = Object.assign({}, base.writing, S.writing);
 S.pres = Object.assign({}, base.pres, S.pres);
-S.reader = Object.assign({papers:[], active:'', view:'paras', rate:1, gender:'f', voiceEn:'', voiceAr:'', marks:{}, enAccent:'en-US', arRegion:'msa', volume:1, mixed:true, pauses:true, headings:true, cites:'skip', lexicon:[]}, S.reader);
+S.reader = Object.assign({papers:[], active:'', view:'paras', rate:1, gender:'f', voiceEn:'', voiceAr:'', marks:{}, enAccent:'en-GB', arRegion:'msa', volume:1, mixed:true, pauses:true, headings:true, cites:'skip', lexicon:[]}, S.reader);
+if (S.reader.accentV !== 2){ S.reader.enAccent = 'en-GB'; S.reader.accentV = 2; }   // British English is the default English accent (owner, 13 Oct 2026); it can still be changed in Voices & accents
 S.reader.rate = [0.75, 0.85, 1, 1.15, 1.25, 1.5].reduce((a, r) => Math.abs(r - S.reader.rate) < Math.abs(a - S.reader.rate) ? r : a, 1);
 S.verify = Object.assign({sets:[], active:'', view:'flow'}, S.verify);
 S.verify.sets = (S.verify.sets || []).filter(Boolean).map(v => Object.assign(newVerifySet(), v, {docs:Object.assign({paper:null, critique:null, pres:null}, v.docs)}));
@@ -3547,7 +3548,7 @@ function starterQuestions(paper){
 const TTS = {ok:typeof window.speechSynthesis !== 'undefined' && typeof window.SpeechSynthesisUtterance !== 'undefined',
   list:[], i:0, char:0, playing:false, gen:0, ctx:null, note:'', sel:null, timer:0};
 const TTS_RATES = [0.75, 0.85, 1, 1.15, 1.25, 1.5];
-const EN_ACCENTS = [{k:'en-US', flag:'US', t:'American English'}, {k:'en-GB', flag:'UK', t:'British English'}, {k:'en-AU', flag:'AU', t:'Australian English'}, {k:'en-CA', flag:'CA', t:'Canadian English'}];
+const EN_ACCENTS = [{k:'en-GB', flag:'UK', t:'British English'}, {k:'en-US', flag:'US', t:'American English'}, {k:'en-AU', flag:'AU', t:'Australian English'}, {k:'en-CA', flag:'CA', t:'Canadian English'}];
 const AR_REGIONS = [{k:'gulf', t:'Gulf', ar:'الخليج', cc:['AE', 'SA', 'KW', 'QA', 'BH', 'OM', 'YE']}, {k:'levant', t:'Levantine', ar:'بلاد الشام', cc:['JO', 'LB', 'SY', 'PS']},
   {k:'egypt', t:'Egyptian', ar:'مصر', cc:['EG']}, {k:'other', t:'Other Arabic voices', ar:'أخرى', cc:[]}];
 const COUNTRY = {AE:'UAE', SA:'Saudi Arabia', KW:'Kuwait', QA:'Qatar', BH:'Bahrain', OM:'Oman', YE:'Yemen', JO:'Jordan', LB:'Lebanon', SY:'Syria', PS:'Palestine', EG:'Egypt', IQ:'Iraq', MA:'Morocco', DZ:'Algeria', TN:'Tunisia', LY:'Libya', SD:'Sudan', '001':'World', XA:'Arabic', US:'United States', GB:'United Kingdom', AU:'Australia', CA:'Canada'};
@@ -3572,8 +3573,12 @@ function voiceTier(v){
   return 1;
 }
 const TIER = [['Basic', 'May sound robotic'], ['Standard', 'Built-in voice'], ['Good', 'Online voice'], ['Natural', 'Neural voice — the most natural']];
+// Novelty voices (sound effects, singing, whispering) and comic character voices are never offered: they are not suitable for reading research (owner, 13 Oct 2026)
+const UNSUITABLE_VOICE = v => { const n = String(v.name || ''), u = String(v.voiceURI || '');
+  return /eloquence/i.test(u) || /^(albert|bad news|bahh|bells|boing|bubbles|cellos|fred|good news|jester|junior|kathy|organ|pipe organ|ralph|superstar|trinoids|whisper|wobble|zarvox|deranged|hysterical|princess)\b/i.test(n)
+    || /^(eddy|flo|grandma|grandpa|reed|rocko|sandy|shelley)\b/i.test(n) || /speech\.synthesis\.voice\.(albert|badnews|bahh|bells|boing|bubbles|cellos|fred|goodnews|jester|junior|kathy|organ|ralph|superstar|trinoids|whisper|wobble|zarvox|deranged|hysterical|princess)\b/i.test(u); };
 function ttsVoices(lang){
-  try { return TTS.ok ? speechSynthesis.getVoices().filter(v => v && v.name && !/undefined/i.test(`${v.name} ${v.lang}`) && (lang ? new RegExp('^' + lang + '\\b', 'i') : /^(en|ar)\b/i).test(vLang(v))) : []; }
+  try { return TTS.ok ? speechSynthesis.getVoices().filter(v => v && v.name && !/undefined/i.test(`${v.name} ${v.lang}`) && !UNSUITABLE_VOICE(v) && (lang ? new RegExp('^' + lang + '\\b', 'i') : /^(en|ar)\b/i).test(vLang(v))) : []; }
   catch { return []; }
 }
 const enAccentOf = v => (EN_ACCENTS.find(a => a.k.toLowerCase() === vLang(v).toLowerCase()) || {}).k || '';
@@ -3585,6 +3590,8 @@ function pickVoice(kind){
   const R = S.reader, all = ttsVoices(kind), want = R.gender || 'f', chosen = kind === 'ar' ? R.voiceAr : R.voiceEn;
   const exact = all.find(v => v.voiceURI === chosen);
   if (exact) return {v:exact, note:''};
+  if (chosen){ let hidden = false; try { hidden = speechSynthesis.getVoices().some(v => v.voiceURI === chosen && UNSUITABLE_VOICE(v)); } catch {}
+    if (hidden){ if (kind === 'ar') R.voiceAr = ''; else R.voiceEn = ''; save(); return pickVoice(kind); } }
   let pool = all, note = '';
   if (kind === 'en'){
     const acc = EN_ACCENTS.find(a => a.k === R.enAccent) || EN_ACCENTS[0], inAcc = all.filter(v => enAccentOf(v) === acc.k);
@@ -3739,7 +3746,7 @@ function ttsPieces(c, from){
 }
 function ttsUtter(x, voice){
   const u = new SpeechSynthesisUtterance(x.say), v = voice || pickVoice(x.lang).v;
-  if (v){ u.voice = v; u.lang = vLang(v); } else u.lang = x.lang === 'ar' ? 'ar-SA' : (S.reader.enAccent || 'en-US');
+  if (v){ u.voice = v; u.lang = vLang(v); } else u.lang = x.lang === 'ar' ? 'ar-SA' : (S.reader.enAccent || 'en-GB');
   u.rate = S.reader.rate || 1; u.volume = Math.max(0, Math.min(1, S.reader.volume ?? 1)); u.pitch = 1;     // the voice is never altered
   return u;
 }
@@ -4027,13 +4034,13 @@ function voiceDlgHTML(){
   const lex = R.lexicon || [];
   return `<div class="dlg-head"><h3>Voices &amp; accents</h3><button type="button" class="btn ghost icon" data-act="tts-voices-close" aria-label="Close">${icon('x')}</button></div>
   <div class="dlg-body voice-dlg">
-    <p class="small">ScholarPath reads with the voices built into <b>this device and browser</b>: ${pl(all.length, 'English or Arabic voice')} found, <b>${nat} natural (neural)</b>. Voices marked <span class="vq vq-3">Natural</span> sound the most human; <span class="vq vq-0">Basic</span> voices often sound robotic.</p>
+    <p class="small">ScholarPath reads with the voices built into <b>this device and browser</b>: ${pl(all.length, 'English or Arabic voice')} found, <b>${nat} natural (neural)</b>. Novelty and character voices (sound effects, whispering, comic styles) are hidden — they don't suit research reading. Voices marked <span class="vq vq-3">Natural</span> sound the most human; <span class="vq vq-0">Basic</span> voices often sound robotic.</p>
     <p class="vtip small">${icon('bulb')}<span>${esc(TTS_TIPS[dev])}${dev !== 'edge' && dev !== 'other' ? ' ' + esc(TTS_TIPS.other) : ''}</span></p>
     ${!all.length ? '<p class="small v-warn">No voices have loaded yet. Wait a moment, or reload the page.</p>' : ''}
     <div class="vsec"><h4>Automatic choice prefers</h4><span class="seg seg-sm" role="group" aria-label="Voice">${[['f', 'A woman’s voice'], ['m', 'A man’s voice']].map(([v, l]) => `<button data-act="tts-gender" data-v="${v}" aria-pressed="${(R.gender || 'f') === v}">${l}</button>`).join('')}</span>
       <p class="small muted" style="margin:6px 0 0">When a device has no voice of that kind, another voice is used as it is — ScholarPath never changes a voice’s pitch to imitate a gender or an accent.</p></div>
     <div class="vsec"><h4>English accent</h4>
-      <div class="accents">${EN_ACCENTS.map(a => { const list = sortV(en.filter(v => enAccentOf(v) === a.k), 'en'), on = (R.enAccent || 'en-US') === a.k;
+      <div class="accents">${EN_ACCENTS.map(a => { const list = sortV(en.filter(v => enAccentOf(v) === a.k), 'en'), on = (R.enAccent || 'en-GB') === a.k;
         return `<section class="accent ${on ? 'on' : ''}"><div class="accent-head"><b><span class="acc-code">${a.flag}</span>${a.t}</b>${list.length ? `<button class="btn sm ${on && !R.voiceEn ? 'primary' : ''}" data-act="tts-accent" data-k="${a.k}">${on && !R.voiceEn ? `${icon('check')}Best ${a.t.split(' ')[0]} voice` : 'Use the best voice'}</button>` : ''}</div>
           ${list.length ? `<ul class="vlist">${list.map(v => voiceRow(v, 'en')).join('')}</ul>` : `<p class="small muted">Not available on this device — ScholarPath does not imitate this accent. ${dev === 'edge' ? '' : 'Microsoft Edge includes ' + a.t + ' natural voices.'}</p>`}</section>`; }).join('')}</div></div>
     <div class="vsec"><h4>Arabic <span lang="ar" dir="rtl">العربية</span></h4>

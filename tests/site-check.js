@@ -15,6 +15,7 @@ const WIDTHS = [1440, 1280, 1024, 390];
 const problems = [];
 const fail = m => { problems.push(m); console.log('  FAIL ' + m); };
 const ok = m => console.log('  ok   ' + m);
+const check = (cond, good, bad) => cond ? ok(good) : fail(bad || good);
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 
 async function newPage(browser, width, scheme){
@@ -145,6 +146,41 @@ const overflow = page => page.evaluate(() => document.documentElement.scrollWidt
       const name = `${layout} at ${w}px`;
       if (r.skip) fail(`${name}: could not test (${r.why || 'no paragraphs'})`);
       else r.below ? ok(`${name}: the toolbar sits below the paragraph`) : fail(`${name}: the toolbar covers the paragraph by ${-r.gap}px`);
+      await ctx.close();
+    }
+
+    console.log('Voices: British English by default, no novelty or character voices');
+    {
+      const ctx = await browser.newContext({viewport:{width:1280, height:900}});
+      await ctx.route('**/*', r => r.request().url().startsWith(BASE) ? r.continue() : r.abort());
+      await ctx.addInitScript(() => {                         // a stand-in voice list like an iPad's
+        window.__spoken = [];
+        const V = (name, lang, uri) => ({name, lang, voiceURI:uri || 'com.apple.voice.compact.' + lang + '.' + name, localService:true});
+        const voices = [V('Samantha', 'en-US'), V('Daniel', 'en-GB'), V('Serena', 'en-GB'), V('Karen', 'en-AU'), V('Maged', 'ar-SA'),
+          V('Albert', 'en-US', 'com.apple.speech.synthesis.voice.Albert'), V('Bells', 'en-US', 'com.apple.speech.synthesis.voice.Bells'), V('Bubbles', 'en-US', 'com.apple.speech.synthesis.voice.Bubbles'),
+          V('Kathy', 'en-US', 'com.apple.speech.synthesis.voice.Kathy'), V('Whisper', 'en-US', 'com.apple.speech.synthesis.voice.Whisper'), V('Good News', 'en-US', 'com.apple.speech.synthesis.voice.GoodNews'),
+          V('Grandma (English (UK))', 'en-GB', 'com.apple.eloquence.en-GB.Grandma'), V('Shelley (English (UK))', 'en-GB', 'com.apple.eloquence.en-GB.Shelley'), V('Flo', 'en-US', 'com.apple.eloquence.en-US.Flo')];
+        class U { constructor(t){ this.text = t; } }
+        window.SpeechSynthesisUtterance = U;
+        Object.defineProperty(window, 'speechSynthesis', {configurable:true, value:{getVoices:() => voices, speak(u){ window.__spoken.push((u.voice || {}).name + ': ' + u.text); setTimeout(() => u.onend && u.onend({}), 5); }, cancel(){}, pause(){}, resume(){}, addEventListener(){}, onvoiceschanged:null}});
+      });
+      const page = await ctx.newPage(), errs = []; page.on('pageerror', e => errs.push(e.message));
+      await page.goto(BASE + 'index.html#critiquing/1'); await page.waitForTimeout(500);
+      const st = await page.evaluate(() => JSON.parse(localStorage.getItem('scholarpath.v1') || '{}'));
+      check((st.reader || {}).enAccent === 'en-GB', 'British English is the default English accent');
+      await page.evaluate(() => { const b = document.createElement('button'); b.dataset.act = 'tts-voices'; document.body.appendChild(b); b.click(); b.remove(); }); await page.waitForTimeout(300);
+      const dlg = await page.textContent('#voiceDlg');
+      const bad = ['Albert', 'Bells', 'Bubbles', 'Kathy', 'Whisper', 'Good News', 'Grandma', 'Shelley', 'Flo'].filter(n => new RegExp('\\b' + n + '\\b').test(dlg));
+      check(!bad.length, 'no novelty or character voice is listed', 'listed: ' + bad.join(', '));
+      check(/Samantha/.test(dlg) && /Daniel/.test(dlg) && /Serena/.test(dlg), 'the standard voices are still listed');
+      check(dlg.indexOf('British English') < dlg.indexOf('American English'), 'British English comes first');
+      await page.evaluate(() => { const b = document.createElement('button'); b.dataset.act = 'tts-voices-close'; document.body.appendChild(b); b.click(); b.remove(); });
+      const ids = await page.evaluate(() => [...document.querySelectorAll('#panel-reader article.rd-p')].map(a => a.dataset.id));
+      await page.evaluate(id => { const b = document.createElement('button'); b.dataset.act = 'tts-one'; b.dataset.id = id; b.dataset.part = 'orig'; document.body.appendChild(b); b.click(); b.remove(); }, ids[1]);
+      await page.waitForTimeout(400);
+      const spoken = await page.evaluate(() => window.__spoken.slice());
+      check(spoken.length && spoken.every(x => /^(Serena|Daniel):/.test(x)), 'reading aloud uses a British voice (a woman’s voice, Serena, by default)', 'read with: ' + spoken.map(x => x.split(':')[0]).join(', '));
+      errs.length ? errs.forEach(e => fail('voices: ' + e)) : ok('no page errors in the voice checks');
       await ctx.close();
     }
 
