@@ -1443,6 +1443,10 @@ dialog.ai-bridge{width:min(720px,calc(100vw - 24px));overflow:auto}
 .aib-imgs{display:flex;flex-wrap:wrap;gap:12px;margin:0 0 10px}.aib-imgs figure{margin:0;display:grid;gap:6px;justify-items:start}.aib-imgs img{max-width:150px;max-height:110px;border:1px solid var(--line);border-radius:var(--radius-sm);background:#fff}
 .aib-check{display:flex;gap:8px;align-items:center;margin:0 0 14px}
 .aib-err{color:var(--danger);margin:8px 0 0}
+.rd-nosimple{border:1px dashed var(--line-strong);border-radius:var(--radius-md);padding:12px 14px;background:var(--surface-2);font-family:var(--sans);font-size:.92rem;color:var(--ink)}
+.rd-nosimple p{margin:0 0 8px}.rd-nosimple p:last-child{margin:0}.rd-nosimple .row{display:flex;flex-wrap:wrap;gap:8px}
+.rd-simple-bar{display:flex;flex-wrap:wrap;align-items:center;gap:10px 12px;padding:12px 16px;margin:0 0 18px;border-radius:var(--radius-md);background:var(--accent-soft);color:var(--ink);font-family:var(--sans);font-size:.92rem}
+.rd-simple-bar>span{flex:1 1 260px}.rd-simple-bar>svg.i{color:var(--accent);flex:none}
 .dlg-foot{display:flex;justify-content:flex-end;gap:8px;padding:16px 24px;border-top:1px solid var(--line)}
 .toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%) translateY(16px);background:var(--heading);color:var(--bg);padding:11px 18px;border-radius:12px;font-weight:500;font-size:14px;opacity:0;pointer-events:none;transition:opacity .2s var(--ease),transform .2s var(--ease);z-index:100;display:flex;gap:8px;align-items:center;max-width:calc(100vw - 32px);box-shadow:var(--shadow-lg)}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
@@ -3240,8 +3244,8 @@ const AI_BRIDGE = (() => {
 })();
 /* --- Claude (sample capability), only where the viewer provides it --- */
 const capUse = n => (window.claude && typeof window.claude.use === 'function') ? Promise.resolve(window.claude.use(n)).catch(() => null) : Promise.resolve(null);
-let AI = null, aiOff = false, aiRun = null;
-capUse('sample').then(fn => { AI = fn || AI_BRIDGE; if (fn && S.ui.tab === 'reader') RENDER.reader(); if (fn && S.ui.tab === 'figlab') RENDER.figlab(); if (fn && S.ui.tab === 'verify') RENDER.verify(); if (fn && S.ui.tab === 'defend') RENDER.defend(); if (fn && S.ui.tab === 'evidence') RENDER.evidence(); if (fn && S.ui.tab === 'present') RENDER.present(); });
+let AI = (window.claude && typeof window.claude.use === 'function') ? null : AI_BRIDGE, aiOff = false, aiRun = null;   // the website gets the bridge at once; claude.ai gets its capability below
+capUse('sample').then(fn => { AI = fn || AI_BRIDGE; if (AI && S.ui.tab === 'reader') RENDER.reader(); if (AI && S.ui.tab === 'figlab') RENDER.figlab(); if (AI && S.ui.tab === 'verify') RENDER.verify(); if (AI && S.ui.tab === 'defend') RENDER.defend(); if (AI && S.ui.tab === 'evidence') RENDER.evidence(); if (AI && S.ui.tab === 'present') RENDER.present(); });
 const aiReady = () => !!AI && !aiOff;
 function aiError(e){
   const code = e && e.code;
@@ -3249,12 +3253,24 @@ function aiError(e){
   return ({rate_limited:'Claude is busy or your usage limit was reached — try again a little later.', session_expired:'Please sign in to Claude again.', refused:'Claude declined this request.', prompt_too_large:'This paper is too long to send in one go.', invalid_json:'Claude’s answer could not be read — try again.', cancelled:'Stopped.'}[code]) || 'Something went wrong talking to Claude — try again.';
 }
 const ideaOf = p => (p.idea || '').trim();
-const simpleOf = p => (p.simple || '').trim();
+// A "simple version" that mostly repeats the original wording is not a simple version: it is treated as missing,
+// so Simple English never shows the original text in disguise. Measured with 4-word sequences (shingles).
+const simWords = t => String(t || '').toLowerCase().replace(/[^\p{L}\p{N}%.]+/gu, ' ').replace(/\.(?!\d)/g, ' ').trim().split(/\s+/).filter(Boolean);
+function tooCloseToOriginal(simple, orig){
+  const a = simWords(simple), b = simWords(orig);
+  if (!a.length) return true;
+  if (a.join(' ') === b.join(' ')) return true;
+  if (a.length < 8) return false;
+  const sh = w => { const out = new Set(); for (let i = 0; i + 4 <= w.length; i++) out.add(w.slice(i, i + 4).join(' ')); return out; };
+  const A = sh(a), B = sh(b); let same = 0; A.forEach(x => { if (B.has(x)) same++; });
+  return A.size > 0 && same / A.size >= 0.6;
+}
+const simpleOf = p => { const t = (p.simple || '').trim(); return t && !tooCloseToOriginal(t, p.text) ? t : ''; };
 function summarizePrompt(paper, batch){
   const before = paper.paras.slice(0, paper.paras.indexOf(batch[0])).filter(ideaOf).slice(-30)
     .map(p => `[${p.id}] ${clip(ideaOf(p), 160)}`).join('\n');
   return `You are helping a master's student read a research paper. For EACH paragraph below:
-1. "simple": the SAME paragraph rewritten in simple, clear English (around B1–B2 level) for a student who finds academic English hard. Keep every point, number and example, in the same order. Use short sentences and everyday words; if a technical term must stay, explain it briefly in brackets. Do NOT add facts, opinions or conclusions that are not in the paragraph, and do not leave content out.
+1. "simple": the SAME paragraph rewritten in VERY SIMPLE English (CEFR A2–B1) for a student whose English is not strong. It must read clearly differently from the original: do NOT copy the original sentences or long phrases — say every idea again in your own plain words. Use short sentences (about 8–15 words each), common everyday words, and active voice ("The researchers asked 20 students…"). Break long sentences into several short ones. If a technical term must stay, explain it in a few plain words in brackets the first time. Keep every point, number, name and example, in the same order. Do NOT add facts, opinions or conclusions that are not in the paragraph, and do not leave content out.
 2. "idea": the main idea in 1–2 short sentences (under 40 words). Keep the meaning exact.
 3. "terms": up to 3 difficult or technical terms from the paragraph, each with a plain meaning (under 12 words). Empty array if none.
 4. "linkTo": the id of ONE earlier paragraph this paragraph most clearly builds on (from "Earlier paragraphs" or earlier in this batch), or null if there is no clear link.
@@ -3289,7 +3305,8 @@ function applySummary(paper, items, batch){
     const simple = String(it.simple || '').trim(), idea = String(it.idea || '').trim();
     if (!simple && !idea) continue;
     n++;
-    if (simple){ if (p.simpleSrc === 'me' && (p.simple || '').trim()) p.aiSimple = simple; else { p.simple = simple; p.simpleSrc = 'ai'; p.aiSimple = ''; } }
+    if (simple && tooCloseToOriginal(simple, p.text)){ simRejected.add(p.id); }
+    else if (simple){ simRejected.delete(p.id); if (p.simpleSrc === 'me' && (p.simple || '').trim()) p.aiSimple = simple; else { p.simple = simple; p.simpleSrc = 'ai'; p.aiSimple = ''; } }
     if (idea){ if (p.src === 'me' && ideaOf(p)) p.aiIdea = idea; else { p.idea = idea; p.src = 'ai'; p.aiIdea = ''; } }
     if (Array.isArray(it.terms)) p.terms = it.terms.filter(t => t && t.term).slice(0,3).map(t => ({term:String(t.term), meaning:String(t.meaning || '')}));
     const to = it.linkTo ? String(it.linkTo) : '';
@@ -3298,7 +3315,7 @@ function applySummary(paper, items, batch){
   }
   return n;
 }
-let simBusy = new Set(), simOpen = new Set();
+let simBusy = new Set(), simOpen = new Set(), simRejected = new Set();   // simRejected: Claude's last answer only repeated the original
 async function summarizeParas(paper, list, label){
   if (!aiReady()){ toast('Simple versions are written by Claude on the published ScholarPath page — you can also write your own'); return false; }
   if (aiRun){ toast('Claude is still working — please wait or press Stop'); return false; }
@@ -3318,7 +3335,9 @@ async function summarizeParas(paper, list, label){
       } finally { b.forEach(p => simBusy.delete(p.id)); }
       aiRun.done += b.length; renderAiBar(); refreshCards(b);
     }
-    if (got) toast(list.length === 1 ? 'Simple version ready' : 'Simple versions ready');
+    const copied = list.filter(p => simRejected.has(p.id)).length;
+    if (copied) alert(`Claude’s simple version of ${copied === 1 ? 'one paragraph' : copied + ' paragraphs'} mostly repeated the original wording, so it was not used. Press Simplify again for ${copied === 1 ? 'it' : 'them'}.`);
+    else if (got) toast(list.length === 1 ? 'Simple version ready' : 'Simple versions ready');
     else if (!ctl.signal.aborted) alert('Claude answered, but no simple version could be read from the answer. Please try again.');
   } catch (e){ if (e && e.code !== 'cancelled') alert(aiError(e)); }
   finally {
@@ -3619,7 +3638,7 @@ function ttsSegs(paper, opts){                                // opts: {from, on
   const heads = S.reader.headings !== false && !opts.only;
   return ps.flatMap((p, k) => {
     const simple = simpleOf(p), ar = (p.ar || '').trim();
-    const shownOrig = !opts.only && !parts.orig && !(parts.idea && simple) && !(parts.ar && ar);     // the chosen version is missing: the original is what is shown
+    const shownOrig = !opts.only && !parts.orig && !parts.idea && !(parts.ar && ar);     // Arabic missing: the original is what is shown. Simple English missing: nothing is read (it is never the original)
     return [
       heads && p.section && (k === 0 || ps[k - 1].section !== p.section) && {pid:p.id, part:'head', text:p.section + '.', lang:isArabic(p.section) ? 'ar' : 'en'},
       (parts.orig || shownOrig) && p.text && {pid:p.id, part:'orig', text:p.text, lang:'en', missing:shownOrig ? (parts.ar ? 'ar' : 'idea') : ''},
@@ -4178,8 +4197,17 @@ function rdTocRefresh(){
   const ol = $('#rdOutline'), li = $('#rdToc li.on');
   if (ol && li && ol.scrollHeight > ol.clientHeight){ const r = li.getBoundingClientRect(), o = ol.getBoundingClientRect(); if (r.top < o.top + 90 || r.bottom > o.bottom - 24) ol.scrollTop += r.top - o.top - 120; }
 }
+function simpleTodo(paper){ return paper.paras.filter(p => isReadable(p) && !simpleOf(p)); }
+function simpleBanner(paper){
+  if (rdMode() !== 'simple') return '';
+  const todo = simpleTodo(paper), all = paper.paras.filter(isReadable).length;
+  if (!todo.length) return '';
+  const busy = !!aiRun;
+  return `<div class="rd-simple-bar" role="status">${icon('sparkle')}<span><b>${todo.length === all ? 'This paper isn’t in simple English yet.' : `${todo.length} of ${all} paragraphs aren’t in simple English yet.`}</b> ${busy ? 'Claude is writing them now…' : 'Simple English shows a new, easier version — never the original text.'}</span>
+    ${aiReady() && !busy ? `<button class="btn sm primary" data-act="rp-sum-all" data-ai-btn>${icon('sparkle')}${todo.length === all ? 'Simplify the whole paper' : 'Simplify the rest'}</button>` : ''}</div>`;
+}
 function parasView(paper){                                        // the paper as one continuous document: headings, page breaks, paragraphs, figures
-  const out = []; let lastSec = null, lastPage = null, front = [];
+  const out = [simpleBanner(paper)]; let lastSec = null, lastPage = null, front = [];
   const flush = () => { if (front.length){ out.push(frontBlock(paper, front)); front = []; } };
   for (const p of paper.paras){
     if (p.kind === 'front'){ front.push(p); continue; }
@@ -4190,7 +4218,7 @@ function parasView(paper){                                        // the paper a
     out.push(paraCard(paper, p));
   }
   flush();
-  return out.join('') || '<div class="empty">No paragraphs were found. If this is a scanned PDF, try <b>Paste text</b> instead.</div>';
+  return paper.paras.length ? out.join('') : '<div class="empty">No paragraphs were found. If this is a scanned PDF, try <b>Paste text</b> instead.</div>';
 }
 function frontLine(paper, p){ return `<div class="para rd-front-p" id="para-${p.id}" data-pid="${p.id}"><span class="rd-front-no">¶${paraNo(paper, p.id)}</span><div class="orig-full" id="po-${p.id}" dir="auto">${esc(p.text)}</div><span class="rd-front-acts">${paraMenu(paper, p)}</span></div>`; }
 function frontBlock(paper, list){                                 // title, authors and journal details: kept word for word, folded away
@@ -4209,11 +4237,17 @@ function paraMenu(paper, p){
     ${isFigure(p) ? '' : `<button class="menu-item" data-act="rp-merge" data-id="${p.id}">${icon('link')}Merge with next paragraph</button>`}
     <button class="menu-item danger" data-act="rp-drop" data-id="${p.id}">${icon('trash')}${isFigure(p) ? 'Remove this figure marker' : 'Remove this paragraph'}</button></div></details>`;
 }
+function noSimple(p){                                           // Simple English, but this paragraph has no simple version yet: say so — never show the original instead
+  if (simBusy.has(p.id)) return `<div class="rd-nosimple" id="pv-${p.id}"><p><span class="spin" aria-hidden="true"></span> Writing this paragraph in simple English…</p></div>`;
+  const copied = simRejected.has(p.id) || ((p.simple || '').trim() && !simpleOf(p));
+  return `<div class="rd-nosimple" id="pv-${p.id}"><p><b>${copied ? 'The simple version only repeated the original.' : 'Not simplified yet.'}</b> Simple English shows a new, easier version of each paragraph — never the original text.</p>
+    <span class="row">${aiReady() ? `<button class="btn sm primary" data-act="rp-sum-one" data-id="${p.id}" data-ai-btn>${icon('sparkle')}${copied ? 'Simplify again' : 'Simplify this paragraph'}</button>` : ''}<button class="btn sm ghost" data-act="rp-tools" data-id="${p.id}" data-tab="explain">${icon('pen')}Write my own</button></span></div>`;
+}
 function paraBody(p){                                             // the version chosen above the paper; the original never changes and stays one click away
   const mode = rdMode(), simple = simpleOf(p), ar = (p.ar || '').trim();
   const orig = `<div class="orig-full" id="po-${p.id}" dir="auto">${esc(p.text)}</div>`;
   const missing = (what, tab) => `<p class="rd-missing">No ${what} yet — the original is shown. <button class="linkish" data-act="rp-tools" data-id="${p.id}" data-tab="${tab}">Add one in the study panel</button></p>`;
-  if (mode === 'simple') return simple ? `<div class="rd-alt" id="pv-${p.id}" dir="auto">${esc(simple)}</div><details class="rd-peek"><summary>Show the original text</summary>${orig}</details>` : orig + missing('simple version', 'explain');
+  if (mode === 'simple') return (simple ? `<div class="rd-alt" id="pv-${p.id}" dir="auto">${esc(simple)}</div>` : noSimple(p)) + `<details class="rd-peek"><summary>Show the original text</summary>${orig}</details>`;
   if (mode === 'ar') return ar ? `<div class="rd-ar rd-ar-main" id="pa-${p.id}" dir="rtl" lang="ar">${esc(p.ar)}</div><details class="rd-peek"><summary>Show the original text</summary>${orig}</details>` : orig + missing('Arabic translation', 'arabic');
   return orig;
 }
@@ -4272,7 +4306,7 @@ function cmpCell(paper, p, kind, sel){
   const n = paraNo(paper, p.id), on = !!sel && sel.id === p.id, simple = simpleOf(p), ar = (p.ar || '').trim();
   const none = (what, act, tab) => `<p class="rd-missing">No ${what} yet. <button class="linkish" data-act="rp-tools" data-id="${p.id}" data-tab="${tab}">Add one</button></p>`;
   const body = kind === 'orig' ? `<div class="orig-full" id="po-${p.id}" dir="auto">${esc(p.text)}</div>`
-    : kind === 'simple' ? (simple ? `<div class="rd-alt" id="pv-${p.id}" dir="auto">${esc(simple)}</div>` : none('simple version', 'rp-sum-one', 'explain'))
+    : kind === 'simple' ? (simple ? `<div class="rd-alt" id="pv-${p.id}" dir="auto">${esc(simple)}</div>` : noSimple(p))
     : (ar ? `<div class="rd-ar-main" id="pa-${p.id}" dir="rtl" lang="ar">${esc(p.ar)}</div>` : none('Arabic translation', 'rp-ar-one', 'arabic'));
   const ver = kind !== 'orig';
   return `<article class="para rd-p cmp-p ${ver ? 'cmp-ver' : ''} ${on ? 'sel' : ''}" id="${ver ? 'cmp-' : 'para-'}${p.id}" data-pid="${p.id}" data-act="rp-sel" data-id="${p.id}" ${ver && kind === 'ar' ? 'dir="rtl"' : ''}>
@@ -4570,6 +4604,8 @@ function rdSetMode(v, fromPlayer){                                // the version
   if (rdLayout() !== 'compare' && (S.reader.view || 'paras') === 'paras'){ rdRenderView(); rdRestore(a); }
   const now = TTS.playing && ttsMain(TTS.ctx) && TTS.list[TTS.i]; if (now) ttsPlayAll(now.pid); else renderTtsBar();
   if (fromPlayer) $('#ttsVer')?.focus();
+  const paper = rPaper();
+  if (S.reader.mode === 'simple' && paper && !aiRun && aiReady()){ const todo = simpleTodo(paper); if (todo.length) summarizeParas(paper, todo, 'Writing simple versions'); }
 }
 function rdConceptAdd(id, text){                                  // an important concept for this paragraph (highlighted in the text, never changing it)
   const paper = rPaper(), p = paper && paper.paras.find(x => x.id === id); text = String(text || '').replace(/\s+/g, ' ').trim().slice(0, 80);
