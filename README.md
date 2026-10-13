@@ -20,6 +20,16 @@ Nothing yet — it's a sandbox for practicing git and GitHub.
 `index.html` is **ScholarPath**, a single-page research companion for master's students and early researchers.
 Open the file in any modern browser. It needs no install, build step or login, and all work is saved in the browser's localStorage.
 
+### Run it on your own computer (localhost)
+
+1. Download the project as a ZIP (on GitHub: **Code → Download ZIP**, or [this branch's ZIP](https://github.com/dimacodes01/first-pr-practice/archive/refs/heads/claude/scholarpath-research-app-jabga7.zip)) and unzip it.
+2. Double-click the starter for your computer:
+   - **Windows:** `Start-ScholarPath-Windows.bat`
+   - **Mac:** `Start-ScholarPath-Mac.command` (the first time, right-click it and choose **Open**, because macOS blocks downloaded scripts)
+3. Your browser opens **http://localhost:8000/index.html**. Keep the small black window open while you use ScholarPath, and close it when you finish.
+
+The localhost address only works while that window is open. The starters need Python; without it they open `index.html` straight from the folder instead, which works the same. Claude features (simple versions, translations, Ask Claude, figure explanations) need the published claude.ai page; everything else works locally. Work saved on localhost is separate from the claude.ai page: use **My Progress → Back up** and restore to move it.
+
 The app is organised as a journey in four parts: **1 · Write a paper** (writing path, find literature, ideas & reading list, figures & tables), **2 · Critique a paper** (read the paper, explain the figures, write the AAU critique, trace where each statement comes from), **3 · Present** (build the slides, prepare for questions) and **4 · Verify & defend** (the final academic verification and consistency checklist, then the professor questions and a mock professor), plus a Dashboard (*Your Research Workspace*: a progress summary, this week's calendar of the steps you opened, continue researching, your library and the research tools) and My Progress.
 
 The look (since 13 Oct 2026) is a friendly school-platform design, like the owner's own school learning platform: a dark-blue top bar, a slate sidebar with a white tile for the current page, white cards on a light blue-grey page, rounded pill buttons, underlined blue tabs and colourful icons and initials. It uses Nunito, with IBM Plex Sans Arabic for Arabic, Lucide icons and no emoji, in light and dark mode, and every text passes WCAG AA contrast. A collapsible sidebar lists every step (a drawer on tablets and phones), and the header shows where you are.
