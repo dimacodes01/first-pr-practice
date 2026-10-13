@@ -1371,6 +1371,29 @@ details.guide[open] summary::after{transform:rotate(-135deg)}
 .timeline{display:flex;height:12px;border-radius:999px;overflow:hidden;gap:2px;margin:8px 0 4px}
 .timeline span{background:var(--accent);opacity:.85}
 .timeline span:nth-child(even){opacity:.55}
+.pr-add{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px 16px;margin-top:16px;padding:12px 14px;border:1px dashed var(--line);border-radius:var(--radius-sm);background:var(--surface-2)}
+.pr-add-t{display:flex;align-items:flex-start;gap:8px;min-width:0;flex:1 1 260px;font-size:.92rem}
+.pr-add-t b{overflow-wrap:anywhere}
+.pr-add-t svg.i{flex:none;margin-top:2px;color:var(--accent)}
+.pr-steps{display:grid;gap:0;margin-top:16px;padding-top:6px;padding-bottom:6px}
+.pr-step{display:flex;flex-wrap:wrap;align-items:center;gap:10px 14px;padding:12px 0}
+.pr-step + .pr-step{border-top:1px solid var(--line)}
+.pr-n{flex:none;width:30px;height:30px;border-radius:50%;display:grid;place-items:center;font:700 .9rem var(--sans);color:var(--accent);background:var(--accent-soft)}
+.pr-step-t{display:flex;flex-direction:column;gap:2px;flex:1 1 260px;min-width:0}
+.pr-step-a{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-left:auto}
+.pr-step-a .menu-pop{min-width:270px}
+.btn.primary .spin{border-color:currentColor;border-right-color:transparent}
+.pr-status{margin:-4px 0 14px}
+.pr-status .chip{margin-right:4px}
+.pr-flag{display:flex;gap:6px;align-items:flex-start;margin:0;font-size:.84rem;color:var(--warn);background:var(--warn-soft);border-radius:var(--radius-sm);padding:7px 10px}
+.pr-flag svg.i{flex:none;margin-top:2px}
+.pr-from{display:flex;gap:6px;align-items:flex-start;margin:0}
+.pr-from svg.i{flex:none;margin-top:2px}
+.pr-edit{border-color:var(--accent)}
+.pr-edit .field{margin:0}
+.pr-secs-l{margin-left:auto;display:inline-flex;align-items:center;gap:8px;color:var(--muted)}
+.pr-secs{width:88px;min-height:36px}
+@media(max-width:560px){.pr-step-a{margin-left:0;width:100%}.pr-step-a details.menu{margin-left:auto}}
 
 /* Progress */
 .stats{display:grid;gap:14px;grid-template-columns:repeat(2,1fr)}
@@ -1548,8 +1571,8 @@ const PARTS = [
     {tab:'figlab', mode:'explain', label:'Explain the figures', desc:'What each figure shows, its strengths, weaknesses and role in the study'},
     {tab:'critique', label:'Write the critique', desc:'The AAU 0106112 Paper Critique Form, with word limits and Word export'},
     {tab:'evidence', label:'Trace your evidence', desc:'Where did this come from? Each statement of your critique linked to the exact passage of the paper'}]},
-  {id:'presenting', no:3, label:'Present', short:'Present', icon:'slides', blurb:'Turn your critique or paper into a timed slide outline and prepare for questions.', steps:[
-    {tab:'present', label:'Build the slides', desc:'Slide structure, speaker notes and timing for 5, 10 or 15 minutes'},
+  {id:'presenting', no:3, label:'Present', short:'Present', icon:'slides', blurb:'Turn your critique into a timed slide outline and a PowerPoint, and prepare for questions.', steps:[
+    {tab:'present', label:'Build the slides', desc:'Add your critique, outline the slides from it and generate the PowerPoint, with speaker notes and timing'},
     {tab:'reader', view:'questions', label:'Questions about the paper', desc:'Discussion questions for the class, and quick questions about the paper'}]},
   {id:'verifying', no:4, label:'Verify & defend', short:'Verify', icon:'shield', blurb:'Check the critique and the slides against the original paper, then prepare to defend them: the questions your professor may ask, with a mock professor.', steps:[
     {tab:'verify', label:'Final verification & consistency', desc:'Checklist, consistency matrix, contradictions, corrections and the quality-assurance report'},
@@ -3117,7 +3140,7 @@ async function addReaderPaper(name, title, res, file){
 /* --- Claude (sample capability), only where the viewer provides it --- */
 const capUse = n => (window.claude && typeof window.claude.use === 'function') ? Promise.resolve(window.claude.use(n)).catch(() => null) : Promise.resolve(null);
 let AI = null, aiOff = false, aiRun = null;
-capUse('sample').then(fn => { AI = fn; if (fn && S.ui.tab === 'reader') RENDER.reader(); if (fn && S.ui.tab === 'figlab') RENDER.figlab(); if (fn && S.ui.tab === 'verify') RENDER.verify(); if (fn && S.ui.tab === 'defend') RENDER.defend(); if (fn && S.ui.tab === 'evidence') RENDER.evidence(); });
+capUse('sample').then(fn => { AI = fn; if (fn && S.ui.tab === 'reader') RENDER.reader(); if (fn && S.ui.tab === 'figlab') RENDER.figlab(); if (fn && S.ui.tab === 'verify') RENDER.verify(); if (fn && S.ui.tab === 'defend') RENDER.defend(); if (fn && S.ui.tab === 'evidence') RENDER.evidence(); if (fn && S.ui.tab === 'present') RENDER.present(); });
 const aiReady = () => !!AI && !aiOff;
 function aiError(e){
   const code = e && e.code;
@@ -5443,7 +5466,8 @@ function updateBuild(){
 function presSources(){
   return [
     ...S.critiques.map(c => ({id:'crit:'+c.id, label:`Critique: ${c.example?'[Example] ':''}${c.form==='aau'?'AAU · ':''}${clip(critTitle(c)||'Untitled',60)}${critDone(c)?' ✓':''}`})),
-    {id:'paper', label:`My paper outline: ${clip(S.writing.title||'Untitled', 60)}`}
+    {id:'paper', label:`My paper outline: ${clip(S.writing.title||'Untitled', 60)}`},
+    ...(S.pres.upload ? [{id:'upload', label:`Added critique: ${clip(S.pres.upload.name, 60)}`}] : [])
   ];
 }
 function figBullets(c){
@@ -5518,45 +5542,321 @@ function slidePlan(){
   let cum = 0;
   return SLIDES.map((d,i) => { const secs = Math.round(total*d.w/5)*5; const start = cum; cum += secs; return {...d, n:i+1, secs, start, h:sl[d.key].h, b:sl[d.key].b.filter(Boolean)}; });
 }
-function presOutline(plan){
+/* --- your critique → a slide outline (Claude, or its own sections) → a PowerPoint --- */
+const PRES_COUNT = {5:7, 10:9, 15:12};                            // slides for each talk length, title and questions included
+let presEdit = -1;                                                 // the slide being edited
+function presUnits(src){                                           // the source as pieces of text with their headings
+  if (src === 'upload') return (S.pres.upload || {}).units || [];
+  if (src.startsWith('crit:')){ const c = S.critiques.find(x => 'crit:' + x.id === src); return c ? critUnits(c) : []; }
+  return [{loc:'Title', text:S.writing.title || ''}, ...WRITE_STEPS.map(s => ({loc:s.title, text:stepState(s.key).notes || ''}))].filter(u => u.text.trim());
+}
+const PRES_HEADS = /^(summary|introduction|background|research problem|problem|objectives?|aims?|research questions?|literature|literature review|methods?|methodology|data|dataset|sample|results?|findings|discussion|strengths?|weaknesses|limitations|ethics|ethical|contribution|contributions|implications|future work|future research|conclusions?|recommendations?|overall evaluation|evaluation|critique|critical evaluation|references)\b/i;
+function presHeadLine(l, prevEnd){                                  // a heading in a PDF or text critique: short, standing alone, and named or numbered like one
+  const w = l.split(/\s+/);
+  if (l.length > 80 || w.length > 9 || /[.!?;,]$/.test(l) || /^\d+([.,]\d+)?%?$/.test(l)) return false;
+  if (/^((section|part)\s+)?[0-9IVX]+[.)]?\s+[A-Z؀-ۿ]/i.test(l) || PRES_HEADS.test(l.replace(/^[0-9IVX.)\s]+/, ''))) return true;
+  return prevEnd && w.length <= 6 && w.filter(x => /^[A-Z؀-ۿ]/.test(x)).length >= Math.ceil(w.length * .6);
+}
+function critSections(units){                                      // the critique's own parts, in order: Word headings, ScholarPath sections, or heading lines
+  const out = []; let cur = null;
+  const start = h => { cur = {h:h.trim().replace(/[:：]\s*$/, ''), text:''}; out.push(cur); };
+  const add = t => { if (!cur) start('Introduction'); cur.text += (cur.text ? '\n' : '') + t; };
+  for (const u of units){
+    const m = u.loc.match(/^(.*) · ¶\d+$/);
+    if (m){ if (!cur || cur.h !== m[1]) start(m[1]); add(u.text); continue; }
+    if (!/^(p\. \d+|¶\d+|Start)$/.test(u.loc)){ start(u.loc); add(u.text); continue; }
+    let prevEnd = true;
+    for (const line of u.text.split(/\n+/)){ const l = line.trim(); if (!l) continue; if (presHeadLine(l, prevEnd)) start(l); else add(l); prevEnd = /[.!?:]$/.test(l); }
+  }
+  return out.filter(s => s.text.trim());
+}
+const presText = src => critSections(presUnits(src)).map(x => `[${x.h}]\n${x.text}`).join('\n\n');   // the source, part by part under its headings
+function presFitTime(slides, total){                               // the times add up to the talk exactly, in steps of 5 seconds
+  const base = slides.map(s => s.secs || total / slides.length), sum = base.reduce((a, x) => a + x, 0) || 1;
+  slides.forEach((s, i) => s.secs = Math.max(10, Math.round(base[i] * total / sum / 5) * 5));
+  let diff = total - slides.reduce((a, s) => a + s.secs, 0);
+  const big = [...slides].sort((a, b) => b.secs - a.secs);
+  for (let k = 0; Math.abs(diff) >= 5 && k < 400; k++){ const s = big[k % big.length]; if (diff < 0 && s.secs <= 10) continue; s.secs += diff > 0 ? 5 : -5; diff += diff > 0 ? -5 : 5; }
+}
+const PRES_NUM = /\d+(?:[.,]\d+)?\s?%?/g;
+function presFlags(src, slides){                                   // numbers on a slide that are not in the critique: "check" (never changed silently)
+  const norm = x => x.replace(/\s/g, '').replace(/,(?=\d{3}\b)/g, '');
+  const have = new Set((presText(src).match(PRES_NUM) || []).map(norm));
+  slides.forEach(s => { s.flags = [...new Set(([s.title, ...s.bullets, s.notes].join(' ').match(PRES_NUM) || []).map(norm))].filter(x => !have.has(x) && !/^[0-9]$/.test(x)); });
+}
+function presApply(src, res, by){                                  // Claude's outline (or a pasted reply) → editable slides
+  const raw = Array.isArray(res) ? {slides:res} : (res || {});
+  const slides = (Array.isArray(raw.slides) ? raw.slides : []).map(s => ({
+    title:String((s && s.title) || '').trim().replace(/\.$/, ''),
+    bullets:(Array.isArray(s && s.bullets) ? s.bullets : String((s && s.bullets) || '').split('\n')).map(b => String(b).replace(/^\s*[•\-*–]\s*/, '').trim()).filter(Boolean).slice(0, 6),
+    notes:String((s && s.notes) || '').trim(), secs:Math.round(+((s && s.seconds) || 0)) || 0, from:String((s && s.source) || '').trim()
+  })).filter(s => s.title);
+  if (!slides.length) return 0;
+  presFitTime(slides, S.pres.minutes * 60); presFlags(src, slides);
+  (S.pres.outlines ||= {})[src] = {by, minutes:S.pres.minutes, at:Date.now(), title:String(raw.title || slides[0].title).trim(), subtitle:String(raw.subtitle || '').trim(), slides};
+  presEdit = -1; save(); return slides.length;
+}
+function presInfo(src){                                            // the paper's title and authors, only when the source gives them
+  if (src.startsWith('crit:')){ const c = S.critiques.find(x => 'crit:' + x.id === src); if (c){ const i = c.form === 'aau' ? c.info : (c.citation || {});
+    return {title:i.title || '', by:[i.authors, i.year].filter(Boolean).join(', '), venue:i.venue || '', name:(c.info && c.info.studentName) || ''}; } }
+  if (src === 'paper') return {title:S.writing.title || '', by:'', venue:'', name:''};
+  const t = presText(src), get = re => ((t.match(re) || [])[1] || '').trim();
+  return {title:get(/(?:paper\s+)?title\s*[:：]\s*(.+)/i), by:get(/authors?\s*(?:\(year\))?\s*[:：]\s*(.+)/i), venue:get(/(?:journal|venue|conference)\s*[:：]\s*(.+)/i), name:get(/student(?:'s)?\s+name\s*[:：]\s*(.+)/i)};
+}
+function presFromSections(src){                                    // no Claude: one slide per part of the critique, in its own words
+  const INFO = /^(paper\s+)?(title|authors?|year|journal|venue|conference|doi|student(?:'s)?\s+(name|id|number)|course|instructor|professor|date|presentation)\b[^:：\n]{0,24}[:：]/i;
+  const secs = critSections(presUnits(src)).filter(s => !/^(references?|paper information|citation details|part a\b)/i.test(s.h.replace(/^section\s*[\d.]+\s*·\s*/i, ''))
+    && !s.text.split('\n').every(l => !l.trim() || INFO.test(l.trim())));     // the paper's details are on the title slide
+  if (!secs.length) return 0;
+  const room = PRES_COUNT[S.pres.minutes] - 2, info = presInfo(src);
+  let groups = secs.map(s => ({h:s.h.replace(/^section\s*[\d.]+\s*·\s*/i, ''), text:s.text, from:s.h}));
+  while (groups.length > room){ let k = 0, best = Infinity; for (let i = 0; i < groups.length - 1; i++){ const l = groups[i].text.length + groups[i + 1].text.length; if (l < best){ best = l; k = i; } }
+    groups.splice(k, 2, {h:`${groups[k].h} & ${groups[k + 1].h}`, text:`${groups[k].text}\n${groups[k + 1].text}`, from:`${groups[k].from} + ${groups[k + 1].from}`}); }
+  const slides = [
+    {title:info.title || '[Paper title]', bullets:[info.by || '[Authors, year]', info.venue || '[Journal or conference]', `Critique by ${info.name || '[Your name]'}`].filter(Boolean), notes:'Introduce yourself and the paper in one breath, and say why you chose it.', secs:0, from:'Title'},
+    ...groups.map(g => { const ss = sentences(g.text.replace(/\n+/g, ' '));
+      return {title:clip(g.h, 60), bullets:ss.slice(0, 3).map(x => clip(x, 140)), notes:ss.length > 3 ? `Say in your own words: ${clip(ss.slice(3).join(' '), 420)}` : 'Explain these points in your own words, with one example from the paper.', secs:Math.max(30, Math.min(150, g.text.length / 6)), from:g.from}; }),
+    {title:'Questions and discussion', bullets:['Thank you — questions?', '[A question you expect]', '[Another question you expect]'], notes:'Repeat each question before you answer it. It is fine to say that a question is a good one for future work.', secs:0, from:''}
+  ];
+  slides[0].secs = S.pres.minutes * 60 * .06; slides[slides.length - 1].secs = S.pres.minutes * 60 * .1;
+  return presApply(src, {title:slides[0].title, slides:slides.map(s => ({...s, seconds:s.secs, source:s.from}))}, 'sections');
+}
+function presPrompt(src){
+  const m = S.pres.minutes, n = PRES_COUNT[m], kind = src === 'paper' ? 'paper outline' : 'critique';
+  return `You are helping a master's student at Al Ain University (Advanced Research Methods 0106112) turn ${src === 'paper' ? 'the outline of their own research paper' : 'their written critique of a research paper'} into the slides of a ${m}-minute class presentation.
+
+Rules:
+- Use only what is in the ${kind} below. Do not add findings, numbers, statistics, names, dates, quotations, references or claims that are not in it. If a slide needs something the ${kind} does not give, write a short placeholder in square brackets, for example [Add the sample size].
+${src === 'paper' ? '' : `- Keep the critique's distinction between what the authors report ("The authors report…") and the student's own evaluation ("In my assessment…"). Present strengths and weaknesses fairly, each with the reason the critique gives.\n`}- Exactly ${n} slides. Slide 1 is the title slide: the paper's title as its title; as bullets, the authors, year and venue if the ${kind} gives them, and "Critique by [Your name]" (or the student's name if given). The last slide is "Questions and discussion", with 2–3 questions the audience may ask, based on the ${kind}.
+- One message per slide. Slide titles: at most 8 words, no full stop. 2–5 bullets per slide, each under 16 words, in plain academic English, without bullet symbols.
+- If one slide covers strengths and weaknesses, start those bullets with "Strength:" or "Weakness:".
+- Speaker notes: 2–4 sentences the student can say aloud, in the first person, based on the ${kind}.
+- "seconds": the speaking time for each slide; together exactly ${m * 60}.
+- "source": the heading of the part of the ${kind} the slide is based on.
+
+The ${kind} (each part starts with its heading in square brackets):
+${presText(src).slice(0, 60000)}
+
+Reply with only JSON in this shape:
+{"title":"...","subtitle":"...","slides":[{"title":"...","bullets":["..."],"notes":"...","seconds":60,"source":"..."}]}`;
+}
+let presRun = null;
+async function presOutlineAI(src){
+  if (!aiReady() || presRun) return;
+  if (!presText(src).trim()) return toast('This source is still empty — add your critique first');
+  const ctl = new AbortController(); presRun = {ctl}; RENDER.present();
+  try {
+    const res = await AI.json(presPrompt(src), {signal:ctl.signal, modelTier:'default'});
+    const n = presApply(src, res, 'claude');
+    toast(n ? `${n} slides outlined by Claude — check them against your critique` : 'Claude did not return slides — please try again');
+  } catch (e){ if (e && e.code !== 'cancelled') alert(aiError(e)); }
+  finally { presRun = null; RENDER.present(); }
+}
+async function presReadFile(file){                                 // a critique as Word, PDF or text: read in this browser, nothing uploaded
+  const ext = (file.name.split('.').pop() || '').toLowerCase(), buf = await file.arrayBuffer();
+  let units;
+  if (ext === 'pdf') units = (await extractPdf(new File([buf], file.name))).map((t, i) => ({loc:`p. ${i + 1}`, text:t}));
+  else if (ext === 'docx') units = await docxUnits(await readZip(buf));
+  else if (ext === 'txt' || ext === 'md') units = textUnits(new TextDecoder().decode(buf), false);
+  else throw new Error(`Please add your critique as a Word (.docx), PDF or text file (this was .${ext}).`);
+  if (!units.some(u => u.text.trim())) throw new Error('No text could be read from this file. If it is a scanned PDF, paste the text instead.');
+  return units;
+}
+async function presAddCritique(name, kind, units){                 // the critique becomes the source, and is outlined straight away
+  S.pres.upload = {name, kind, units, at:Date.now()}; S.pres.source = 'upload';
+  if (S.pres.outlines) delete S.pres.outlines.upload;
+  save(); RENDER.present();
+  if (aiReady()) await presOutlineAI('upload');
+  else { const n = presFromSections('upload'); RENDER.present(); toast(n ? `${n} slides made from the sections of your critique — edit them, or use Claude on the published page` : 'Your critique is added'); }
+}
+function presDeck(){                                               // the slides shown: an outline (Claude, sections or pasted) or the template
+  const src = S.pres.source, o = (S.pres.outlines || {})[src];
+  if (o && (o.slides || []).length) return {kind:o.by, o, title:o.title, slides:o.slides};
+  const plan = slidePlan();
+  return {kind:'template', title:(plan[0] && plan[0].h) || '', slides:plan.map(s => ({title:s.key === 'title' ? (s.h || 'Title') : s.title, sub:s.key === 'title' ? '' : (s.h || ''), bullets:s.b, notes:s.tip, secs:s.secs, from:''}))};
+}
+const presRole = (s, i, all) => i === 0 ? 'title' : i === all.length - 1 && /question|discussion|thank/i.test(s.title) ? 'closing'
+  : (s.bullets.some(b => /^strengths?\b/i.test(b)) && s.bullets.some(b => /^weakness(es)?\b/i.test(b))) ? 'compare' : 'content';
+
+/* --- the whole PowerPoint, made in this browser with PptxGenJS 4.0.1 (MIT; vendor/pptxgenjs, cdn fallback) --- */
+const PPTX_SRC = ['vendor/pptxgenjs/pptxgen.bundle.js', 'https://cdn.jsdelivr.net/npm/pptxgenjs@4.0.1/dist/pptxgen.bundle.js'];
+let pptxP;
+function loadPptxGen(){
+  const tryAt = i => new Promise((res, rej) => {
+    if (i >= PPTX_SRC.length) return rej(new Error('The PowerPoint maker could not be loaded — check your internet connection.'));
+    if (window.PptxGenJS) return res(window.PptxGenJS);
+    const s = document.createElement('script'); s.src = PPTX_SRC[i];
+    s.onload = () => window.PptxGenJS ? res(window.PptxGenJS) : tryAt(i + 1).then(res, rej);
+    s.onerror = () => { s.remove(); tryAt(i + 1).then(res, rej); };
+    document.head.appendChild(s);
+  });
+  return pptxP ||= tryAt(0).catch(e => { pptxP = null; throw e; });
+}
+const presIsExample = src => { const c = src.startsWith('crit:') && S.critiques.find(x => 'crit:' + x.id === src); return !!(c && c.example); };
+const PX = {navy:'102B50', deep:'0B1F3A', blue:'2563A6', ice:'C9DCF5', gray:'F1F4F7', line:'D9E1EA', slate:'5B6B80', ink:'1F2937', white:'FFFFFF', okBg:'E8F3EC', ok:'2E7D32', warnBg:'FDF0E1', warn:'9A5200'};
+const presFileName = deck => `${(deck.title || 'Presentation').replace(/[\\/:*?"<>|[\]]+/g, ' ').replace(/\s+/g, ' ').trim().slice(0, 70) || 'Presentation'} - slides.pptx`;
+async function presPptx(deck){
+  const P = await loadPptxGen(), pres = new P();
+  pres.layout = 'LAYOUT_WIDE';                                     // 13.33 × 7.5 in
+  pres.theme = {headFontFace:'Cambria', bodyFontFace:'Calibri'};
+  const info = presInfo(S.pres.source);
+  pres.title = deck.title || 'Presentation'; pres.subject = 'Presentation of a research paper critique'; pres.author = info.name || '';
+  const ex = presIsExample(S.pres.source), byClaude = ['claude', 'pasted'].includes(deck.kind);
+  const foot = (ex ? '[Example] ' : '') + clip(deck.title || '', 90);
+  const ph = (name, type, x, y, w, h, o) => ({placeholder:{options:{name, type, x, y, w, h, margin:0, ...o}, text:''}});
+  pres.defineSlideMaster({title:'SP_TITLE', background:{color:PX.navy}, objects:[
+    ph('title', 'title', .8, 1.65, 9.6, 2.2, {fontFace:'Cambria', fontSize:38, bold:true, color:PX.white, valign:'bottom', align:'left'}),
+    ph('body', 'body', .8, 4.15, 9.6, 1.9, {fontFace:'Calibri', fontSize:20, color:PX.ice, valign:'top', align:'left'}),
+    {text:{text:(ex ? '[Example] ' : '') + 'Advanced Research Methods (0106112) · Al Ain University', options:{x:.8, y:6.6, w:10, h:.4, margin:0, fontFace:'Calibri', fontSize:12, color:PX.ice}}}]});
+  pres.defineSlideMaster({title:'SP_CONTENT', background:{color:PX.white}, slideNumber:{x:12.25, y:6.95, w:.5, h:.3, fontFace:'Calibri', fontSize:10, color:PX.slate, align:'right'}, objects:[
+    ph('title', 'title', .7, .45, 11.9, .95, {fontFace:'Cambria', fontSize:30, bold:true, color:PX.navy, valign:'middle', align:'left'}),
+    ph('body', 'body', .7, 1.65, 7.9, 4.95, {fontFace:'Calibri', fontSize:22, color:PX.ink, valign:'top', align:'left'}),
+    {text:{text:foot, options:{x:.7, y:6.95, w:10.5, h:.3, margin:0, fontFace:'Calibri', fontSize:10, color:PX.slate}}}]});
+  pres.defineSlideMaster({title:'SP_COMPARE', background:{color:PX.white}, slideNumber:{x:12.25, y:6.95, w:.5, h:.3, fontFace:'Calibri', fontSize:10, color:PX.slate, align:'right'}, objects:[
+    ph('title', 'title', .7, .45, 11.9, .95, {fontFace:'Cambria', fontSize:30, bold:true, color:PX.navy, valign:'middle', align:'left'}),
+    {text:{text:foot, options:{x:.7, y:6.95, w:10.5, h:.3, margin:0, fontFace:'Calibri', fontSize:10, color:PX.slate}}}]});
+  pres.defineSlideMaster({title:'SP_CLOSING', background:{color:PX.navy}, objects:[
+    ph('title', 'title', .8, 1.3, 9.6, 1.4, {fontFace:'Cambria', fontSize:40, bold:true, color:PX.white, valign:'bottom', align:'left'}),
+    ph('body', 'body', .8, 3.0, 9.6, 3.4, {fontFace:'Calibri', fontSize:22, color:PX.ice, valign:'top', align:'left'})]});
+  const size = arr => { const n = arr.join(' ').length; return n > 700 ? 16 : n > 520 ? 18 : n > 360 ? 20 : n > 200 ? 22 : 24; };
+  const circles = sl => {                                           // the deck's motif on the dark slides
+    sl.addShape(pres.ShapeType.ellipse, {x:10.35, y:-1.4, w:4.4, h:4.4, fill:{color:PX.blue, transparency:70}, line:{type:'none'}, objectName:'Decoration circle'});
+    sl.addShape(pres.ShapeType.ellipse, {x:11.55, y:4.9, w:2.4, h:2.4, fill:{color:PX.ice, transparency:85}, line:{type:'none'}, objectName:'Decoration circle small'});
+  };
+  const agenda = deck.slides.map((s, i, all) => ({i, t:s.title, role:presRole(s, i, all)})).filter(a => a.role === 'content' || a.role === 'compare');
+  const list = (arr, o = {}) => arr.map((t, i) => ({text:t, options:{bullet:{indent:18}, paraSpaceAfter:10, breakLine:i < arr.length - 1, ...o}}));
+  let start = 0;
+  deck.slides.forEach((s, i, all) => {
+    const role = presRole(s, i, all), secs = s.secs || 0, bullets = (s.bullets || []).filter(Boolean);
+    const sl = pres.addSlide({masterName:role === 'title' ? 'SP_TITLE' : role === 'closing' ? 'SP_CLOSING' : role === 'compare' ? 'SP_COMPARE' : 'SP_CONTENT'});
+    const title = role === 'title' ? (s.title || deck.title) : s.title + (s.sub ? ` — ${s.sub}` : '');
+    sl.addText(title, {placeholder:'title', fontSize:role === 'title' ? (title.length > 90 ? 30 : title.length > 60 ? 34 : 38) : title.length > 60 ? 24 : title.length > 42 ? 26 : undefined});
+    if (role === 'title'){
+      sl.addText(bullets.map((t, k) => ({text:t, options:{breakLine:k < bullets.length - 1, paraSpaceAfter:4}})), {placeholder:'body'});
+      circles(sl);
+    } else if (role === 'closing'){
+      if (bullets.length) sl.addText(list(bullets), {placeholder:'body', fontSize:Math.min(22, size(bullets))});
+      circles(sl);
+    } else if (role === 'compare'){
+      const pick = re => bullets.filter(b => re.test(b)).map(b => b.replace(re, '').replace(/^\s*[:–—-]\s*/, '').trim().replace(/^\p{Ll}/u, c => c.toUpperCase()));
+      const st = pick(/^strengths?\b/i), wk = pick(/^weakness(es)?\b/i), other = bullets.filter(b => !/^(strengths?|weakness(es)?)\b/i.test(b));
+      const card = (x, head, items, bg, col) => {
+        sl.addShape(pres.ShapeType.roundRect, {x, y:1.65, w:5.85, h:4.95, rectRadius:.12, fill:{color:bg}, line:{type:'none'}, objectName:head + ' card'});
+        sl.addText(head, {x:x + .35, y:1.9, w:5.15, h:.5, margin:0, fontFace:'Cambria', fontSize:22, bold:true, color:col, isTextBox:true, objectName:head + ' heading'});
+        sl.addText(list(items.length ? items : ['[Add one from your critique]']), {x:x + .35, y:2.6, w:5.15, h:3.8, margin:0, valign:'top', fontFace:'Calibri', fontSize:Math.min(22, size(items) - 2), color:PX.ink, isTextBox:true, objectName:head + ' points'});
+      };
+      card(.7, 'Strengths', st, PX.okBg, PX.ok); card(6.78, 'Weaknesses', wk, PX.warnBg, PX.warn);
+      if (other.length) sl.addText(other.join('  ·  '), {x:.7, y:6.62, w:11.6, h:.3, margin:0, fontFace:'Calibri', fontSize:11, color:PX.slate, isTextBox:true, objectName:'Other points'});
+    } else {
+      sl.addText(list(bullets.length ? bullets : ['[Add the points for this slide]']), {placeholder:'body', fontSize:size(bullets)});
+      // "In this talk": every part of the talk, with this one highlighted — the audience always knows where they are
+      const n = agenda.length, step = Math.min(.56, 4.15 / Math.max(n, 1)), fs = n > 9 ? 11 : n > 7 ? 12 : 13;
+      sl.addShape(pres.ShapeType.roundRect, {x:9.1, y:1.65, w:3.5, h:4.95, rectRadius:.12, fill:{color:PX.gray}, line:{type:'none'}, objectName:'Talk tracker panel'});
+      sl.addText('IN THIS TALK', {x:9.35, y:1.85, w:3.0, h:.3, margin:0, fontFace:'Calibri', fontSize:11, bold:true, charSpacing:1.5, color:PX.slate, isTextBox:true, objectName:'Talk tracker heading'});
+      agenda.forEach((a, k) => {
+        const y = 2.3 + k * step, cur = a.i === i, label = `${String(k + 1).padStart(2, '0')}   ${clip(a.t, 36)}`;
+        if (cur) sl.addShape(pres.ShapeType.roundRect, {x:9.25, y, w:3.2, h:step - .06, rectRadius:.08, fill:{color:PX.navy}, line:{type:'none'}, objectName:'Talk tracker current'});
+        sl.addText(label, {x:9.38, y, w:3.0, h:step - .06, margin:0, valign:'middle', fontFace:'Calibri', fontSize:fs, bold:cur, color:cur ? PX.white : PX.slate, fit:'shrink', isTextBox:true, objectName:`Talk part ${k + 1}`});
+      });
+    }
+    const notes = [s.notes || '', '', `Time: about ${fmtTime(secs)} (from ${fmtTime(start)} to ${fmtTime(start + secs)}).`,
+      s.from ? `From my critique: ${s.from}.` : '', (s.flags || []).length ? `Check against my critique: ${s.flags.join(', ')}.` : '',
+      byClaude ? 'Drafted by Claude from my critique — check it against the critique and the paper before presenting.' : '',
+      ex && i === 0 ? 'Example content — replace it with your own critique.' : ''].filter((x, k) => k < 2 || x).join('\n');
+    sl.addNotes(notes.trim());
+    start += secs;
+  });
+  return pres.write({outputType:'blob'});
+}
+
+function presOutline(deck = presDeck()){
   const src = presSources().find(s => s.id === S.pres.source);
-  const L = [`PRESENTATION OUTLINE — ${S.pres.minutes}-minute talk`, `Source: ${src ? src.label : ''}`, '='.repeat(48), ''];
-  plan.forEach(s => {
-    L.push(`SLIDE ${s.n}: ${s.title}${s.h ? ` — ${s.h}` : ''}   [${fmtTime(s.secs)} · starts at ${fmtTime(s.start)}]`);
-    s.b.forEach(b => L.push(`  • ${b}`));
-    L.push(`  Speaker notes: ${s.tip}`);
-    L.push('');
+  const L = [`PRESENTATION OUTLINE — ${S.pres.minutes}-minute talk`, `Source: ${src ? src.label : ''}`, ['claude', 'pasted'].includes(deck.kind) ? 'Outlined by Claude from this source — check every slide against it and against the paper.' : '', '='.repeat(48), ''].filter((x, i) => i !== 2 || x);
+  let start = 0;
+  deck.slides.forEach((s, i) => {
+    L.push(`SLIDE ${i + 1}: ${s.title}${s.sub ? ` — ${s.sub}` : ''}   [${fmtTime(s.secs || 0)} · starts at ${fmtTime(start)}]`);
+    (s.bullets || []).forEach(b => L.push(`  • ${b}`));
+    if (s.notes) L.push(`  Speaker notes: ${s.notes}`);
+    if (s.from) L.push(`  From: ${s.from}`);
+    if ((s.flags || []).length) L.push(`  Check against the source: ${s.flags.join(', ')}`);
+    L.push(''); start += s.secs || 0;
   });
   L.push('Timing tip: ' + TALK_GUIDE[S.pres.minutes]);
   return L.join('\n');
 }
+function presCard(s, i, all, editable){
+  const role = presRole(s, i, all), n = i + 1;
+  if (editable && presEdit === i) return `<article class="card slide pr-edit" id="pr-slide-${i}">
+    <div class="slide-head"><span class="slide-no">Slide ${n}</span><label class="small pr-secs-l" for="psS${i}">Seconds <input class="input pr-secs" id="psS${i}" type="number" min="10" step="5" data-ps="secs" data-i="${i}" value="${s.secs || 0}"></label></div>
+    <div class="field"><label class="f" for="psT${i}">Title</label><input class="input" id="psT${i}" data-ps="title" data-i="${i}" value="${esc(s.title)}"></div>
+    <div class="field"><label class="f" for="psB${i}">Points — one per line</label><textarea id="psB${i}" data-ps="bullets" data-i="${i}" rows="5">${esc((s.bullets || []).join('\n'))}</textarea></div>
+    <div class="field"><label class="f" for="psN${i}">Speaker notes</label><textarea id="psN${i}" data-ps="notes" data-i="${i}" rows="3">${esc(s.notes || '')}</textarea></div>
+    <div class="row"><button class="btn primary sm" data-act="pres-done">${icon('check')}Done</button><button class="btn sm danger" data-act="pres-del" data-i="${i}">${icon('trash')}Delete this slide</button></div></article>`;
+  const tag = {title:'Title slide', closing:'Questions', compare:'Strengths & weaknesses'}[role];
+  return `<article class="card slide" id="pr-slide-${i}">
+    <div class="slide-head"><span class="slide-no">Slide ${n}</span>${tag ? `<span class="small muted">${tag}</span>` : ''}<span class="slide-time">${icon('clock')} ${fmtTime(s.secs || 0)}</span>
+      ${editable ? `<button class="btn ghost icon sm" data-act="pres-edit" data-i="${i}" aria-label="Edit slide ${n}" title="Edit slide ${n}">${icon('pen')}</button>` : ''}</div>
+    <h3>${esc(s.title)}</h3>${s.sub ? `<div class="muted small" style="margin-top:-4px">${esc(s.sub)}</div>` : ''}
+    <ul>${(s.bullets || []).map(b => `<li>${esc(b)}</li>`).join('')}</ul>
+    ${(s.flags || []).length ? `<p class="pr-flag">${icon('info')}<span>Check against your source: <b>${esc(s.flags.join(', '))}</b> — not found in it.</span></p>` : ''}
+    ${s.from ? `<p class="small muted pr-from">${icon('link')}From: ${esc(s.from)}</p>` : ''}
+    ${s.notes ? `<div class="notes"><b>Speaker notes:</b> ${esc(s.notes)}</div>` : ''}</article>`;
+}
 RENDER.present = () => {
   const sources = presSources();
   if (!sources.some(s => s.id === S.pres.source)) S.pres.source = sources[0].id;
-  const plan = slidePlan();
+  const src = S.pres.source, deck = presDeck(), o = deck.o, m = S.pres.minutes, up = S.pres.upload;
+  const label = src === 'upload' && up ? up.name : (sources.find(s => s.id === src) || {}).label || '', what = src === 'paper' ? 'my paper outline' : 'my critique';
+  const when = o ? new Date(o.at).toLocaleString([], {dateStyle:'medium', timeStyle:'short'}) : '';
+  const status = !o ? `A template from <b>${esc(label)}</b>. Fill the [brackets], or outline it from ${what} below.`
+    : o.by === 'claude' ? `<span class="chip">by Claude — check it</span> Outlined from <b>${esc(label)}</b> · ${esc(when)}. Every slide comes from your source; check it against your critique before you present.`
+    : o.by === 'pasted' ? `<span class="chip">by Claude — check it</span> Read from Claude’s pasted reply · ${esc(when)}.`
+    : `Made from the sections of <b>${esc(label)}</b>, in your own words · ${esc(when)}.`;
   $('#panel-present').innerHTML = `
   <div class="page-head"><div class="eyebrow">Presentation Builder</div><h1>Turn your work into a talk</h1>
-  <p>Choose a critique or your paper outline, pick a talk length, and get a suggested slide structure with speaker notes and timings.</p></div>
+  <p>Add your critique, outline the slides from it, then generate the whole PowerPoint — with speaker notes and timings.</p></div>
 
   <div class="card"><div class="fields-2" style="align-items:end">
     <div class="field" style="margin:0"><label class="f" for="presSrc">Build from</label>
-      <select id="presSrc">${sources.map(s => `<option value="${s.id}" ${s.id===S.pres.source?'selected':''}>${esc(s.label)}</option>`).join('')}</select></div>
+      <select id="presSrc">${sources.map(s => `<option value="${s.id}" ${s.id === src ? 'selected' : ''}>${esc(s.label)}</option>`).join('')}</select></div>
     <div><span class="f" style="display:block;font-weight:500;font-size:.86rem;margin-bottom:5px">Talk length</span>
-      <div class="seg" role="group" aria-label="Talk length">${[5,10,15].map(m => `<button data-act="pres-min" data-v="${m}" aria-pressed="${S.pres.minutes===m}">${m} min</button>`).join('')}</div></div>
+      <div class="seg" role="group" aria-label="Talk length">${[5, 10, 15].map(x => `<button data-act="pres-min" data-v="${x}" aria-pressed="${m === x}">${x} min</button>`).join('')}</div></div>
   </div>
-  <p class="small muted" style="margin:14px 0 4px">${icon('clock')} ${esc(TALK_GUIDE[S.pres.minutes])}</p>
-  <div class="timeline" aria-hidden="true">${plan.map(s => `<span style="flex:${s.secs}" title="${esc(s.title)} · ${fmtTime(s.secs)}"></span>`).join('')}</div>
+  <div class="pr-add">
+    <span class="pr-add-t">${up ? `${icon('file')}<span><b>${esc(up.name)}</b> · ${pl(up.units.length, 'part')}, read in this browser (nothing is uploaded)</span>` : `${icon('file')}<span>Is your critique a Word, PDF or text file? Add it, and the slides are outlined from it.</span>`}</span>
+    <span class="row"><button class="btn ${up ? '' : 'primary'}" data-act="pres-file">${icon('upload')}${up ? 'Add another critique' : 'Add my critique'}</button><input type="file" id="presFile" accept=".docx,.pdf,.txt,.md" hidden>
+      <button class="btn" data-act="pres-paste">${icon('clip')}Paste my critique</button>
+      ${up ? `<button class="btn ghost icon" data-act="pres-up-del" aria-label="Remove the added critique" title="Remove the added critique">${icon('trash')}</button>` : ''}</span>
+  </div>
+  <p class="small muted" style="margin:14px 0 4px">${icon('clock')} ${esc(TALK_GUIDE[m])}</p>
+  <div class="timeline" aria-hidden="true">${deck.slides.map(s => `<span style="flex:${s.secs || 1}" title="${esc(s.title)} · ${fmtTime(s.secs || 0)}"></span>`).join('')}</div>
   </div>
 
-  <div class="section-title"><h2>Suggested slides</h2>${copyBtn('#presOut','Copy outline')}</div>
-  <div class="slides">${plan.map(s => `<article class="card slide">
-    <div class="slide-head"><span class="slide-no">Slide ${s.n}</span><span class="slide-time">${icon('clock')} ${fmtTime(s.secs)}</span></div>
-    <h3>${esc(s.title)}</h3>${s.h ? `<div class="muted small" style="margin-top:-4px">${esc(s.h)}</div>` : ''}
-    <ul>${s.b.map(b => `<li>${esc(b)}</li>`).join('')}</ul>
-    <div class="notes"><b>Speaker notes:</b> ${esc(s.tip)}</div></article>`).join('')}</div>
+  <div class="card pr-steps">
+    <div class="pr-step"><span class="pr-n" aria-hidden="true">1</span>
+      <div class="pr-step-t"><b>Outline the slides from ${what}</b><span class="small muted">${aiReady() ? `Claude reads it and plans ${PRES_COUNT[m]} slides for ${m} minutes — only from what it says; anything missing is left as a [placeholder].` : `Each part of your critique becomes a slide, in your own words. On the published ScholarPath page, Claude can plan the slides for you.`}</span></div>
+      <div class="pr-step-a">${aiReady()
+        ? presRun ? `<button class="btn primary" disabled><span class="spin" aria-hidden="true"></span>Claude is outlining…</button><button class="btn" data-act="pres-stop">${icon('stop')}Stop</button>`
+          : `<button class="btn primary" data-act="pres-ai" data-ai-btn>${icon('sparkle')}${o && o.by === 'claude' ? 'Outline again with Claude' : 'Outline with Claude'}</button>`
+        : `<button class="btn primary" data-act="pres-sections">${icon('list')}Outline from its sections</button>`}
+        <details class="menu"><summary class="btn ghost icon" aria-label="More ways to outline" title="More">${icon('more')}</summary><div class="menu-pop">
+          ${aiReady() ? `<button class="menu-item" data-act="pres-sections">${icon('list')}Outline from its sections (no Claude)</button>` : ''}
+          <button class="menu-item" data-act="pres-copy-prompt">${icon('copy')}Copy the prompt for a Claude chat</button>
+          <button class="menu-item" data-act="pres-paste-reply">${icon('clip')}Paste Claude’s reply</button>
+          ${o ? `<button class="menu-item danger" data-act="pres-reset">${icon('refresh')}Back to the template</button>` : ''}</div></details></div></div>
+    <div class="pr-step"><span class="pr-n" aria-hidden="true">2</span>
+      <div class="pr-step-t"><b>Generate the whole PowerPoint</b><span class="small muted">${pl(deck.slides.length, 'slide')} with speaker notes, timings and where each slide comes from — a .pptx for PowerPoint, Keynote or Google Slides.</span></div>
+      <div class="pr-step-a"><button class="btn primary" data-act="pres-pptx">${icon('download')}Generate the PowerPoint</button></div></div>
+  </div>
 
-  <div class="card" style="margin-top:16px"><div class="output-head"><h3 style="margin:0">Full outline (plain text)</h3>${copyBtn('#presOut','Copy outline')}</div>
-  <div class="output" id="presOut">${esc(presOutline(plan))}</div></div>`;
+  <div class="section-title"><h2>Suggested slides</h2>${copyBtn('#presOut', 'Copy outline')}</div>
+  <p class="small muted pr-status">${status}</p>
+  <div class="slides">${deck.slides.map((s, i, all) => presCard(s, i, all, !!o)).join('')}</div>
+  ${o ? `<div class="row" style="margin-top:12px"><button class="btn" data-act="pres-add">${icon('plus')}Add a slide</button></div>` : ''}
+
+  <div class="card" style="margin-top:16px"><div class="output-head"><h3 style="margin:0">Full outline (plain text)</h3>${copyBtn('#presOut', 'Copy outline')}</div>
+  <div class="output" id="presOut">${esc(presOutline(deck))}</div></div>`;
+  if (aiRun || presRun) $$('#panel-present [data-ai-btn]').forEach(b => b.disabled = true);
 };
 
 /* ---------- Part 4 · Final Academic Verification & Consistency Checklist ----------
@@ -5686,6 +5986,8 @@ function critUnits(c){
     ...CRIT_SECTIONS.map(s => ({loc:s.title, text:((c.sections[s.key] || {}).text || '')}))].filter(u => u.text.trim());
 }
 function builderSlides(c){
+  const o = (S.pres.outlines || {})['crit:' + c.id];                // the slides outlined from this critique, when there are any
+  if (o && (o.slides || []).length) return o.slides.map((s, i) => ({loc:`Slide ${i + 1}`, text:`${s.title}\n• ${(s.bullets || []).join('\n• ')}`}));
   const keep = S.pres.source; S.pres.source = 'crit:' + c.id;
   try { return slidePlan().map(s => ({loc:`Slide ${s.n}`, text:`${s.title}${s.h ? ` — ${s.h}` : ''}\n• ${s.b.join('\n• ')}`})); }
   finally { S.pres.source = keep; }
@@ -7935,7 +8237,37 @@ const ACTIONS = {
   'crit-summary': (el, e) => { e.preventDefault(); const c = activeCrit(); $('#critSummary').textContent = c.form === 'aau' ? aauPlain(c) : genSummary(c); $('#critSummaryCard').scrollIntoView({behavior:'smooth', block:'start'}); toast('Summary generated'); },
   jump: (el, e) => { e.preventDefault(); $('#sec-'+el.dataset.key)?.scrollIntoView({behavior:'smooth', block:'start'}); },
   wstep: el => { S.writing.active = +el.dataset.v; save(); RENDER.write(); $('#stepper')?.scrollIntoView({behavior:'smooth', block:'nearest'}); },
-  'pres-min': el => { S.pres.minutes = +el.dataset.v; save(); RENDER.present(); },
+  'pres-min': el => { S.pres.minutes = +el.dataset.v; const o = (S.pres.outlines || {})[S.pres.source];
+    if (o){ presFitTime(o.slides, S.pres.minutes * 60); o.minutes = S.pres.minutes; toast(`Times fitted to ${S.pres.minutes} minutes — outline again for ${PRES_COUNT[S.pres.minutes]} slides`); }
+    save(); RENDER.present(); },
+  'pres-file': () => $('#presFile').click(),
+  'pres-ai': () => presOutlineAI(S.pres.source),
+  'pres-stop': () => presRun && presRun.ctl.abort(),
+  'pres-sections': () => { const src = S.pres.source, o = (S.pres.outlines || {})[src];
+    if (o && o.by !== 'sections' && !confirm('Replace the current outline with one made from the sections of your source? Your edits to it will be lost.')) return;
+    const n = presFromSections(src); RENDER.present(); toast(n ? `${n} slides made from the sections — edit them to fit your talk` : 'This source is still empty — add your critique first'); },
+  'pres-copy-prompt': () => { if (!presText(S.pres.source).trim()) return toast('This source is still empty — add your critique first');
+    copyText(presPrompt(S.pres.source), 'Prompt copied — paste it into a Claude chat, then paste the reply back here'); },
+  'pres-paste-reply': () => openDialog('Paste Claude’s reply — slide outline', `<p class="small muted">Paste the whole JSON reply Claude gave to the copied prompt. The slides are shown as Claude’s — check them against your critique.</p><div class="field"><label class="f" for="pr-rp">Reply *</label><textarea id="pr-rp" name="reply" required style="min-height:240px;font-family:var(--mono);font-size:12px"></textarea></div>`, f => {
+    const res = vParseReply(f.reply); if (!res){ alert('This is not a JSON reply. Copy Claude’s whole answer (it starts with { ).'); return false; }
+    const n = presApply(S.pres.source, res, 'pasted'); if (!n){ alert('No slides were found in this reply.'); return false; }
+    RENDER.present(); toast(`${pl(n, 'slide')} read from Claude’s reply — check them against your critique`); }, 'Read the reply'),
+  'pres-reset': () => { if (!confirm('Go back to the template? The outline and your edits to it will be deleted.')) return; delete (S.pres.outlines || {})[S.pres.source]; presEdit = -1; save(); RENDER.present(); },
+  'pres-paste': () => openDialog('Paste my critique', `<p class="small muted">Paste the whole text of your critique, with its headings. It stays in this browser.</p><div class="field"><label class="f" for="pr-name">Name</label><input class="input" id="pr-name" name="name" value="My critique"></div><div class="field"><label class="f" for="pr-text">Critique *</label><textarea id="pr-text" name="text" required style="min-height:260px"></textarea></div>`, f => {
+    const units = textUnits(f.text, false); if (!units.length){ alert('Paste the text of your critique first.'); return false; }
+    presAddCritique((f.name || '').trim() || 'My critique', 'paste', units); }, 'Add my critique'),
+  'pres-up-del': () => { if (!confirm('Remove the added critique and the slides outlined from it?')) return;
+    delete S.pres.upload; if (S.pres.outlines) delete S.pres.outlines.upload; if (S.pres.source === 'upload') S.pres.source = presSources()[0].id; presEdit = -1; save(); RENDER.present(); },
+  'pres-edit': el => { presEdit = +el.dataset.i; RENDER.present(); const f = $(`#psT${presEdit}`); if (f){ f.focus(); $(`#pr-slide-${presEdit}`).scrollIntoView({block:'nearest'}); } },
+  'pres-done': () => { const i = presEdit; presEdit = -1; const o = (S.pres.outlines || {})[S.pres.source]; if (o){ presFlags(S.pres.source, o.slides); save(); } RENDER.present(); const b = $(`#pr-slide-${i} [data-act="pres-edit"]`); b && b.focus(); },
+  'pres-del': el => { const o = (S.pres.outlines || {})[S.pres.source], i = +el.dataset.i; if (!o || o.slides.length < 2) return toast('A talk needs at least one slide');
+    if (!confirm(`Delete slide ${i + 1}, “${clip(o.slides[i].title, 60)}”?`)) return; o.slides.splice(i, 1); presEdit = -1; save(); RENDER.present(); },
+  'pres-add': () => { const o = (S.pres.outlines || {})[S.pres.source]; if (!o) return; const at = Math.max(1, o.slides.length - (presRole(o.slides[o.slides.length - 1], o.slides.length - 1, o.slides) === 'closing' ? 1 : 0));
+    o.slides.splice(at, 0, {title:'New slide', bullets:['[A point from your critique]'], notes:'', secs:60, from:'', flags:[]}); presEdit = at; save(); RENDER.present(); const f = $(`#psT${at}`); if (f){ f.select(); f.scrollIntoView({block:'center'}); } },
+  'pres-pptx': async el => { const deck = presDeck(); el.disabled = true; const keep = el.innerHTML; el.innerHTML = '<span class="spin" aria-hidden="true"></span>Making the PowerPoint…';
+    try { const blob = await presPptx(deck); await saveFile(presFileName(deck), blob, `PowerPoint saved — ${pl(deck.slides.length, 'slide')} with speaker notes`); }
+    catch (e){ alert((e && e.message) || 'The PowerPoint could not be made — please try again.'); }
+    finally { el.disabled = false; el.innerHTML = keep; } },
   export: () => {
     saveFile(`scholarpath-backup-${today()}.json`, new Blob([JSON.stringify(S, null, 2)], {type:'application/json'}), 'Backup saved');
   },
@@ -8005,6 +8337,9 @@ document.addEventListener('input', e => {
     rdSaved();
     save(); const n = $('#rpNotes'); if (n) n.textContent = readingNotes(rPaper()); return;
   }
+  if (t.dataset.ps){ const o = (S.pres.outlines || {})[S.pres.source], sl = o && o.slides[+t.dataset.i]; if (!sl) return;
+    const k = t.dataset.ps; if (k === 'bullets') sl.bullets = t.value.split('\n').map(b => b.trim()).filter(Boolean); else if (k === 'secs') sl.secs = Math.max(0, Math.round(+t.value || 0)); else sl[k] = t.value;
+    save(); const out = $('#presOut'); if (out) out.textContent = presOutline(); return; }
   if (t.id === 'rdFind'){ clearTimeout(rdFindT); rdFindT = setTimeout(() => rdFind(t.value), 150); return; }
   if (t.id === 'rpTitle'){ if (/\n/.test(t.value)) t.value = t.value.replace(/\s*\n\s*/g, ' '); grow(t); const p = rPaper(); p.title = t.value; save(); const o = $('#rpSel option:checked'); if (o) o.textContent = (p.example?'[Demo] ':'') + clip(t.value || p.name, 70); return; }
   if (t.id === 'q' || t.id === 'yr'){ S.ui[t.id] = t.value; save(); }
@@ -8025,6 +8360,8 @@ document.addEventListener('change', e => {
   const t = e.target;
   if (vChange(t) || dChange(t) || eChange(t)) return;
   if (t.dataset.fl === 'critId'){ RENDER.figlab(); return; }
+  if (t.id === 'presFile' && t.files[0]){ const file = t.files[0]; t.value = ''; toast('Reading your critique…');
+    presReadFile(file).then(units => presAddCritique(file.name, (file.name.split('.').pop() || '').toLowerCase(), units)).catch(err => alert((err && err.message) || 'This file could not be read.')); return; }
   if (t.id === 'flScanCrit'){ S.figlab.scanCrit = t.value; save(); RENDER.figlab(); return; }
   if (t.dataset.fsel !== undefined){ figScan.items[+t.dataset.fsel].sel = t.checked; const n = figScan.items.filter(i => i.sel).length;
     $$('[data-act="fl-scan-go"]').forEach(b => { b.disabled = !n; b.innerHTML = b.dataset.v === 'ai' ? `${icon('sparkle')}Analyse ${n} with Claude` : `${icon('plus')}${aiReady() ? 'Only create reviews' : `Create ${n} review${n === 1 ? '' : 's'}`}`; }); return; }
@@ -8094,7 +8431,7 @@ document.addEventListener('change', e => {
     const n = SELF_REVIEW.filter((_,i) => S.writing.review[i]).length;
     $('#revN').textContent = n; $('#revMsg').textContent = n === SELF_REVIEW.length ? '✓ Ready to submit — good luck!' : 'Tick every item before you press submit.';
   }
-  else if (t.id === 'presSrc'){ S.pres.source = t.value; save(); RENDER.present(); }
+  else if (t.id === 'presSrc'){ S.pres.source = t.value; presEdit = -1; save(); RENDER.present(); }
   else if (t.id === 'importFile' && t.files[0]){
     const r = new FileReader();
     r.onload = () => {

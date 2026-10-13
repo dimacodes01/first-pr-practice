@@ -19,7 +19,7 @@ ScholarPath is a research companion web app built for **Dima Alkharraz** (Englis
 - The app is a journey in four parts (Write a paper → Critique a paper → Present → Verify & defend), plus the Dashboard (`start` tab) and My Progress; see spec §4. The sidebar and breadcrumb are drawn by `renderTabs()`; the Research Reader (2.1) has three reading modes — Read, Study, Compare (`S.reader.layout`, `rdLayout()`) — kept separate from the version shown (`S.reader.mode`: Original / Simple English / Arabic). Its parts: the workspace bar (`rdBarHTML`), the outline (`tocHTML`, per-mode `S.reader.ol`), the paper as one continuous document (`parasView`, `paraCard`, the selected paragraph's toolbar `ctxBar`), Compare (`compareView`, paragraph-aware sync `cmpFollow` / `cmpAlign`), the study panel (`assistHTML`, `rdSelect`, `renderAssist`, `S.reader.sels`, `S.reader.as`) and the audio bar along the bottom (`ttsBarHTML`). Keep the reader's place on every change (`rdAnchor` / `rdRestore`). The reader has its own palette tokens on `#panel-reader` and sets the paper in Source Serif 4. Step 2.4 (`evidence` tab) is spec §5.4b, step 4.1 (`verify` tab) §5.9 and step 4.2 (`defend` tab) §5.10; all three share one document set (`S.verify.sets`). `PARTS` lists the steps; `goStep` / `showTab` / `route` handle navigation.
 - `index.html` is the whole app: CSS, markup and one script in an IIFE. Each tab has a `RENDER.<tab>()`. Events use `data-act` → `ACTIONS`, plus `input` / `change` handlers keyed on `data-*`.
 - State lives in `localStorage['scholarpath.v1']` (`S`), and figure pictures in IndexedDB (`scholarpath` / `img`).
-- `vendor/pdfjs/` holds pdf.js 3.11.174 (with a cdnjs fallback).
+- `vendor/pdfjs/` holds pdf.js 3.11.174 (with a cdnjs fallback); `vendor/pptxgenjs/` holds PptxGenJS 4.0.1 (jsDelivr fallback), loaded only when step 3.1 generates a PowerPoint (`presPptx`). Step 3.1 is spec §5.7: an added critique (`S.pres.upload`), outlines per source (`S.pres.outlines`, `presDeck()`), Claude's prompt `presPrompt`, the no-Claude `presFromSections`.
 - Claude runs only on the published page, via `window.claude.use('sample')`. Every AI feature needs a manual fallback.
 - Match the existing style: plain functions, template strings, `esc()` for every user value, CSS tokens on `:root`.
 
@@ -30,7 +30,7 @@ ScholarPath is a research companion web app built for **Dima Alkharraz** (Englis
 
 ## Publishing
 - Published page: https://claude.ai/artifact/RQWX4dnGb7W68zTghnoLvz
-- Publish `index.html` with the supporting files `vendor/pdfjs/pdf.min.js` and `vendor/pdfjs/pdf.worker.min.js`, and the capabilities `{"sample": {"images": true}, "downloads": true}`.
+- Publish `index.html` with the supporting files `vendor/pdfjs/pdf.min.js`, `vendor/pdfjs/pdf.worker.min.js` and `vendor/pptxgenjs/pptxgen.bundle.js`, and the capabilities `{"sample": {"images": true}, "downloads": true}`.
 - Work on branch `claude/scholarpath-research-app-jabga7`. Commit and push after each change, with an attribution footer.
 
 ## Owner's preferences
