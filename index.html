@@ -53,7 +53,8 @@
   color-scheme:dark;
 }
 *{box-sizing:border-box}
-html{-webkit-text-size-adjust:100%}
+html{-webkit-text-size-adjust:100%;scroll-padding-top:calc(var(--hdr,72px) + 12px)}
+html[data-tab="reader"]{scroll-padding-bottom:150px}       /* focused or scrolled-to items never hide under the sticky header or the docked player */
 body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.6 var(--sans);overflow-x:hidden;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
 h1,h2,h3,h4{line-height:1.3;margin:0 0 .45em;color:var(--heading)}
 h1,h2{font-family:var(--serif);font-weight:400;letter-spacing:-.012em}
@@ -572,12 +573,17 @@ textarea.rd-title:focus{border-color:var(--focus);background:var(--surface)}
 .rd-fine{margin:28px auto 0}
 .rd-fine svg.i{width:14px;height:14px;vertical-align:-2px}
 .rd-player{position:sticky;bottom:16px;z-index:8;margin-top:20px}
+.rd-player{container:player / inline-size}
+@container player (max-width:660px){.pl-more .hide-sm{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}.btn.pl-more{width:36px;padding:0}.pl .pl-now{flex-basis:96px}.pl .pl-name{display:none}.pl .pl-reads::before{content:none}.pl .pl-reads{color:var(--heading)}}
 .pl{background:var(--surface);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow-lg);overflow:hidden}
 .pl-off{padding:14px 18px}
 .pl-main{display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px;padding:10px 12px 10px 18px}
 .pl-now{flex:1 1 120px;min-width:0;display:flex;flex-direction:column;gap:1px}
-.pl-t{display:inline-flex;align-items:center;gap:6px;font:600 13px var(--sans);color:var(--heading)}
+.pl-t{display:flex;align-items:center;gap:6px;min-width:0;font:600 13px var(--sans);color:var(--heading)}
+.pl-name{flex:none}
 .pl-t svg.i{width:16px;height:16px;color:var(--gold-ink)}
+.pl-reads{font-weight:500;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
+.pl-reads::before{content:"· "}
 .tts-status{font-size:12px;color:var(--muted);font-weight:400;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .pl.playing .tts-status{color:var(--ink)}
 .pl-ctl{display:flex;align-items:center;gap:2px}
@@ -597,8 +603,8 @@ select.pl-rate{width:auto;min-height:36px;padding:4px 30px 4px 10px;font:600 13p
 .pl-grp{padding:14px 18px;display:flex;flex-direction:column;align-items:flex-start;gap:10px;border-right:1px solid var(--line);min-width:0}
 .pl-grp:last-child{border-right:0}
 .pl-grp .row{gap:6px}
-@media(max-width:700px){.pl-grp{border-right:0;border-bottom:1px solid var(--line)}.pl-main{padding:8px 10px 8px 14px}.pl-now{flex-basis:100%}}
-@media(max-width:480px){.pl-t{display:none}.pl-btn[data-v="0"]{display:none}.pl-main{gap:4px 6px}.pl-play{width:44px;height:44px}.rd-p.sel .rd-flags{display:none}}
+@media(max-width:700px){.pl-grp{border-right:0;border-bottom:1px solid var(--line)}.pl-main{padding:8px 10px 8px 14px}.pl .pl-now{flex-basis:100%}}
+@media(max-width:480px){.pl-t svg.i,.pl-name{display:none}.pl-reads::before{content:none}.pl-reads{color:var(--heading)}.pl-btn[data-v="0"]{display:none}.pl-main{gap:4px 6px}.pl-play{width:44px;height:44px}.rd-p.sel .rd-flags{display:none}}
 .rd-assist{position:sticky;top:var(--hdr,72px);height:calc(100vh - var(--hdr,72px));overflow:auto;overscroll-behavior:contain;border-left:1px solid var(--line);background:var(--surface);scrollbar-width:thin}
 .rd-assist:focus{outline:none}
 .as-head{display:flex;align-items:flex-start;gap:8px;padding:20px 20px 6px}
@@ -1767,7 +1773,7 @@ function showTab(id, push=true){                                 // used all ove
 function openTab(id, push){
   if (id !== 'reader' && TTS.playing) ttsPause();          // keeps the place for Continue
   S.ui.tab = id; save();
-  document.body.dataset.tab = id;
+  document.body.dataset.tab = id; document.documentElement.dataset.tab = id;
   if ($('#app').classList.contains('side-open')) sideDrawer(false, false);
   renderTabs();
   for (const t of TABS) $('#panel-'+t.id).hidden = t.id !== id;
@@ -3145,8 +3151,11 @@ function ttsUtter(x, voice){
 }
 
 const PART_LABEL = {orig:'Original', idea:'Simple', ar:'Arabic', head:'Heading', sel:'Selection'};
+const MODE_PARTS = {orig:{orig:true}, simple:{idea:true}, both:{orig:true, ar:true}};     // the text shown above the paper decides what is read
+const PARTS_SAID = {orig:'Original', idea:'Simple English', ar:'Arabic'};
+const partsLabel = parts => ['orig', 'idea', 'ar'].filter(k => parts && parts[k]).map(k => PARTS_SAID[k]).join(' + ') || 'Original';
 function ttsSegs(paper, opts){                                // opts: {from, only, section, parts}
-  const parts = opts.parts || S.reader.ttsParts || {orig:true, idea:true};
+  const parts = opts.parts || S.reader.ttsParts || MODE_PARTS[S.reader.mode || 'orig'];
   const list = paper.paras.filter(isReadable);
   let ps;
   if (opts.only) ps = list.filter(p => p.id === opts.only);
@@ -3158,7 +3167,7 @@ function ttsSegs(paper, opts){                                // opts: {from, on
   const heads = S.reader.headings !== false && !opts.only;
   return ps.flatMap((p, k) => [
     heads && p.section && (k === 0 || ps[k - 1].section !== p.section) && {pid:p.id, part:'head', text:p.section + '.', lang:isArabic(p.section) ? 'ar' : 'en'},
-    parts.orig && p.text && {pid:p.id, part:'orig', text:p.text, lang:'en'},
+    (parts.orig || (!opts.only && parts.idea && !simpleOf(p) && !ideaOf(p))) && p.text && {pid:p.id, part:'orig', text:p.text, lang:'en'},     // no simple version yet: read what is shown, the original
     parts.idea && (simpleOf(p) || ideaOf(p)) && {pid:p.id, part:'idea', text:simpleOf(p) ? 'In simple words: ' + simpleOf(p) : 'Main idea: ' + ideaOf(p), lang:'en'},
     parts.ar && (p.ar || '').trim() && {pid:p.id, part:'ar', text:p.ar, lang:'ar', voc:arVocOf(p)}
   ].filter(Boolean));
@@ -3170,7 +3179,7 @@ function ttsLoad(segs, ctx){
 }
 function ttsStart(segs, ctx, at){
   if (!TTS.ok) return toast('Your browser cannot read aloud');
-  if (TTS.playing && TTS.ctx && !TTS.ctx.sel) ttsSaveMark();          // reading a selection keeps your place in the paper
+  if (TTS.playing && ttsMain(TTS.ctx)) ttsSaveMark();                 // listening to one part keeps your place in the paper
   ttsHalt();
   ttsLoad(segs, ctx);
   if (!TTS.list.length) return toast('Nothing to read yet — the selected parts are empty');
@@ -3215,9 +3224,10 @@ function ttsAdvance(gen){                                     // the next senten
 }
 function ttsHalt(){ TTS.gen++; TTS.playing = false; clearTimeout(TTS.timer); try { if (TTS.ok) speechSynthesis.cancel(); } catch {} }
 function ttsPos(){ const c = TTS.list[TTS.i]; return c ? {pid:c.pid, part:c.part, offset:c.segStart + TTS.char} : null; }
+const ttsMain = ctx => !!(ctx && ctx.paperId && !ctx.sel && !ctx.only && !ctx.section && !ctx.ev);   // reading the paper from a point onwards
 function ttsSaveMark(){
   const pos = ttsPos(), ctx = TTS.ctx;
-  if (pos && ctx && ctx.paperId && !ctx.sel){ (S.reader.marks ||= {})[ctx.paperId] = {...pos, from:ctx.from || null, only:ctx.only || null, section:ctx.section || null, parts:ctx.parts, at:Date.now()}; save(); }
+  if (pos && ttsMain(ctx)){ (S.reader.marks ||= {})[ctx.paperId] = {...pos, from:ctx.from || null, only:ctx.only || null, section:ctx.section || null, parts:ctx.parts, at:Date.now()}; save(); }
 }
 function ttsPause(){ if (!TTS.playing) return; ttsHalt(); ttsSaveMark(); renderTtsBar(); if (TTS.ctx && TTS.ctx.ev) evOnPause(); }   // stop here, remember the exact place
 function ttsRestore(){                                       // the reading list for this paper: still in memory, or rebuilt from the bookmark
@@ -3230,7 +3240,7 @@ function ttsRestore(){                                       // the reading list
 }
 function ttsContinue(){
   if (!TTS.ok) return;
-  if (!ttsRestore()) return ttsPlayAll();
+  if (!ttsRestore()) return ttsPlayAll(ttsStartPid());
   ttsHalt(); ttsSpeak(true);
 }
 function ttsSkip(dir){                                        // -1 previous sentence · 0 this sentence again · 1 next sentence
@@ -3240,13 +3250,14 @@ function ttsSkip(dir){                                        // -1 previous sen
 }
 function ttsFinish(){
   ttsHalt();
-  const ctx = TTS.ctx; if (ctx && ctx.paperId && !ctx.sel && S.reader.marks){ delete S.reader.marks[ctx.paperId]; save(); }
+  const ctx = TTS.ctx; if (ttsMain(ctx) && S.reader.marks){ delete S.reader.marks[ctx.paperId]; save(); }
   TTS.list = []; TTS.i = 0; TTS.char = 0; ttsMark(null); renderTtsBar();
 }
 function ttsStop(){ ttsFinish(); }                               // stop and forget the place
+const ttsStartPid = () => { const paper = rPaper(), sel = paper && rdSel(paper); return sel ? sel.id : null; };   // Play starts at the selected paragraph
 function ttsPlayAll(from){
   const paper = rPaper(); if (!paper) return;
-  const ctx = {paperId:paper.id, from:from || null, parts:{...(S.reader.ttsParts || {orig:true, idea:true})}, follow:true};
+  const ctx = {paperId:paper.id, from:from || null, parts:{...(S.reader.ttsParts || MODE_PARTS[S.reader.mode || 'orig'])}, follow:true};
   ttsStart(ttsSegs(paper, ctx), ctx);
 }
 function ttsHerePid(){                                        // the paragraph being read, or where you paused, or the first one
@@ -3255,12 +3266,12 @@ function ttsHerePid(){                                        // the paragraph b
 }
 function ttsPlaySection(pid){
   const paper = rPaper(); if (!paper || !pid) return;
-  const ctx = {paperId:paper.id, section:pid, parts:{...(S.reader.ttsParts || {orig:true, idea:true})}, follow:true};
+  const ctx = {paperId:paper.id, section:pid, parts:{...(S.reader.ttsParts || MODE_PARTS[S.reader.mode || 'orig'])}, follow:true};
   ttsStart(ttsSegs(paper, ctx), ctx);
 }
 function ttsPlayPara(pid){
   const paper = rPaper(); if (!paper || !pid) return;
-  const ctx = {paperId:paper.id, only:pid, parts:{...(S.reader.ttsParts || {orig:true, idea:true})}, follow:true};
+  const ctx = {paperId:paper.id, only:pid, parts:{...(S.reader.ttsParts || MODE_PARTS[S.reader.mode || 'orig'])}, follow:true};
   ttsStart(ttsSegs(paper, ctx), ctx);
 }
 function ttsReadSelection(){
@@ -3315,21 +3326,23 @@ function ttsVoiceSummary(){
 function ttsBarHTML(){                                           // the read-aloud player: playback in front, voice and reading settings folded away
   if (!TTS.ok) return '<div class="pl pl-off"><span class="small muted">Read-aloud is not supported in this browser.</span></div>';
   const paper = rPaper(), mark = paper && (S.reader.marks || {})[paper.id], c = TTS.list[TTS.i];
-  const parts = S.reader.ttsParts || {orig:true, idea:true};
-  const paused = !TTS.playing && (mark || (TTS.list.length && TTS.ctx && paper && TTS.ctx.paperId === paper.id));
-  const where = TTS.playing && c ? c : paused && mark ? mark : null;
+  const parts = S.reader.ttsParts || MODE_PARTS[S.reader.mode || 'orig'];
+  const live = TTS.list.length && TTS.ctx && paper && TTS.ctx.paperId === paper.id && TTS.list[TTS.i];
+  const paused = !TTS.playing && (live || mark);
+  const where = TTS.playing && c ? c : paused ? (live ? TTS.list[TTS.i] : mark) : null;
+  const startP = paper && rdSel(paper), startN = startP ? paraNo(paper, startP.id) : 1, isFirst = !startP || startP === paper.paras.find(isReadable);
   const whereTxt = where && paper ? (where.part === 'sel' ? 'your selection' : `¶${paraNo(paper, where.pid)} · ${PART_LABEL[where.part]}`) : '';
   const rate = S.reader.rate || 1, vol = S.reader.volume ?? 1, has = !!TTS.list.length || !!mark, open = !!S.reader.playerOpen;
   const pct = TTS.list.length ? Math.round((TTS.i + (TTS.playing ? .5 : 0)) / TTS.list.length * 100) : 0;
   const vocTodo = parts.ar && paper && aiReady() ? paper.paras.filter(p => isReadable(p) && (p.ar || '').trim() && !arVocOf(p)).length : 0;
-  const status = TTS.playing ? `Reading ${whereTxt}` : paused ? `Paused at ${whereTxt}${mark && mark.at && !(TTS.ctx && TTS.ctx.sel) ? ` · ${new Date(mark.at).toLocaleString([], {dateStyle:'short', timeStyle:'short'})}` : ''}` : 'Ready to read the paper aloud';
+  const status = TTS.playing ? `Reading ${whereTxt}` : paused ? `Paused at ${whereTxt}${!live && mark && mark.at ? ` · ${new Date(mark.at).toLocaleString([], {dateStyle:'short', timeStyle:'short'})}` : ''}` : `Ready to read ${isFirst ? 'from the beginning' : `from ¶${startN}`}`;
   return `<div class="pl ${TTS.playing ? 'playing' : ''}" role="group" aria-label="Read aloud">
     <div class="pl-main">
-      <div class="pl-now"><span class="pl-t">${icon('headphones')}Read aloud</span><span class="tts-status" aria-live="polite">${status}</span></div>
+      <div class="pl-now"><span class="pl-t">${icon('headphones')}<span class="pl-name">Read aloud</span><span class="pl-reads" title="What the player reads. It follows the text shown above the paper; change it in Settings.">${partsLabel(parts)}</span></span><span class="tts-status" aria-live="polite">${status}</span></div>
       <div class="pl-ctl" role="group" aria-label="Playback">
         <button class="pl-btn" data-act="tts-skip" data-v="-1" title="Previous sentence" aria-label="Previous sentence" ${has ? '' : 'disabled'}>${icon('skipb')}</button>
         ${TTS.playing ? `<button class="pl-play" data-act="tts-pause" title="Pause" aria-label="Pause">${icon('pause', 'fill')}</button>`
-          : paused ? `<button class="pl-play" data-act="tts-continue" title="Continue" aria-label="Continue">${icon('play', 'fill')}</button>` : `<button class="pl-play" data-act="tts-all" title="Play all" aria-label="Play all">${icon('play', 'fill')}</button>`}
+          : paused ? `<button class="pl-play" data-act="tts-continue" title="Continue from ${esc(whereTxt)}" aria-label="Continue from ${esc(whereTxt)}">${icon('play', 'fill')}</button>` : `<button class="pl-play" data-act="tts-all" title="${isFirst ? 'Play from the beginning' : `Play from ¶${startN}`}" aria-label="${isFirst ? 'Play from the beginning' : `Play from ¶${startN}`}">${icon('play', 'fill')}</button>`}
         <button class="pl-btn" data-act="tts-skip" data-v="1" title="Next sentence" aria-label="Next sentence" ${has ? '' : 'disabled'}>${icon('skipf')}</button>
         <button class="pl-btn" data-act="tts-skip" data-v="0" title="Replay this sentence" aria-label="Replay this sentence" ${has ? '' : 'disabled'}>${icon('refresh')}</button>
         <button class="pl-btn" data-act="tts-stop" title="Stop and forget the place" aria-label="Stop and forget the place" ${TTS.playing || paused ? '' : 'disabled'}>${icon('stop')}</button>
@@ -3342,8 +3355,10 @@ function ttsBarHTML(){                                           // the read-alo
     <div class="pl-track" aria-hidden="true"><span style="width:${pct}%"></span></div>
     <div class="pl-more-in" id="plMore" ${open ? '' : 'hidden'}>
       <div class="pl-grp"><span class="label">Playback</span>
+        <p class="small muted" style="margin:0">The player reads the text shown above the paper (Original, Simple English, or Original + Arabic). You can change it here.</p>
         <div class="row"><span class="small muted">Read</span><span class="filter-chips">${['orig', 'idea', 'ar'].map(k => `<button class="fchip sm-chip" data-act="tts-part" data-v="${k}" aria-pressed="${!!parts[k]}">${PART_LABEL[k]}${k === 'ar' ? ' translation' : ''}</button>`).join('')}</span></div>
-        <div class="row tts-scope"><span class="small muted">Play only</span><button class="btn sm" id="ttsSelBtn" data-act="tts-sel" ${TTS.sel ? '' : 'disabled'} title="Select text in the paper, then press here">Selection</button><button class="btn sm" data-act="tts-para" title="Read the current paragraph">Paragraph</button><button class="btn sm" data-act="tts-section" title="Read the whole section">Section</button>${paused && !TTS.playing ? `<button class="btn sm ghost" data-act="tts-restart" title="Start again from the beginning">From the start</button>` : ''}</div></div>
+        <div class="row tts-scope"><span class="small muted">Play only</span><button class="btn sm" id="ttsSelBtn" data-act="tts-sel" ${TTS.sel ? '' : 'disabled'} title="Select text in the paper, then press here">Selection</button><button class="btn sm" data-act="tts-para" title="Read the current paragraph">Paragraph</button><button class="btn sm" data-act="tts-section" title="Read the whole section">Section</button>${paused && !TTS.playing ? `<button class="btn sm ghost" data-act="tts-restart" title="Start again from the beginning">From the start</button>` : ''}</div>
+        <p class="small muted" style="margin:0">Listening to one paragraph, a section or your selection keeps your place in the paper.</p></div>
       <div class="pl-grp"><span class="label">Voice</span>
         <div class="small tts-voices">${ttsVoiceSummary()}</div>
         <button class="btn sm" data-act="tts-voices">${icon('volume')}Voices &amp; accents</button></div>
@@ -3750,6 +3765,7 @@ function rdSelect(id, {tab, open} = {}){
   $$('#panel-reader .rd-p.sel').forEach(e => e.classList.remove('sel')); $('#para-' + id)?.classList.add('sel');
   renderAssist();
   const toc = $('#rdToc'); if (toc) toc.innerHTML = tocHTML(paper);
+  if (!TTS.playing) renderTtsBar();
   if (open) rdAssistOpen(true);
 }
 let rdFindT = 0;
@@ -7041,7 +7057,7 @@ const ACTIONS = {
   'fl-goal': el => { S.figlab.build.goal = el.dataset.v; save(); RENDER.figlab(); },
   'fl-ctype': el => { S.figlab.build.chart.type = el.dataset.v; save(); $$('[data-act="fl-ctype"]').forEach(b => b.setAttribute('aria-pressed', b.dataset.v === el.dataset.v));
     const lbl = $('label[for="cb-cats"]'); if (lbl) lbl.textContent = el.dataset.v === 'scatter' ? 'X values (numbers, comma-separated)' : 'Category labels (comma-separated)'; updateBuild(); },
-  'tts-all': () => ttsPlayAll(),
+  'tts-all': () => ttsPlayAll(ttsStartPid()),
   'tts-pause': () => ttsPause(),
   'tts-continue': () => ttsContinue(),
   'tts-restart': () => { ttsStop(); ttsPlayAll(); },
@@ -7125,7 +7141,8 @@ const ACTIONS = {
   'rp-tools': el => rdSelect(el.dataset.id, {tab:el.dataset.tab || (S.reader.as === 'paper' ? 'explain' : S.reader.as || 'explain'), open:true}),
   'rp-as': el => { S.reader.as = el.dataset.tab; save(); renderAssist(); $('#as-tab-' + el.dataset.tab)?.focus(); },
   'rp-assist-close': () => { rdAssistOpen(false); const sel = rPaper() && rdSel(rPaper()); $(`#para-${sel && sel.id} .rd-study`)?.focus(); },
-  'rp-mode': el => { S.reader.mode = el.dataset.v; save(); const paper = rPaper(); $('#rpView').innerHTML = parasView(paper); $$('#panel-reader [data-act="rp-mode"]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.v === S.reader.mode))); loadReaderFigs(); if (TTS.playing) ttsMark(TTS.list[TTS.i], false); },
+  'rp-mode': el => { S.reader.mode = el.dataset.v; S.reader.ttsParts = {...MODE_PARTS[S.reader.mode]}; save();
+    const now = TTS.playing && ttsMain(TTS.ctx) && TTS.list[TTS.i]; if (now) ttsPlayAll(now.pid); else renderTtsBar(); const paper = rPaper(); $('#rpView').innerHTML = parasView(paper); $$('#panel-reader [data-act="rp-mode"]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.v === S.reader.mode))); loadReaderFigs(); if (TTS.playing) ttsMark(TTS.list[TTS.i], false); },
   'tts-panel': () => { S.reader.playerOpen = !S.reader.playerOpen; save(); renderTtsBar(); $('#ttsBar [data-act="tts-panel"]')?.focus(); },
   'rp-to-crit': () => {
     const paper = rPaper(); let c = activeCrit();
@@ -7354,6 +7371,7 @@ $('.menu-btn').innerHTML = icon('menu');
 $('.side-close').innerHTML = icon('x');
 applySide();
 S.critiques.forEach(fixCrit);
+if (S.reader && S.reader.partsV !== 2){ S.reader.ttsParts = {...MODE_PARTS[S.reader.mode || 'orig']}; S.reader.partsV = 2; save(); }
 applyTheme();
 route(location.hash);
 })();
