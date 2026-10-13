@@ -142,6 +142,7 @@ header.top :focus-visible{outline-color:#ffffff}
 @media(max-width:1023px){.menu-btn{display:inline-flex}header.top{padding:0 20px 0 12px}}
 .crumbs{display:flex;align-items:center;gap:8px;min-width:0;font-size:15px;color:rgba(255,255,255,.88)}
 .crumbs > *{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+@media(min-width:901px){.crumbs{max-width:calc(50% - 100px)}}   /* stop before the round logo in the middle of the top bar */
 .crumbs .cur{color:#ffffff;font-weight:700}
 .crumbs svg.i{width:14px;height:14px;color:rgba(255,255,255,.7);flex:none}
 .crumbs a{color:inherit;text-decoration:none}
@@ -152,6 +153,7 @@ header.top :focus-visible{outline-color:#ffffff}
 main{width:100%;max-width:1200px;margin:0 auto;padding:32px 40px 56px}
 @media(max-width:760px){main{padding:24px 16px 48px}}
 .panel[hidden]{display:none}
+#fsBtn[hidden]{display:none}
 .panel{animation:panelIn .22s var(--ease)}
 @keyframes panelIn{from{opacity:0}to{opacity:1}}
 .page-head{margin-bottom:28px}
@@ -1238,6 +1240,7 @@ dialog::backdrop{background:rgba(10,15,25,.45);backdrop-filter:blur(2px)}
   <a class="top-logo" href="#start" data-act="part" data-part="start" aria-label="ScholarPath dashboard" title="Dashboard"><span></span></a>
   <span class="spacer"></span>
   <div class="top-actions" id="topActions"></div>
+  <button class="btn ghost icon" id="fsBtn" data-act="fullscreen" title="Full screen" aria-label="Full screen" hidden></button>
   <button class="btn ghost icon" id="themeBtn" data-act="theme" title="Theme" aria-label="Change theme"></button>
 </header>
 
@@ -1272,6 +1275,8 @@ dialog::backdrop{background:rgba(10,15,25,.45);backdrop-filter:blur(2px)}
 /* ---------- Icons ---------- */
 const ICONS = {                                                   // Lucide icons (lucide.dev, ISC licence), drawn inline at 1.75 px
   cap:'<path d="M21.42 10.922a1 1 0 0 0-.019-1.838L12.83 5.18a2 2 0 0 0-1.66 0L2.6 9.08a1 1 0 0 0 0 1.832l8.57 3.908a2 2 0 0 0 1.66 0z"/><path d="M22 10v6"/><path d="M6 12.5V16a6 3 0 0 0 12 0v-3.5"/>',
+  maximize:'<path d="M8 3H5a2 2 0 0 0-2 2v3"/><path d="M21 8V5a2 2 0 0 0-2-2h-3"/><path d="M3 16v3a2 2 0 0 0 2 2h3"/><path d="M16 21h3a2 2 0 0 0 2-2v-3"/>',
+  minimize:'<path d="M8 3v3a2 2 0 0 1-2 2H3"/><path d="M21 8h-3a2 2 0 0 1-2-2V3"/><path d="M3 16h3a2 2 0 0 1 2 2v3"/><path d="M16 21v-3a2 2 0 0 1 2-2h3"/>',
   library:'<path d="m16 6 4 14"/><path d="M12 6v14"/><path d="M8 8v12"/><path d="M4 4v16"/>',
   bulb:'<path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/>',
   clip:'<rect width="8" height="4" x="8" y="2" rx="1" ry="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="m9 14 2 2 4-4"/>',
@@ -1895,6 +1900,14 @@ function route(hash){
   if (TABS.some(t => t.id === a)) return showTab(a, true);
   goStep(S.ui.part || 'start', S.ui.part ? S.ui.step : 0, false);
 }
+const fsEl = () => document.fullscreenElement || document.webkitFullscreenElement;
+function applyFs(){                                              // Full screen button: shown only where the browser allows it (not on iPhone, nor in a frame that forbids it)
+  const b = $('#fsBtn'); if (!b) return;
+  b.hidden = !('fullscreenEnabled' in document ? document.fullscreenEnabled : document.webkitFullscreenEnabled);   // the old webkit flag says yes even where it is blocked
+  const on = !!fsEl(), label = on ? 'Exit full screen' : 'Full screen';
+  b.innerHTML = icon(on ? 'minimize' : 'maximize'); b.title = on ? label + ' (Esc)' : label; b.setAttribute('aria-label', label); b.setAttribute('aria-pressed', String(on));
+}
+['fullscreenchange', 'webkitfullscreenchange'].forEach(ev => document.addEventListener(ev, applyFs));
 function applyTheme(){
   const root = document.documentElement;
   if (S.theme === 'auto') root.removeAttribute('data-theme'); else root.setAttribute('data-theme', S.theme);
@@ -7155,6 +7168,12 @@ const ACTIONS = {
   'dash-paste': () => { goStep('critiquing', 0); ACTIONS['rp-paste'](); },
   'dash-listen': () => { goStep('critiquing', 0); ttsContinue(); },
   'side-close': () => sideDrawer(false),
+  fullscreen: async () => {
+    const d = document, el = d.documentElement;
+    try { if (fsEl()) await (d.exitFullscreen || d.webkitExitFullscreen).call(d); else await (el.requestFullscreen || el.webkitRequestFullscreen).call(el); }
+    catch { toast('Full screen is not allowed here. Press F11 on Windows, or Control + Command + F on a Mac.'); }
+    applyFs();
+  },
   theme: () => { S.theme = {auto:'light', light:'dark', dark:'auto'}[S.theme] || 'auto'; applyTheme(); save(); toast({auto:'Theme follows your system', light:'Light mode', dark:'Dark mode'}[S.theme]); },
   copy: el => { const t = $(el.dataset.target); if (t) copyText(t.textContent); },
   search: () => { const r = buildSearch(); if (!r) return; window.open(r.url, '_blank', 'noopener'); if (r.db.note) copyText(r.q, 'Query copied — paste it into Web of Science'); },
@@ -7505,7 +7524,7 @@ $('.side-close').innerHTML = icon('x');
 applySide();
 S.critiques.forEach(fixCrit);
 if (S.reader && S.reader.partsV !== 3){ if (S.reader.mode === 'both') S.reader.mode = 'ar'; delete S.reader.ttsParts; S.reader.partsV = 3; save(); }   // the version shown decides what is read
-applyTheme();
+applyTheme(); applyFs();
 route(location.hash);
 })();
 </script>
