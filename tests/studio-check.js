@@ -67,7 +67,7 @@ const FAKE_SPEECH = () => {
     check(d.blocks.some(b => b.table && /Sampling \| Weak/.test(b.text)), 'the table is kept, row by row');
     const shownTexts = await page.$$eval('#stDoc .st-p', els => els.map(e => { const c = e.cloneNode(true); c.querySelectorAll('.st-no, .st-study-btn').forEach(x => x.remove()); return c.textContent; }));
     check(d.blocks.filter(b => b.kind === 'p').every((b, i) => shownTexts[i] === b.text), 'every paragraph is shown exactly as written (word for word)');
-    check(await page.$$eval('.st-outline button', bs => bs.length) === 4, 'the outline lists the critique’s own 4 sections');
+    check(await page.$$eval('#stNavList .st-row-main[data-act="st-nav"]', bs => bs.length) === 4, 'the Critique Navigator lists the critique’s own 4 sections');
     const set0 = (await S()).verify.sets.find(s => s.id === d.setId);
     check(set0 && set0.docs.critique && set0.docs.critique.units.length === 7, 'the critique is also a Part 4 document set (2.4 / 4.1 / 4.2 can use it)');
     check(await page.isVisible('.st-note-warn'), 'without the paper: “not independently verified” is stated');
@@ -90,11 +90,13 @@ const FAKE_SPEECH = () => {
     check(await page.$$eval('#stDoc mark.sth', m => m.length) === 2, 'the highlights are shown as marks inside the original words');
     const before = await page.$eval('#sp-b7', e => { const c = e.cloneNode(true); c.querySelectorAll('.st-no, .st-study-btn').forEach(x => x.remove()); return c.textContent; });
     check(before === d.blocks.find(b => b.id === 'b7').text, 'marking never changes the wording');
+    await click('.st-hlmenu > summary');
     await page.uncheck('input[data-st="hl"][data-k="limit"]'); await page.waitForTimeout(200);
     check(await page.$$eval('#stDoc mark.sth-limit', m => m.length) === 0, 'a highlight colour can be turned off');
     await page.check('input[data-st="hl"][data-k="limit"]'); await page.waitForTimeout(200);
+    await click('.st-hlmenu > summary');
     await click('#stDoc mark.sth-limit');
-    if (process.env.SHOTS){ await page.evaluate(() => document.querySelector('.st-modes').scrollIntoView()); await page.screenshot({path:process.env.SHOTS + '/studio-analysed.png'}); }
+    if (process.env.SHOTS){ await page.evaluate(() => document.querySelector('.st-ws').scrollIntoView()); await page.screenshot({path:process.env.SHOTS + '/studio-analysed.png'}); }
     check(/Why does random sampling matter here\?/.test(await page.textContent('#stAssist')) && /Weaknesses or methodological concerns/.test(await page.textContent('#stAssist')), 'selecting a highlight shows its meaning, why it matters, its type and a professor question');
 
     console.log('Understand: explain, Arabic, sentence by sentence, key points');
@@ -104,12 +106,12 @@ const FAKE_SPEECH = () => {
     await bridge({simple:'You say the sample was too small and not random.', academic:'Non-probability sampling limits external validity.', why:'It is your main criticism.', connection:'It must be checked in the paper, which was not added.', remember:['Sample of 20', 'One school']}, /THE SECTION "2\. Methodology"/);
     const ex = await page.textContent('#stAssist');
     check(['A. Simple explanation', 'B. Detailed academic explanation', 'C. Why this section matters', 'D. Connection to the original research', 'E. What I should remember'].every(h => ex.includes(h)), 'Explain This Section gives A–E');
-    await click('#stAssist [data-act="st-lang"][data-v="ar"]');
+    await click('#stListen [data-act="st-lang"][data-v="ar"]');
     await click('#stAssist [data-act="st-explain"]');
     await bridge({simple:'تقول إن العينة صغيرة وغير عشوائية.', academic:'العينة غير الاحتمالية (non-probability sampling) تحدّ من التعميم.', why:'هذا نقدك الرئيسي.', connection:'يجب التحقق من ذلك في الورقة.', remember:['عشرون طالبًا']}, /Modern Standard Arabic/);
     check(await page.$eval('#stEx', e => e.getAttribute('dir') === 'rtl' && /العينة/.test(e.textContent)), 'F. the Arabic explanation is shown right-to-left');
-    await click('#stAssist [data-act="st-lang"][data-v="en"]');
-    await click('#stAssist [data-act="st-tab"][data-v="sentences"]');
+    await click('#stListen [data-act="st-lang"][data-v="en"]');
+    await click('#stAssist [data-act="st-sub"][data-v="sentences"]');
     await click('#stAssist [data-act="st-sents"]');
     const sp = await bridge({items:[{n:1, simple:'The sample was not random, so results may not apply to everyone.', terms:[{term:'generalizability', meaning:'how far results apply to others'}], reasoning:'Random samples represent a population.', connection:'Needs checking in the paper.', kind:'criticism'}, {n:2, simple:'Only 20 students from one school.', terms:[], reasoning:'A small sample.', connection:'', kind:'description'}]}, /\[s1\] The use of non-probability sampling/);
     check(await page.$$eval('#stAssist .st-orig', e => e.length) === 2 && /A criticism/.test(await page.textContent('#stAssist')), 'each original sentence is shown with its explanation and its type');
@@ -117,12 +119,10 @@ const FAKE_SPEECH = () => {
     check(/non-probability sampling/.test(await page.textContent('#stAssist')) && /العينة غير الاحتمالية/.test(await page.textContent('#stAssist')), 'Key points: the section’s terms with their Arabic meaning');
 
     console.log('Analyze: evidence, critical thinking');
-    await click('[data-act="st-mode"][data-v="analyze"]');
     await click('#stAssist [data-act="st-tab"][data-v="evidence"]');
     check(/Upload the original research paper to verify the evidence/.test(await page.textContent('#stAssist')), 'without the paper, evidence asks for the paper');
     await page.click('.st-docs-fold > summary').catch(() => {});
     await page.setInputFiles('#stPaperFile', path.join(ROOT, 'tests/fixtures/example-paper.txt')); await page.waitForTimeout(800);
-    await click('[data-act="st-mode"][data-v="analyze"]');
     await click('#stAssist [data-act="st-tab"][data-v="evidence"]');
     check(!(await page.$('.st-note-warn')), 'after adding the paper the “not verified” warning goes');
     await click('#stAssist .st-claims [data-act="st-ev"]');
@@ -133,7 +133,8 @@ const FAKE_SPEECH = () => {
     d = await doc();
     check(d.an.objectives.filter(o => o.id === 'b6').every(o => (d.check[o.k] || {}).ev), 'the checklist records that evidence was reviewed for that section');
     check(d.an.objectives.filter(o => o.id === 'b6').every(o => !(d.check[o.k] || {}).und), '“Understood” is never ticked automatically');
-    await click('#stAssist [data-act="st-tab"][data-v="critical"]');
+    await click('#stAssist [data-act="st-tab"][data-v="questions"]');
+    await click('#stAssist [data-act="st-sub"][data-v="challenge"]');
     await click('#stAssist [data-act="st-chal"]');
     await bridge({questions:[{q:'Could the researchers justify using one school?', why:'Tests the fairness of your criticism', hint:'Think about access and cost'}]}, /Challenge a master's student's OWN/);
     await page.fill('#stCA0', 'Yes, access was limited, but it still limits generalisation.');
@@ -142,7 +143,7 @@ const FAKE_SPEECH = () => {
     check(/Partly there/.test(await page.textContent('#stAssist')), 'Challenge My Critique: the student’s answer gets feedback');
 
     console.log('Prepare: professor questions and practice');
-    await click('[data-act="st-mode"][data-v="prepare"]');
+    await click('#stAssist [data-act="st-sub"][data-v="professor"]');
     await click('#stAssist [data-act="st-qa"]');
     await bridge({questions:[{q:'Why is the sample a problem?', asks:'Whether you understand generalisability', answer:'Because twenty students from one school may not represent others.', oral:'The sample was small and not random.', evidence:{from:'critique', id:'b7', quote:'Only twenty students from one school took part'}, followups:['What sample would you use?']},
       {q:'What is good about the data?', asks:'Balance', answer:'Drafts and interviews together.', oral:'Two sources.', evidence:{from:'paper', id:'P3', quote:'a quotation the paper does not contain anywhere'}, followups:[]}]}, /professor will question/);
@@ -188,6 +189,62 @@ const FAKE_SPEECH = () => {
     d = await doc();
     check(d.blocks.filter(b => b.kind === 'h').length === 2 && d.blocks.filter(b => b.kind === 'p').length === 2, 'pasted text: headings and paragraphs found');
     check((await S()).studio.docs.length === 2, 'several critiques can be studied');
+    await page.selectOption('#stDocSel', {index:1}); await page.waitForTimeout(300);
+
+    console.log('The Critique Navigator');
+    const shown = async () => page.$$eval('#stDoc .st-p', els => els.map(e => { const c = e.cloneNode(true); c.querySelectorAll('.st-no, .st-study-btn').forEach(x => x.remove()); return c.textContent; }));
+    const navTitles = () => page.$$eval('#stNavList .st-rtitle', t => t.map(x => x.textContent.trim()));
+    await click('#stNavList .st-row-main[data-act="st-nav"]:nth-of-type(1)');
+    await click('#stAssist [data-act="st-status"][data-v="reviewed"]');
+    check(/1 of \d+ sections? reviewed/.test(await page.textContent('#stNavHead')), 'marking a section “Reviewed” updates the navigator’s progress');
+    d = await doc();
+    check(Object.values(d.status || {}).includes('reviewed'), 'the study status is saved with the critique');
+    await page.fill('#stFind', 'generalizability'); await page.waitForTimeout(500);
+    check(/1 of 1/.test(await page.textContent('#stFindN')) && await page.evaluate(() => !!(CSS.highlights && CSS.highlights.get('st-find'))), 'search finds the words and marks them over the original text');
+    check(/1 match/.test(await page.textContent('#stNavList')), 'the navigator shows where the matches are');
+    await page.fill('#stFind', ''); await page.waitForTimeout(400);
+    await click('[data-act="st-focus"]');
+    check(!(await page.isVisible('#stNav')) && !(await page.isVisible('#stAssist')) && await page.isVisible('#stDoc'), 'Focus Mode shows only the critique');
+    await page.keyboard.press('Escape'); await page.waitForTimeout(300);
+    check(await page.isVisible('#stNav') && await page.isVisible('#stAssist'), 'Esc leaves Focus Mode');
+
+    console.log('Ten critique formats (made-up texts)');
+    const P = (...xs) => xs.join('\n\n');
+    const refs = Array.from({length:12}, (_, i) => `[${i + 1}] Author ${String.fromCharCode(65 + i)}. (20${10 + i}). Example reference title number ${i + 1}. Example Journal of Testing.`);
+    const long = Array.from({length:120}, (_, i) => `Sentence ${i + 1} of a deliberately long paragraph that discusses the sampling decision and its effect on validity in some detail.`).join(' ');
+    const FORMATS = [
+      ['clear headings', P('Introduction\nThe study looks at peer feedback in writing classes.', 'Methodology\nThe authors surveyed students in two schools.', 'Findings\nStudents valued specific comments.', 'Conclusion\nThe critique finds the conclusions reasonable but limited.'),
+        async () => { const t = await navTitles(); return JSON.stringify(t) === JSON.stringify(['Introduction', 'Methodology', 'Findings', 'Conclusion']); }, 'the four headings become the four navigator rows'],
+      ['percentages', P('1. Summary of the paper\n10% | Maximum 150 words\nThe paper reports a four-week study of feedback.', '2. Methodology\n15% | Maximum 200 words\nThe design is a small case study.', '3. Critical evaluation (25%)\nThe sample limits the claims.'),
+        async () => { const t = await navTitles(), m = await page.$$eval('#stNavList .st-rmeta', x => x.map(e => e.textContent)); return t.length === 3 && t.every(x => !/%|words/i.test(x)) && /Summary of the paper/.test(t[0]) && m.some(x => /10%.*Maximum 150 words/.test(x)); }, 'percentages are shown under the real titles, never as titles'],
+      ['word limits', P('Summary (Maximum 150 words)\nThe study is described briefly.', 'Word limit: 200 words', 'The second part evaluates the method and its sampling in detail.', 'Recommendations — Max 100 words\nA larger random sample is recommended.'),
+        async () => { const t = await navTitles(); return t.every(x => !/max|word limit|\bwords\b/i.test(x)) && t.includes('Summary') && t.includes('Recommendations') && /Suggested label/.test(await page.textContent('#stNavList')); }, 'word limits are secondary information; an untitled part gets a clearly marked suggested label'],
+      ['many references', P('Summary\nA short summary of the critiqued paper.', 'References', ...refs),
+        async () => /References — 12 sources/.test(await page.textContent('#stNavList')) && !(await navTitles()).some(x => /^\[\d+\]/.test(x)), 'the 12 references are one group: “References — 12 sources”'],
+      ['nested sub-sections', P('1. Introduction\nWhy the study matters.', '2. Methods\nAn overview of the design.', '2.1 Sample\nTwenty students took part.', '2.2 Instruments\nA survey and interviews.', '3. Results\nThe main results.'),
+        async () => { await click('[data-act="st-expand-all"]'); const top = await page.$$eval('#stNavList .st-ng-main > .st-list > .st-node > .st-row .st-rtitle', x => x.map(e => e.textContent));
+          const kids = await page.$$eval('#stNavList .st-kids .st-rtitle', x => x.map(e => e.textContent)); await click('[data-act="st-collapse-all"]');
+          return top.length === 3 && kids.includes('Sample') && kids.includes('Instruments') && !(await page.$('#stNavList .st-kids')); }, '2.1 and 2.2 sit under 2; Expand all and Collapse all work'],
+      ['no headings', P('The authors used a survey with a convenience sample of twenty participants, so the method and the sampling limit the study.', 'The results show significant gains in accuracy, and the findings are clearly reported.', 'One limitation is the short period; a further weakness is the lack of a control group.'),
+        async () => (await page.$$('#stDoc .st-sug')).length >= 2 && /Suggested label/.test(await page.textContent('#stNavList')) && (await doc()).blocks.every(b => b.kind === 'p'), 'without headings, parts get suggested labels — outside the text, which stays unchanged'],
+      ['a table', P('Evaluation table', 'Criterion | Rating | Comment\nSampling | Weak | Twenty students\nData | Strong | Drafts and interviews'),
+        async () => (await shown()).some(t => /Sampling \| Weak \| Twenty students/.test(t)), 'table rows are kept as written'],
+      ['a long paragraph', P('Discussion', long),
+        async () => (await shown())[0] === long, 'a 2,000-word paragraph is kept whole'],
+      ['Arabic', P('الملخص\nتتناول هذه الدراسة استخدام التغذية الراجعة في الكتابة.', 'المنهجية\nاستخدم الباحثون استبانة ومقابلات مع عشرين طالبًا.'),
+        async () => { const t = await navTitles(); const dir = await page.$eval('#stDoc .st-p', e => getComputedStyle(e).direction); return t[0] === 'الملخص' && dir === 'rtl'; }, 'Arabic headings are navigator titles and Arabic text reads right to left'],
+      ['mixed English and Arabic', P('Summary — الملخص\nThe study examines feedback. وتوضح الدراسة أن الطلاب استفادوا من التعليقات.', 'Limitations\nThe sample is small (عينة صغيرة).'),
+        async () => (await navTitles()).length === 2 && (await shown()).some(t => /وتوضح الدراسة/.test(t)), 'mixed English and Arabic is kept and navigable']];
+    for (const [name, text, test, good] of FORMATS){
+      await click('[data-act="st-new"]'); await click('[data-act="st-paste"]');
+      await page.fill('#stPasteName', 'Format: ' + name); await page.fill('#stPasteText', text);
+      await page.click('#dlgForm button[type=submit]'); await page.waitForTimeout(450);
+      const dd = await doc(), sh = await shown();
+      check(dd.blocks.filter(b => b.kind === 'p').every((b, i) => sh[i] === b.text), `${name}: every paragraph is shown word for word`);
+      const nt = await navTitles();
+      check(nt.length > 0 && nt.every(x => !/^\s*\d+\s*%|\|\s*max/i.test(x)), `${name}: no percentage or word limit is used as a title`, `${name}: titles ${JSON.stringify(nt)}`);
+      check(await test(), `${name}: ${good}`, `${name}: ${good} — titles ${JSON.stringify(await navTitles())}`);
+    }
     errs.length ? errs.forEach(e => fail('page error: ' + e)) : ok('no page errors');
     const unexpected = alerts.filter(a => !/mostly repeated/.test(a));
     unexpected.length ? unexpected.forEach(a => fail('unexpected alert: ' + a)) : ok('no unexpected alerts');
@@ -204,7 +261,12 @@ const FAKE_SPEECH = () => {
       const studio = await p2.isVisible('#panel-studio');
       const o = await p2.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
       check(studio && o <= 1 && !e2.length, `${w}px ${scheme}: the studio fits without sideways scrolling`, `${w}px ${scheme}: studio ${studio}, overflow ${o}, errors ${e2.join('; ')}`);
-      if (process.env.SHOTS){ await p2.evaluate(() => document.querySelector('.st-modes')?.scrollIntoView()); await p2.waitForTimeout(150); await p2.screenshot({path:`${process.env.SHOTS}/studio-${w}-${scheme}.png`}); }
+      if (process.env.SHOTS){ await p2.evaluate(() => document.querySelector('.st-ws')?.scrollIntoView()); await p2.waitForTimeout(150); await p2.screenshot({path:`${process.env.SHOTS}/studio-${w}-${scheme}.png`}); }
+      if (w === 390 || w === 1024){ const n = await p2.$$eval('#stDocSel option', o => o.length); let worst = 0;
+        for (let i = 0; i < n; i++){ await p2.selectOption('#stDocSel', {index:i}); await p2.waitForTimeout(150);
+          for (const pane of w === 390 ? ['nav', 'doc', 'study'] : ['doc']){ if (w === 390) await p2.click(`.st-panesw [data-v="${pane}"]`); worst = Math.max(worst, await p2.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth)); } }
+        check(worst <= 1 && !e2.length, `${w}px ${scheme}: all ${n} critique formats fit without sideways scrolling`, `${w}px ${scheme}: overflow ${worst}`);
+        await p2.selectOption('#stDocSel', {index:n - 1}); await p2.waitForTimeout(150); }
       if (w === 390){ await p2.click('.st-panesw [data-v="study"]'); await p2.waitForTimeout(200);
         check(await p2.isVisible('#stAssist') && !(await p2.isVisible('.st-docpane')), '390px: the study assistant opens as its own pane');
         if (process.env.SHOTS) await p2.screenshot({path:`${process.env.SHOTS}/studio-390-${scheme}-study.png`}); }

@@ -56,7 +56,7 @@ The app opens with one example idea, two example papers and an example AAU-form 
 
 ### Critique Study Studio
 
-Step 2.3 has two pathways: **Create a Critique** (the AAU form) and **Upload & Study My Critique**. The studio takes a finished critique (PDF, Word, text or pasted), with the original paper and slides if you have them, and helps you understand, check and defend it — explanations in English or Arabic, highlights, sentence-by-sentence help, “Where did this come from?”, Challenge My Critique, professor questions with practice, Read & explain, and a study checklist. Your critique is never rewritten. See spec §5.4c.
+Step 2.3 has two pathways: **Create a Critique** (the AAU form) and **Upload & Study My Critique**. The studio takes a finished critique (PDF, Word, text or pasted), with the original paper and slides if you have them, and helps you understand, check and defend it — explanations in English or Arabic, highlights, sentence-by-sentence help, “Where did this come from?”, Challenge My Critique, professor questions with practice, Read & explain, and a study checklist. It works in three panels: the **Critique Navigator** (sections, sub-sections and paragraphs, with search and your own study status), your **original critique** with a reading toolbar and Focus Mode, and the **study assistant**. Percentages and word limits are shown as information under each title, never as titles. Your critique is never rewritten. See spec §5.4c.
 
 ### Checking the site
 

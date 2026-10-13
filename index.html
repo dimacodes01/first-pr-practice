@@ -24,7 +24,7 @@
 <meta name="twitter:card" content="summary_large_image">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800&family=IBM+Plex+Sans+Arabic:wght@400;500;600&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&family=IBM+Plex+Sans+Arabic:wght@400;500;600&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap" rel="stylesheet">
 <style>
 /* ScholarPath design system — friendly school-platform look (13 Oct 2026, from the owner's own school platform):
    a dark-blue top bar, a dark slate sidebar with a white tile for the current page, a light blue-grey background,
@@ -1468,43 +1468,209 @@ dialog.ai-bridge{width:min(720px,calc(100vw - 24px));overflow:auto}
 .st-note{display:flex;gap:8px;align-items:flex-start;font-size:.9rem;background:var(--accent-soft);color:var(--ink);padding:10px 14px;border-radius:var(--radius-sm);margin:0 0 14px}
 .st-note svg.i{color:var(--accent);margin-top:2px}
 .st-note-warn{background:var(--warn-soft)}.st-note-warn svg.i{color:var(--warn)}
-.st-overview{margin-bottom:16px}
-.st-modes{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:0 0 14px}
-.st-modes button{appearance:none;display:flex;gap:10px;align-items:flex-start;text-align:left;padding:12px 14px;border-radius:var(--radius);border:1.5px solid transparent;background:var(--surface);box-shadow:var(--shadow);color:var(--ink);cursor:pointer;font:inherit}
-.st-modes button > span{display:flex;flex-direction:column;gap:2px;min-width:0}
-.st-modes button b{font-size:15px;color:var(--heading)}
-.st-modes button .small{color:var(--muted)}
-.st-modes button svg.i{width:22px;height:22px;color:var(--accent);margin-top:1px}
-.st-modes button[aria-selected="true"]{border-color:var(--accent);background:var(--accent-soft)}
-@media(max-width:760px){.st-modes{grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}.st-modes button{flex-direction:column;align-items:center;text-align:center;padding:10px 6px}.st-modes button .small{display:none}}
-.st-panesw{display:none;gap:4px;padding:4px;background:var(--surface);border-radius:999px;box-shadow:var(--shadow);margin:0 0 12px}
-.st-panesw button{appearance:none;flex:1;border:0;background:transparent;border-radius:999px;min-height:40px;font:700 14px var(--sans);color:var(--muted);display:inline-flex;align-items:center;justify-content:center;gap:6px;cursor:pointer}
-.st-panesw button[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink)}
-.st-ws{display:grid;grid-template-columns:minmax(0,1.12fr) minmax(0,.88fr);gap:18px;align-items:start}
-.st-assist{position:sticky;top:calc(var(--hdr,72px) + 14px);max-height:calc(100vh - var(--hdr,72px) - 28px);overflow:auto;overscroll-behavior:contain;padding:20px}
-@media(max-width:999px){.st-panesw{display:flex}.st-ws{grid-template-columns:minmax(0,1fr)}.st-ws[data-pane="doc"] .st-assist{display:none}.st-ws[data-pane="study"] .st-docpane{display:none}.st-assist{position:static;max-height:none}}
-.st-outline{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 12px}
-.st-outline button{appearance:none;border:1px solid var(--line-strong);background:var(--surface);color:var(--ink);font:600 13px var(--sans);padding:5px 12px;border-radius:999px;cursor:pointer;min-height:34px}
-.st-outline button:hover{background:var(--surface-2)}
-.st-outline button[aria-current="true"]{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
-.st-outline button[aria-current="true"] .muted{color:inherit;opacity:.85}
-.st-listen{display:flex;flex-wrap:wrap;gap:6px;align-items:center;padding:10px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);margin:0 0 10px}
-.st-speed{display:inline-flex;align-items:center;gap:6px}.st-speed select{width:auto;min-height:32px;padding:3px 30px 3px 8px;font-size:13px}
-.st-hlbar{display:flex;flex-wrap:wrap;gap:6px 14px;margin:0 0 12px;font-size:.84rem}
-.st-hlk{display:inline-flex;align-items:center;gap:6px;cursor:pointer;min-height:30px}
-.st-doc{font:1.02rem/1.78 "Source Serif 4",Georgia,serif;color:var(--ink)}
-.st-h{font:800 1.08rem/1.35 var(--sans);color:var(--heading);margin:22px 0 8px;cursor:pointer;scroll-margin-top:calc(var(--hdr,72px) + 16px)}
-.st-h:first-child{margin-top:4px}
-.st-p{position:relative;padding:8px 12px 8px 14px;border-left:3px solid transparent;border-radius:8px;cursor:pointer;white-space:pre-line;margin:0 0 6px;scroll-margin-top:calc(var(--hdr,72px) + 16px);transition:background-color .15s}
-.st-p:hover{background:var(--surface-2)}
-.st-p.sel{background:var(--accent-soft);border-left-color:var(--accent)}
-.st-p.speaking{box-shadow:0 0 0 2px var(--gold)}
+/* ===== Critique Study Studio: the owner's academic palette (navy, ivory, champagne gold), scoped to this step (spec §5.4c) ===== */
+#panel-studio{
+  --sp-navy:#142338; --sp-ivory:#FAF9F6; --sp-paper:#FFFFFF; --sp-gold:#B49A67; --sp-gold-ink:#76602F; --sp-char:#242A31; --sp-slate:#5D6873; --sp-line:#E2E5E8; --sp-line-2:#CDD2D8;
+  --sp-sel:#F5F0E4; --sp-hover:#F4F3EF; --sp-cur:#EEF0F4; --sp-find:#F3E3B5; --sp-find-cur:#E2C77F; --sp-ok:#2F6B4F; --sp-warn:#A3472F;
+  --bg:var(--sp-ivory); --surface:var(--sp-paper); --surface-2:#F6F5F1; --ink:var(--sp-char); --heading:var(--sp-navy); --muted:var(--sp-slate); --line:var(--sp-line); --line-strong:var(--sp-line-2);
+  --accent:#142338; --accent-hover:#22385A; --accent-ink:#FFFFFF; --accent-soft:#ECEEF2; --focus:#76602F; --card-line:var(--sp-line); --shadow:none; --radius:8px; --radius-sm:6px;
+  --sans:Inter,"IBM Plex Sans Arabic","Segoe UI",system-ui,-apple-system,Roboto,Arial,sans-serif;
+  --sp-serif:"Source Serif 4","IBM Plex Sans Arabic",Georgia,"Times New Roman",serif;
+  color:var(--ink);font-family:var(--sans)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) #panel-studio{
+  --sp-navy:#E8E2D4; --sp-ivory:#10161F; --sp-paper:#161E29; --sp-gold:#C9B07F; --sp-gold-ink:#D8C397; --sp-char:#E1E4E8; --sp-slate:#A4ADB8; --sp-line:#283241; --sp-line-2:#3A4658;
+  --sp-sel:#2A2820; --sp-hover:#1C2531; --sp-cur:#1E2836; --sp-find:#5A4A1E; --sp-find-cur:#806A2A; --sp-ok:#7FBF9E; --sp-warn:#E39A82;
+  --surface-2:#1B2430; --accent:#D8C397; --accent-hover:#E6D6B2; --accent-ink:#142338; --accent-soft:#232C3A; --focus:#D8C397}}
+:root[data-theme="dark"] #panel-studio{
+  --sp-navy:#E8E2D4; --sp-ivory:#10161F; --sp-paper:#161E29; --sp-gold:#C9B07F; --sp-gold-ink:#D8C397; --sp-char:#E1E4E8; --sp-slate:#A4ADB8; --sp-line:#283241; --sp-line-2:#3A4658;
+  --sp-sel:#2A2820; --sp-hover:#1C2531; --sp-cur:#1E2836; --sp-find:#5A4A1E; --sp-find-cur:#806A2A; --sp-ok:#7FBF9E; --sp-warn:#E39A82;
+  --surface-2:#1B2430; --accent:#D8C397; --accent-hover:#E6D6B2; --accent-ink:#142338; --accent-soft:#232C3A; --focus:#D8C397}
+body[data-tab="studio"]{--bg:#FAF9F6}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) body[data-tab="studio"]{--bg:#10161F}}
+:root[data-theme="dark"] body[data-tab="studio"]{--bg:#10161F}
+body[data-tab="studio"] main{max-width:1680px;padding:28px 28px 56px}
+#panel-studio h1,#panel-studio h2{font-family:var(--sp-serif);font-weight:600;letter-spacing:0}
+#panel-studio .btn{border-radius:6px;box-shadow:none}
+#panel-studio .card{box-shadow:none}
+#panel-studio .chip{border-radius:4px;background:transparent;border:1px solid var(--sp-line-2);color:var(--muted)}
+#panel-studio .st-path{box-shadow:none;border:1px solid var(--sp-line);border-radius:8px}
+#panel-studio .st-path button{border-radius:6px}
+#panel-studio .st-docs-fold > summary{box-shadow:none;border:1px solid var(--sp-line);border-radius:8px}
+#panel-studio [lang="ar"],#panel-studio [dir="rtl"]{font-family:var(--arabic)}
+.st-eyebrow{font:700 11px/1.4 var(--sans);letter-spacing:.08em;text-transform:uppercase;color:var(--sp-gold-ink)}
+.st-overview{border:1px solid var(--sp-line);border-inline-start:3px solid var(--sp-gold);background:var(--sp-paper);border-radius:8px;padding:16px 20px;margin:0 0 16px}
+.st-overview h2{font-size:1.25rem;margin:4px 0 6px;color:var(--heading)}
+.st-overview p{margin:0;max-width:90ch}
+/* the workspace: navigator · original critique · study assistant */
+.st-wsw{min-width:0}
+.st-ws{display:grid;align-items:start;background:var(--sp-paper);border:1px solid var(--sp-line);border-radius:8px;min-width:0}
+.st-nav{grid-area:nav;min-width:0}
+.st-docpane{grid-area:doc;min-width:0;align-self:stretch;container:stdoc / inline-size}
+.st-assist{grid-area:as;min-width:0;padding:18px 20px 28px}
+.st-wsw[data-size="wide"] .st-docpane{border-inline:1px solid var(--sp-line)}
+.st-wsw[data-size="wide"] .st-ws[data-nav="0"] .st-docpane{border-inline-start:0}
+.st-wsw[data-size="mid"] .st-docpane{border-inline-end:1px solid var(--sp-line)}
+.st-wsw:not([data-size="narrow"]) .st-ws[data-as="0"] .st-docpane{border-inline-end:0}
+@container stdoc (max-width:720px){.st-tbtn:not(.pri):not([data-act="st-re"]) .tl{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}}
+@container stdoc (max-width:470px){.st-tbtn[data-act="st-re"] .tl{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}}
+.st-find:has(input:placeholder-shown) .st-ib,.st-find:has(input:placeholder-shown) .st-find-n{display:none}
+.st-wsw[data-size="wide"] .st-ws{grid-template-areas:"nav doc as";grid-template-columns:minmax(232px,26%) minmax(0,1fr) minmax(300px,31%)}
+.st-wsw[data-size="wide"] .st-ws[data-nav="0"]{grid-template-areas:"doc as";grid-template-columns:minmax(0,1fr) minmax(300px,31%)}
+.st-wsw[data-size="wide"] .st-ws[data-as="0"]{grid-template-areas:"nav doc";grid-template-columns:minmax(232px,27%) minmax(0,1fr)}
+.st-wsw[data-size="wide"] .st-ws[data-nav="0"][data-as="0"]{grid-template-areas:"doc";grid-template-columns:minmax(0,1fr)}
+.st-wsw[data-size="mid"] .st-ws{grid-template-areas:"doc as";grid-template-columns:minmax(0,1fr) minmax(280px,40%)}
+.st-wsw[data-size="mid"] .st-ws[data-navm="1"]{grid-template-areas:"nav nav" "doc as"}
+.st-wsw[data-size="mid"] .st-ws[data-as="0"]{grid-template-areas:"doc";grid-template-columns:minmax(0,1fr)}
+.st-wsw[data-size="mid"] .st-ws[data-navm="1"][data-as="0"]{grid-template-areas:"nav" "doc"}
+.st-wsw[data-size="wide"] .st-ws[data-nav="0"] .st-nav,.st-wsw[data-size="mid"] .st-ws:not([data-navm="1"]) .st-nav,.st-wsw:not([data-size="narrow"]) .st-ws[data-as="0"] .st-assist{display:none}
+.st-wsw[data-size="mid"] .st-nav{border-inline-end:0;border-bottom:1px solid var(--sp-line);max-height:min(460px,55vh);overflow:auto;border-start-end-radius:8px}
+.st-wsw[data-size="wide"] .st-nav,.st-wsw:not([data-size="narrow"]) .st-assist{position:sticky;top:var(--hdr,72px);max-height:calc(100vh - var(--hdr,72px));overflow:auto;overscroll-behavior:contain;scrollbar-width:thin}
+.st-wsw[data-size="narrow"] .st-ws{grid-template-areas:"one";grid-template-columns:minmax(0,1fr)}
+.st-wsw[data-size="narrow"] .st-ws > *{grid-area:one;border:0}
+.st-wsw[data-size="narrow"] .st-ws:not([data-pane="nav"]) .st-nav,.st-wsw[data-size="narrow"] .st-ws:not([data-pane="study"]) .st-assist,.st-wsw[data-size="narrow"] .st-ws[data-pane="nav"] .st-docpane,.st-wsw[data-size="narrow"] .st-ws[data-pane="study"] .st-docpane{display:none}
+.st-panesw{display:none;border-bottom:1px solid var(--sp-line);margin:0 0 12px}
+.st-wsw[data-size="narrow"] .st-panesw{display:flex;position:sticky;top:var(--hdr,72px);z-index:6;background:var(--bg)}
+.st-panesw button{appearance:none;flex:1;border:0;background:transparent;min-height:46px;font:600 14px var(--sans);color:var(--muted);display:inline-flex;align-items:center;justify-content:center;gap:6px;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px}
+.st-panesw button[aria-pressed="true"]{color:var(--heading);border-bottom-color:var(--sp-gold)}
+.st-wsw[data-size="narrow"] .st-navt,.st-wsw[data-size="narrow"] .st-ast{display:none}
+.st-wsw:not([data-size="narrow"]) .st-study-btn,.st-wsw:not([data-size="narrow"]) .st-lang-a{display:none}
+.st-wsw[data-size="narrow"] .st-tbtn .tl{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.st-wsw[data-size="narrow"] .st-tbtn.pri .tl{position:static;width:auto;height:auto;clip:auto}
+/* navigator */
+.st-nav-h{padding:20px 18px 12px}
+.st-nav-h h2{font:600 1.08rem/1.3 var(--sp-serif);margin:0;color:var(--heading)}
+.st-nav-p{font-size:12.5px;line-height:1.5;color:var(--muted);margin:4px 0 10px}
+.st-prog{height:3px;background:var(--sp-line);border-radius:2px;overflow:hidden}
+.st-prog span{display:block;height:100%;background:var(--sp-gold)}
+.st-find{display:flex;align-items:center;gap:4px;margin:0 18px 8px;padding:0 4px 0 10px;border:1px solid var(--sp-line-2);border-radius:6px;background:var(--sp-paper)}
+.st-find:focus-within{border-color:var(--sp-gold-ink)}
+.st-find svg.i{width:16px;height:16px;color:var(--muted);flex:none}
+.st-find input{flex:1;min-width:0;min-height:38px;border:0;background:transparent;padding:0 4px;font:14px var(--sans);color:var(--ink);outline:0;box-shadow:none}
+.st-find-n{font:600 11.5px var(--sans);color:var(--muted);white-space:nowrap}
+.st-ib{appearance:none;border:0;background:transparent;color:var(--muted);width:30px;height:30px;display:inline-flex;align-items:center;justify-content:center;border-radius:4px;cursor:pointer;flex:none}
+.st-ib:hover{background:var(--sp-hover);color:var(--heading)}
+.st-navtools{display:flex;flex-wrap:wrap;gap:0 2px;padding:0 12px 10px;border-bottom:1px solid var(--sp-line)}
+.st-navtools button{appearance:none;border:0;background:transparent;color:var(--sp-gold-ink);font:600 12.5px var(--sans);padding:6px;min-height:32px;cursor:pointer;display:inline-flex;align-items:center;gap:5px;border-radius:4px}
+.st-navtools button:hover{background:var(--sp-hover);text-decoration:underline}
+.st-navtools svg.i{width:14px;height:14px}
+.st-ng{border-bottom:1px solid var(--sp-line)}
+.st-ng:last-child{border-bottom:0}
+.st-ng-h{appearance:none;display:flex;width:100%;align-items:center;gap:8px;padding:12px 18px;font:700 11px/1.3 var(--sans);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);background:none;border:0;cursor:pointer;text-align:start}
+.st-ng-h > span:first-child{flex:1}
+.st-ng-n{font-weight:600;letter-spacing:.02em;text-transform:none;font-size:11.5px}
+.st-ng-h svg.i{width:16px;height:16px;transition:transform .2s var(--ease)}
+.st-ng-h[aria-expanded="true"] svg.i{transform:rotate(180deg)}
+.st-ng-static{cursor:default;padding-bottom:6px}
+.st-list,.st-kids{list-style:none;margin:0;padding:0}
+.st-refs{padding-bottom:8px}
+.st-row{display:flex;align-items:stretch}
+.st-row-main{appearance:none;flex:1;min-width:0;display:grid;grid-template-columns:minmax(1.4em,auto) 16px minmax(0,1fr);gap:0 9px;align-items:start;text-align:start;padding:10px 2px 10px 13px;background:transparent;border:0;border-inline-start:3px solid transparent;cursor:pointer;color:var(--ink);font:inherit}
+.st-row:hover{background:var(--sp-hover)}
+.st-row.cur{background:var(--sp-cur)}
+.st-row.cur .st-row-main{border-inline-start-color:var(--sp-gold)}
+.st-row.hit .st-rtitle{text-decoration:underline;text-decoration-color:var(--sp-gold);text-underline-offset:3px}
+.st-num{font:600 12px/1.55 var(--sans);color:var(--muted);font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
+.st-row-main > svg.i{width:16px;height:16px;color:var(--sp-gold-ink);margin-top:2px}
+.st-rt{display:flex;flex-direction:column;gap:2px;min-width:0}
+.st-rtitle{font:600 14px/1.4 var(--sans);color:var(--heading);overflow-wrap:break-word;hyphens:auto}
+.lv2 .st-rtitle,.lv3 .st-rtitle{font-weight:500;font-size:13.5px}
+.st-rsug{font:italic 500 11.5px/1.4 var(--sans);color:var(--sp-gold-ink);margin:0}
+.st-rsub{font:12px/1.45 var(--sans);color:var(--muted)}
+.st-rmeta{font:500 11.5px/1.45 var(--sans);color:var(--muted);border-inline-start:2px solid var(--sp-line-2);padding-inline-start:6px;margin-top:2px}
+.st-hits{color:var(--sp-gold-ink);font-weight:700}
+.st-chev{appearance:none;border:0;background:transparent;width:38px;flex:none;color:var(--muted);cursor:pointer;display:flex;align-items:flex-start;justify-content:center;padding-top:11px}
+.st-chev:hover{color:var(--heading)}
+.st-chev svg.i{width:18px;height:18px;transition:transform .2s var(--ease)}
+.st-chev[aria-expanded="true"] svg.i{transform:rotate(180deg)}
+.st-chev-sp{width:38px;flex:none}
+.st-kids .st-row-main{padding-inline-start:31px}
+.st-kids .st-kids .st-row-main{padding-inline-start:47px}
+.st-prow{appearance:none;display:grid;grid-template-columns:2.6em minmax(0,1fr);gap:0 8px;width:100%;text-align:start;padding:6px 14px 6px 46px;background:transparent;border:0;border-inline-start:3px solid transparent;cursor:pointer;font:13px/1.45 var(--sans);color:var(--ink)}
+.st-prow.lv1{padding-inline-start:15px}
+.st-prow.lv3{padding-inline-start:62px}
+.st-prow:hover{background:var(--sp-hover)}
+.st-prow.cur{background:var(--sp-cur);border-inline-start-color:var(--sp-gold);color:var(--heading);font-weight:600}
+.st-ptxt{overflow-wrap:anywhere}
+.st-stat{width:9px;height:9px;border-radius:50%;border:1.5px solid var(--sp-slate);flex:none;display:inline-block;box-sizing:border-box;vertical-align:0;margin-inline-end:6px}
+.st-stat-progress{border-color:var(--sp-gold-ink);background:linear-gradient(90deg,var(--sp-gold-ink) 50%,transparent 50%)}
+.st-stat-reviewed{border-color:var(--sp-ok);background:var(--sp-ok)}
+.st-stat-practice{border-color:var(--sp-warn);background:var(--sp-warn)}
+/* reading area */
+.st-tool{position:sticky;top:var(--hdr,72px);z-index:5;display:flex;flex-wrap:wrap;align-items:center;gap:4px;padding:8px 14px;background:var(--sp-paper);border-bottom:1px solid var(--sp-line);border-start-end-radius:8px}
+.st-wsw[data-size="narrow"] .st-tool{top:calc(var(--hdr,72px) + 47px);padding:6px 4px}
+.st-listen{display:contents}
+.st-tsp{flex:1}
+.st-tbtn{appearance:none;display:inline-flex;align-items:center;gap:6px;min-height:36px;padding:0 10px;border:1px solid transparent;background:transparent;color:var(--ink);font:600 13px var(--sans);border-radius:6px;cursor:pointer;white-space:nowrap;list-style:none}
+.st-tbtn::-webkit-details-marker{display:none}
+.st-tbtn svg.i{width:17px;height:17px}
+.st-tbtn:hover{background:var(--sp-hover);color:var(--heading)}
+.st-tbtn[aria-pressed="true"],.st-tbtn[aria-expanded="true"]{background:var(--accent-soft);color:var(--heading)}
+.st-tbtn.pri{background:var(--accent);color:var(--accent-ink)}
+.st-tbtn.pri:hover{background:var(--accent-hover);color:var(--accent-ink)}
+.st-tbtn:disabled{opacity:.55;cursor:not-allowed}
+.st-speed select{width:auto;min-height:36px;padding:0 28px 0 8px;font:600 13px var(--sans);border-color:var(--sp-line);border-radius:6px;background-color:var(--sp-paper);color:var(--ink)}
+.st-hlmenu{position:relative}
+.st-hlmenu[open] > summary{background:var(--accent-soft);color:var(--heading)}
+.st-hlpop{position:absolute;inset-inline-end:0;top:calc(100% + 6px);z-index:7;background:var(--sp-paper);border:1px solid var(--sp-line-2);border-radius:6px;padding:10px 14px;min-width:250px;display:flex;flex-direction:column;gap:2px}
+.st-wsw[data-size="narrow"] .st-hlmenu[open]{flex-basis:100%;order:9}
+.st-wsw[data-size="narrow"] .st-hlpop{position:static;margin-top:6px}
+.st-hlk{display:flex;align-items:center;gap:8px;cursor:pointer;min-height:34px;font-size:13.5px}
+.st-doc{font:1.06rem/1.8 var(--sp-serif);color:var(--ink);max-width:74ch;margin:0 auto;padding:18px 34px 40px}
+.st-wsw[data-size="narrow"] .st-doc{padding:14px 4px 32px}
+.st-h{color:var(--heading);cursor:pointer;scroll-margin-top:calc(var(--hdr,72px) + 64px)}
+.st-h1{font:600 1.32rem/1.32 var(--sp-serif);margin:34px 0 10px;padding-bottom:8px;border-bottom:1px solid var(--sp-line)}
+.st-h2{font:600 1.12rem/1.38 var(--sp-serif);margin:24px 0 8px}
+.st-h3{font:600 1rem/1.4 var(--sp-serif);margin:18px 0 6px}
+.st-h:first-child,.st-sug:first-child{margin-top:4px}
+.st-h1.cur{border-bottom-color:var(--sp-gold)}
+.st-h.st-h-meta,.st-meta{font:500 .82rem/1.5 var(--sans);color:var(--muted);border:0;padding:0;margin:0 0 12px;letter-spacing:.01em}
+.st-sug{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 8px;font:600 .95rem/1.4 var(--sans);color:var(--heading);border:1px dashed var(--sp-gold);border-radius:6px;padding:6px 12px;margin:30px 0 10px;scroll-margin-top:calc(var(--hdr,72px) + 64px)}
+.st-sug-k{font:700 10.5px var(--sans);text-transform:uppercase;letter-spacing:.08em;color:var(--sp-gold-ink)}
+.st-sug-n{font:italic 400 12px var(--sans);color:var(--muted)}
+.st-p{position:relative;padding:6px 14px;border-inline-start:2px solid transparent;cursor:pointer;white-space:pre-line;margin:0 0 10px;scroll-margin-top:calc(var(--hdr,72px) + 64px);transition:background-color .15s}
+.st-p:hover{background:var(--sp-hover)}
+.st-p.sel{background:var(--sp-sel);border-inline-start-color:var(--sp-gold)}
+.st-p.speaking{outline:2px solid var(--sp-gold);outline-offset:2px}
 .st-table{font:.92rem/1.6 var(--sans)}
-.st-no{display:block;font:600 11.5px var(--sans);color:var(--muted);margin-bottom:2px;white-space:normal}
+.st-no{display:block;font:600 11px var(--sans);color:var(--muted);margin-bottom:2px;white-space:normal;letter-spacing:.02em}
 .st-study-btn{display:block;margin-top:8px;white-space:normal}
-@media(min-width:1000px){.st-study-btn{display:none}}
-.st-pg{font:600 11px var(--sans);letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin:16px 0 8px;display:flex;align-items:center;gap:10px}
-.st-pg::after{content:"";flex:1;height:1px;background:var(--line)}
+.st-pg{font:600 11px var(--sans);letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin:18px 0 8px;display:flex;align-items:center;gap:10px}
+.st-pg::after{content:"";flex:1;height:1px;background:var(--sp-line)}
+::highlight(st-find){background-color:#F3E3B5;color:#242A31}
+::highlight(st-find-cur){background-color:#E2C77F;color:#242A31}
+/* study assistant */
+.st-ahead{margin:0 0 10px}
+.st-ahead-r{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.st-ahead h3{font:600 1.22rem/1.3 var(--sp-serif);color:var(--heading);margin:4px 0 2px;overflow-wrap:anywhere}
+.st-ameta{font-size:12.5px;line-height:1.5;color:var(--muted);margin:2px 0 0}
+.st-status{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:4px;margin:12px 0 16px}
+.st-status button{appearance:none;display:flex;align-items:center;gap:2px;border:1px solid var(--sp-line);background:var(--sp-paper);border-radius:6px;padding:3px 8px;font:600 12px/1.25 var(--sans);color:var(--ink);cursor:pointer;min-height:32px;text-align:start}
+.st-status button:hover{background:var(--sp-hover)}
+.st-status button[aria-checked="true"]{border-color:var(--heading);background:var(--accent-soft);color:var(--heading)}
+.st-status .st-stat{margin-top:0}
+.st-tabs2{display:flex;flex-wrap:wrap;gap:8px 14px;margin:0 0 14px}
+.st-tg{display:flex;flex-direction:column;gap:1px;flex:none;border-bottom:1px solid var(--sp-line)}
+.st-tgl{font:700 10px var(--sans);letter-spacing:.09em;text-transform:uppercase;color:var(--muted);padding:0 8px}
+.st-tgb{display:flex}
+.st-tabs2 button{appearance:none;border:0;background:transparent;padding:6px 7px 9px;font:600 13.5px var(--sans);color:var(--muted);border-bottom:2px solid transparent;margin-bottom:-1px;cursor:pointer;white-space:nowrap}
+.st-tabs2 button:hover{color:var(--heading)}
+.st-tabs2 button[aria-selected="true"]{color:var(--heading);border-bottom-color:var(--sp-gold)}
+.st-subs{display:inline-flex;flex-wrap:wrap;gap:2px;margin:0 0 12px;border:1px solid var(--sp-line);border-radius:6px;padding:2px;max-width:100%}
+.st-subs button{appearance:none;border:0;background:transparent;padding:0 10px;min-height:32px;border-radius:4px;font:600 12.5px var(--sans);color:var(--muted);cursor:pointer}
+.st-subs button[aria-pressed="true"]{background:var(--accent-soft);color:var(--heading)}
+.st-lang{display:inline-flex;gap:2px;padding:2px;border:1px solid var(--sp-line);border-radius:6px}
+.st-lang button{appearance:none;border:0;background:transparent;border-radius:4px;padding:0 9px;min-height:30px;font:700 12px var(--sans);color:var(--muted);cursor:pointer}
+.st-lang button[lang="ar"]{font-family:var(--arabic)}
+.st-lang button[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink)}
+.st-tabs{display:flex;gap:4px;border-bottom:1px solid var(--line);margin:0 0 14px;overflow-x:auto;scrollbar-width:none}
+.st-tabs button{appearance:none;border:0;background:transparent;padding:10px 12px;font:600 14px var(--sans);color:var(--muted);border-bottom:2px solid transparent;margin-bottom:-1px;cursor:pointer;white-space:nowrap}
+.st-tabs button[aria-selected="true"]{color:var(--heading);border-bottom-color:var(--sp-gold)}
+.st-abody > .row{margin-bottom:12px}
+.st-abody h4{margin:16px 0 6px;font:700 13px var(--sans);color:var(--heading)}
+#panel-studio.st-focus .st-path,#panel-studio.st-focus .page-head,#panel-studio.st-focus .st-bar,#panel-studio.st-focus .st-docs-fold,#panel-studio.st-focus .st-overview,#panel-studio.st-focus .st-bottom,#panel-studio.st-focus .st-panesw,#panel-studio.st-focus .st-note-warn,#panel-studio.st-focus .st-nav,#panel-studio.st-focus .st-assist,#panel-studio.st-focus .st-navt,#panel-studio.st-focus .st-ast{display:none!important}
+#panel-studio.st-focus .st-ws{grid-template-areas:"doc"!important;grid-template-columns:minmax(0,1fr)!important}
+#panel-studio.st-focus .st-ws .st-docpane{display:block!important}
+#panel-studio.st-focus .st-doc{font-size:1.12rem;max-width:68ch;padding-top:28px}
 /* highlight colours: soft tints of the brand accents, with a coloured underline so the meaning never depends on colour alone */
 mark.sth{color:inherit;font-weight:inherit;border-radius:3px;padding:0 1px;cursor:pointer;border-bottom:2px solid;-webkit-box-decoration-break:clone;box-decoration-break:clone}
 mark.sth:focus-visible{outline:2px solid var(--focus);outline-offset:1px}
@@ -1519,17 +1685,6 @@ mark.sth.on{box-shadow:0 0 0 2px var(--focus)}
 .st-hlcard{border:1px solid var(--line);border-left:4px solid var(--accent);border-radius:var(--radius-sm);padding:12px 14px;margin:0 0 14px;background:var(--surface-2)}
 .sth-edge-main{border-left-color:#b88a00}.sth-edge-evidence{border-left-color:#1976d2}.sth-edge-eval{border-left-color:#8e44ad}.sth-edge-strength{border-left-color:#2e7d32}.sth-edge-limit{border-left-color:#c62828}
 .st-hlcard p{margin:0 0 6px}
-.st-ahead{display:flex;flex-wrap:wrap;gap:10px;align-items:flex-start;justify-content:space-between;margin:0 0 10px}
-.st-ahead h3{margin:2px 0 0}
-.st-lang{display:inline-flex;gap:2px;padding:3px;background:var(--surface-2);border-radius:999px}
-.st-lang button{appearance:none;border:0;background:transparent;border-radius:999px;padding:0 12px;min-height:32px;font:700 13px var(--sans);color:var(--muted);cursor:pointer}
-.st-lang button[lang="ar"]{font-family:var(--arabic)}
-.st-lang button[aria-pressed="true"]{background:var(--surface);color:var(--heading);box-shadow:0 1px 2px rgba(16,24,40,.14)}
-.st-tabs{display:flex;gap:4px;border-bottom:1px solid var(--line);margin:0 0 14px;overflow-x:auto;scrollbar-width:none}
-.st-tabs button{appearance:none;border:0;background:transparent;padding:10px 12px;font:700 14px var(--sans);color:var(--muted);border-bottom:2px solid transparent;margin-bottom:-1px;cursor:pointer;white-space:nowrap}
-.st-tabs button[aria-selected="true"]{color:var(--accent);border-bottom-color:var(--accent)}
-.st-abody > .row{margin-bottom:12px}
-.st-abody h4{margin:14px 0 6px}
 .st-out{border:1px solid var(--line);border-radius:var(--radius-sm);padding:12px 14px;margin:10px 0;background:var(--surface)}
 .st-out .output-head{margin-bottom:4px}
 .st-out p{margin:0 0 8px}.st-out p:last-child{margin-bottom:0}
@@ -5887,7 +6042,7 @@ const PRES_HEADS = /^(summary|introduction|background|research problem|problem|o
 function presHeadLine(l, prevEnd){                                  // a heading in a PDF or text critique: short, standing alone, and named or numbered like one
   const w = l.split(/\s+/);
   if (l.length > 80 || w.length > 9 || /[.!?;,]$/.test(l) || /^\d+([.,]\d+)?%?$/.test(l)) return false;
-  if (/^((section|part)\s+)?[0-9IVX]+[.)]?\s+[A-Z؀-ۿ]/i.test(l) || PRES_HEADS.test(l.replace(/^[0-9IVX.)\s]+/, ''))) return true;
+  if (/^((section|part)\s+)?[0-9IVX]+(\.\d+)*[.)]?\s+[A-Z؀-ۿ]/i.test(l) || PRES_HEADS.test(l.replace(/^[0-9IVX.)\s]+/, ''))) return true;
   return prevEnd && w.length <= 6 && w.filter(x => /^[A-Z؀-ۿ]/.test(x)).length >= Math.ceil(w.length * .6);
 }
 function critSections(units){                                      // the critique's own parts, in order: Word headings, ScholarPath sections, or heading lines
@@ -8640,10 +8795,8 @@ const ACTIONS = {
 const ST_HL = [['main', 'Main ideas', 'The central argument of a paragraph'], ['evidence', 'Research evidence', 'Information taken from the original paper'],
   ['eval', 'Critical evaluation', 'Your own analysis, judgements and criticism'], ['strength', 'Strengths', 'Positive aspects you identified'], ['limit', 'Limitations', 'Weaknesses or methodological concerns']];
 const ST_HL_NAME = Object.fromEntries(ST_HL.map(([k, l]) => [k, l]));
-const ST_MODES = [['understand', 'Understand', 'bulb', 'Learn what each part of your critique means'], ['analyze', 'Analyze', 'search', 'Understand the reasoning and the evidence behind it'], ['prepare', 'Prepare', 'messages', 'Get ready to present and to answer your professor']];
-const ST_TABS = {understand:[['explain', 'Explain'], ['sentences', 'Sentence by sentence'], ['points', 'Key points']],
-  analyze:[['marks', 'Highlights'], ['evidence', 'Evidence'], ['critical', 'Critical thinking']],
-  prepare:[['questions', 'Questions'], ['practice', 'Practice'], ['remember', 'Remember']]};
+const ST_TABS = [['explain', 'Explain', 'Understand'], ['points', 'Key points', 'Understand'], ['evidence', 'Evidence', 'Analyze'], ['questions', 'Questions', 'Prepare'], ['practice', 'Practice', 'Prepare']];
+const ST_TAB_ALIAS = {sentences:['explain', 'sentences'], section:['explain', 'section'], marks:['points'], remember:['points'], critical:['questions', 'challenge'], professor:['questions', 'professor'], understand:['explain'], analyze:['evidence'], prepare:['questions']};
 const ST_KINDS = {finding:'A finding of the paper', interpretation:'An interpretation', criticism:'A criticism', recommendation:'A recommendation', description:'A description', other:'Other'};
 const ST_RULES = `RULES (follow all of them)
 - You are explaining the student's OWN completed critique so they understand and can defend it. Never rewrite the critique and never write new critique text for them.
@@ -8655,29 +8808,137 @@ const ST_RULES = `RULES (follow all of them)
 let stRun = null, stSelText = '', stHlSel = null;
 
 function stState(){
-  const d = {docs:[], active:'', mode:'understand', tab:{}, lang:'en', hl:{main:true, evidence:true, eval:true, strength:true, limit:true}, bottom:'check', bottomOpen:true, pane:'doc'};
-  S.studio = Object.assign(d, S.studio); S.studio.hl = Object.assign(d.hl, S.studio.hl); S.studio.tab ||= {};
-  return S.studio;
+  const d = {docs:[], active:'', tab2:'explain', sub:{}, lang:'en', hl:{main:true, evidence:true, eval:true, strength:true, limit:true}, bottom:'check', bottomOpen:true, pane:'doc', navOpen:true, navMid:false, asOpen:true, focus:false, open:{}};
+  const st = (S.studio ||= {});                                     // filled in place, so every reference to it stays the same object
+  for (const k in d) if (st[k] === undefined || st[k] === null) st[k] = d[k];
+  for (const k in d.hl) if (st.hl[k] === undefined) st.hl[k] = d.hl[k];
+  if (typeof st.sub !== 'object') st.sub = {}; if (typeof st.open !== 'object') st.open = {};
+  return st;
 }
 const stDoc = () => { const st = stState(); return st.docs.find(d => d.id === st.active) || st.docs[0] || null; };
 const stSet = doc => doc && (S.verify.sets || []).find(s => s.id === doc.setId) || null;
 const stParas = doc => doc.blocks.filter(b => b.kind === 'p');
 const stParaNo = (doc, id) => stParas(doc).findIndex(b => b.id === id) + 1;
 const stBlock = (doc, id) => doc.blocks.find(b => b.id === id);
-function stSections(doc){                                          // the critique's own sections, from its own headings
-  const out = []; let cur = null;
-  doc.blocks.forEach(b => {
-    if (b.kind === 'h'){ cur = {id:b.id, title:b.text, paras:[]}; out.push(cur); return; }
-    if (!cur){ cur = {id:'top', title:'Opening', paras:[]}; out.push(cur); }
-    cur.paras.push(b);
-  });
-  return out.filter(s => s.paras.length);
+/* --- the critique's structure for navigation: sections, levels and groups. The text itself is never changed:
+   assessment lines ("15% | Maximum 200 words", "(1–5)") become secondary information of the section they describe,
+   a section without a real heading gets a clearly marked SUGGESTED label, and form fields, references and
+   instructor-only parts are grouped. (spec §5.4c, owner's redesign brief of 14 Oct 2026) --- */
+const stIsMeta = p => { p = String(p || '').trim(); if (!p || !/\d/.test(p)) return false;
+  const rest = p.replace(/[()[\]]/g, ' ').replace(/\b\d{1,3}(?:\.\d+)?\s?%/g, ' ').replace(/\b\d+\s*(?:[–-]|to)\s*\d+\b/g, ' ').replace(/\b\d+\b/g, ' ')
+    .replace(/\b(of|the|assessment|grade|marks?|points?|weight(?:ing)?|max(?:imum)?|min(?:imum)?|words?|limit|count|combined|approx(?:imately)?|about|up|to|total|score|rated|rating|scale|out|suggested|each|per)\b\.?/gi, ' ')
+    .replace(/[:|·,;.\/≈~+*–\-—]/g, ' ').trim();
+  return !rest; };
+function stSplitMeta(t){                                            // "3. Methodology — 10% | Maximum 200 words" → title "3. Methodology", meta "10% · Maximum 200 words"
+  const raw = String(t || '').trim(), meta = [];
+  if (stIsMeta(raw)) return {title:'', meta:raw.replace(/\s*\|\s*/g, ' · ')};
+  let title = raw.replace(/\(([^()]*)\)/g, (m, g) => stIsMeta(g) ? (meta.push(g.trim()), ' ') : m);
+  const parts = title.split(/\s+[|—–]\s+|\s*\|\s*/);
+  if (parts.length > 1){ const keep = parts.filter(x => { if (stIsMeta(x)){ meta.push(x.trim()); return false; } return true; }); title = keep.join(' — '); }
+  return {title:title.replace(/\s{2,}/g, ' ').replace(/[\s:—–-]+$/, '').trim(), meta:meta.join(' · ')};
 }
-const stSecOf = (doc, pid) => stSections(doc).find(s => s.id === pid || s.paras.some(p => p.id === pid)) || stSections(doc)[0];
+const ST_INFO_RE = /^((research\s+)?(paper\s+)?critique\s+form|cover(\s+page)?|student(['’]s)?(\s+(name|id|number|details|information))?|name|id|topic(\s+id)?|paper\s+id|presentation\s+(number|no\.?|date)|paper\s+(title|details|information)|title(\s+of\s+(the\s+)?paper)?|authors?|venue|journal|conference|publisher|year|doi|official\s+link|url|date(\s+of\s+(the\s+)?(critique|submission))?|publication(\s+(status|details))?|course(\s+(name|code|title))?|instructor|lecturer|supervisor|semester|term|university|college|faculty|programme|program|submission)\b/i;
+const ST_REF_RE = /^((\d+|[ivx]+)[.)]?\s*)?(references?|bibliography|works\s+cited|reference\s+list|related\s+(references?|sources|work\s+references?)|sources|citations)\b|^related\s+reference\b|^reference\s*\[?\d/i;
+const ST_ASSESS_RE = /^(final\s+(score|mark|grade)|total\s+(score|mark)|overall\s+(score|mark|grade)|grade\b|instructor(['’]s)?\s*(comments?|feedback|use|notes)|for\s+(the\s+)?instructor|marker|examiner|grader|score\b|marks?\b|rubric)/i;
+const ST_EVAL_RE = /\b(strengths?|weakness(es)?|limitations?|recommendations?|future\s+(work|research|directions?)|critical\s+evaluation|overall\s+evaluation|student(['’]s)?\s+(critical\s+)?evaluation)\b/i;
+const ST_SUG = [['Summary of the paper', 'book', /\b(summar\w*|this (paper|study|article) (examines|investigates|presents|reports|explores)|the authors (examine|investigate|present|propose|report))\b/gi],
+  ['Research problem & objectives', 'quest', /\b(problem|objectives?|aims?|research questions?|purpose|gap)\b/gi],
+  ['Literature review', 'library', /\b(literature|previous (research|studies|work)|prior (work|research)|related work|cited|citations?)\b/gi],
+  ['Methodology', 'scan', /\b(method\w*|sampl\w*|participants?|data collection|research design|procedure|instrument\w*|dataset|survey|interviews?)\b/gi],
+  ['Results & discussion', 'chart', /\b(results?|findings?|discussion|significan\w*|accuracy|performance|outcomes?)\b/gi],
+  ['Contribution & implications', 'bulb', /\b(contribut\w*|novel\w*|implications?|originality|practical)\b/gi],
+  ['Critical evaluation', 'shield', /\b(strengths?|weakness\w*|limitations?|recommend\w*|future (work|research))\b/gi],
+  ['Ethics', 'shield', /\b(ethic\w*|consent|privacy|approval)\b/gi],
+  ['Presentation & writing quality', 'pen', /\b(writing|clarity|organi[sz]ation|readab\w*|structure of the paper|figures? and tables)\b/gi]];
+function stSuggest(text){ let best = null, n = 0; for (const [l, ic, re] of ST_SUG){ const k = (String(text).match(re) || []).length; if (k > n){ n = k; best = [l, ic]; } } return n >= 2 ? best : null; }
+const stClean = t => String(t || '').replace(/^(section|part)\s+[\dA-Z]+\s*[·:.)-]?\s*/i, '').replace(/^[\dIVX]+(\.\d+)*[.)]?\s+/, '').replace(/^\(?[a-z]\)\s+/i, '').trim();
+function stIconFor(s){
+  const t = stClean(s.title).toLowerCase();
+  if (s.group === 'info') return 'file'; if (s.group === 'refs') return 'link'; if (s.group === 'assess') return 'clip'; if (s.group === 'eval') return 'shield';
+  for (const [l, ic, re] of ST_SUG){ re.lastIndex = 0; if (re.test(t)) return ic; }
+  return 'note';
+}
+function stLevel(b, title){
+  if (b.lvl) return Math.min(3, Math.max(1, b.lvl));
+  const t = title || '';
+  if (/^\d+\.\d+(\.\d+)?\b/.test(t) || /^\d+\s*\(?[a-z]\)/i.test(t) || /^\(?[a-z]\)\s/i.test(t) || /^\(?(i|ii|iii|iv|v|vi)\)\s/i.test(t)) return 2;
+  return 1;
+}
+const stSecCache = new WeakMap();
+function stSections(doc){
+  const sig = doc.blocks.length + '|' + JSON.stringify(((doc.an || {}).labels) || {});
+  const hit = stSecCache.get(doc); if (hit && hit.sig === sig) return hit.v;
+  let out = [];
+  const heads = doc.blocks.filter(b => b.kind === 'h');
+  if (!heads.length){ let prev = null;                                    // no headings at all: neighbouring paragraphs about the same thing form one part
+    stParas(doc).forEach(b => { const g = stSuggest(b.text), lab = g ? g[0] : '';
+      if (prev && lab && prev.auto === lab){ prev.paras.push(b); return; }
+      prev = {id:b.id, orig:'', title:'', meta:[], metaIds:[], paras:[b], lvl:1, auto:lab}; out.push(prev); }); }
+  else { let cur = null;
+    doc.blocks.forEach(b => {
+      if (b.kind === 'h'){ const sm = stSplitMeta(b.text);
+        if (!sm.title && cur && !cur.paras.length){ if (sm.meta) cur.meta.push(sm.meta); cur.metaIds.push(b.id); return; }    // assessment line right under a heading
+        cur = {id:b.id, orig:b.text, title:sm.title, meta:sm.meta ? [sm.meta] : [], metaIds:[], paras:[], lvl:stLevel(b, sm.title), size:b.size || 0}; out.push(cur); return; }
+      if (!cur){ cur = {id:'top', orig:'', title:'', meta:[], metaIds:[], paras:[], lvl:1}; out.push(cur); }
+      cur.paras.push(b);
+    });
+    const big = Math.max(0, ...out.map(s => s.size || 0));
+    out.forEach((s, i) => {
+      const prev = out.slice(0, i).reverse().find(x => x.lvl === 1 && x.title); if (!prev || s.lvl !== 1 || !s.title) return;
+      if (/\(\s*\d+\s*[–-]\s*\d+\s*\)/.test(s.orig) && /^part\b/i.test(prev.orig)) s.lvl = 2;                     // rated items under "Part A — …"
+      else if (ST_EVAL_RE.test(s.title) && !/critical|overall|student/i.test(s.title) && /(critical|overall|student(['’]s)?).{0,24}evaluation/i.test(prev.title)) s.lvl = 2;   // strengths under "Critical evaluation"
+      else if (big && s.size && prev.size && s.size < prev.size * .9) s.lvl = 2;                                                 // a smaller heading under a bigger one (PDF)
+    });
+  }
+  out.forEach((s, i) => {
+    const text = stSecText(s);
+    if (!s.title){
+      const lab = ((doc.an || {}).labels || {})[s.id], first = s.paras[0] && s.paras[0].text.split('\n')[0].trim();
+      if (lab){ s.title = lab; s.sug = 'claude'; }
+      else if (first && first.length <= 120 && (/^\d+[.)]\s+\S/.test(first) || /[?:]$/.test(first))){ s.title = first.replace(/[:\s]+$/, ''); s.sug = 'first'; }
+      else { const g = stSuggest(text); s.title = g ? g[0] : s.id === 'top' ? 'Opening' : `Part ${i + 1}`; s.sug = 'rules'; }
+    }
+    const t = stClean(s.title), short = text.length < 700;
+    s.group = ST_REF_RE.test(t) || ST_REF_RE.test(s.title) ? 'refs' : ST_ASSESS_RE.test(t) ? 'assess' : (ST_INFO_RE.test(t) && short) ? 'info' : ST_EVAL_RE.test(t) ? 'eval' : 'main';
+    s.words = text.split(/\s+/).filter(Boolean).length;
+  });
+  out = out.filter(s => s.paras.length || s.title);
+  stSecCache.set(doc, {sig, v:out});
+  return out;
+}
+const stSecOf = (doc, pid) => { const all = stSections(doc); return all.find(s => s.id === pid || s.metaIds.includes(pid) || s.paras.some(p => p.id === pid)) || all.find(s => s.paras.length) || all[0]; };
+const stFirstPara = (doc, s) => { if (s.paras.length) return s.paras[0].id; const all = stSections(doc), k = all.indexOf(s), nx = all.slice(k + 1).find(x => x.paras.length); return nx ? nx.paras[0].id : ((stParas(doc)[0] || {}).id); };
+function stTree(doc){                                               // the navigator: document information · the critique's sections (with sub-sections) · references · instructor use
+  const secs = stSections(doc), info = [], refs = [], assess = [], main = []; let parent = null;
+  secs.forEach(s => { const node = {s, kids:[]};
+    if (s.group === 'info') return info.push(node);
+    if (s.group === 'refs') return refs.push(node);
+    if (s.group === 'assess') return assess.push(node);
+    if (s.lvl >= 2 && parent){ parent.kids.push(node); return; }
+    main.push(node); parent = node; });
+  const out = [];
+  for (let i = 0; i < main.length; i++){
+    const n = main[i];
+    if (n.s.group === 'eval' && !n.kids.length){ const run = []; let j = i; while (j < main.length && main[j].s.group === 'eval' && !main[j].kids.length) run.push(main[j++]);
+      if (run.length >= 2){ out.push({virtual:true, id:'v-eval-' + run[0].s.id, title:'Critical evaluation', kids:run}); i = j - 1; continue; } }
+    out.push(n);
+  }
+  const refItems = refs.flatMap(n => !n.s.paras.length ? [{sec:n.s.id, text:n.s.orig}] : n.s.paras.flatMap(p => { const lines = p.text.split('\n').filter(l => l.trim()); const numbered = lines.filter(l => /^\s*(\[\d+\]|\d+[.)])\s/.test(l)); return numbered.length > 1 ? numbered.map(l => ({pid:p.id, text:l.trim()})) : [{pid:p.id, text:p.text}]; }));
+  return {info, main:out, refs, refItems, assess};
+}
+const ST_STATUS = [['', 'Not started', '○'], ['progress', 'In progress', '◐'], ['reviewed', 'Reviewed', '✓'], ['practice', 'Needs more practice', '!']];
+const stStatusOf = (doc, id) => (doc.status || {})[id] || '';
+function stNodeStatus(doc, node){                                   // a parent: from its own status and its sub-sections'
+  const ids = [node.s && node.s.id, ...(node.kids || []).map(k => k.s.id)].filter(Boolean), st = ids.map(id => stStatusOf(doc, id));
+  if (node.s && stStatusOf(doc, node.s.id) && !(node.kids || []).length) return stStatusOf(doc, node.s.id);
+  if (st.includes('practice')) return 'practice';
+  if (st.length && st.every(x => x === 'reviewed')) return 'reviewed';
+  return st.some(Boolean) ? 'progress' : '';
+}
 const stSelId = doc => doc.sel || (stParas(doc)[0] || {}).id;
 const stSecText = sec => sec.paras.map(p => p.text).join('\n\n');
-const stMode = () => ST_MODES.some(m => m[0] === stState().mode) ? stState().mode : 'understand';
-const stTab = () => { const m = stMode(), t = stState().tab[m]; return ST_TABS[m].some(x => x[0] === t) ? t : ST_TABS[m][0][0]; };
+const stTab = () => { const t = stState().tab2; return ST_TABS.some(x => x[0] === t) ? t : 'explain'; };
+const stSub = k => (stState().sub || {})[k] || (k === 'explain' ? 'section' : 'professor');
 const stLang = () => stState().lang === 'ar' ? 'ar' : 'en';
 const stCopy = (target, label = 'Copy') => `<button class="btn ghost icon sm" data-act="st-copy" data-target="${target}" aria-label="${label}" title="${label}">${icon('copy')}</button>`;   // copies with its line breaks
 const stByClaude = '<span class="chip">by Claude — check it</span>';
@@ -8751,7 +9012,7 @@ function stTextBlocks(t){                                           // pasted or
   const out = [];
   String(t || '').replace(/\r/g, '').split(/\n\s*\n/).forEach(chunk => {
     const lines = chunk.split('\n').map(l => l.replace(/\s+$/, '')).filter(l => l.trim());
-    while (lines.length && presHeadLine(lines[0].trim(), true) && (lines.length > 1 || lines[0].trim().split(/\s+/).length <= 9)){ out.push({kind:'h', text:lines.shift().trim()}); }
+    while (lines.length && ((presHeadLine(lines[0].trim(), true) && (lines.length > 1 || lines[0].trim().split(/\s+/).length <= 9)) || (lines[0].trim().length < 90 && stIsMeta(lines[0].trim())))){ out.push({kind:'h', text:lines.shift().trim()}); }   // an assessment line ("10% | Maximum 150 words") is kept apart from the paragraph, word for word
     if (lines.length) out.push({kind:'p', text:lines.join('\n').trim()});
   });
   return out;
@@ -8775,7 +9036,7 @@ function stNewDoc(name, kind, raw){
   set.docs.critique = {src:'upload', name, kind, units, at:Date.now()};
   S.verify.sets.push(set);
   const doc = {id:uid(), name, kind, at:Date.now(), setId:set.id, blocks, sel:(blocks.find(b => b.kind === 'p') || {}).id, an:null, hls:[], secs:{}, sents:{}, ev:{}, evOn:{}, check:{}, prac:null, chal:{}};
-  const st = stState(); st.docs.unshift(doc); st.active = doc.id; st.mode = 'understand'; st.pane = 'doc';
+  const st = stState(); st.docs.unshift(doc); st.active = doc.id; st.tab2 = 'explain'; st.pane = 'doc'; st.focus = false;
   logActivity('Added a critique to study', 'critiquing', 2, name); save();
   return doc;
 }
@@ -8815,19 +9076,22 @@ function stAnalyzePrompt(doc){
   return `A master's student uploaded their OWN completed research critique. Analyse it so ScholarPath can build a study guide around it.
 ${ST_RULES}
 ${hasPaper ? 'The student has also added the original paper; it is checked separately — here, work only from the critique.' : 'The student has NOT added the original paper, so nothing in the critique has been verified.'}
-Do not assume every critique has the same structure: use THIS critique's own sections (the blocks marked HEADING).
+Do not assume every critique has the same structure: use THIS critique's own parts, listed here with their ids. Assessment lines such as "10% | Maximum 150 words" are instructions, not titles.
+THE PARTS OF THE CRITIQUE:
+${stSections(doc).map(s => `[${s.id}] ${s.sug && s.sug !== 'first' ? '(no heading in the critique)' : s.title}${s.meta.length ? ' — assessment: ' + s.meta.join(' · ') : ''}`).join('\n')}
 
 THE CRITIQUE (block ids in brackets):
 ${stDocText(doc)}
 Reply with only JSON:
 {"topic":"the research topic of the paper being critiqued, as the critique describes it",
 "overview":"2–3 simple sentences: what the critique argues overall",
-"sections":[{"id":"the HEADING block id","purpose":"what this section does in the critique (one sentence)","args":["its main argument(s), in simple words"]}],
+"labels":[{"id":"the id of a part marked (no heading in the critique)","label":"a short, accurate label for that part (2–6 words), e.g. Methodology"}],
+"sections":[{"id":"the part id from the list above","purpose":"what this section does in the critique (one sentence)","args":["its main argument(s), in simple words"]}],
 "strengths":["strengths of the paper that the critique identifies"],"limitations":["limitations it identifies"],"recommendations":["recommendations it makes"],
 "evaluation":["the student's own independent judgements"],
 "claims":[{"id":"paragraph block id","quote":"5–30 exact consecutive words from that paragraph: a claim that needs evidence from the paper"}],
 "terms":[{"term":"","definition":"accurate academic definition","simple":"simple explanation","ar":"Arabic meaning","context":"what it means in THIS research","example":"a short example, or empty"}],
-"objectives":[{"id":"HEADING block id","objective":"what the student must be able to explain or defend about this section"}],
+"objectives":[{"id":"the part id","objective":"what the student must be able to explain or defend about this section"}],
 "studyMore":[{"area":"","kind":"method|statistics|terminology|weak argument|finding|interpretation|recommendation","why":"why it needs more study","action":"a concrete study action","id":"paragraph block id or null","priority":1}]}
 Limits: up to 12 terms the student genuinely needs (no common words); 1–3 objectives per section; up to 8 studyMore items, priority 1 = most important; up to 12 claims. Quote exactly.`;
 }
@@ -8844,9 +9108,10 @@ Reply with only JSON: {"highlights":[{"id":"paragraph block id","quote":"exact w
 const stStrs = (a, n = 20, len = 600) => vArr(a).map(x => vStr(x, len)).filter(Boolean).slice(0, n);
 function stApplyAnalysis(doc, r){
   if (!r || typeof r !== 'object') return false;
-  const heads = new Set(doc.blocks.filter(b => b.kind === 'h').map(b => b.id).concat(['top'])), paras = new Set(stParas(doc).map(b => b.id));
+  const secs0 = stSections(doc), heads = new Set(secs0.map(s => s.id)), paras = new Set(stParas(doc).map(b => b.id)), untitled = new Set(secs0.filter(s => s.sug && s.sug !== 'first').map(s => s.id));
+  const labels = {}; vArr(r.labels).forEach(l => { const id = vStr(l && l.id, 12), t = vStr(l && l.label, 60).replace(/[.:]+$/, ''); if (untitled.has(id) && t && !stIsMeta(t)) labels[id] = t; });
   const claims = vArr(r.claims).map(c => ({id:vStr(c && c.id, 12), quote:vStr(c && c.quote, 400)})).filter(c => { const b = stBlock(doc, c.id); return b && paras.has(c.id) && vLocate(b.text, c.quote); });
-  doc.an = {at:Date.now(), topic:vStr(r.topic, 300), overview:vStr(r.overview, 900),
+  doc.an = {at:Date.now(), labels, topic:vStr(r.topic, 300), overview:vStr(r.overview, 900),
     sections:vArr(r.sections).filter(s => s && heads.has(vStr(s.id, 12))).map(s => ({id:vStr(s.id, 12), purpose:vStr(s.purpose, 400), args:stStrs(s.args, 4, 400)})),
     strengths:stStrs(r.strengths, 12), limitations:stStrs(r.limitations, 12), recommendations:stStrs(r.recommendations, 10), evaluation:stStrs(r.evaluation, 10), claims,
     terms:vArr(r.terms).filter(t => t && vStr(t.term)).slice(0, 12).map(t => ({term:vStr(t.term, 80), definition:vStr(t.definition, 500), simple:vStr(t.simple, 400), ar:vStr(t.ar, 300), context:vStr(t.context, 500), example:vStr(t.example, 400)})),
@@ -9048,17 +9313,6 @@ async function stReadExplain(doc, pid){                              // read the
   doc.sel = pid; save(); stRenderDoc(doc);
   ttsStart([{pid, part:'st', text:b.text, lang:baseLang(b.text)}, {pid, part:'stx', text:say, lang}], {studio:true, re:pid});
 }
-function stListenUI(){
-  const el = $('#stListen'), doc = S.ui.tab === 'studio' && stDoc(); if (!el || !doc) return;
-  const mine = TTS.ctx && TTS.ctx.studio, sel = stSelId(doc), ps = stParas(doc), k = ps.findIndex(b => b.id === sel), next = ps[k + 1];
-  const reDone = mine && TTS.ctx.re && !TTS.playing && !TTS.list.length;
-  el.innerHTML = `${mine && TTS.playing ? `<button class="btn sm primary" data-act="st-pause">${icon('pause')}Pause</button>` : mine && TTS.list[TTS.i] ? `<button class="btn sm primary" data-act="st-continue">${icon('play')}Continue</button>` : ''}
-    <button class="btn sm" data-act="st-listen" ${TTS.ok ? '' : 'disabled title="Your browser cannot read aloud"'}>${icon('volume')}Listen from ¶${Math.max(1, k + 1)}</button>
-    <button class="btn sm" data-act="st-re" data-id="${esc(sel || '')}" data-st-ai ${TTS.ok && aiReady() ? '' : 'disabled'}>${icon('headphones')}Read &amp; explain ¶${Math.max(1, k + 1)}</button>
-    ${reDone && next ? `<button class="btn sm primary" data-act="st-re-next" data-id="${next.id}">${icon('skipf')}Next paragraph</button>` : ''}
-    <label class="st-speed small">Speed <select data-st="rate">${[0.75, 0.85, 1, 1.15, 1.25, 1.5].map(r => `<option value="${r}" ${r === (S.reader.rate || 1) ? 'selected' : ''}>${r}×</option>`).join('')}</select></label>
-    <button class="btn sm ghost" data-act="tts-voices">${icon('sliders')}Voices &amp; accents</button>`;
-}
 
 /* --- the page --- */
 function stPathSwitch(cur){
@@ -9086,34 +9340,150 @@ function stUploadCard(doc){
     <p class="small muted" style="margin:12px 0 0">Files are read inside your browser. Your critique is shown exactly as you wrote it.</p>
   </section>`;
 }
+/* --- the page: navigator · the original critique · the study assistant --- */
+let stFindQ = '', stFindI = 0, stFindR = [], stFindT = 0, stRO = null;
+function stNumOf(s){ const t = s.title || '', m = t.match(/^(?:section|part)\s+([\dA-Z]+)\b/i) || t.match(/^(\d+(?:\.\d+)*)[.)]?\s/) || t.match(/^\(([a-z]|[ivx]+)\)\s/i) || t.match(/^([a-z])\)\s/i); return m ? m[1] : ''; }
+const stOpenMap = doc => { const st = stState(); return (st.open[doc.id] ||= {}); };
+const stSecEl = (doc, s) => $('#sg-' + s.id) || $('#sp-' + s.id) || $('#sp-' + stFirstPara(doc, s));
+const stSize = () => {                                                // the layout follows the space the studio really has (the sidebar can be open or closed)
+  const w = $('#stWsw'); if (!w || !w.clientWidth) return;
+  const W = w.clientWidth, sz = W >= 960 ? 'wide' : W >= 680 ? 'mid' : 'narrow', st = stState();
+  if (w.dataset.size !== sz) w.dataset.size = sz;
+  $$('[data-act="st-navt"]').forEach(b => b.setAttribute('aria-expanded', String(sz === 'mid' ? !!st.navMid : st.navOpen !== false)));
+};
+const stNarrow = () => ($('#stWsw') || {dataset:{}}).dataset.size === 'narrow';
+function stPaneSet(v){
+  stState().pane = v; save();
+  const ws = $('#stWs'); if (ws) ws.dataset.pane = v;
+  $$('.st-panesw button').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.v === v)));
+}
+function stHitCount(s){ const q = stFindQ.trim().toLowerCase(); if (q.length < 2) return 0; const t = (s.orig + '\n' + stSecText(s)).toLowerCase(); let n = 0, i = t.indexOf(q); while (i >= 0){ n++; i = t.indexOf(q, i + q.length); } return n; }
+function stFindApply(scroll){                                          // search: matches are painted over the original words (CSS highlights) — nothing is inserted into the text
+  const box = $('#stDoc'), q = stFindQ.trim().toLowerCase(), nEl = $('#stFindN'), HL = window.CSS && CSS.highlights && window.Highlight;
+  stFindR = []; if (HL){ CSS.highlights.delete('st-find'); CSS.highlights.delete('st-find-cur'); }
+  if (!box || q.length < 2){ if (nEl) nEl.textContent = ''; return; }
+  const w = document.createTreeWalker(box, NodeFilter.SHOW_TEXT, {acceptNode:n => n.parentElement.closest('.st-no, .st-sug, .st-study-btn, .st-pg') ? NodeFilter.FILTER_REJECT : NodeFilter.FILTER_ACCEPT});
+  for (let n = w.nextNode(); n; n = w.nextNode()){ const t = n.data.toLowerCase(); for (let i = t.indexOf(q); i >= 0; i = t.indexOf(q, i + q.length)){ const r = new Range(); r.setStart(n, i); r.setEnd(n, i + q.length); stFindR.push(r); } }
+  if (stFindI >= stFindR.length) stFindI = 0;
+  if (nEl) nEl.textContent = stFindR.length ? `${stFindI + 1} of ${stFindR.length}` : 'No matches';
+  if (!stFindR.length) return;
+  if (HL){ CSS.highlights.set('st-find', new Highlight(...stFindR)); CSS.highlights.set('st-find-cur', new Highlight(stFindR[stFindI])); }
+  if (scroll){ const rc = stFindR[stFindI].getBoundingClientRect(), top = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--hdr')) || 72;
+    if (rc.height && (rc.top < top + 70 || rc.bottom > innerHeight - 60)) scrollBy({top:rc.top - innerHeight / 2, behavior:'smooth'}); }
+}
+const stStatusLabel = v => (ST_STATUS.find(x => x[0] === (v || '')) || ST_STATUS[0])[1];
+function stNavHeadHTML(doc){
+  const all = stSections(doc).filter(s => s.group === 'main' || s.group === 'eval'), k = v => all.filter(s => stStatusOf(doc, s.id) === v).length;
+  const rev = k('reviewed'), prac = k('practice'), prog = k('progress');
+  return `<h2 id="stNavH">Critique Navigator</h2>
+    <p class="st-nav-p">${rev} of ${all.length} section${all.length === 1 ? '' : 's'} reviewed${prog ? ` · ${prog} in progress` : ''}${prac ? ` · ${prac} need${prac === 1 ? 's' : ''} more practice` : ''}</p>
+    <div class="st-prog" role="progressbar" aria-label="Sections reviewed" aria-valuemin="0" aria-valuemax="${all.length}" aria-valuenow="${rev}"><span style="width:${all.length ? Math.round(rev / all.length * 100) : 0}%"></span></div>`;
+}
+function stNavShell(doc){
+  return `<div class="st-nav-h" id="stNavHead">${stNavHeadHTML(doc)}</div>
+    <div class="st-find" role="search">${icon('search')}<label class="sr-only" for="stFind">Search your critique</label><input type="search" id="stFind" data-st="find" placeholder="Search your critique" value="${esc(stFindQ)}" autocomplete="off" enterkeyhint="search">
+      <span class="st-find-n" id="stFindN" aria-live="polite"></span><button class="st-ib" data-act="st-find-prev" aria-label="Previous match" title="Previous match">${icon('chevu')}</button><button class="st-ib" data-act="st-find-next" aria-label="Next match" title="Next match">${icon('chevd')}</button></div>
+    <div class="st-navtools"><button data-act="st-expand-all">Expand all</button><button data-act="st-collapse-all">Collapse all</button><button data-act="st-current">${icon('route')}Return to current section</button></div>
+    <div id="stNavList">${stNavListHTML(doc)}</div>`;
+}
+function stNavListHTML(doc){
+  const T = stTree(doc), open = stOpenMap(doc), sel = stSelId(doc), cur = stSecOf(doc, sel) || {}, q = stFindQ.trim().length >= 2;
+  const isOpen = (id, def) => open[id] == null ? !!def : !!open[id];
+  const pno = {}; stParas(doc).forEach((b, i) => { pno[b.id] = i + 1; });
+  const has = (node, id) => (node.s && node.s.id === id) || (node.kids || []).some(k => has(k, id));
+  const plur = (n, w) => `${n} ${w}${n === 1 ? '' : 's'}`;
+  const paraRows = (s, depth) => s.paras.map(b => `<li><button class="st-prow lv${depth}${b.id === sel ? ' cur' : ''}" data-act="st-sel" data-id="${b.id}" data-go="1"${b.id === sel ? ' aria-current="true"' : ''}><span class="st-num">¶${pno[b.id]}</span><span class="st-ptxt" dir="auto">${esc(clip(b.text.replace(/\s+/g, ' '), 72))}</span></button></li>`).join('');
+  const statDot = (v, l) => `<span class="st-stat st-stat-${v || 'none'}" title="${l}"><span class="sr-only">${l}</span></span>`;
+  const row = (node, num, depth) => {
+    const s = node.s, kids = node.kids || [], hits = q ? stHitCount(s) + kids.reduce((a, k) => a + stHitCount(k.s), 0) : 0;
+    const exp = kids.length > 0 || s.paras.length > 1, on = exp && isOpen(s.id, kids.some(k => has(k, cur.id)) || (s.id === cur.id && s.paras.length > 1));
+    const stv = stNodeStatus(doc, node), title = stClean(s.title) || s.title, here = s.id === cur.id;
+    return `<li class="st-node" data-sec="${s.id}"><div class="st-row lv${depth}${here ? ' cur' : ''}${hits ? ' hit' : ''}">
+      <button class="st-row-main" data-act="st-nav" data-id="${s.id}"${here ? ' aria-current="true"' : ''}>
+        <span class="st-num">${esc(num)}</span>${icon(stIconFor(s))}
+        <span class="st-rt"><span class="st-rtitle" dir="auto">${esc(title)}</span>${s.sug && s.sug !== 'first' ? `<span class="st-rsug">${s.sug === 'claude' ? 'Label suggested by Claude' : 'Suggested label'}</span>` : ''}
+          <span class="st-rsub">${statDot(stv, stStatusLabel(stv))}${plur(s.paras.length, 'paragraph')} · ${plur(s.words, 'word')}${kids.length ? ` · ${plur(kids.length, 'sub-section')}` : ''}${hits ? ` · <b class="st-hits">${plur(hits, 'match')}</b>`.replace('matchs', 'matches') : ''}</span>
+          ${s.meta.length ? `<span class="st-rmeta">${esc(s.meta.join(' · '))}</span>` : ''}</span></button>
+      ${exp ? `<button class="st-chev" data-act="st-toggle" data-id="${s.id}" aria-expanded="${on}" aria-label="${on ? 'Collapse' : 'Expand'}: ${esc(clip(title, 60))}">${icon('chevd')}</button>` : '<span class="st-chev-sp" aria-hidden="true"></span>'}</div>
+      ${on ? `<ul class="st-kids">${s.paras.length > 1 ? paraRows(s, depth + 1) : ''}${kids.map((k, i) => row(k, stNumOf(k.s) || (num ? `${num}.${i + 1}` : ''), depth + 1)).join('')}</ul>` : ''}</li>`;
+  };
+  let pos = 0; const own = T.main.some(n => !n.virtual && stNumOf(n.s)), num0 = s => stNumOf(s) || (own ? '' : String(pos));   // the critique's own numbers; positions only when it has none
+  const mainRows = T.main.map(node => {
+    if (!node.virtual){ pos++; return row(node, num0(node.s), 1); }
+    const on = isOpen(node.id, true), stv = stNodeStatus(doc, {kids:node.kids});
+    return `<li class="st-node st-vnode"><div class="st-row lv1">
+      <button class="st-row-main" data-act="st-toggle" data-id="${node.id}" aria-expanded="${on}"><span class="st-num"></span>${icon('shield')}<span class="st-rt"><span class="st-rtitle">${node.title}</span><span class="st-rsug">Grouping added by ScholarPath</span><span class="st-rsub">${statDot(stv, stStatusLabel(stv))}${plur(node.kids.length, 'part')}</span></span></button>
+      <button class="st-chev" data-act="st-toggle" data-id="${node.id}" aria-expanded="${on}" aria-label="${on ? 'Collapse' : 'Expand'}: ${node.title}">${icon('chevd')}</button></div>
+      ${on ? `<ul class="st-kids">${node.kids.map(k => { pos++; return row(k, num0(k.s), 2); }).join('')}</ul>` : ''}</li>`;
+  }).join('');
+  const grp = (id, label, n, body, def) => { const on = isOpen(id, def);
+    return `<section class="st-ng" aria-label="${esc(label)}"><button class="st-ng-h" data-act="st-toggle" data-id="${id}" aria-expanded="${on}"><span>${esc(label)}</span>${n != null ? `<span class="st-ng-n">${n}</span>` : ''}${icon('chevd')}</button>${on ? body : ''}</section>`; };
+  const inG = list => list.some(n => n.s.id === cur.id), nRef = T.refItems.length;
+  return [
+    T.info.length ? grp('g-info', 'Document information', T.info.length, `<ul class="st-list">${T.info.map(n => row(n, '', 1)).join('')}</ul>`, inG(T.info)) : '',
+    T.main.length ? `<section class="st-ng st-ng-main" aria-label="The critique"><div class="st-ng-h st-ng-static"><span>The critique</span><span class="st-ng-n">in its original order</span></div><ul class="st-list">${mainRows}</ul></section>` : '',
+    T.refs.length ? grp('g-refs', `References — ${nRef} source${nRef === 1 ? '' : 's'}`, null, `<ol class="st-list st-refs">${T.refItems.map((r, i) => `<li><button class="st-prow lv1${r.pid && r.pid === sel ? ' cur' : ''}" ${r.sec ? `data-act="st-nav" data-id="${r.sec}"` : `data-act="st-sel" data-id="${r.pid}" data-go="1"`}><span class="st-num">${i + 1}</span><span class="st-ptxt" dir="auto">${esc(clip(r.text.replace(/\s+/g, ' '), 120))}</span></button></li>`).join('')}</ol>`, inG(T.refs)) : '',
+    T.assess.length ? grp('g-assess', 'For the instructor', T.assess.length, `<ul class="st-list">${T.assess.map(n => row(n, '', 1)).join('')}</ul>`, inG(T.assess)) : ''
+  ].join('');
+}
+function stRenderNav(doc){ const h = $('#stNavHead'), l = $('#stNavList'); if (h) h.innerHTML = stNavHeadHTML(doc); if (l) l.innerHTML = stNavListHTML(doc); }
+function stNavIds(doc){ const T = stTree(doc); return ['g-info', 'g-refs', 'g-assess', ...T.main.filter(n => n.virtual).map(n => n.id), ...stSections(doc).map(s => s.id)]; }
+
+function stToolHTML(doc){
+  const st = stState(), on = !!st.focus;
+  return `<div class="st-tool" role="toolbar" aria-label="Reading and listening tools">
+    <button class="st-tbtn st-navt" data-act="st-navt" aria-expanded="${st.navOpen !== false}" aria-controls="stNav" title="Show or hide the Critique Navigator">${icon('list')}<span class="tl">Sections</span></button>
+    <div class="st-listen" id="stListen"></div>
+    <span class="st-tsp" aria-hidden="true"></span>
+    <details class="st-hlmenu"><summary class="st-tbtn" title="Choose which highlights to show">${icon('pen')}<span class="tl">Highlights${doc.hls.length ? ` (${doc.hls.length})` : ''}</span></summary>
+      <div class="st-hlpop" role="group" aria-label="Highlights">${doc.hls.length ? ST_HL.map(([k, l, d]) => `<label class="st-hlk" title="${esc(d)}"><input type="checkbox" data-st="hl" data-k="${k}" ${st.hl[k] ? 'checked' : ''}><span class="sth-dot sth-${k}" aria-hidden="true"></span>${l} <span class="muted">${doc.hls.filter(h => h.type === k).length}</span></label>`).join('') : `<span class="small muted">${doc.an ? 'No highlights yet.' : 'Highlights appear after “Analyze My Critique”.'}</span>`}</div></details>
+    <button class="st-tbtn" data-act="st-focus" aria-pressed="${on}" title="${on ? 'Leave Focus Mode (Esc)' : 'Focus Mode: only your critique'}">${icon(on ? 'minimize' : 'maximize')}<span class="tl">${on ? 'Exit focus' : 'Focus'}</span></button>
+    <button class="st-tbtn st-ast" data-act="st-ast" aria-expanded="${st.asOpen !== false}" aria-controls="stAssist" title="Show or hide the study assistant">${icon('panelright')}<span class="tl">Assistant</span></button>
+  </div>`;
+}
+const stLangHTML = cls => `<div class="st-lang ${cls}" role="group" aria-label="Explanations in"><button data-act="st-lang" data-v="en" aria-pressed="${stLang() === 'en'}" title="Explanations in English">EN</button><button data-act="st-lang" data-v="ar" aria-pressed="${stLang() === 'ar'}" lang="ar" title="Explanations in Arabic">العربية</button></div>`;
+function stListenUI(){
+  const el = $('#stListen'), doc = S.ui.tab === 'studio' && stDoc(); if (!el || !doc) return;
+  const mine = TTS.ctx && TTS.ctx.studio, sel = stSelId(doc), ps = stParas(doc), k = ps.findIndex(b => b.id === sel), next = ps[k + 1], n = Math.max(1, k + 1);
+  const reDone = mine && TTS.ctx.re && !TTS.playing && !TTS.list.length, no = TTS.ok ? '' : 'disabled title="Your browser cannot read aloud"';
+  el.innerHTML = `${mine && TTS.playing ? `<button class="st-tbtn pri" data-act="st-pause">${icon('pause')}<span class="tl">Pause</span></button>` : mine && TTS.list[TTS.i] ? `<button class="st-tbtn pri" data-act="st-continue">${icon('play')}<span class="tl">Continue</span></button>`
+      : `<button class="st-tbtn pri" data-act="st-listen" ${no} title="Read aloud from the selected paragraph">${icon('play')}<span class="tl">Play from ¶${n}</span></button>`}
+    <button class="st-tbtn" data-act="st-read-sec" ${no} title="Read the selected section aloud">${icon('volume')}<span class="tl">Read section</span></button>
+    <button class="st-tbtn" data-act="st-re" data-id="${esc(sel || '')}" data-st-ai ${TTS.ok && aiReady() ? '' : 'disabled'} title="Read the paragraph, then a simple explanation">${icon('headphones')}<span class="tl">Read &amp; explain ¶${n}</span></button>
+    ${reDone && next ? `<button class="st-tbtn pri" data-act="st-re-next" data-id="${next.id}">${icon('skipf')}<span class="tl">Next paragraph</span></button>` : ''}
+    <label class="st-speed"><span class="sr-only">Reading speed</span><select data-st="rate" title="Reading speed">${[0.75, 0.85, 1, 1.15, 1.25, 1.5].map(r => `<option value="${r}" ${r === (S.reader.rate || 1) ? 'selected' : ''}>${r}×</option>`).join('')}</select></label>
+    <button class="st-tbtn" data-act="tts-voices" title="Voice and accent">${icon('sliders')}<span class="tl">Voice</span></button>
+    ${stLangHTML('st-lang-t')}`;
+}
+
 RENDER.studio = () => {
-  const st = stState(), doc = stDoc(); if (doc) st.active = doc.id;
+  const st = stState(), doc = stDoc(), P = $('#panel-studio'); if (doc) st.active = doc.id;
   S.ui.critPath = 'studio';
-  const set = doc && stSet(doc);
-  $('#panel-studio').innerHTML = `${stPathSwitch('studio')}
+  const set = doc && stSet(doc), ws = doc && !st.adding;
+  P.classList.toggle('st-focus', !!(ws && st.focus));
+  P.innerHTML = `${stPathSwitch('studio')}
   <div class="page-head"><h1>Critique Study Studio</h1><p>Understand your critique. Explore the evidence. Prepare to defend your ideas.</p></div>
   ${st.docs.length ? `<div class="card st-bar"><div class="row" style="flex:1;min-width:220px"><label class="sr-only" for="stDocSel">Choose a critique to study</label>
     <select id="stDocSel" data-st="doc" style="flex:1;max-width:460px">${st.docs.map(d => `<option value="${d.id}" ${doc && d.id === doc.id ? 'selected' : ''}>${esc(clip(d.name, 70))}</option>`).join('')}</select></div>
     <div class="row"><button class="btn" data-act="st-new">${icon('plus')}Study another critique</button><button class="btn ghost danger" data-act="st-del">${icon('trash')}Remove</button></div></div>` : ''}
-  ${!doc || st.adding ? stUploadCard(null) + (doc ? `<p><button class="btn" data-act="st-cancel-add">${icon('back')}Back to ${esc(clip(doc.name, 40))}</button></p>` : '') : `<details class="st-docs-fold" ${!doc.an || !set.docs.paper ? 'open' : ''}><summary>${icon('file')}<b>Documents</b> · ${esc(clip(doc.name, 40))}${set && set.docs.paper ? ' · paper added' : ' · <span class="st-warn-t">no paper yet</span>'}${set && set.docs.pres ? ' · slides added' : ''}${icon('chevd', 'chev')}</summary>${stUploadCard(doc)}</details>`}
-  ${doc && !st.adding ? stWorkspace(doc) : ''}`;
-  stRenderRun(); stListenUI();
+  ${!ws ? stUploadCard(null) + (doc ? `<p><button class="btn" data-act="st-cancel-add">${icon('back')}Back to ${esc(clip(doc.name, 40))}</button></p>` : '') : `<details class="st-docs-fold" ${!doc.an || !set.docs.paper ? 'open' : ''}><summary>${icon('file')}<b>Documents</b> · ${esc(clip(doc.name, 40))}${set && set.docs.paper ? ' · paper added' : ' · <span class="st-warn-t">no paper yet</span>'}${set && set.docs.pres ? ' · slides added' : ''}${icon('chevd', 'chev')}</summary>${stUploadCard(doc)}</details>`}
+  ${ws ? stWorkspace(doc) : ''}`;
+  stSize(); stRenderRun(); stListenUI(); stFindApply(false);
+  if (!stRO && window.ResizeObserver){ stRO = new ResizeObserver(() => stSize()); stRO.observe(P); }
 };
 function stWorkspace(doc){
-  const st = stState(), set = stSet(doc), secs = stSections(doc), selSec = stSecOf(doc, stSelId(doc));
-  return `${!set || !set.docs.paper ? `<p class="st-note st-note-warn">${icon('info')}The original paper hasn't been added, so the facts and source references in your critique have <b>not been independently verified</b>. Explanations still work; evidence needs the paper.</p>` : ''}
-  ${doc.an ? `<div class="card st-overview"><div class="output-head"><h3 style="margin:0">${esc(doc.an.topic || 'Your critique')}</h3><span class="row">${stByClaude}${stCopy('#stOv', 'Copy the overview')}</span></div><p id="stOv" style="margin:0">${esc(doc.an.overview)}</p></div>` : ''}
-  <div class="st-modes" role="tablist" aria-label="Study mode">${ST_MODES.map(([k, l, ic, d]) => `<button role="tab" id="st-mode-${k}" aria-selected="${stMode() === k}" data-act="st-mode" data-v="${k}" title="${esc(d)}">${icon(ic)}<span><b>${l}</b><span class="small">${esc(d)}</span></span></button>`).join('')}</div>
+  const st = stState(), set = stSet(doc), pane = ['nav', 'doc', 'study'].includes(st.pane) ? st.pane : 'doc', guess = innerWidth >= 1280 ? 'wide' : innerWidth >= 760 ? 'mid' : 'narrow';
+  const pb = (v, ic, l) => `<button data-act="st-pane" data-v="${v}" aria-pressed="${pane === v}">${icon(ic)}${l}</button>`;
+  return `${!set || !set.docs.paper ? `<p class="st-note st-note-warn">${icon('info')}<span>The original paper hasn't been added, so the facts and source references in your critique have <b>not been independently verified</b>. Explanations still work; evidence needs the paper.</span></p>` : ''}
+  ${doc.an ? `<section class="st-overview" aria-label="Overview of your critique"><div class="output-head"><span class="st-eyebrow">Overview · by Claude — check it against your critique</span>${stCopy('#stOv', 'Copy the overview')}</div><h2>${esc(doc.an.topic || 'Your critique')}</h2><p id="stOv">${esc(doc.an.overview)}</p></section>` : ''}
   <div id="stRun"></div>
-  <div class="st-panesw" role="group" aria-label="Show"><button data-act="st-pane" data-v="doc" aria-pressed="${st.pane !== 'study'}">${icon('file')}Your critique</button><button data-act="st-pane" data-v="study" aria-pressed="${st.pane === 'study'}">${icon('sparkle')}Study assistant</button></div>
-  <div class="st-ws" data-pane="${st.pane === 'study' ? 'study' : 'doc'}">
-    <section class="card st-docpane" aria-label="Your original critique">
-      <nav class="st-outline" aria-label="Sections of your critique">${secs.map(s => `<button data-act="st-sec" data-id="${s.paras[0].id}" aria-current="${s.id === selSec.id}">${esc(clip(s.title, 42))}<span class="small muted"> · ${s.paras.length}¶</span></button>`).join('')}</nav>
-      <div class="st-listen" id="stListen"></div>
-      <div class="st-hlbar" role="group" aria-label="Highlights">${doc.hls.length ? ST_HL.map(([k, l, d]) => `<label class="st-hlk" title="${esc(d)}"><input type="checkbox" data-st="hl" data-k="${k}" ${st.hl[k] ? 'checked' : ''}><span class="sth-dot sth-${k}" aria-hidden="true"></span>${l} <span class="muted">${doc.hls.filter(h => h.type === k).length}</span></label>`).join('') : `<span class="small muted">${doc.an ? 'No highlights yet.' : 'Highlights appear after “Analyze My Critique”.'}</span>`}</div>
-      <article class="st-doc" id="stDoc" lang="en">${stDocHTML(doc)}</article>
-    </section>
-    <aside class="card st-assist" id="stAssist" aria-label="Study assistant">${stAssistHTML(doc)}</aside>
+  <div class="st-wsw" id="stWsw" data-size="${guess}">
+    <div class="st-panesw" role="group" aria-label="Show">${pb('nav', 'list', 'Sections')}${pb('doc', 'file', 'Critique')}${pb('study', 'sparkle', 'Study')}</div>
+    <div class="st-ws" id="stWs" data-pane="${pane}" data-nav="${st.navOpen === false ? 0 : 1}" data-navm="${st.navMid ? 1 : 0}" data-as="${st.asOpen === false ? 0 : 1}">
+      <nav class="st-nav" id="stNav" aria-labelledby="stNavH">${stNavShell(doc)}</nav>
+      <section class="st-docpane" aria-label="Your original critique">${stToolHTML(doc)}<article class="st-doc" id="stDoc">${stDocHTML(doc)}</article></section>
+      <aside class="st-assist" id="stAssist" aria-label="Study assistant">${stAssistHTML(doc)}</aside>
+    </div>
   </div>
   <details class="card st-bottom" ${st.bottomOpen ? 'open' : ''} id="stBottom"><summary>${icon('chart')}<b>Study progress &amp; key concepts</b>${icon('chevd', 'chev')}</summary>${stBottomHTML(doc)}</details>`;
 }
@@ -9123,27 +9493,43 @@ function stMarked(doc, b){                                          // the origi
   hs.forEach(h => { const i = doc.hls.indexOf(h); out += esc(b.text.slice(at, h.a)) + `<mark class="sth sth-${h.type}${stHlSel === i ? ' on' : ''}" data-act="st-hl" data-i="${i}" tabindex="0" role="button" aria-label="${esc(ST_HL_NAME[h.type])}: ${esc(clip(b.text.slice(h.a, h.b), 60))}">${esc(b.text.slice(h.a, h.b))}</mark>`; at = h.b; });
   return out + esc(b.text.slice(at));
 }
+const stSugHTML = s => `<div class="st-sug" id="sg-${s.id}"><span class="st-sug-k">${s.sug === 'claude' ? 'Label suggested by Claude' : 'Suggested label'}</span><span dir="auto">${esc(s.title)}</span><span class="st-sug-n">— not part of your critique</span></div>`;
 function stDocHTML(doc){
-  const sel = stSelId(doc); let lastPage = null, n = 0;
+  const sel = stSelId(doc), secs = stSections(doc), byHead = new Map(), byPara = new Map(), meta = new Set(), cur = (stSecOf(doc, sel) || {}).id;
+  secs.forEach(s => { s.metaIds.forEach(id => meta.add(id)); if (s.orig) byHead.set(s.id, s); else if (s.paras[0]) byPara.set(s.paras[0].id, s); });
+  let lastPage = null, n = 0;
   return doc.blocks.map(b => {
     const pg = b.page && b.page !== lastPage && lastPage !== null ? `<div class="st-pg" aria-hidden="true">Page ${b.page}</div>` : ''; if (b.page) lastPage = b.page;
-    if (b.kind === 'h') return `${pg}<h3 class="st-h" id="sp-${b.id}" data-act="st-sec" data-id="${b.id}" dir="auto">${esc(b.text)}</h3>`;
+    if (b.kind === 'h'){
+      if (meta.has(b.id)) return `${pg}<p class="st-meta" id="sp-${b.id}" dir="auto">${esc(b.text)}</p>`;   // an assessment line under a heading: shown word for word, quietly
+      const s = byHead.get(b.id), lvl = s ? Math.min(s.lvl, 3) : 1, sug = s && s.sug && s.sug !== 'first' ? stSugHTML(s) : '';
+      return `${pg}${sug}<h3 class="st-h st-h${lvl}${sug ? ' st-h-meta' : ''}${s && s.id === cur ? ' cur' : ''}" id="sp-${b.id}" data-act="st-sec" data-id="${b.id}" dir="auto">${esc(b.text)}</h3>`;
+    }
+    const s0 = byPara.get(b.id), sug = s0 && s0.sug && s0.sug !== 'first' ? stSugHTML(s0) : '';
     n++;
-    return `${pg}<div class="st-p${b.id === sel ? ' sel' : ''}${b.table ? ' st-table' : ''}" id="sp-${b.id}" data-act="st-sel" data-id="${b.id}" dir="auto"><span class="st-no" aria-hidden="true">¶${n}${b.page ? ` · p. ${b.page}` : ''}</span>${stMarked(doc, b)}${b.id === sel ? `<span class="st-study-btn"><button class="btn sm" data-act="st-pane" data-v="study">${icon('sparkle')}Study ¶${n}</button></span>` : ''}</div>`;
+    return `${pg}${sug}<div class="st-p${b.id === sel ? ' sel' : ''}${b.table ? ' st-table' : ''}" id="sp-${b.id}" data-act="st-sel" data-id="${b.id}" dir="auto"><span class="st-no" aria-hidden="true">¶${n}${b.page ? ` · p. ${b.page}` : ''}</span>${stMarked(doc, b)}${b.id === sel ? `<span class="st-study-btn"><button class="btn sm" data-act="st-pane" data-v="study">${icon('sparkle')}Study ¶${n}</button></span>` : ''}</div>`;
   }).join('');
 }
-function stRenderDoc(doc){ const el = $('#stDoc'); if (el) el.innerHTML = stDocHTML(doc); const sec = stSecOf(doc, stSelId(doc)); $$('.st-outline button').forEach(bt => bt.setAttribute('aria-current', String(stSecOf(doc, bt.dataset.id).id === sec.id))); stListenUI(); }
+function stRenderDoc(doc){ const el = $('#stDoc'); if (el) el.innerHTML = stDocHTML(doc); stRenderNav(doc); stListenUI(); stFindApply(false); }
 function stRenderAssist(doc){ const el = $('#stAssist'); if (el) el.innerHTML = stAssistHTML(doc); stRenderRun(); }
 
+function stStatusHTML(doc, sec){
+  const cur = stStatusOf(doc, sec.id);
+  return `<div class="st-status" role="radiogroup" aria-label="My progress on this section">${ST_STATUS.map(([k, l]) => `<button role="radio" aria-checked="${cur === k}" data-act="st-status" data-id="${sec.id}" data-v="${k}"><span class="st-stat st-stat-${k || 'none'}" aria-hidden="true"></span>${l}</button>`).join('')}</div>`;
+}
+const stSubHTML = (tab, opts) => `<div class="st-subs" role="group">${opts.map(([v, l]) => `<button data-act="st-sub" data-tab="${tab}" data-v="${v}" aria-pressed="${stSub(tab) === v}">${l}</button>`).join('')}</div>`;
 function stAssistHTML(doc){
-  const m = stMode(), t = stTab(), pid = stSelId(doc), b = stBlock(doc, pid), sec = stSecOf(doc, pid), n = stParaNo(doc, pid);
-  const head = `<div class="st-ahead"><div><span class="label">Studying</span><h3>${esc(clip(sec.title, 70))}</h3><span class="small muted">¶${n} selected${sec.paras.length > 1 ? ` · ${sec.paras.length} paragraphs in this section` : ''}</span></div>
-    <div class="st-lang" role="group" aria-label="Explanations in"><button data-act="st-lang" data-v="en" aria-pressed="${stLang() === 'en'}">English</button><button data-act="st-lang" data-v="ar" aria-pressed="${stLang() === 'ar'}" lang="ar">العربية</button></div></div>`;
-  const tabs = `<div class="st-tabs" role="tablist" aria-label="${esc(ST_MODES.find(x => x[0] === m)[1])} tools">${ST_TABS[m].map(([k, l]) => `<button role="tab" aria-selected="${t === k}" data-act="st-tab" data-v="${k}">${l}</button>`).join('')}</div>`;
+  const t = stTab(), pid = stSelId(doc), b = stBlock(doc, pid), sec = stSecOf(doc, pid), n = stParaNo(doc, pid), title = stClean(sec.title) || sec.title;
+  const head = `<div class="st-ahead"><div class="st-ahead-r"><span class="st-eyebrow">Studying</span>${stLangHTML('st-lang-a')}</div><h3 dir="auto">${esc(title)}</h3>
+    ${sec.sug && sec.sug !== 'first' ? `<p class="st-rsug">${sec.sug === 'claude' ? 'Label suggested by Claude' : 'Suggested label'} — this part has no heading in your critique</p>` : ''}
+    <p class="st-ameta">${n ? `¶${n} selected · ` : ''}${sec.paras.length} paragraph${sec.paras.length === 1 ? '' : 's'} · ${sec.words} words${sec.meta.length ? ' · ' + esc(sec.meta.join(' · ')) : ''}</p></div>${stStatusHTML(doc, sec)}`;
+  const tabs = `<div class="st-tabs2" role="tablist" aria-label="Study tools">${['Understand', 'Analyze', 'Prepare'].map(g => `<div class="st-tg" role="presentation"><span class="st-tgl" aria-hidden="true">${g}</span><div class="st-tgb" role="presentation">${ST_TABS.filter(x => x[2] === g).map(([k, l]) => `<button role="tab" aria-selected="${t === k}" data-act="st-tab" data-v="${k}">${l}</button>`).join('')}</div></div>`).join('')}</div>`;
   const hl = stHlSel != null && doc.hls[stHlSel] ? stHlCard(doc, doc.hls[stHlSel]) : '';
-  const selBox = `<div id="stSelBox">${stSelBoxHTML(doc)}</div>`;
-  const body = !b ? '<p class="muted">Select a paragraph of your critique.</p>' : ({explain:stTabExplain, sentences:stTabSents, points:stTabPoints, marks:stTabMarks, evidence:stTabEvidence, critical:stTabCritical, questions:stTabQuestions, practice:stTabPractice, remember:stTabRemember}[t])(doc, sec, b);
-  return head + tabs + hl + selBox + `<div class="st-abody" role="tabpanel">${body}</div>`;
+  const body = !b || b.kind !== 'p' ? '<p class="muted">Select a paragraph of your critique.</p>'
+    : t === 'explain' ? stSubHTML('explain', [['section', 'This section'], ['sentences', `¶${n} sentence by sentence`]]) + (stSub('explain') === 'sentences' ? stTabSents(doc, sec, b) : stTabExplain(doc, sec, b))
+    : t === 'questions' ? stSubHTML('questions', [['professor', 'Professor questions'], ['challenge', 'Challenge my critique']]) + (stSub('questions') === 'challenge' ? stTabCritical(doc, sec, b) : stTabQuestions(doc, sec, b))
+    : ({points:stTabPoints, evidence:stTabEvidence, practice:stTabPractice}[t])(doc, sec, b);
+  return head + tabs + hl + `<div id="stSelBox">${stSelBoxHTML(doc)}</div><div class="st-abody" role="tabpanel">${body}</div>`;
 }
 const stAr = lang => lang === 'ar' ? ' dir="rtl" lang="ar"' : '';
 function stSelBoxHTML(doc){
@@ -9176,7 +9562,7 @@ function stTabExplain(doc, sec){
     <div class="row"><button class="btn sm primary" data-act="st-explain" data-id="${sec.id}" data-st-ai>${icon('sparkle')}${e ? (lang === 'ar' ? 'Explain again in Arabic' : 'Explain this section again') : (lang === 'ar' ? 'Explain this section in Arabic' : 'Explain This Section')}</button>
     ${!e && other ? `<button class="btn sm ghost" data-act="st-lang" data-v="${lang === 'ar' ? 'en' : 'ar'}">Show the ${lang === 'ar' ? 'English' : 'Arabic'} explanation</button>` : ''}</div>
     ${e ? stOut('stEx', lang, `<h4>${L.a}</h4>${stP(e.simple)}<h4>${L.b}</h4>${stP(e.academic)}<h4>${L.c}</h4>${stP(e.why)}<h4>${L.d}</h4>${stP(e.connection)}${e.remember.length ? `<h4>${L.e}</h4><ul>${e.remember.map(x => `<li>${esc(x)}</li>`).join('')}</ul>` : ''}`)
-      : `<p class="small muted">${lang === 'ar' ? 'F. ' : ''}Claude explains this section: a simple explanation, the academic meaning, why it matters, how it connects to the paper and what to remember${lang === 'ar' ? ' — in Arabic' : ''}. Switch to العربية above for an Arabic explanation.</p>`}`;
+      : `<p class="small muted">${lang === 'ar' ? 'F. ' : ''}Claude explains this section: a simple explanation, the academic meaning, why it matters, how it connects to the paper and what to remember${lang === 'ar' ? ' — in Arabic' : ''}. Choose العربية (next to “Studying”, or in the reading toolbar) for an Arabic explanation.</p>`}`;
 }
 function stTabSents(doc, sec, b){
   const lang = stLang(), r = (doc.sents[b.id] || {})[lang], ss = stSentsOf(b), n = stParaNo(doc, b.id);
@@ -9194,18 +9580,17 @@ function stTermCard(t, i){
     <div id="${id}-t"><p>${esc(t.definition)}</p>${t.simple ? `<p><b>Simply:</b> ${esc(t.simple)}</p>` : ''}${t.ar ? `<p dir="rtl" lang="ar"><b>بالعربية:</b> ${esc(t.ar)}</p>` : ''}${t.context ? `<p><b>In this research:</b> ${esc(t.context)}</p>` : ''}${t.example ? `<p><b>Example:</b> ${esc(t.example)}</p>` : ''}</div></div>`;
 }
 function stSecTerms(doc, sec){ const all = (doc.an && doc.an.terms) || [], txt = stSecText(sec).toLowerCase(); const hit = all.filter(t => txt.includes(t.term.toLowerCase())); return {hit, all}; }
-function stTabPoints(doc, sec){
-  const an = doc.an && doc.an.sections.find(s => s.id === sec.id), {hit} = stSecTerms(doc, sec), e = ((doc.secs[sec.id] || {}).explain || {}).en;
-  if (!doc.an) return `<p class="muted">Run <b>Analyze My Critique</b> to see this section's key points and the academic terms you need.</p>`;
-  return `${an && an.args.length ? stOut('stArgs', 'en', `<h4>Main argument${an.args.length > 1 ? 's' : ''} of this section</h4><ul>${an.args.map(a => `<li>${esc(a)}</li>`).join('')}</ul>`) : ''}
+function stTabPoints(doc, sec){                                      // key points, highlights, what to remember and the terms of THIS section — once each
+  if (!doc.an && !doc.hls.length) return `<p class="muted">Run <b>Analyze My Critique</b> to see this section's key points, highlights and the academic terms you need.</p>`;
+  const an = doc.an && doc.an.sections.find(s => s.id === sec.id), objs = ((doc.an && doc.an.objectives) || []).filter(o => o.id === sec.id), e = ((doc.secs[sec.id] || {}).explain || {}).en;
+  const {hit} = doc.an ? stSecTerms(doc, sec) : {hit:[]}, list = doc.hls.filter(h => sec.paras.some(p => p.id === h.pid));
+  return `${objs.length ? stOut('stObj', 'en', `<h4>You should be able to…</h4><ul>${objs.map(o => `<li>${esc(o.objective)}</li>`).join('')}</ul>`) : ''}
+    ${an && an.args.length ? stOut('stArgs', 'en', `<h4>Main argument${an.args.length > 1 ? 's' : ''} of this section</h4><ul>${an.args.map(a => `<li>${esc(a)}</li>`).join('')}</ul>`) : ''}
     ${e && e.remember.length ? stOut('stRem1', 'en', `<h4>What to remember</h4><ul>${e.remember.map(a => `<li>${esc(a)}</li>`).join('')}</ul>`) : ''}
-    <h4 style="margin:16px 0 8px">Academic terms in this section</h4>${hit.length ? hit.map((t, i) => stTermCard(t, 's' + i)).join('') : '<p class="small muted">No key term from the analysis appears in this section. All key concepts are in the panel below the page.</p>'}`;
-}
-function stTabMarks(doc, sec){
-  const list = doc.hls.filter(h => sec.paras.some(p => p.id === h.pid));
-  if (!doc.hls.length) return `<p class="muted">Run <b>Analyze My Critique</b>: Claude marks the main ideas, the research evidence, your own evaluation, strengths and limitations — at most two short passages per paragraph, each checked word for word in your text.</p>`;
-  return `<p class="small muted">Turn the colours on or off above your critique. Select a highlight to see what it means, why it matters and a question your professor may ask.</p>
-    ${list.length ? `<ul class="st-hllist">${list.map(h => { const i = doc.hls.indexOf(h), b = stBlock(doc, h.pid); return `<li><button class="st-hlbtn" data-act="st-hl" data-i="${i}"><span class="sth-dot sth-${h.type}" aria-hidden="true"></span><span><b>${esc(ST_HL_NAME[h.type])}</b> · ¶${stParaNo(doc, h.pid)}<br>“${esc(clip(b.text.slice(h.a, h.b), 140))}”</span></button></li>`; }).join('')}</ul>` : '<p class="small muted">No highlights in this section.</p>'}`;
+    <h4>Highlights in this section</h4>
+    ${list.length ? `<p class="small muted">Choose which colours show in the Highlights menu above your critique. Select one to see what it means and a question your professor may ask.</p><ul class="st-hllist">${list.map(h => { const i = doc.hls.indexOf(h), b = stBlock(doc, h.pid); return `<li><button class="st-hlbtn" data-act="st-hl" data-i="${i}"><span class="sth-dot sth-${h.type}" aria-hidden="true"></span><span><b>${esc(ST_HL_NAME[h.type])}</b> · ¶${stParaNo(doc, h.pid)}<br>“${esc(clip(b.text.slice(h.a, h.b), 140))}”</span></button></li>`; }).join('')}</ul>`
+      : `<p class="small muted">${doc.hls.length ? 'No highlights in this section.' : 'Highlights are added by “Analyze My Critique”: main ideas, research evidence, your evaluation, strengths and limitations — each checked word for word in your text.'}</p>`}
+    ${doc.an ? `<h4>Academic terms in this section</h4>${hit.length ? hit.map((t, i) => stTermCard(t, 's' + i)).join('') : '<p class="small muted">No key term from the analysis appears in this section. All key concepts are in the panel below the workspace.</p>'}` : ''}`;
 }
 function stTabEvidence(doc, sec, b){
   const set = stSet(doc), hasP = !!(set && ePassages(set).length), n = stParaNo(doc, b.id), claims = ((doc.an && doc.an.claims) || []).filter(c => sec.paras.some(p => p.id === c.id));
@@ -9256,13 +9641,6 @@ function stTabPractice(doc, sec){
     ${p && p.model && !p.follow ? `<div class="st-out"><p><b>Suggested answer:</b> ${esc(q.answer)}</p><p><b>Short oral answer:</b> ${esc(q.oral)}</p></div>` : ''}</div>
     <p class="small"><button class="linkish" data-act="st-open-defend">A full mock professor across all your documents is in step 4.2</button></p>`;
 }
-function stTabRemember(doc, sec){
-  const e = ((doc.secs[sec.id] || {}).explain || {}).en, an = doc.an && doc.an.sections.find(s => s.id === sec.id), objs = ((doc.an && doc.an.objectives) || []).filter(o => o.id === sec.id);
-  if (!e && !an && !objs.length) return `<p class="muted">Explain this section (Understand → Explain) and analyse your critique to build the points to remember.</p>`;
-  return `${objs.length ? stOut('stObj', 'en', `<h4>You should be able to…</h4><ul>${objs.map(o => `<li>${esc(o.objective)}</li>`).join('')}</ul>`) : ''}
-    ${an && an.args.length ? stOut('stArg2', 'en', `<h4>The argument in one breath</h4><ul>${an.args.map(a => `<li>${esc(a)}</li>`).join('')}</ul>`) : ''}
-    ${e && e.remember.length ? stOut('stRem2', 'en', `<h4>Key points to remember</h4><ul>${e.remember.map(a => `<li>${esc(a)}</li>`).join('')}</ul>`) : ''}`;
-}
 function stBottomHTML(doc){
   const st = stState(), k = ['check', 'concepts', 'more'].includes(st.bottom) ? st.bottom : 'check';
   const tabs = `<div class="st-tabs" role="tablist" aria-label="Study progress">${[['check', 'Study checklist'], ['concepts', 'Key concepts'], ['more', 'What should I study more?']].map(([v, l]) => `<button role="tab" aria-selected="${k === v}" data-act="st-bottom" data-v="${v}">${l}</button>`).join('')}</div>`;
@@ -9302,14 +9680,33 @@ const ST_ACTIONS = {
   'st-stop': () => stRun && stRun.ctl.abort(),
   'st-docs': () => { const f = $('.st-docs-fold'); if (f){ f.open = true; f.scrollIntoView({block:'start', behavior:'smooth'}); } },
   'st-doc-remove': el => { const doc = stDoc(), set = stSet(doc); if (!set || !confirm('Remove this document from your study set?')) return; set.docs[el.dataset.k] = null; save(); RENDER.studio(); },
-  'st-mode': el => { stState().mode = el.dataset.v; save(); RENDER.studio(); },
-  'st-tab': el => { stState().tab[stMode()] = el.dataset.v; save(); stRenderAssist(stDoc()); },
+  'st-mode': el => ST_ACTIONS['st-tab']({dataset:{v:el.dataset.v}}),
+  'st-tab': el => { const st = stState(); let v = el.dataset.v; const a = ST_TAB_ALIAS[v]; if (a){ v = a[0]; if (a[1]) st.sub[v] = a[1]; } st.tab2 = v; save(); stRenderAssist(stDoc()); },
+  'st-sub': el => { stState().sub[el.dataset.tab] = el.dataset.v; save(); stRenderAssist(stDoc()); },
   'st-lang': el => { stState().lang = el.dataset.v === 'ar' ? 'ar' : 'en'; save(); stRenderAssist(stDoc()); stListenUI(); },
-  'st-pane': el => { stState().pane = el.dataset.v; save(); const ws = $('.st-ws'); if (ws) ws.dataset.pane = el.dataset.v; $$('.st-panesw button').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.v === el.dataset.v))); (el.dataset.v === 'study' ? $('#stAssist') : $('#stDoc'))?.scrollIntoView({block:'start'}); },
+  'st-pane': el => { stPaneSet(el.dataset.v); $('#stWsw')?.scrollIntoView({block:'start'}); },
   'st-sel': (el, e) => { const s = getSelection(); if (s && !s.isCollapsed && s.toString().trim()) return; if (e && e.target.closest('button') && e.target.closest('button') !== el) return;
-    const doc = stDoc(); doc.sel = el.dataset.id; stHlSel = null; save(); stRenderDoc(doc); stRenderAssist(doc); if (el.dataset.go){ $('#sp-' + doc.sel)?.scrollIntoView({block:'center', behavior:'smooth'}); } },
-  'st-sec': el => { const doc = stDoc(), sec = stSecOf(doc, el.dataset.id); doc.sel = sec.paras[0].id; stHlSel = null; save(); stRenderDoc(doc); stRenderAssist(doc); $('#sp-' + sec.id)?.scrollIntoView({block:'start', behavior:'smooth'}); },
-  'st-hl': el => { const doc = stDoc(), h = doc.hls[+el.dataset.i]; if (!h) return; stHlSel = +el.dataset.i; doc.sel = h.pid; save(); stRenderDoc(doc); stRenderAssist(doc); if (innerWidth < 1000) ACTIONS['st-pane']({dataset:{v:'study'}}); },
+    const doc = stDoc(); doc.sel = el.dataset.id; stHlSel = null; save(); stRenderDoc(doc); stRenderAssist(doc);
+    if (el.dataset.go){ if (stNarrow()) stPaneSet('doc'); $('#sp-' + doc.sel)?.scrollIntoView({block:'center', behavior:'smooth'}); } },
+  'st-sec': el => { const doc = stDoc(), sec = stSecOf(doc, el.dataset.id); doc.sel = stFirstPara(doc, sec); stHlSel = null; save(); stRenderDoc(doc); stRenderAssist(doc); },
+  'st-nav': el => { const doc = stDoc(), s = stSections(doc).find(x => x.id === el.dataset.id); if (!s) return;
+    doc.sel = stFirstPara(doc, s); stHlSel = null; save(); if (stNarrow()) stPaneSet('doc'); stRenderDoc(doc); stRenderAssist(doc);
+    stSecEl(doc, s)?.scrollIntoView({block:'start', behavior:'smooth'}); },
+  'st-toggle': el => { const doc = stDoc(), id = el.dataset.id; stOpenMap(doc)[id] = el.getAttribute('aria-expanded') !== 'true'; save(); stRenderNav(doc);
+    $(`#stNavList [data-act="st-toggle"][data-id="${CSS.escape(id)}"]`)?.focus(); },
+  'st-expand-all': () => { const doc = stDoc(), o = stOpenMap(doc); stNavIds(doc).forEach(id => { o[id] = true; }); save(); stRenderNav(doc); },
+  'st-collapse-all': () => { const doc = stDoc(), o = stOpenMap(doc); stNavIds(doc).forEach(id => { o[id] = false; }); save(); stRenderNav(doc); },
+  'st-current': () => { const doc = stDoc(); if (stNarrow()) stPaneSet('doc'); $('#sp-' + stSelId(doc))?.scrollIntoView({block:'center', behavior:'smooth'}); $('#stNavList .st-row.cur')?.scrollIntoView({block:'nearest'}); },
+  'st-status': el => { const doc = stDoc(); (doc.status ||= {})[el.dataset.id] = el.dataset.v || ''; if (!el.dataset.v) delete doc.status[el.dataset.id]; save(); stRenderNav(doc); stRenderAssist(doc);
+    $(`#stAssist [data-act="st-status"][data-v="${el.dataset.v}"]`)?.focus(); },
+  'st-navt': () => { const st = stState(), mid = ($('#stWsw') || {dataset:{}}).dataset.size === 'mid'; if (mid) st.navMid = !st.navMid; else st.navOpen = st.navOpen === false; save();
+    const ws = $('#stWs'); if (ws){ ws.dataset.nav = st.navOpen === false ? 0 : 1; ws.dataset.navm = st.navMid ? 1 : 0; } stSize(); },
+  'st-ast': el => { const st = stState(); st.asOpen = st.asOpen === false; save(); const ws = $('#stWs'); if (ws) ws.dataset.as = st.asOpen ? 1 : 0; $$('[data-act="st-ast"]').forEach(b => b.setAttribute('aria-expanded', String(st.asOpen))); },
+  'st-focus': () => { const st = stState(), doc = stDoc(); st.focus = !st.focus; if (st.focus) st.pane = 'doc'; save(); RENDER.studio(); $('#sp-' + stSelId(doc))?.scrollIntoView({block:'center'}); $('[data-act="st-focus"]')?.focus(); },
+  'st-read-sec': () => { const doc = stDoc(), sec = stSecOf(doc, stSelId(doc)); if (sec && sec.paras.length) ttsStart(sec.paras.map(b => ({pid:b.id, part:'st', text:b.text, lang:baseLang(b.text)})), {studio:true, follow:true}); },
+  'st-find-next': () => { if (!stFindR.length) return; stFindI = (stFindI + 1) % stFindR.length; if (stNarrow()) stPaneSet('doc'); stFindApply(true); },
+  'st-find-prev': () => { if (!stFindR.length) return; stFindI = (stFindI - 1 + stFindR.length) % stFindR.length; if (stNarrow()) stPaneSet('doc'); stFindApply(true); },
+  'st-hl': el => { const doc = stDoc(), h = doc.hls[+el.dataset.i]; if (!h) return; stHlSel = +el.dataset.i; doc.sel = h.pid; save(); stRenderDoc(doc); stRenderAssist(doc); if (stNarrow()) stPaneSet('study'); },
   'st-hl-close': () => { stHlSel = null; const doc = stDoc(); stRenderDoc(doc); stRenderAssist(doc); },
   'st-explain': el => { const doc = stDoc(), sec = stSecOf(doc, el.dataset.id), lang = stLang(); stAsk(lang === 'ar' ? 'Explaining this section in Arabic' : 'Explaining this section', stExplainPrompt(doc, sec, lang), r => stApplyExplain(doc, sec, lang, r)); },
   'st-sents': el => { const doc = stDoc(), b = stBlock(doc, el.dataset.id), lang = stLang(); stAsk('Explaining sentence by sentence', stSentPrompt(doc, b, lang), r => stApplySents(doc, b, lang, r)); },
@@ -9347,6 +9744,7 @@ function stInput(t){
   if (!t.dataset || !t.dataset.st) return false;
   const doc = stDoc(); if (!doc) return true;
   if (t.dataset.st === 'chal-ans'){ const c = doc.chal[t.dataset.sec]; if (c){ c.ans[+t.dataset.i] = t.value; save(); } return true; }
+  if (t.dataset.st === 'find'){ stFindQ = t.value; stFindI = 0; clearTimeout(stFindT); stFindT = setTimeout(() => { const d = stDoc(); if (d){ const l = $('#stNavList'); if (l) l.innerHTML = stNavListHTML(d); } stFindApply(true); }, 200); return true; }
   if (t.dataset.st === 'prac-ans'){ const sec = stSecOf(doc, stSelId(doc)); if (!doc.prac || doc.prac.sec !== sec.id) doc.prac = {sec:sec.id, i:0}; doc.prac.answer = t.value; save(); return true; }
   return false;
 }
@@ -9358,7 +9756,7 @@ function stChange(t){
   if (t.id === 'stPresFile' && t.files[0]){ const f = t.files[0]; t.value = ''; stAddFile('pres', f); return true; }
   if (!t.dataset || !t.dataset.st) return false;
   const st = stState(), doc = stDoc();
-  if (t.dataset.st === 'doc'){ st.active = t.value; st.adding = false; stHlSel = null; save(); RENDER.studio(); return true; }
+  if (t.dataset.st === 'doc'){ st.active = t.value; st.adding = false; stHlSel = null; stFindQ = ''; save(); RENDER.studio(); return true; }
   if (t.dataset.st === 'hl'){ st.hl[t.dataset.k] = t.checked; save(); if (doc) stRenderDoc(doc); return true; }
   if (t.dataset.st === 'rate'){ S.reader.rate = +t.value || 1; save(); return true; }
   if (t.dataset.st === 'reader-paper' && t.value){ const set = stSet(doc); set.docs.paper = {src:'reader', ref:t.value, at:Date.now()}; save(); RENDER.studio(); toast('Paper added from the reader'); return true; }
@@ -9372,7 +9770,12 @@ document.addEventListener('selectionchange', () => {                    // selec
   if (el && $('#stDoc') && $('#stDoc').contains(el) && t.length > 3 && t !== stSelText){ stSelText = t.slice(0, 1500); clearTimeout(stSelT); stSelT = setTimeout(() => { const d = stDoc(); if (d) box.innerHTML = stSelBoxHTML(d); stRenderRun(); }, 250); }
 });
 let stSelT = 0;
-document.addEventListener('keydown', e => { if ((e.key === 'Enter' || e.key === ' ') && e.target.classList && e.target.classList.contains('sth')){ e.preventDefault(); ST_ACTIONS['st-hl'](e.target); } });
+document.addEventListener('keydown', e => {
+  if ((e.key === 'Enter' || e.key === ' ') && e.target.classList && e.target.classList.contains('sth')){ e.preventDefault(); ST_ACTIONS['st-hl'](e.target); return; }
+  if (e.key === 'Enter' && e.target.id === 'stFind'){ e.preventDefault(); clearTimeout(stFindT); stFindQ = e.target.value; const d = stDoc(); if (d){ const l = $('#stNavList'); if (l) l.innerHTML = stNavListHTML(d); }
+    const had = stFindR.length; stFindApply(false); if (stFindR.length){ if (had) stFindI = (stFindI + (e.shiftKey ? -1 : 1) + stFindR.length) % stFindR.length; if (stNarrow()) stPaneSet('doc'); stFindApply(true); } return; }
+  if (e.key === 'Escape' && S.ui.tab === 'studio' && stState().focus && !document.querySelector('dialog[open]')) ST_ACTIONS['st-focus']();
+});
 /* ===================== Presentation Studio (step 3.1): designs, Figure Intelligence, quality review =====================
    Every slide is described ONCE as positioned elements (inches on a 13.333 × 7.5 in slide); the same description draws the
    preview (HTML) and the PowerPoint (PptxGenJS), so what the student approves is what they download.
