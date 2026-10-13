@@ -1738,7 +1738,6 @@ S.writing = Object.assign({}, base.writing, S.writing);
 S.pres = Object.assign({}, base.pres, S.pres);
 S.reader = Object.assign({papers:[], active:'', view:'paras', rate:1, gender:'f', voiceEn:'', voiceAr:'', marks:{}, enAccent:'en-US', arRegion:'msa', volume:1, mixed:true, pauses:true, headings:true, cites:'skip', lexicon:[]}, S.reader);
 S.reader.rate = [0.75, 0.85, 1, 1.15, 1.25, 1.5].reduce((a, r) => Math.abs(r - S.reader.rate) < Math.abs(a - S.reader.rate) ? r : a, 1);
-S.reader.ttsParts = Object.assign({orig:true, idea:true, ar:false}, S.reader.ttsParts);
 S.verify = Object.assign({sets:[], active:'', view:'flow'}, S.verify);
 S.verify.sets = (S.verify.sets || []).filter(Boolean).map(v => Object.assign(newVerifySet(), v, {docs:Object.assign({paper:null, critique:null, pres:null}, v.docs)}));
 S.figlab = Object.assign({}, base.figlab, S.figlab); S.figlab.build = Object.assign({}, base.figlab.build, S.figlab.build);
@@ -1912,7 +1911,7 @@ function startStatus(){                                          // a short, hon
     'presenting/0':`from your ${pl(S.critiques.length, 'critique')}`, 'verifying/0':vStartStatus(), 'verifying/1':dStartStatus(), 'presenting/1':`${pl(S.reader.papers.filter(p => p.questions && (p.questions.audience || []).length).length, 'paper')} with questions`
   };
 }
-// Recent activity: the steps you open and the papers you add, newest first (kept in this browser, at most 40)
+// Recent activity: the steps you open and the papers you add, newest first (kept in this browser, at most 150)
 function logActivity(text, part, i, sub=''){
   const A = (S.activity ||= []), last = A[0], now = Date.now();
   if (last && last.part === part && last.i === i && last.text === text){ last.at = now; last.sub = sub; return; }
@@ -7269,7 +7268,7 @@ const ACTIONS = {
   'rp-tools': el => rdSelect(el.dataset.id, {tab:el.dataset.tab || (S.reader.as === 'paper' ? 'explain' : S.reader.as || 'explain'), open:true}),
   'rp-as': el => { S.reader.as = el.dataset.tab; save(); renderAssist(); $('#as-tab-' + el.dataset.tab)?.focus(); },
   'rp-assist-close': () => { rdAssistOpen(false); const sel = rPaper() && rdSel(rPaper()); $(`#para-${sel && sel.id} .rd-study`)?.focus(); },
-  'rp-mode': el => { S.reader.mode = MODE_PARTS[el.dataset.v] ? el.dataset.v : 'orig'; S.reader.ttsParts = {...MODE_PARTS[S.reader.mode]}; save();
+  'rp-mode': el => { S.reader.mode = MODE_PARTS[el.dataset.v] ? el.dataset.v : 'orig'; save();
     const now = TTS.playing && ttsMain(TTS.ctx) && TTS.list[TTS.i]; if (now) ttsPlayAll(now.pid); else renderTtsBar();
     if (el.closest('#ttsBar')) $(`#ttsBar [data-act="rp-mode"][data-v="${S.reader.mode}"]`)?.focus(); const paper = rPaper(); $('#rpView').innerHTML = parasView(paper); $$('#panel-reader [data-act="rp-mode"]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.v === S.reader.mode))); loadReaderFigs(); if (TTS.playing) ttsMark(TTS.list[TTS.i], false); },
   'tts-panel': () => { S.reader.playerOpen = !S.reader.playerOpen; save(); renderTtsBar(); $('#ttsBar [data-act="tts-panel"]')?.focus(); },
@@ -7502,7 +7501,7 @@ $('.menu-btn').innerHTML = icon('menu');
 $('.side-close').innerHTML = icon('x');
 applySide();
 S.critiques.forEach(fixCrit);
-if (S.reader && S.reader.partsV !== 3){ if (S.reader.mode === 'both') S.reader.mode = 'ar'; S.reader.ttsParts = {...MODE_PARTS[rdMode()]}; S.reader.partsV = 3; save(); }
+if (S.reader && S.reader.partsV !== 3){ if (S.reader.mode === 'both') S.reader.mode = 'ar'; delete S.reader.ttsParts; S.reader.partsV = 3; save(); }   // the version shown decides what is read
 applyTheme();
 route(location.hash);
 })();
