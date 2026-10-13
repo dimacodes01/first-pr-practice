@@ -63,3 +63,5 @@ Step 2.3 has two pathways: **Create a Critique** (the AAU form) and **Upload & S
 `PLAYWRIGHT_BROWSERS_PATH=/opt/pw-browsers node tests/site-check.js` serves the folder like GitHub Pages and checks every step at four widths in light and dark, the website pages and files, and the copy-prompt bridge.
 
 `node tests/studio-check.js` (same setup) checks the Critique Study Studio with the made-up documents in `tests/fixtures/`.
+
+`node tests/presentation-check.js` (same setup) checks the Presentation Studio of step 3.1: the ten steps, the three designs (inside the downloaded .pptx files), Figure Intelligence, diagrams, the quality review and export.

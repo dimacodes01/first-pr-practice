@@ -1565,6 +1565,69 @@ mark.sth.on{box-shadow:0 0 0 2px var(--focus)}
 .st-check th,.st-check td{border-bottom:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top}
 .st-check th{font:700 12.5px var(--sans);color:var(--muted)}
 .st-cb{text-align:center!important}.st-cb input{width:20px;height:20px}
+/* Presentation Studio (step 3.1) — slides are drawn in inches and scale with their box (1pt = 100cqw / 960) */
+.ps-s{position:relative;width:100%;aspect-ratio:16/9;container-type:inline-size;overflow:hidden;border-radius:6px;box-shadow:0 1px 3px rgba(16,24,40,.18),0 0 0 1px rgba(16,24,40,.06);background:#fff;color:#111}
+.ps-e{position:absolute;box-sizing:border-box;margin:0}
+.ps-t{display:flex;flex-direction:column;line-height:1.15;overflow:hidden;white-space:pre-line;overflow-wrap:anywhere}
+.ps-t span{display:block}
+.ps-l{padding:0 0 0 1.15em;line-height:1.18;overflow:hidden;list-style:square;overflow-wrap:anywhere}
+.ps-l[dir="rtl"]{padding:0 1.15em 0 0}
+.ps-l li{margin:0 0 var(--gap)}.ps-l li:last-child{margin-bottom:0}
+.ps-l li::marker{color:var(--mk)}
+ol.ps-l{list-style:decimal}
+.ps-img img{width:100%;height:100%;object-fit:contain;display:block}
+.ps-img .ps-noimg{position:absolute;inset:0;display:grid;place-items:center;font:600 1.2cqw/1.3 var(--sans);color:#777;text-align:center;padding:4%}
+.ps-img.has .ps-noimg{display:none}
+.ps-steps{margin:0 0 18px;overflow-x:auto;scrollbar-width:thin}
+.ps-steps ol{list-style:none;margin:0;padding:4px;display:flex;gap:4px;background:var(--surface);border-radius:999px;box-shadow:var(--shadow);width:max-content;min-width:100%}
+.ps-steps button{appearance:none;border:0;background:transparent;border-radius:999px;display:inline-flex;align-items:center;gap:6px;padding:0 12px 0 6px;min-height:38px;font:700 13px var(--sans);color:var(--muted);cursor:pointer;white-space:nowrap}
+.ps-steps button:hover{color:var(--heading)}
+.ps-sn{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;background:var(--surface-2);font-size:12px}
+.ps-steps button.done .ps-sn{background:var(--ok-soft);color:var(--ok)}
+.ps-steps button[aria-current="step"]{background:var(--accent);color:var(--accent-ink)}
+.ps-steps button[aria-current="step"] .ps-sn{background:rgba(255,255,255,.22);color:inherit}
+.ps-h{margin:6px 0 14px}
+.ps-card{margin-bottom:16px}.ps-card h3{margin-top:0}
+.ps-nav{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;margin:20px 0 0}
+.ps-form{display:grid;gap:16px;grid-template-columns:repeat(auto-fill,minmax(min(300px,100%),1fr));margin-top:10px}
+.ps-form fieldset{border:1px solid var(--line);border-radius:var(--radius-sm);padding:12px 14px;margin:0;min-width:0}
+.ps-form legend{padding:0 6px}
+.ps-opt{display:flex;align-items:flex-start;gap:8px;min-height:32px;cursor:pointer;font-size:.92rem}.ps-opt input{margin-top:4px}
+.ps-col{display:inline-flex;align-items:center;gap:8px;margin:0 14px 8px 0;font-size:.92rem}.ps-col input{width:44px;height:34px;border:1px solid var(--line-strong);border-radius:8px;padding:2px;background:var(--surface)}
+.ps-designs{display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(min(330px,100%),1fr));align-items:start}
+.ps-dcard.on{box-shadow:0 0 0 2px var(--accent),var(--shadow)}
+.ps-reps{display:flex;flex-direction:column;gap:10px;margin:12px 0}
+.ps-sw{display:flex;flex-wrap:wrap;gap:8px 14px;margin:8px 0 14px}
+.ps-swi{display:inline-flex;align-items:center;gap:6px}.ps-swi code{font-size:11px}
+.ps-swc{width:26px;height:26px;border-radius:6px;box-shadow:inset 0 0 0 1px rgba(0,0,0,.15);flex:none}
+.ps-grid{display:grid;gap:16px;grid-template-columns:repeat(auto-fill,minmax(min(420px,100%),1fr))}
+.ps-pv{margin:0}.ps-pv figcaption{justify-content:space-between;margin-top:6px}
+.ps-figs{display:grid;gap:12px;grid-template-columns:repeat(auto-fill,minmax(min(420px,100%),1fr));margin-top:12px}
+.ps-fig{display:grid;grid-template-columns:120px minmax(0,1fr);gap:12px;border:1px solid var(--line);border-radius:var(--radius-sm);padding:12px}
+.ps-fig.on{border-color:var(--accent);background:var(--accent-soft)}
+.ps-fig:not(:has(.ps-thumb)){grid-template-columns:minmax(0,1fr)}
+.ps-thumb{background:#fff;border:1px solid var(--line);border-radius:6px;display:grid;place-items:center;min-height:90px;overflow:hidden}.ps-thumb img{max-width:100%;max-height:140px;display:block}
+.ps-fig-t{min-width:0}.ps-fig-t p{margin:4px 0}.ps-fig-t label.small{display:inline-flex;align-items:center;gap:6px;flex-wrap:wrap;max-width:100%}.ps-fig-t select{width:auto;min-height:32px;padding:3px 28px 3px 8px;font-size:13px;max-width:min(220px,100%)}
+@media(max-width:620px){.ps-fig{grid-template-columns:84px minmax(0,1fr)}}
+.ps-sum{margin:0 0 14px;padding-left:20px}.ps-sum li{margin-bottom:6px}
+.ps-score{display:flex;gap:20px;align-items:center;flex-wrap:wrap}
+.ps-big{display:flex;align-items:baseline;gap:4px;padding:14px 20px;border-radius:var(--radius);background:var(--accent-soft)}
+.ps-n{font:800 3rem/1 var(--sans);color:var(--accent)}.ps-of{font:700 1.2rem var(--sans);color:var(--muted)}
+.ps-score > div:last-child{flex:1;min-width:240px}
+.ps-rub{width:100%;border-collapse:collapse;font-size:.9rem;min-width:560px}
+.ps-rub th,.ps-rub td{border-bottom:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top}
+.ps-rub tr.ps-crit th,.ps-rub tr.ps-crit td{background:var(--surface-2);font-weight:700;color:var(--heading)}
+.ps-fixes{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:10px}
+.ps-fixes li{display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap;border:1px solid var(--line);border-radius:var(--radius-sm);padding:10px 12px}
+.ps-fixes li > span{flex:1;min-width:220px}
+.ps-exports{display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(min(240px,100%),1fr))}.ps-exports p{margin:4px 0 10px}
+#psPrint{display:none}
+@media print{
+  @page{size:13.333in 7.5in;margin:0}
+  body.ps-printing > *:not(#psPrint){display:none!important}
+  body.ps-printing #psPrint{display:block}
+  body.ps-printing #psPrint .ps-s{width:13.333in;height:7.5in;border-radius:0;box-shadow:none;break-after:page;page-break-after:always;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+}
 .rd-nosimple{border:1px dashed var(--line-strong);border-radius:var(--radius-md);padding:12px 14px;background:var(--surface-2);font-family:var(--sans);font-size:.92rem;color:var(--ink)}
 .rd-nosimple p{margin:0 0 8px}.rd-nosimple p:last-child{margin:0}.rd-nosimple .row{display:flex;flex-wrap:wrap;gap:8px}
 .rd-simple-bar{display:flex;flex-wrap:wrap;align-items:center;gap:10px 12px;padding:12px 16px;margin:0 0 18px;border-radius:var(--radius-md);background:var(--accent-soft);color:var(--ink);font-family:var(--sans);font-size:.92rem}
@@ -5878,7 +5941,7 @@ function presFromSections(src){                                    // no Claude:
   const secs = critSections(presUnits(src)).filter(s => !/^(references?|paper information|citation details|part a\b)/i.test(s.h.replace(/^section\s*[\d.]+\s*·\s*/i, ''))
     && !s.text.split('\n').every(l => !l.trim() || INFO.test(l.trim())));     // the paper's details are on the title slide
   if (!secs.length) return 0;
-  const room = PRES_COUNT[S.pres.minutes] - 2, info = presInfo(src);
+  const room = psCount() - 2, info = presInfo(src);
   let groups = secs.map(s => ({h:s.h.replace(/^section\s*[\d.]+\s*·\s*/i, ''), text:s.text, from:s.h}));
   while (groups.length > room){ let k = 0, best = Infinity; for (let i = 0; i < groups.length - 1; i++){ const l = groups[i].text.length + groups[i + 1].text.length; if (l < best){ best = l; k = i; } }
     groups.splice(k, 2, {h:`${groups[k].h} & ${groups[k + 1].h}`, text:`${groups[k].text}\n${groups[k + 1].text}`, from:`${groups[k].from} + ${groups[k + 1].from}`}); }
@@ -5892,13 +5955,13 @@ function presFromSections(src){                                    // no Claude:
   return presApply(src, {title:slides[0].title, slides:slides.map(s => ({...s, seconds:s.secs, source:s.from}))}, 'sections');
 }
 function presPrompt(src){
-  const m = S.pres.minutes, n = PRES_COUNT[m], kind = src === 'paper' ? 'paper outline' : 'critique';
-  return `You are helping a master's student at Al Ain University (Advanced Research Methods 0106112) turn ${src === 'paper' ? 'the outline of their own research paper' : 'their written critique of a research paper'} into the slides of a ${m}-minute class presentation.
+  const m = S.pres.minutes, n = psCount(), kind = src === 'paper' ? 'paper outline' : 'critique', ds = psState(), det = PS_DETAIL[ds.detail] || PS_DETAIL.standard;
+  return `You are helping a master's student at Al Ain University (Advanced Research Methods 0106112) turn ${src === 'paper' ? 'the outline of their own research paper' : 'their written critique of a research paper'} into the slides of a ${m}-minute class presentation.${ds.lang === 'ar' ? '\nWrite every slide title, bullet and speaker note in clear Modern Standard Arabic. Keep technical terms in English in brackets the first time.' : ''}
 
 Rules:
 - Use only what is in the ${kind} below. Do not add findings, numbers, statistics, names, dates, quotations, references or claims that are not in it. If a slide needs something the ${kind} does not give, write a short placeholder in square brackets, for example [Add the sample size].
 ${src === 'paper' ? '' : `- Keep the critique's distinction between what the authors report ("The authors report…") and the student's own evaluation ("In my assessment…"). Present strengths and weaknesses fairly, each with the reason the critique gives.\n`}- Exactly ${n} slides. Slide 1 is the title slide: the paper's title as its title; as bullets, the authors, year and venue if the ${kind} gives them, and "Critique by [Your name]" (or the student's name if given). The last slide is "Questions and discussion", with 2–3 questions the audience may ask, based on the ${kind}.
-- One message per slide. Slide titles: at most 8 words, no full stop. 2–5 bullets per slide, each under 16 words, in plain academic English, without bullet symbols.
+- One message per slide. Slide titles: at most 8 words, no full stop. ${det.b} bullets per slide, each under ${det.w} words, in plain academic English, without bullet symbols.
 - If one slide covers strengths and weaknesses, start those bullets with "Strength:" or "Weakness:".
 - Speaker notes: 2–4 sentences the student can say aloud, in the first person, based on the ${kind}.
 - "seconds": the speaking time for each slide; together exactly ${m * 60}.
@@ -5965,7 +6028,8 @@ function loadPptxGen(){
 const presIsExample = src => { const c = src.startsWith('crit:') && S.critiques.find(x => 'crit:' + x.id === src); return !!(c && c.example); };
 const PX = {navy:'102B50', deep:'0B1F3A', blue:'2563A6', ice:'C9DCF5', gray:'F1F4F7', line:'D9E1EA', slate:'5B6B80', ink:'1F2937', white:'FFFFFF', okBg:'E8F3EC', ok:'2E7D32', warnBg:'FDF0E1', warn:'9A5200'};
 const presFileName = deck => `${(deck.title || 'Presentation').replace(/[\\/:*?"<>|[\]]+/g, ' ').replace(/\s+/g, ' ').trim().slice(0, 70) || 'Presentation'} - slides.pptx`;
-async function presPptx(deck){
+async function presPptx(deck){ return psPptx(); }
+async function presPptxOld(deck){
   const P = await loadPptxGen(), pres = new P();
   pres.layout = 'LAYOUT_WIDE';                                     // 13.33 × 7.5 in
   pres.theme = {headFontFace:'Cambria', bodyFontFace:'Calibri'};
@@ -6072,7 +6136,7 @@ function presCard(s, i, all, editable){
     ${s.from ? `<p class="small muted pr-from">${icon('link')}From: ${esc(s.from)}</p>` : ''}
     ${s.notes ? `<div class="notes"><b>Speaker notes:</b> ${esc(s.notes)}</div>` : ''}</article>`;
 }
-RENDER.present = () => {
+function presOldParts(){                                         // steps 1 and 5 of the Presentation Studio: the source card, the outline steps and the slides
   const sources = presSources();
   if (!sources.some(s => s.id === S.pres.source)) S.pres.source = sources[0].id;
   const src = S.pres.source, deck = presDeck(), o = deck.o, m = S.pres.minutes, up = S.pres.upload;
@@ -6082,7 +6146,7 @@ RENDER.present = () => {
     : o.by === 'claude' ? `<span class="chip">by Claude — check it</span> Outlined from <b>${esc(label)}</b> · ${esc(when)}. Every slide comes from your source; check it against your critique before you present.`
     : o.by === 'pasted' ? `<span class="chip">by Claude — check it</span> Read from Claude’s pasted reply · ${esc(when)}.`
     : `Made from the sections of <b>${esc(label)}</b>, in your own words · ${esc(when)}.`;
-  $('#panel-present').innerHTML = `
+  const html = `
   <div class="page-head"><div class="eyebrow">Presentation Builder</div><h1>Turn your work into a talk</h1>
   <p>Add your critique, outline the slides from it, then generate the whole PowerPoint — with speaker notes and timings.</p></div>
 
@@ -6104,7 +6168,7 @@ RENDER.present = () => {
 
   <div class="card pr-steps">
     <div class="pr-step"><span class="pr-n" aria-hidden="true">1</span>
-      <div class="pr-step-t"><b>Outline the slides from ${what}</b><span class="small muted">${aiReady() ? `Claude reads it and plans ${PRES_COUNT[m]} slides for ${m} minutes — only from what it says; anything missing is left as a [placeholder].` : `Each part of your critique becomes a slide, in your own words. On the published ScholarPath page, Claude can plan the slides for you.`}</span></div>
+      <div class="pr-step-t"><b>Outline the slides from ${what}</b><span class="small muted">${aiReady() ? `Claude reads it and plans ${psCount()} slides for ${m} minutes — only from what it says; anything missing is left as a [placeholder].` : `Each part of your critique becomes a slide, in your own words. On the published ScholarPath page, Claude can plan the slides for you.`}</span></div>
       <div class="pr-step-a">${aiReady()
         ? presRun ? `<button class="btn primary" disabled><span class="spin" aria-hidden="true"></span>Claude is outlining…</button><button class="btn" data-act="pres-stop">${icon('stop')}Stop</button>`
           : `<button class="btn primary" data-act="pres-ai" data-ai-btn>${icon('sparkle')}${o && o.by === 'claude' ? 'Outline again with Claude' : 'Outline with Claude'}</button>`
@@ -6126,8 +6190,9 @@ RENDER.present = () => {
 
   <div class="card" style="margin-top:16px"><div class="output-head"><h3 style="margin:0">Full outline (plain text)</h3>${copyBtn('#presOut', 'Copy outline')}</div>
   <div class="output" id="presOut">${esc(presOutline(deck))}</div></div>`;
-  if (aiRun || presRun) $$('#panel-present [data-ai-btn]').forEach(b => b.disabled = true);
-};
+  const i1 = html.indexOf('<div class="card"><div class="fields-2"'), i2 = html.indexOf('<div class="card pr-steps">'), i3 = html.indexOf('<div class="section-title"><h2>Suggested slides</h2>');
+  return {head:html.slice(0, i1), source:html.slice(i1, i2), steps:html.slice(i2, i3), slides:html.slice(i3)};
+}
 
 /* ---------- Part 4 · Final Academic Verification & Consistency Checklist ----------
    Compares the original paper (source of truth), the written critique and the presentation.
@@ -9308,7 +9373,762 @@ document.addEventListener('selectionchange', () => {                    // selec
 });
 let stSelT = 0;
 document.addEventListener('keydown', e => { if ((e.key === 'Enter' || e.key === ' ') && e.target.classList && e.target.classList.contains('sth')){ e.preventDefault(); ST_ACTIONS['st-hl'](e.target); } });
-Object.assign(ACTIONS, V_ACTIONS, D_ACTIONS, E_ACTIONS, ST_ACTIONS);
+/* ===================== Presentation Studio (step 3.1): designs, Figure Intelligence, quality review =====================
+   Every slide is described ONCE as positioned elements (inches on a 13.333 × 7.5 in slide); the same description draws the
+   preview (HTML) and the PowerPoint (PptxGenJS), so what the student approves is what they download.
+   Rules (spec §5.7b): no number, finding or relationship is invented — stat callouts show numbers exactly as written on the
+   slide, figures are the paper's own pictures (never redrawn), diagram items must be backed by a quotation found word for
+   word in the critique, and the quality score comes only from checks that were actually run. */
+const PS_W = 13.333, PS_H = 7.5;
+const PS_STAGES = [['docs', 'Documents'], ['custom', 'Customize'], ['designs', 'Three designs'], ['refine', 'Select & refine'], ['outline', 'Slide outline'],
+  ['figures', 'Research figures'], ['generate', 'Generate'], ['preview', 'Preview & edit'], ['quality', 'Quality review'], ['export', 'Export']];
+const PS_FONTS = {
+  georgia:{l:'Georgia + Calibri', head:'Georgia', body:'Calibri', wh:'Georgia, \'Times New Roman\', serif', wb:'Calibri, Carlito, \'Segoe UI\', Arial, sans-serif'},
+  cambria:{l:'Cambria + Calibri', head:'Cambria', body:'Calibri', wh:'Cambria, Caladea, Georgia, serif', wb:'Calibri, Carlito, \'Segoe UI\', Arial, sans-serif'},
+  arial:{l:'Arial (clean sans-serif)', head:'Arial', body:'Arial', wh:'Arial, Helvetica, sans-serif', wb:'Arial, Helvetica, sans-serif'},
+  trebuchet:{l:'Trebuchet MS + Calibri', head:'Trebuchet MS', body:'Calibri', wh:'\'Trebuchet MS\', \'Segoe UI\', sans-serif', wb:'Calibri, Carlito, \'Segoe UI\', Arial, sans-serif'},
+  verdana:{l:'Verdana (very readable)', head:'Verdana', body:'Verdana', wh:'Verdana, Geneva, sans-serif', wb:'Verdana, Geneva, sans-serif'}};
+const PS_TOPICS = [['ai', 'AI & computing', /\b(ai|artificial intelligence|machine learning|algorithm\w*|neural|deep learning|computing|software|dataset|facial recognition|technolog\w*|automat\w*)\b/gi],
+  ['health', 'Health & medicine', /\b(health|patients?|clinical|medical|nursing|disease|hospital\w*|therap\w*)\b/gi],
+  ['education', 'Education', /\b(students?|teachers?|learning|schools?|education\w*|classroom\w*|curricul\w*|pedagog\w*)\b/gi],
+  ['social', 'Social science & policy', /\b(social|polic\w+|public|surveys?|attitudes?|perceptions?|political|citizens?|government\w*|communit\w*)\b/gi],
+  ['environment', 'Environment & sustainability', /\b(environment\w*|climate|sustainab\w*|energy|emissions?|ecolog\w*)\b/gi]];
+const PS_DESIGNS = {
+  elegant:{name:'Academic Elegant', fonts:'georgia', what:'Centred serif titles, fine gold rules, generous margins and a quiet vertical timeline — for formal master’s and doctoral talks.',
+    accents:{general:'14213D', ai:'1B2A4A', health:'173B3A', education:'2A2350', social:'3E1E2C', environment:'1E3A2C'}, accent2:'A8834A'},
+  scientific:{name:'Modern Scientific', fonts:'arial', what:'Left-aligned sans-serif, numbered sections, point cards, step-by-step process boxes and an “In this talk” tracker — for AI, engineering and technical research.',
+    accents:{general:'2563EB', ai:'2563EB', health:'0F766E', education:'4338CA', social:'BE123C', environment:'15803D'}, accent2:'0EA5E9'},
+  creative:{name:'Creative Professional', fonts:'trebuchet', what:'Editorial colour blocks, a lead statement on every slide, numbered columns and bold shapes — for talks that need more audience engagement.',
+    accents:{general:'0F4C5C', ai:'1D4E89', health:'0F4C5C', education:'5B2A86', social:'7A2E3A', environment:'2D6A4F'}, accent2:'E36414'}
+};
+const PS_DETAIL = {concise:{l:'Concise', b:'2–3', w:12, max:35}, standard:{l:'Standard', b:'2–5', w:16, max:50}, detailed:{l:'Detailed', b:'3–6', w:22, max:70}};
+
+function psState(){
+  const d = {stage:'docs', style:'', theme:'auto', accent:'', accent2:'', fonts:'', count:'auto', detail:'standard', figs:true, diagrams:true, lang:'en', notes:true, paper:''};
+  const ds = S.pres.ds ||= {}; for (const k of Object.keys(d)) if (ds[k] === undefined) ds[k] = d[k];   // filled in place: every caller holds the same object
+  S.pres.figs ||= {}; S.pres.diags ||= {}; S.pres.qc ||= {};
+  if (!PS_STAGES.some(s => s[0] === S.pres.ds.stage)) S.pres.ds.stage = 'docs';
+  return S.pres.ds;
+}
+/* --- colour helpers: real WCAG contrast --- */
+const psRGB = h => { const n = parseInt(String(h).replace('#', '').slice(0, 6), 16); return [(n >> 16) & 255, (n >> 8) & 255, n & 255]; };
+const psHex = a => a.map(v => Math.max(0, Math.min(255, Math.round(v))).toString(16).padStart(2, '0')).join('').toUpperCase();
+const psMix = (a, b, t) => { const x = psRGB(a), y = psRGB(b); return psHex(x.map((v, i) => v + (y[i] - v) * t)); };
+const psLum = h => { const c = psRGB(h).map(v => { v /= 255; return v <= .03928 ? v / 12.92 : Math.pow((v + .055) / 1.055, 2.4); }); return .2126 * c[0] + .7152 * c[1] + .0722 * c[2]; };
+const psContrast = (a, b) => { const x = psLum(a), y = psLum(b); return (Math.max(x, y) + .05) / (Math.min(x, y) + .05); };
+const psOn = bg => psContrast('FFFFFF', bg) >= psContrast('111111', bg) ? 'FFFFFF' : '111111';
+function psTopic(src){
+  const text = presText(src) + ' ' + presDeck().slides.map(s => s.title + ' ' + (s.bullets || []).join(' ')).join(' ');
+  let best = ['general', 'General research', 0];
+  for (const [k, l, re] of PS_TOPICS){ const n = (text.match(re) || []).length; if (n > best[2]) best = [k, l, n]; }
+  return {k:best[0], label:best[1], n:best[2]};
+}
+function psDesign(style){                                         // the resolved design: palette, fonts, theme — used by the preview, the .pptx and the checks
+  const ds = psState(), id = PS_DESIGNS[style] ? style : (PS_DESIGNS[ds.style] ? ds.style : 'elegant'), base = PS_DESIGNS[id], topic = psTopic(S.pres.source);
+  const custom = ds.theme === 'custom' && /^[0-9A-F]{6}$/i.test(ds.accent || '');
+  let A = custom ? ds.accent.toUpperCase() : base.accents[topic.k] || base.accents.general;
+  let A2 = custom && /^[0-9A-F]{6}$/i.test(ds.accent2 || '') ? ds.accent2.toUpperCase() : base.accent2;
+  const dark = ds.theme === 'dark';
+  const F0 = PS_FONTS[ds.fonts] || PS_FONTS[base.fonts], ar = ds.lang === 'ar';
+  const F = ar ? {l:'Arial (Arabic)', head:'Arial', body:'Arial', wh:"'IBM Plex Sans Arabic', Arial, sans-serif", wb:"'IBM Plex Sans Arabic', Arial, sans-serif"} : F0;
+  let P;
+  if (id === 'elegant') P = dark ? {bg:psMix(A, '000000', .25), surface:psMix(A, 'FFFFFF', .08), ink:'F2EEE4', muted:'CFC8B8', head:'F7F2E6', rule:'D4B67A', accent:'D4B67A', hero:psMix(A, '000000', .45), heroInk:'F7F2E6', heroMuted:'D9D2C3', heroRule:'D4B67A'}
+    : {bg:'FAF7F0', surface:'FFFFFF', ink:'1F2430', muted:'585E6B', head:A, rule:A2, accent:A, hero:A, heroInk:'F7F2E6', heroMuted:'D9D2C3', heroRule:'D4B67A'};
+  else if (id === 'scientific') { const AL = dark ? psMix(A, 'FFFFFF', .45) : A;
+    P = dark ? {bg:'0F172A', surface:'1E293B', ink:'E2E8F0', muted:'A3B1C6', head:'F8FAFC', rule:AL, accent:AL, accent2:psMix(A2, 'FFFFFF', .2), onAccent:psOn(AL), hero:'020617', heroInk:'F8FAFC', heroMuted:'A3B1C6', heroRule:AL, line:'334155'}
+      : {bg:'FFFFFF', surface:'F1F5F9', ink:'0F172A', muted:'475569', head:'0F172A', rule:A, accent:A, accent2:A2, onAccent:psOn(A), hero:'0F172A', heroInk:'F8FAFC', heroMuted:'B6C2D3', heroRule:psMix(A, 'FFFFFF', .35), line:'E2E8F0'}; }
+  else { P = dark ? {bg:'1C1917', surface:'292524', ink:'F5EFE6', muted:'C8BBAE', head:psMix(A2, 'FFFFFF', .25), rule:A2, accent:psMix(A, 'FFFFFF', .2), accent2:A2, onAccent:psOn(psMix(A, 'FFFFFF', .2)), hero:psMix(A, '000000', .2), heroInk:'FFFFFF', heroMuted:'E7DCCF', heroRule:A2}
+      : {bg:'FBF5EF', surface:'F3E6D8', ink:'2B2118', muted:'5F5147', head:A, rule:A2, accent:A, accent2:A2, onAccent:psOn(A), hero:A, heroInk:'FFFFFF', heroMuted:'E7DCCF', heroRule:A2}; }
+  P.accent2 ||= A2; P.onAccent ||= psOn(P.accent); P.line ||= psMix(P.bg, P.ink, .15); P.onA2 = psOn(P.accent2);
+  return {id, name:base.name, what:base.what, F, P, topic, dark, ar, theme:ds.theme};
+}
+
+/* --- fitting text to its box (the same estimate drives the preview, the .pptx and the readability check) --- */
+function psFit(texts, w, h, max, min, face = 'body', gap = 8, lh = 1.18, indent = 0){
+  const k = face === 'head' ? .62 : .54, list = (Array.isArray(texts) ? texts : [texts]).map(t => String(t || ''));
+  for (let pt = max; pt >= min; pt--){
+    const cpl = Math.max(6, Math.floor((w - indent) * 72 / (pt * k)));
+    let lines = 0; list.forEach(t => t.split('\n').forEach(seg => { lines += Math.max(1, Math.ceil(seg.length / cpl)); }));
+    if ((lines * pt * lh + gap * Math.max(0, list.length - 1)) / 72 <= h) return {pt, over:false};
+  }
+  return {pt:min, over:true};
+}
+/* --- the slides to draw: the outline, plus the approved figures and diagrams --- */
+function psStatOf(b){ const n = numbersIn([{loc:'', text:b}]).filter(x => !x.word); return n.length ? n.sort((x, y) => /%/.test(y.shown) - /%/.test(x.shown))[0].shown : ''; }
+function psKind(s, i, all){
+  const r = presRole(s, i, all); if (r !== 'content') return r;
+  const b = (s.bullets || []).filter(Boolean);
+  if (/method|design|procedure|approach|sampl|data collection|process|steps?\b|how the study/i.test(s.title) && b.length >= 3 && b.length <= 6) return 'method';
+  if (b.length && b.length <= 4 && psStatOf(b.join(' '))) return 'stat';
+  return 'content';
+}
+function psSlides(deck = presDeck()){
+  const src = S.pres.source, ds = psState(), F = (S.pres.figs[src] || {}).items || {}, D = (S.pres.diags[src] || {}).list || [];
+  const out = [];
+  deck.slides.forEach((s, i, all) => {
+    out.push({...s, kind:psKind(s, i, all), oi:i, bullets:(s.bullets || []).filter(Boolean)});
+    if (ds.figs) psFigList().filter(f => F[f.id] && F[f.id].inc && +F[f.id].slide === i + 1).forEach(f => out.push({kind:'figure', title:f.label + (f.caption ? ': ' + clip(f.caption.replace(/^(fig(ure)?\.?|table)\s*[\dIVX]+[.:]?\s*/i, ''), 60) : ''), fig:f, why:F[f.id].why || '', notes:F[f.id].why ? `Why this figure: ${F[f.id].why}` : '', secs:0, from:`Original paper, ${f.page ? 'p. ' + f.page : 'page not given'}`, bullets:[]}));
+    if (ds.diagrams) D.filter(d => d.inc && +d.slide === i + 1).forEach(d => out.push({kind:d.type === 'process' ? 'method' : d.type === 'compare' ? 'compare' : d.type, title:d.title, diagram:d, notes:`Diagram drawn from my critique. Its points are backed by these words of the critique: ${d.items.map(x => `“${x.quote}”`).join(' ')}`, secs:0, from:'Diagram from my critique',
+      bullets:d.type === 'compare' ? d.items.map(x => (x.side === 'limit' ? 'Weakness: ' : 'Strength: ') + x.label + (x.detail ? ' — ' + x.detail : '')) : d.items.map(x => x.label + (x.detail ? ' — ' + x.detail : '')), items:d.items}));
+  });
+  return out;
+}
+const psAgenda = sl => sl.map((s, i) => ({i, t:s.title, k:s.kind})).filter(a => ['content', 'method', 'stat', 'compare'].includes(a.k) && a.t);
+/* --- the three designs: positioned elements for every kind of slide --- */
+function psEls(s, i, all, D){
+  const P = D.P, E = [], rtl = D.ar, total = all.length, label = (S.pres.source === 'paper' ? 'Research presentation' : 'Research critique');
+  const B = (x, y, w, h, fill, o = {}) => E.push({t:'box', x, y, w, h, fill, ...o});
+  const Ln = (x, y, w, h, color, lw = 1) => E.push({t:'line', x, y, w, h, color, lw});
+  const T = (x, y, w, h, text, o = {}) => { if (!String(text || '').trim()) return; const face = o.face || 'body', f = o.pt ? {pt:o.pt, over:false} : psFit(text, w, h, o.max || 24, o.min || 14, face, 0, o.lh || 1.15);
+    E.push({t:'text', x, y, w, h, text:String(text), face, pt:f.pt, over:f.over, color:o.color || P.ink, on:o.on || P.bg, bold:!!o.bold, italic:!!o.italic, align:o.align || (rtl ? 'right' : 'left'), valign:o.valign || 'top', caps:!!o.caps, sp:o.sp || 0, role:o.role || 'body', rtl}); };
+  const L = (x, y, w, h, items, o = {}) => { items = items.filter(Boolean); if (!items.length) return; const f = psFit(items, w, h, o.max || 24, o.min || 18, 'body', o.gap ?? 10, 1.18, .35);
+    E.push({t:'list', x, y, w, h, items, face:'body', pt:f.pt, over:f.over, color:o.color || P.ink, marker:o.marker || P.accent, on:o.on || P.bg, numbered:!!o.numbered, gap:o.gap ?? 10, rtl, role:'body'}); };
+  const Img = (x, y, w, h, f) => E.push({t:'img', x, y, w, h, key:f && f.key, alt:f ? `${f.label}${f.caption ? ': ' + f.caption : ''}` : 'Figure'});
+  const bul = s.bullets || [], title = s.title + (s.sub ? ` — ${s.sub}` : ''), pageNo = `${i + 1}`;
+  const sw = (re) => bul.filter(b => re.test(b)).map(b => b.replace(re, '').replace(/^\s*[:–—-]\s*/, '').trim().replace(/^\p{Ll}/u, c => c.toUpperCase()));
+  const strengths = sw(/^strengths?\b/i), weaknesses = sw(/^(weakness(es)?|limitations?)\b/i), others = bul.filter(b => !/^(strengths?|weakness(es)?|limitations?)\b/i.test(b));
+  const statB = s.kind === 'stat' ? bul.find(b => psStatOf(b)) : '', statN = statB ? psStatOf(statB) : '';
+  const fig = s.fig, cap = fig ? `${fig.label}${fig.caption ? '. ' + fig.caption.replace(/^(fig(ure)?\.?|table)\s*[\dIVX]+[.:]?\s*/i, '') : ''}` : '';
+  const srcLine = fig ? `Source: ${[presInfo(S.pres.source).by, fig.paper].filter(Boolean).join(' · ') || 'the original paper'}${fig.page ? `, p. ${fig.page}` : ''} — reproduced as published` : '';
+  const items = s.items || bul.map(b => { const m = b.split(/\s+—\s+/); return {label:m[0], detail:m.slice(1).join(' — ')}; });
+
+  if (D.id === 'elegant'){
+    const hero = s.kind === 'title' || s.kind === 'closing', bg = hero ? P.hero : P.bg;
+    B(0, 0, PS_W, PS_H, bg);
+    if (s.kind === 'title'){
+      T(1.2, 1.45, 10.93, .4, label, {pt:13, caps:true, sp:3, color:P.heroRule, on:bg, align:'center', role:'label'});
+      T(1.2, 1.95, 10.93, 2.35, title, {face:'head', max:44, min:28, color:P.heroInk, on:bg, align:'center', valign:'bottom', role:'title'});
+      Ln(6.17, 4.55, 1.0, 0, P.heroRule, 1.5);
+      T(1.2, 4.85, 10.93, 1.7, bul.join('\n'), {max:20, min:14, color:P.heroMuted, on:bg, align:'center', role:'sub'});
+    } else if (s.kind === 'closing'){
+      T(1.2, 1.2, 10.93, 1.6, title, {face:'head', max:44, min:28, color:P.heroInk, on:bg, align:'center', valign:'bottom', role:'title'});
+      Ln(6.17, 3.05, 1.0, 0, P.heroRule, 1.5);
+      T(1.6, 3.4, 10.13, 3.2, bul.join('\n'), {max:22, min:16, color:P.heroMuted, on:bg, align:'center', lh:1.35, role:'body'});
+    } else {
+      T(.9, .5, 11.5, 1.0, title, {face:'head', max:32, min:22, color:P.head, valign:'bottom', role:'title'});
+      Ln(.9, 1.66, 1.1, 0, P.rule, 1.75);
+      if (s.kind === 'method'){
+        const n = items.length, step = 4.6 / Math.max(n, 1);
+        Ln(1.36, 2.05, 0, step * (n - .5), P.rule, 1);
+        items.forEach((it, k) => { const y = 2.0 + k * step; B(1.25, y + .02, .22, .22, P.rule, {shape:'ellipse'});
+          T(1.8, y - .06, 10.4, step - .08, it.label + (it.detail ? ' — ' + it.detail : ''), {max:22, min:16, color:P.ink}); });
+      } else if (s.kind === 'stat'){
+        T(.9, 2.1, 4.2, 1.7, statN, {face:'head', max:72, min:40, color:P.head, valign:'bottom', role:'stat'});
+        T(.9, 3.95, 4.2, 2.5, statB, {max:20, min:16, italic:true, color:P.muted});
+        Ln(5.5, 2.1, 0, 4.3, P.rule, 1);
+        L(5.9, 2.05, 6.5, 4.5, bul.filter(b => b !== statB));
+      } else if (s.kind === 'compare'){
+        Ln(6.67, 2.05, 0, 4.5, P.rule, 1);
+        T(.9, 2.0, 5.4, .45, 'Strengths', {pt:15, caps:true, sp:2, bold:true, color:P.head, role:'label'});
+        T(7.07, 2.0, 5.4, .45, 'Weaknesses', {pt:15, caps:true, sp:2, bold:true, color:P.head, role:'label'});
+        L(.9, 2.6, 5.4, 3.7, strengths.length ? strengths : ['[Add one from your critique]'], {marker:P.rule});
+        L(7.07, 2.6, 5.4, 3.7, weaknesses.length ? weaknesses : ['[Add one from your critique]'], {marker:P.rule});
+        if (others.length) T(.9, 6.4, 11.5, .4, others.join('  ·  '), {pt:12, color:P.muted, role:'note'});
+      } else if (s.kind === 'figure'){
+        B(1.4, 1.95, 10.53, 3.85, P.surface, {line:P.rule, lw:.75});
+        Img(1.55, 2.08, 10.23, 3.6, fig);
+        T(1.4, 5.95, 10.53, .62, cap, {max:15, min:12, italic:true, color:P.ink, align:'center', role:'caption'});
+        T(1.4, 6.55, 10.53, .32, srcLine, {pt:11, color:P.muted, align:'center', role:'note'});
+      } else if (s.kind === 'framework'){
+        const n = items.length, cols = n <= 4 ? 2 : 3, rows = Math.ceil(n / cols), cw = (11.5 - (cols - 1) * .3) / cols, ch = (4.6 - (rows - 1) * .3) / rows;
+        items.forEach((it, k) => { const x = .9 + (k % cols) * (cw + .3), y = 2.0 + Math.floor(k / cols) * (ch + .3);
+          B(x, y, cw, ch, P.surface, {line:psMix(P.surface, P.rule, .5), lw:.5}); Ln(x + .25, y + .2, .7, 0, P.rule, 1.5);
+          T(x + .25, y + .35, cw - .5, .55, it.label, {face:'head', max:20, min:16, bold:true, color:P.head, on:P.surface});
+          T(x + .25, y + .95, cw - .5, ch - 1.1, it.detail, {max:18, min:14, color:P.ink, on:P.surface}); });
+      } else if (s.kind === 'timeline'){
+        const n = items.length, gap = 11.5 / Math.max(n, 1);
+        Ln(.9, 4.0, 11.5, 0, P.rule, 1.25);
+        items.forEach((it, k) => { const x = .9 + k * gap; B(x + gap / 2 - .1, 3.9, .2, .2, P.rule, {shape:'ellipse'});
+          T(x + .1, 2.3, gap - .2, 1.45, it.label, {face:'head', max:20, min:14, bold:true, color:P.head, align:'center', valign:'bottom'});
+          T(x + .1, 4.3, gap - .2, 2.2, it.detail, {max:16, min:13, color:P.ink, align:'center'}); });
+      } else if (s.kind === 'concept'){
+        const [c, ...rest] = items; B(4.92, 3.0, 3.5, 1.6, P.hero, {shape:'ellipse'});
+        T(5.12, 3.2, 3.1, 1.2, c ? c.label : '', {face:'head', max:20, min:14, color:P.heroInk, on:P.hero, align:'center', valign:'middle', bold:true});
+        rest.slice(0, 6).forEach((it, k) => { const ang = -Math.PI / 2 + k * 2 * Math.PI / Math.min(rest.length, 6), cx = 6.67 + Math.cos(ang) * 4.6, cy = 3.8 + Math.sin(ang) * 2.1;
+          B(cx - 1.55, cy - .5, 3.1, 1.0, P.surface, {line:P.rule, lw:.75}); T(cx - 1.45, cy - .45, 2.9, .9, it.label + (it.detail ? ': ' + it.detail : ''), {max:15, min:12, color:P.ink, on:P.surface, align:'center', valign:'middle'}); });
+      } else {
+        L(.9, 2.0, 10.6, 4.6, bul.length ? bul : ['[Add the points for this slide]'], {marker:P.rule});
+      }
+      T(6.17, 6.95, 1.0, .3, `— ${pageNo} —`, {pt:11, color:P.muted, align:'center', role:'note'});
+      T(.9, 6.95, 4.5, .3, clip(presDeck().title || '', 60), {pt:10, color:P.muted, role:'note'});
+    }
+  } else if (D.id === 'scientific'){
+    const hero = s.kind === 'closing', bg = hero ? P.hero : P.bg;
+    B(0, 0, PS_W, PS_H, bg);
+    if (s.kind === 'title'){
+      B(0, 0, .35, PS_H, P.accent);
+      for (let k = 0; k < 6; k++) Ln(8.4 + k * .85, .6, 0, 6.3, P.line, .75);
+      B(8.4, 2.05, 4.25, .08, P.accent2);
+      T(1.0, 1.55, 7, .4, label, {pt:13, caps:true, sp:2, bold:true, color:P.accent, role:'label'});
+      T(1.0, 1.95, 7.1, 2.7, title, {face:'head', max:40, min:24, bold:true, color:P.ink, valign:'bottom', role:'title'});
+      T(1.0, 4.85, 7.6, 1.7, bul.join('\n'), {max:20, min:14, color:P.muted, role:'sub'});
+    } else if (s.kind === 'closing'){
+      B(0, 0, .35, PS_H, P.accent);
+      for (let k = 0; k < 6; k++) Ln(8.4 + k * .85, .6, 0, 6.3, psMix(P.hero, 'FFFFFF', .12), .75);
+      T(1.0, 1.4, 7.4, 1.5, title, {face:'head', max:42, min:26, bold:true, color:P.heroInk, on:bg, valign:'bottom', role:'title'});
+      L(1.0, 3.2, 7.2, 3.4, bul, {color:P.heroMuted, marker:P.heroRule, on:bg, max:22});
+    } else {
+      const agenda = psAgenda(all), track = ['content', 'stat'].includes(s.kind) && agenda.length > 1, cw = track ? 8.2 : 11.93;
+      const k0 = agenda.findIndex(a => a.i === i);
+      T(.7, .42, 3, .32, k0 >= 0 ? `${String(k0 + 1).padStart(2, '0')} / ${String(agenda.length).padStart(2, '0')}` : s.kind === 'figure' ? 'FIGURE' : 'DIAGRAM', {pt:12, bold:true, sp:1, color:P.accent, role:'label'});
+      T(.7, .75, cw, .95, title, {face:'head', max:30, min:20, bold:true, color:P.head, role:'title'});
+      if (s.kind === 'method'){
+        const n = items.length, per = n > 5 ? Math.ceil(n / 2) : n, rows = Math.ceil(n / per), bw = (11.93 - (per - 1) * .45) / per, bh = (4.7 - (rows - 1) * .35) / rows;
+        items.forEach((it, k) => { const x = .7 + (k % per) * (bw + .45), y = 1.9 + Math.floor(k / per) * (bh + .35);
+          B(x, y, bw, bh, P.surface, {r:.08}); B(x, y, bw, .07, P.accent);
+          B(x + .2, y + .25, .48, .48, P.accent, {shape:'ellipse'}); T(x + .2, y + .25, .48, .48, String(k + 1), {pt:15, bold:true, color:P.onAccent, on:P.accent, align:'center', valign:'middle', role:'label'});
+          T(x + .2, y + .85, bw - .4, bh - 1.0, it.label + (it.detail ? ' — ' + it.detail : ''), {max:20, min:14, color:P.ink, on:P.surface});
+          if (k % per < per - 1 && k < n - 1) T(x + bw, y + bh / 2 - .22, .45, .44, '→', {pt:20, bold:true, color:P.accent, align:'center', valign:'middle', role:'label'}); });
+      } else if (s.kind === 'stat'){
+        const tiles = bul.filter(b => psStatOf(b)).slice(0, 3), tw = (cw - (tiles.length - 1) * .3) / Math.max(tiles.length, 1);
+        tiles.forEach((b, k) => { const x = .7 + k * (tw + .3); B(x, 1.9, tw, 2.5, P.surface, {r:.08}); B(x, 1.9, .07, 2.5, P.accent);
+          T(x + .3, 2.0, tw - .5, 1.0, psStatOf(b), {face:'head', max:48, min:28, bold:true, color:P.accent, on:P.surface, role:'stat'});
+          T(x + .3, 3.05, tw - .5, 1.25, b, {max:16, min:12, color:P.ink, on:P.surface}); });
+        L(.7, 4.65, cw, 1.95, bul.filter(b => !tiles.includes(b)), {max:20});
+      } else if (s.kind === 'compare'){
+        [['Strengths', strengths, P.accent], ['Weaknesses', weaknesses, P.ink]].forEach(([h, list, col], k) => { const x = .7 + k * 6.1;
+          B(x, 1.9, 5.83, .6, col, {r:.06}); T(x + .25, 1.9, 5.3, .6, h, {pt:17, bold:true, color:psOn(col), on:col, valign:'middle', role:'label'});
+          B(x, 2.5, 5.83, 4.1, P.surface); L(x + .25, 2.7, 5.33, 3.75, list.length ? list : ['[Add one from your critique]'], {on:P.surface, marker:col}); });
+        if (others.length) T(.7, 6.68, 11.93, .35, others.join('  ·  '), {pt:12, color:P.muted, role:'note'});
+      } else if (s.kind === 'figure'){
+        B(.7, 1.85, 7.9, 4.9, P.surface, {r:.06}); Img(.85, 2.0, 7.6, 4.6, fig);
+        T(8.95, 1.9, 3.7, .4, `${fig.label}${fig.page ? ' · page ' + fig.page : ''}`, {pt:13, bold:true, caps:true, sp:1, color:P.accent, role:'label'});
+        T(8.95, 2.4, 3.7, 3.3, cap, {max:16, min:12, color:P.ink, role:'caption'});
+        T(8.95, 5.8, 3.7, .9, srcLine, {pt:11, color:P.muted, role:'note'});
+      } else if (s.kind === 'framework' || s.kind === 'timeline' || s.kind === 'concept'){
+        const n = items.length, cols = s.kind === 'timeline' ? n : n <= 4 ? 2 : 3, rows = Math.ceil(n / cols), w = (11.93 - (cols - 1) * .3) / cols, h = (4.7 - (rows - 1) * .3) / rows;
+        if (s.kind === 'timeline') Ln(.7, 3.15, 11.93, 0, P.accent, 2);
+        items.forEach((it, k) => { const x = .7 + (k % cols) * (w + .3), y = (s.kind === 'timeline' ? 3.45 : 1.9) + Math.floor(k / cols) * (h + .3), hh = s.kind === 'timeline' ? 3.1 : h;
+          if (s.kind === 'timeline') B(x + w / 2 - .1, 3.05, .2, .2, P.accent, {shape:'ellipse'});
+          B(x, y, w, hh, P.surface, {r:.08}); B(x, y, w, .07, k === 0 && s.kind === 'concept' ? P.accent2 : P.accent);
+          T(x + .2, y + .2, w - .4, .7, it.label, {face:'head', max:19, min:13, bold:true, color:P.head, on:P.surface});
+          T(x + .2, y + .9, w - .4, hh - 1.05, it.detail, {max:16, min:12, color:P.ink, on:P.surface}); });
+      } else {
+        const cards = bul.length >= 4 && bul.every(b => b.length <= 140);
+        if (cards){ const per = 2, rows = Math.ceil(bul.length / per), w = (cw - .3) / per, h = (4.75 - (rows - 1) * .25) / rows, f = psFit(bul, w - .5, h - .3, 20, 14, 'body', 0);
+          bul.forEach((b, k) => { const x = .7 + (k % per) * (w + .3), y = 1.85 + Math.floor(k / per) * (h + .25); B(x, y, w, h, P.surface, {r:.06}); B(x, y, .07, h, P.accent);
+            T(x + .3, y + .15, w - .5, h - .3, b, {pt:f.pt, color:P.ink, on:P.surface}); E[E.length - 1].over = f.over; });
+        } else L(.7, 1.85, cw, 4.75, bul.length ? bul : ['[Add the points for this slide]']);
+      }
+      if (track){ B(9.3, .45, 3.33, 6.6, P.surface, {r:.08}); T(9.55, .65, 2.9, .3, 'IN THIS TALK', {pt:11, bold:true, sp:1.5, color:P.muted, on:P.surface, role:'label'});
+        const step = Math.min(.56, 5.6 / agenda.length), fs = agenda.length > 9 ? 11 : 12;
+        agenda.forEach((a, k) => { const y = 1.1 + k * step, cur = a.i === i; if (cur) B(9.45, y, 3.03, step - .06, P.accent, {r:.06});
+          T(9.58, y, 2.8, step - .06, `${String(k + 1).padStart(2, '0')}  ${clip(a.t, 34)}`, {pt:fs, bold:cur, color:cur ? P.onAccent : P.muted, on:cur ? P.accent : P.surface, valign:'middle', role:'tracker'}); }); }
+      T(11.9, 7.0, .75, .3, pageNo, {pt:10, color:P.muted, align:'right', role:'note'});
+    }
+  } else {                                                        // creative
+    if (s.kind === 'title'){
+      B(0, 0, PS_W, PS_H, P.bg); B(0, 0, 7.7, PS_H, P.hero); B(8.7, -1.3, 6.0, 6.0, P.accent2, {shape:'ellipse', alpha:.92});
+      T(.8, 1.05, 6.3, .4, label, {pt:13, caps:true, sp:2, bold:true, color:P.heroMuted, on:P.hero, role:'label'});
+      T(.8, 1.6, 6.3, 3.9, title, {face:'head', max:44, min:24, bold:true, color:P.heroInk, on:P.hero, valign:'bottom', role:'title'});
+      B(.8, 5.7, 1.4, .1, P.accent2);
+      T(8.2, 5.0, 4.6, 1.9, bul.join('\n'), {max:18, min:13, color:P.ink, role:'sub'});
+    } else if (s.kind === 'closing'){
+      B(0, 0, PS_W, PS_H, P.hero); B(9.4, 3.9, 6.0, 6.0, P.accent2, {shape:'ellipse', alpha:.92});
+      T(.9, 1.3, 8.4, 1.8, title, {face:'head', max:48, min:30, bold:true, color:P.heroInk, on:P.hero, valign:'bottom', role:'title'});
+      L(.9, 3.4, 8.0, 3.3, bul, {color:P.heroInk, marker:P.accent2, on:P.hero, max:22});
+    } else if (s.kind === 'figure'){
+      B(0, 0, PS_W, PS_H, P.bg); B(0, 0, 4.4, PS_H, P.hero);
+      T(.6, .7, 3.3, .4, `${fig.label}${fig.page ? ' · p. ' + fig.page : ''}`, {pt:13, bold:true, caps:true, sp:1.5, color:P.heroMuted, on:P.hero, role:'label'});
+      T(.6, 1.2, 3.3, 1.9, title, {face:'head', max:26, min:18, bold:true, color:P.heroInk, on:P.hero, role:'title'});
+      T(.6, 3.25, 3.3, 2.9, cap, {max:15, min:12, color:P.heroInk, on:P.hero, role:'caption'});
+      T(.6, 6.3, 3.3, .8, srcLine, {pt:11, color:P.heroMuted, on:P.hero, role:'note'});
+      Img(4.9, .7, 7.9, 6.1, fig);
+    } else {
+      B(0, 0, PS_W, PS_H, P.bg); B(PS_W - 1.2, -.6, 1.8, 1.8, P.accent2, {shape:'ellipse', alpha:.9});
+      T(.8, .5, 10.8, .85, title, {face:'head', max:28, min:20, bold:true, color:P.head, role:'title'});
+      if (s.kind === 'method'){
+        const n = items.length, cw = n > 4 ? 3.0 : 3.7, ch = n > 4 ? 1.55 : 2.0;
+        items.forEach((it, k) => { const x = .8 + (n > 1 ? k * (11.73 - cw) / (n - 1) : 0), y = 1.65 + (n > 1 ? k * (4.95 - ch) / (n - 1) : 0);
+          B(x, y, cw, ch, P.surface, {r:.2}); B(x - .25, y - .25, .62, .62, P.accent2, {shape:'ellipse'});
+          T(x - .25, y - .25, .62, .62, String(k + 1), {pt:16, bold:true, color:P.onA2, on:P.accent2, align:'center', valign:'middle', role:'label'});
+          T(x + .4, y + .25, cw - .6, ch - .4, it.label + (it.detail ? ' — ' + it.detail : ''), {max:18, min:14, color:P.ink, on:P.surface}); });
+      } else if (s.kind === 'stat'){
+        B(.8, 1.65, 4.4, 4.4, P.accent2, {shape:'ellipse'});
+        T(1.1, 2.95, 3.8, 1.8, statN, {face:'head', max:64, min:32, bold:true, color:P.onA2, on:P.accent2, align:'center', valign:'middle', role:'stat'});
+        T(5.7, 1.75, 6.9, 1.9, statB, {face:'head', max:26, min:18, color:P.head, role:'lead'});
+        L(5.7, 3.85, 6.9, 2.8, bul.filter(b => b !== statB), {marker:P.accent2});
+      } else if (s.kind === 'compare'){
+        [['Strengths', strengths, P.surface, P.accent], ['Weaknesses', weaknesses, psMix(P.bg, P.accent2, .12), P.ink]].forEach(([h, list, fill, col], k) => { const y = 1.6 + k * 2.6;
+          B(0, y, PS_W, 2.45, fill); T(.8, y + .2, 3, .45, h, {pt:16, caps:true, sp:2, bold:true, color:col, on:fill, role:'label'});
+          const l = (list.length ? list : ['[Add one from your critique]']).slice(0, 4), w = (11.73 - (l.length - 1) * .3) / l.length;
+          l.forEach((b, j) => T(.8 + j * (w + .3), y + .75, w, 1.55, b, {max:18, min:12, color:P.ink, on:fill})); });
+        if (others.length) T(.8, 6.85, 11.7, .35, others.join('  ·  '), {pt:12, color:P.muted, role:'note'});
+      } else if (s.kind === 'framework' || s.kind === 'timeline' || s.kind === 'concept'){
+        const n = items.length, cols = s.kind === 'timeline' ? n : n <= 4 ? 2 : 3, rows = Math.ceil(n / cols), w = (11.73 - (cols - 1) * .35) / cols, h = (4.9 - (rows - 1) * .35) / rows;
+        if (s.kind === 'timeline') B(.8, 3.05, 11.73, .12, P.accent2);
+        items.forEach((it, k) => { const x = .8 + (k % cols) * (w + .35), y = (s.kind === 'timeline' ? 3.45 : 1.65) + Math.floor(k / cols) * (h + .35), hh = s.kind === 'timeline' ? 3.2 : h;
+          B(x, y, w, hh, k === 0 && s.kind === 'concept' ? P.hero : P.surface, {r:.2});
+          const on = k === 0 && s.kind === 'concept' ? P.hero : P.surface, ink = k === 0 && s.kind === 'concept' ? P.heroInk : P.ink;
+          T(x + .25, y + .2, w - .5, .7, (s.kind === 'concept' ? '' : String(k + 1).padStart(2, '0') + '  ') + it.label, {face:'head', max:19, min:13, bold:true, color:k === 0 && s.kind === 'concept' ? P.heroInk : P.head, on});
+          T(x + .25, y + .95, w - .5, hh - 1.1, it.detail, {max:16, min:12, color:ink, on}); });
+      } else {
+        const [lead, ...rest] = bul.length ? bul : ['[Add the points for this slide]'];
+        B(.55, 1.55, .1, 1.45, P.accent2);
+        T(.8, 1.5, 11.5, 1.6, lead, {face:'head', max:28, min:18, color:P.head, role:'lead'});
+        const cols = rest.length > 2 ? 2 : 1, per = Math.ceil(rest.length / cols), w = (11.7 - (cols - 1) * .5) / cols;
+        rest.forEach((b, k) => { const c = Math.floor(k / per), r = k % per, x = .8 + c * (w + .5), h = 3.6 / Math.max(per, 1), y = 3.35 + r * h;
+          T(x, y, .75, .5, String(k + 2).padStart(2, '0'), {pt:20, bold:true, color:P.accent2 === 'E36414' && !D.dark ? 'B4500F' : P.accent2, role:'label'});
+          T(x + .8, y + .02, w - .8, h - .1, b, {max:20, min:14, color:P.ink}); });
+      }
+      T(11.9, 7.0, .75, .3, pageNo, {pt:10, color:P.muted, align:'right', role:'note'});
+    }
+  }
+  return E;
+}
+/* --- drawing: the same elements as HTML (preview, PDF) and as PowerPoint --- */
+const psImgs = {};
+async function psLoadImg(key){
+  if (!key) return null; if (key in psImgs) return psImgs[key];
+  const blob = await IDB.get(key); if (!blob) return psImgs[key] = null;
+  let w = 4, h = 3; try { const bm = await createImageBitmap(blob); w = bm.width; h = bm.height; bm.close && bm.close(); } catch {}
+  const data = await new Promise(r => { const fr = new FileReader(); fr.onload = () => r(fr.result); fr.onerror = () => r(null); fr.readAsDataURL(blob); });
+  return psImgs[key] = {url:URL.createObjectURL(blob), data, w, h};
+}
+function psContain(e, d){ const r = d ? d.w / d.h : 4 / 3; let w = e.w, h = e.w / r; if (h > e.h){ h = e.h; w = h * r; } return {x:e.x + (e.w - w) / 2, y:e.y + (e.h - h) / 2, w, h}; }
+const pct = (v, of) => `${(v / of * 100).toFixed(3)}%`;
+function psElHTML(e, D){
+  const pos = `left:${pct(e.x, PS_W)};top:${pct(e.y, PS_H)};width:${pct(e.w, PS_W)};height:${pct(e.h, PS_H)}`;
+  if (e.t === 'box') return `<div class="ps-e" style="${pos};background:#${e.fill};${e.alpha != null ? `opacity:${e.alpha};` : ''}${e.line ? `box-shadow:inset 0 0 0 ${Math.max(1, (e.lw || 1) * 1.2)}px #${e.line};` : ''}border-radius:${e.shape === 'ellipse' ? '50%' : e.r ? `${(e.r / PS_W * 100).toFixed(3)}cqw` : '0'}"></div>`;
+  if (e.t === 'line') return `<div class="ps-e" style="left:${pct(e.x, PS_W)};top:${pct(e.y, PS_H)};width:${e.w ? pct(e.w, PS_W) : 0};height:${e.h ? pct(e.h, PS_H) : 0};${e.w ? `border-top:${(e.lw * 100 / 960).toFixed(3)}cqw solid #${e.color}` : `border-left:${(e.lw * 100 / 960).toFixed(3)}cqw solid #${e.color}`}"></div>`;
+  const font = `font-family:${e.face === 'head' ? D.F.wh : D.F.wb};font-size:calc(${e.pt} * 100cqw / 960);color:#${e.color}`;
+  if (e.t === 'text') return `<div class="ps-e ps-t" style="${pos};${font};${e.bold ? 'font-weight:700;' : ''}${e.italic ? 'font-style:italic;' : ''}text-align:${e.align};justify-content:${{top:'flex-start', middle:'center', bottom:'flex-end'}[e.valign]};${e.caps ? `text-transform:uppercase;letter-spacing:${(e.sp / e.pt).toFixed(3)}em;` : ''}" ${e.rtl ? 'dir="rtl" lang="ar"' : ''}><span>${esc(e.text)}</span></div>`;
+  if (e.t === 'list') return `<${e.numbered ? 'ol' : 'ul'} class="ps-e ps-l" style="${pos};${font};--mk:#${e.marker};--gap:calc(${e.gap} * 100cqw / 960)" ${e.rtl ? 'dir="rtl" lang="ar"' : ''}>${e.items.map(t => `<li>${esc(t)}</li>`).join('')}</${e.numbered ? 'ol' : 'ul'}>`;
+  if (e.t === 'img') return `<div class="ps-e ps-img" style="${pos}">${e.key ? `<img data-pskey="${esc(e.key)}" alt="${esc(e.alt)}">` : ''}<span class="ps-noimg">Picture of ${esc(clip(e.alt, 40))}</span></div>`;
+  return '';
+}
+function psSlideHTML(s, i, all, D, cls = ''){
+  return `<div class="ps-s ${cls}" role="group" aria-label="Slide ${i + 1}: ${esc(clip(s.title || '', 80))}">${psEls(s, i, all, D).map(e => psElHTML(e, D)).join('')}</div>`;
+}
+async function psHydrate(root = document){
+  for (const img of $$('img[data-pskey]', root)){ const d = await psLoadImg(img.dataset.pskey); if (d){ img.src = d.url; img.closest('.ps-img')?.classList.add('has'); } }
+}
+function psNotes(s, i, deck, start){
+  const ex = presIsExample(S.pres.source), byClaude = ['claude', 'pasted'].includes(deck.kind), secs = s.secs || 0;
+  return [s.notes || '', '', secs ? `Time: about ${fmtTime(secs)} (from ${fmtTime(start)} to ${fmtTime(start + secs)}).` : '',
+    s.from ? `From: ${s.from}.` : '', (s.flags || []).length ? `Check against my critique: ${s.flags.join(', ')}.` : '',
+    s.kind === 'figure' ? 'This is the original figure from the paper, reproduced as published (not redrawn).' : '',
+    byClaude && s.kind !== 'figure' ? 'Drafted by Claude from my critique — check it against the critique and the paper before presenting.' : '',
+    ex && i === 0 ? 'Example content — replace it with your own critique.' : ''].filter((x, k) => k < 2 || x).join('\n').trim();
+}
+async function psPptx(){
+  const deck = presDeck(), D = psDesign(), all = psSlides(deck), ds = psState(), Pg = await loadPptxGen(), pres = new Pg();
+  pres.layout = 'LAYOUT_WIDE'; pres.theme = {headFontFace:D.F.head, bodyFontFace:D.F.body};
+  const info = presInfo(S.pres.source);
+  pres.title = deck.title || 'Presentation'; pres.subject = `Research presentation · ${D.name} design`; pres.author = info.name || '';
+  await Promise.all(all.filter(s => s.fig).map(s => psLoadImg(s.fig.key)));
+  let start = 0;
+  all.forEach((s, i) => {
+    const sl = pres.addSlide();
+    psEls(s, i, all, D).forEach(e => {
+      if (e.t === 'box'){
+        const shape = e.shape === 'ellipse' ? pres.ShapeType.ellipse : e.r ? pres.ShapeType.roundRect : pres.ShapeType.rect;
+        sl.addShape(shape, {x:e.x, y:e.y, w:e.w, h:e.h, fill:{color:e.fill, transparency:e.alpha != null ? Math.round((1 - e.alpha) * 100) : 0}, line:e.line ? {color:e.line, width:e.lw || 1} : {type:'none'}, ...(e.r && e.shape !== 'ellipse' ? {rectRadius:e.r} : {})});
+      } else if (e.t === 'line') sl.addShape(pres.ShapeType.line, {x:e.x, y:e.y, w:e.w || .001, h:e.h || .001, line:{color:e.color, width:e.lw}});
+      else if (e.t === 'text') sl.addText(e.caps ? e.text.toUpperCase() : e.text, {x:e.x, y:e.y, w:e.w, h:e.h, margin:0, fontFace:e.face === 'head' ? D.F.head : D.F.body, fontSize:e.pt, color:e.color, bold:e.bold, italic:e.italic, align:e.align, valign:e.valign, charSpacing:e.sp || undefined, isTextBox:true, lineSpacingMultiple:1.1, rtlMode:!!e.rtl, lang:e.rtl ? 'ar-SA' : 'en-GB'});
+      else if (e.t === 'list') sl.addText(e.items.map((t, k) => ({text:t, options:{bullet:e.numbered ? {type:'number'} : {indent:Math.round(e.pt * .9)}, breakLine:k < e.items.length - 1, paraSpaceAfter:e.gap}})),
+        {x:e.x, y:e.y, w:e.w, h:e.h, margin:0, valign:'top', fontFace:D.F.body, fontSize:e.pt, color:e.color, isTextBox:true, lineSpacingMultiple:1.1, rtlMode:!!e.rtl, lang:e.rtl ? 'ar-SA' : 'en-GB', align:e.rtl ? 'right' : 'left'});
+      else if (e.t === 'img'){ const d = psImgs[e.key];
+        if (d && d.data){ const b = psContain(e, d); sl.addImage({data:d.data, x:b.x, y:b.y, w:b.w, h:b.h, altText:e.alt}); }
+        else sl.addText('[The figure picture is not available — add it from Figure Lab]', {x:e.x, y:e.y, w:e.w, h:e.h, align:'center', valign:'middle', fontFace:D.F.body, fontSize:14, color:'777777'}); }
+    });
+    if (ds.notes) sl.addNotes(psNotes(s, i, deck, start));
+    start += s.secs || 0;
+  });
+  return pres.write({outputType:'blob'});
+}
+
+/* --- Figure Intelligence: the paper's own figures, recommended for slides --- */
+function psFigPapers(){
+  const out = [];
+  (S.reader.papers || []).forEach(p => { const n = p.paras.filter(x => x.kind === 'figure').length; if (n) out.push({id:'r:' + p.id, label:(p.example ? '[Demo] ' : '') + (p.title || p.name || 'Paper'), n}); });
+  const fl = S.figlab.reviews.filter(r => r.img && !r.srcKey); if (fl.length) out.push({id:'fl', label:'Figures added in Figure Lab', n:fl.length});
+  return out;
+}
+function psFigPaperId(){
+  const ds = psState(), papers = psFigPapers(); if (papers.some(p => p.id === ds.paper)) return ds.paper;
+  const t = (presInfo(S.pres.source).title || '').toLowerCase().slice(0, 40);
+  return ((t && papers.find(p => p.label.toLowerCase().includes(t))) || papers.find(p => !/^\[Demo\]/.test(p.label)) || papers[0] || {}).id || '';
+}
+function psFigList(){
+  const id = psFigPaperId(); if (!id) return [];
+  if (id === 'fl') return S.figlab.reviews.filter(r => r.img && !r.srcKey).map(r => ({id:'fl:' + r.id, key:r.id + ':crop', label:r.figNo || 'Figure', caption:r.caption || '', page:r.page || '', paper:r.paperTitle || '', img:true, lab:r}));
+  const p = S.reader.papers.find(x => 'r:' + x.id === id); if (!p) return [];
+  return p.paras.filter(x => x.kind === 'figure').map(f => ({id:p.id + ':' + f.id, key:`${p.id}:${f.id}:crop`, label:f.label || 'Figure', caption:f.caption || f.text || '', page:f.page || '', paper:p.title || '', img:!!f.img, lab:figReviewOf(p, f)}));
+}
+const psFigState = () => (S.pres.figs[S.pres.source] ||= {items:{}});
+function psFigPrompt(figs, deck){
+  return `Recommend which ORIGINAL figures and tables of a research paper should appear in a student's presentation of their critique.
+RULES: use only the captions and notes below; a figure is shown exactly as published (never redrawn), so judge only whether it supports a slide's point. Recommend a figure only if it clearly helps the audience understand that slide; never use one figure twice; it is fine to recommend none.
+THE SLIDES:
+${deck.slides.map((s, i) => `[${i + 1}] ${s.title}: ${(s.bullets || []).join(' | ')}`).join('\n')}
+THE FIGURES OF THE PAPER:
+${figs.map(f => `[${f.id}] ${f.label}${f.page ? ` (p. ${f.page})` : ''}: ${clip(f.caption, 500)}${f.lab && f.lab.pattern ? ` — explained in Figure Lab as: ${clip(f.lab.pattern, 300)}` : ''}`).join('\n')}
+Reply with only JSON: {"figures":[{"id":"figure id","include":true,"slide":3,"why":"one sentence: how it supports that slide's point"}]} — one object per figure.`;
+}
+function psApplyFigs(r, figs, deck){
+  const st = psFigState(), list = vArr(r && (r.figures || (Array.isArray(r) ? r : null))), used = new Set();
+  let n = 0;
+  list.forEach(x => { const f = figs.find(g => g.id === vStr(x && x.id, 200)); const k = Math.round(+(x && x.slide)); if (!f) return;
+    const ok = !!x.include && f.img && k >= 1 && k <= deck.slides.length && !used.has(f.id); if (ok) used.add(f.id);
+    st.items[f.id] = {inc:ok, slide:k >= 1 && k <= deck.slides.length ? k : 0, why:vStr(x.why, 400), by:'claude'}; n++; });
+  st.at = Date.now(); return n > 0;
+}
+function psFigMatch(figs, deck){                                   // without Claude: the slide that shares the most words with the caption
+  const st = psFigState();
+  figs.forEach(f => {
+    const w = new Set(eTok(f.caption + ' ' + ((f.lab && f.lab.pattern) || '')));
+    let best = 0, at = 0, shared = [];
+    deck.slides.forEach((s, i) => { const t = eTok(s.title + ' ' + (s.bullets || []).join(' ')), hit = [...new Set(t.filter(x => w.has(x)))]; if (hit.length > best){ best = hit.length; at = i + 1; shared = hit; } });
+    st.items[f.id] = best >= 2 ? {inc:f.img, slide:at, why:`The slide and the caption share the words: ${shared.slice(0, 5).join(', ')} (matched by words — check that it really supports the point).`, by:'words'} : {inc:false, slide:0, why:'No slide shares enough words with this caption.', by:'words'};
+  });
+  st.at = Date.now();
+}
+
+/* --- diagrams drawn only from the critique (every point must be backed by its exact words) --- */
+const PS_DIAG = {process:'Methodology flowchart', framework:'Recommendations framework', compare:'Strengths and limitations', timeline:'Timeline or research stages', concept:'Conceptual diagram'};
+function psDiagPrompt(src, deck){
+  return `Create presentation diagrams from a student's research critique — ONLY from what the critique says.
+RULES: every item must be backed by an exact quotation of 5–25 consecutive words copied from the critique below. Never add steps, numbers, relationships, results or findings that the critique does not state. If the critique does not support a diagram type, return it with no items. Labels at most 5 words; details at most 14 words.
+Types: "process" (the study's methodology steps, as the critique describes them), "framework" (the critique's recommendations), "compare" (strengths and limitations; give each item "side": "strength" or "limit"), "timeline" (only if the critique gives stages or dates), "concept" (the first item is the central concept; the others are what the critique links to it).
+For each diagram give "slide": the number of the slide it should follow.
+THE SLIDES:
+${deck.slides.map((s, i) => `[${i + 1}] ${s.title}`).join('\n')}
+THE CRITIQUE:
+${presText(src).slice(0, 50000)}
+Reply with only JSON: {"diagrams":[{"type":"process","title":"slide title","slide":4,"items":[{"label":"","detail":"","quote":"exact words","side":""}]}]}`;
+}
+function psApplyDiags(src, r, deck){
+  const text = presText(src), out = [];
+  vArr(r && (r.diagrams || (Array.isArray(r) ? r : null))).forEach(d => {
+    const type = PS_DIAG[d && d.type] ? d.type : ''; if (!type) return;
+    const items = vArr(d.items).map(x => ({label:vStr(x && x.label, 60), detail:vStr(x && x.detail, 160), quote:vStr(x && x.quote, 400), side:x && x.side === 'limit' ? 'limit' : 'strength'}))
+      .filter(x => x.label && x.quote && vLocate(text, x.quote)).slice(0, type === 'concept' ? 7 : 6);    // a point without its words in the critique is dropped
+    const k = Math.round(+d.slide);
+    if (items.length >= (type === 'concept' ? 3 : 2)) out.push({id:uid(), type, title:vStr(d.title, 90) || PS_DIAG[type], slide:k >= 1 && k <= deck.slides.length ? k : deck.slides.length - 1, items, inc:true});
+  });
+  S.pres.diags[src] = {list:out, at:Date.now(), asked:true};
+  return true;
+}
+
+/* --- Presentation Quality Review: points only from checks that were actually run --- */
+const psDeckHash = deck => textHash(JSON.stringify(deck.slides.map(s => [s.title, s.bullets])));
+function psPaperText(){
+  const id = psFigPaperId();
+  if (id && id.startsWith('r:')){ const p = S.reader.papers.find(x => 'r:' + x.id === id); if (p && !p.example) return p.paras.filter(isReadable).map(x => x.text).join('\n'); }
+  const set = (S.verify.sets || []).find(s => s.docs && s.docs.paper && s.docs.critique && s.docs.critique.src === 'upload' && S.pres.upload && s.docs.critique.name === S.pres.upload.name) || null;
+  return set ? vUnits(set, 'paper').map(u => u.text).join('\n') : '';
+}
+function psCheckPrompt(src, deck, paper){
+  return `Check a student's presentation slides for academic accuracy.
+Compare the SLIDES with the student's CRITIQUE${paper ? ' and the ORIGINAL PAPER' : ''}. Report only real problems: a slide statement that contradicts or misrepresents the ${paper ? 'critique or the paper' : 'critique'}, a number that differs, a finding attributed to the authors that they did not report, or an important critique point missing from the slides. Quote EXACTLY.
+THE SLIDES:
+${deck.slides.map((s, i) => `[${i + 1}] ${s.title}\n${(s.bullets || []).join('\n')}`).join('\n\n')}
+THE CRITIQUE:
+${presText(src).slice(0, 40000)}
+${paper ? `THE ORIGINAL PAPER:\n${paper.slice(0, 80000)}` : ''}
+Reply with only JSON: {"issues":[{"slide":3,"slideQuote":"exact words from that slide","source":"critique|paper","problem":"what is wrong","sourceQuote":"exact words from the critique or paper"}],"missing":[{"point":"the missing point","critiqueQuote":"exact words from the critique"}]}`;
+}
+function psApplyCheck(src, deck, paper, r){
+  if (!r || typeof r !== 'object') return false;
+  const crit = presText(src), issues = [], missing = [];
+  vArr(r.issues).forEach(x => { const k = Math.round(+(x && x.slide)), s = deck.slides[k - 1]; if (!s) return;
+    const st = s.title + '\n' + (s.bullets || []).join('\n'), sq = vStr(x.slideQuote, 400), oq = vStr(x.sourceQuote, 600), from = x.source === 'paper' ? 'paper' : 'critique';
+    if (!vLocate(st, sq) || !oq || !vLocate(from === 'paper' ? paper : crit, oq)) return;     // only problems whose quotations are real
+    issues.push({slide:k, slideQuote:sq, source:from, problem:vStr(x.problem, 500), sourceQuote:oq}); });
+  vArr(r.missing).forEach(x => { const q = vStr(x && x.critiqueQuote, 500); if (q && vLocate(crit, q)) missing.push({point:vStr(x.point, 300), quote:q}); });
+  S.pres.qc[src] = {hash:psDeckHash(deck), paper:!!paper, at:Date.now(), issues, missing}; return true;
+}
+function psQuality(){
+  const src = S.pres.source, deck = presDeck(), D = psDesign(), all = psSlides(deck), ds = psState(), det = PS_DETAIL[ds.detail] || PS_DETAIL.standard;
+  const words = s => [s.title, ...(s.bullets || [])].join(' ').split(/\s+/).filter(Boolean).length;
+  const content = all.filter(s => !['title', 'closing', 'figure'].includes(s.kind) && !s.diagram), outlineSl = all.filter(s => s.oi != null);
+  const frac = (ok, n) => n ? ok / n : 1, C = [];
+  const crit = (k, label, max, checks) => C.push({k, label, max, checks});
+  const ck = (label, max, f, detail, o = {}) => ({label, max, pts:o.status === 'unverified' || o.status === 'na' ? 0 : Math.round(max * f * 10) / 10, f, detail, status:o.status || (f >= .999 ? 'pass' : f >= .6 ? 'warn' : 'fail'), slides:o.slides || []});
+  const slideNo = s => all.indexOf(s) + 1, unitsOf = list => list.map(s => ({loc:'Slide ' + slideNo(s), text:[s.title, ...(s.bullets || [])].join('\n')}));
+  // 1. Academic accuracy (25)
+  const critText = presText(src), norm = x => String(x).replace(/\s/g, '').replace(/,(?=\d{3}\b)/g, '');
+  const nums = numbersIn(unitsOf(content)), critNums = new Set(numbersIn([{loc:'', text:critText}]).map(n => n.val)), inCrit = nums.filter(n => critNums.has(n.val) || critText.includes(n.shown));
+  const ph = outlineSl.filter(s => /\[[^\]]{3,}\]/.test([s.title, ...(s.bullets || [])].join(' ')));
+  const paper = psPaperText(), qc = S.pres.qc[src], qcOk = qc && qc.hash === psDeckHash(deck);
+  const paperNums = paper ? new Set(numbersIn([{loc:'', text:paper}]).map(n => n.val)) : null;
+  crit('acc', 'Academic accuracy', 25, [
+    ck('Numbers on the slides are in your critique', 8, frac(inCrit.length, nums.length), nums.length ? `${inCrit.length} of ${nums.length} numbers found in the critique${nums.length - inCrit.length ? ' — check: ' + nums.filter(n => !inCrit.includes(n)).map(n => `${n.shown} (${n.loc})`).slice(0, 6).join(', ') : ''}` : 'No numbers on the slides to check', {slides:nums.filter(n => !inCrit.includes(n)).map(n => +n.loc.slice(6))}),
+    ck('No unfinished [placeholders]', 5, frac(outlineSl.length - ph.length, outlineSl.length), ph.length ? `Placeholders on slide${ph.length > 1 ? 's' : ''} ${ph.map(slideNo).join(', ')}` : 'None left', {slides:ph.map(slideNo)}),
+    paper ? ck('Numbers on the slides are in the original paper', 4, frac(nums.filter(n => paperNums.has(n.val)).length, nums.length), nums.length ? `${nums.filter(n => paperNums.has(n.val)).length} of ${nums.length} found in the paper` : 'No numbers to check')
+      : ck('Numbers checked against the original paper', 4, 0, 'Not verified — the original paper has not been added (step 1). No accuracy points are claimed for it.', {status:'unverified'}),
+    qcOk ? ck(`Claude’s check against the critique${qc.paper ? ' and the paper' : ''}`, 8, Math.max(0, 1 - qc.issues.length * .25), qc.issues.length ? `${pl(qc.issues.length, 'verified problem')} — see below` : 'No problem found (every reported problem must quote the slide and the source word for word)')
+      : ck('Accuracy check with Claude', 8, 0, qc ? 'Not verified for this version — the slides changed since the last check. Run it again.' : 'Not run yet — press “Check accuracy with Claude”.', {status:'unverified'})]);
+  // 2. Content coverage & relevance (20)
+  const parts = critSections(presUnits(src)).filter(p => !/\breferences?\b|^(paper information|citation details|part a\b|introduction|start)$/i.test(p.h.replace(/^section\s*[\d.]+\s*·\s*/i, '').trim()));
+  const slideTok = new Set(eTok(outlineSl.map(s => s.title + ' ' + (s.bullets || []).join(' ') + ' ' + (s.from || '')).join(' ')));
+  const covered = parts.filter(p => { const t = p.h.toLowerCase(); if (outlineSl.some(s => (s.from || '').toLowerCase().includes(t.slice(0, 24)))) return true;
+    const f = {}; eTok(p.text).forEach(w => f[w] = (f[w] || 0) + 1); const top = Object.entries(f).sort((a, b) => b[1] - a[1]).slice(0, 8).map(x => x[0]); return top.filter(w => slideTok.has(w)).length >= 3; });
+  const withSrc = content.filter(s => s.from), critTok = new Set(eTok(critText)), onTopic = content.filter(s => eTok(s.title + ' ' + (s.bullets || []).join(' ')).filter(w => critTok.has(w)).length >= 2);
+  crit('cov', 'Content coverage & relevance', 20, [
+    ck('The critique’s main parts are covered', 12, frac(covered.length, parts.length), parts.length ? `${covered.length} of ${parts.length} parts covered${parts.length - covered.length ? ' — missing: ' + parts.filter(p => !covered.includes(p)).map(p => clip(p.h, 40)).slice(0, 5).join('; ') : ''}` : 'The critique has no separate parts to compare'),
+    ck('Each content slide names its source in the critique', 4, frac(withSrc.length, content.length), `${withSrc.length} of ${content.length} slides`, {slides:content.filter(s => !s.from).map(slideNo)}),
+    ck('Slides stay on the critique’s topic', 4, frac(onTopic.length, content.length), `${onTopic.length} of ${content.length} slides share key words with the critique`, {slides:content.filter(s => !onTopic.includes(s)).map(slideNo)})]);
+  // 3. Visual design & consistency (20)
+  const els = all.flatMap((s, i) => psEls(s, i, all, D).map(e => ({...e, n:i + 1}))), texts = els.filter(e => e.t === 'text' || e.t === 'list');
+  const large = e => e.pt >= 24 || (e.bold && e.pt >= 18.66);
+  const lowC = texts.filter(e => psContrast(e.color, e.on) < (large(e) ? 3 : 4.5));
+  const titles = outlineSl.filter(s => s.title.split(/\s+/).length > 10 || /\.$/.test(s.title.trim()));
+  const bs = outlineSl.flatMap(s => s.bullets || []), dots = bs.filter(b => /[.!?]$/.test(b.trim())).length, consistent = !bs.length || dots / bs.length >= .8 || dots / bs.length <= .2;
+  crit('vis', 'Visual design & consistency', 20, [
+    ck('One design system on every slide', 4, 1, `All ${all.length} slides use ${D.name}${D.theme === 'custom' ? ' with your colours' : ''}`),
+    ck('Text contrast meets WCAG AA', 6, frac(texts.length - lowC.length, texts.length), lowC.length ? `${pl(lowC.length, 'text')} below the contrast ratio (lowest ${Math.min(...lowC.map(e => psContrast(e.color, e.on))).toFixed(1)}:1) on slide${new Set(lowC.map(e => e.n)).size > 1 ? 's' : ''} ${[...new Set(lowC.map(e => e.n))].join(', ')}` : `All ${texts.length} text items pass (measured)`, {slides:[...new Set(lowC.map(e => e.n))]}),
+    ck('Readable font sizes (points ≥ 14 pt, labels ≥ 10 pt)', 5, frac(texts.length - texts.filter(e => e.pt < ((e.role === 'body' || e.t === 'list') ? 14 : 10)).length, texts.length), (() => { const sm = texts.filter(e => e.pt < ((e.role === 'body' || e.t === 'list') ? 14 : 10)); return sm.length ? `${pl(sm.length, 'text')} too small on slide${new Set(sm.map(e => e.n)).size > 1 ? 's' : ''} ${[...new Set(sm.map(e => e.n))].join(', ')}` : `Smallest point text ${Math.min(...texts.filter(e => e.role === 'body' || e.t === 'list').map(e => e.pt), 99)} pt`; })(), {slides:[...new Set(texts.filter(e => e.pt < ((e.role === 'body' || e.t === 'list') ? 14 : 10)).map(e => e.n))]}),
+    ck('Titles: short, no full stop', 3, frac(outlineSl.length - titles.length, outlineSl.length), titles.length ? `Slide${titles.length > 1 ? 's' : ''} ${titles.map(slideNo).join(', ')}` : 'All titles are consistent', {slides:titles.map(slideNo)}),
+    ck('Consistent punctuation at the end of points', 2, consistent ? 1 : 0, consistent ? 'Consistent' : `${dots} of ${bs.length} points end with a full stop — make them all the same`)]);
+  // 4. Readability & slide balance (15)
+  const wordy = content.filter(s => words(s) > det.max), many = content.filter(s => (s.bullets || []).length > 6), over = [...new Set(els.filter(e => e.over).map(e => e.n))];
+  const dupes = []; const seen = [];
+  outlineSl.forEach(s => (s.bullets || []).forEach((b, j) => { const w = simWords(b); if (w.length < 4) return; const prev = seen.find(x => x.s !== s && (x.t === w.join(' ') || tooCloseToOriginal(b, x.b))); if (prev) dupes.push({s, j, b, of:prev.s}); seen.push({s, b, t:w.join(' ')}); }));
+  crit('read', 'Readability & slide balance', 15, [
+    ck(`Words per slide within ${det.max} (${det.l})`, 5, frac(content.length - wordy.length, content.length), wordy.length ? `Too many words on slide${wordy.length > 1 ? 's' : ''} ${wordy.map(slideNo).join(', ')}` : 'All within the limit', {slides:wordy.map(slideNo)}),
+    ck('At most 6 points per slide', 3, frac(content.length - many.length, content.length), many.length ? `Slide${many.length > 1 ? 's' : ''} ${many.map(slideNo).join(', ')}` : 'All within 6', {slides:many.map(slideNo)}),
+    ck('All text fits its box', 4, frac(all.length - over.length, all.length), over.length ? `Text is squeezed to the smallest size on slide${over.length > 1 ? 's' : ''} ${over.join(', ')}` : 'Everything fits', {slides:over}),
+    ck('No repeated points', 3, Math.max(0, 1 - dupes.length / 3), dupes.length ? dupes.map(d => `slide ${slideNo(d.s)} repeats slide ${slideNo(d.of)}: “${clip(d.b, 60)}”`).slice(0, 4).join('; ') : 'No repetition found', {slides:dupes.map(d => slideNo(d.s))})]);
+  // 5. Figure & diagram relevance (10)
+  const figs = psFigList(), used = all.filter(s => s.kind === 'figure'), diags = all.filter(s => s.diagram), withPic = figs.filter(f => f.img);
+  if (!withPic.length && !used.length && !diags.length) crit('fig', 'Figure & diagram relevance', 10, [ck('Figures and diagrams', 10, 0, 'Not applicable — no figures were extracted from the paper and no diagram was added', {status:'na'})]);
+  else crit('fig', 'Figure & diagram relevance', 10, [
+    used.length ? ck('Each figure shows its number, page, caption and source', 4, frac(used.filter(s => s.fig.page && s.fig.caption && psImgs[s.fig.key] !== null).length, used.length), `${used.length} figure${used.length > 1 ? 's' : ''} from the paper, reproduced as published`)
+      : ck('Figures from the paper are considered', 4, .5, `None of the paper’s ${withPic.length} extracted figures is used — consider one (step 6)`, {status:'warn'}),
+    used.length ? ck('Each figure has a reason and a slide', 3, frac(used.filter(s => s.why).length, used.length), `${used.filter(s => s.why).length} of ${used.length} have a reason`) : ck('Each figure has a reason and a slide', 3, 0, 'No figure included', {status:'na'}),
+    ck('No figure used twice', 1, new Set(used.map(s => s.fig.id)).size === used.length ? 1 : 0, 'Each figure appears once'),
+    diags.length ? ck('Every diagram point is backed by the critique’s own words', 2, 1, `${diags.length} diagram${diags.length > 1 ? 's' : ''}; every point was found word for word`) : ck('Diagrams', 2, 0, 'No diagram included', {status:'na'})]);
+  // 6. Presentation flow & organisation (10)
+  const order = outlineSl.map(s => parts.findIndex(p => (s.from || '').toLowerCase().includes(p.h.toLowerCase().slice(0, 24)))).filter(x => x >= 0);
+  let inOrder = 0; for (let k = 1; k < order.length; k++) if (order[k] >= order[k - 1]) inOrder++;
+  const sum = outlineSl.reduce((a, s) => a + (s.secs || 0), 0), tdup = outlineSl.filter((s, k) => outlineSl.findIndex(x => x.title.trim().toLowerCase() === s.title.trim().toLowerCase()) !== k);
+  crit('flow', 'Presentation flow & organisation', 10, [
+    ck('Opens with a title slide', 2, all[0] && all[0].kind === 'title' ? 1 : 0, all[0] && all[0].kind === 'title' ? 'Yes' : 'The first slide is not a title slide'),
+    ck('Ends with questions or a conclusion', 2, all.length && all[all.length - 1].kind === 'closing' ? 1 : 0, all.length && all[all.length - 1].kind === 'closing' ? 'Yes' : 'Add a closing slide (questions / thank you)'),
+    ck('Follows the order of the critique', 3, order.length > 1 ? inOrder / (order.length - 1) : 1, order.length > 1 ? `${inOrder} of ${order.length - 1} steps keep the critique’s order` : 'Not enough sources to compare'),
+    ck(`Timing adds up to ${S.pres.minutes} minutes`, 2, Math.abs(sum - S.pres.minutes * 60) <= 5 ? 1 : 0, `${fmtTime(sum)} planned`),
+    ck('No two slides with the same title', 1, tdup.length ? 0 : 1, tdup.length ? `Repeated: ${tdup.map(s => s.title).join(', ')}` : 'All titles differ')]);
+  C.forEach(c => { const ap = c.checks.filter(x => !['unverified', 'na'].includes(x.status)); c.earned = Math.round(ap.reduce((a, x) => a + x.pts, 0) * 10) / 10; c.applies = ap.reduce((a, x) => a + x.max, 0);
+    c.unverified = c.checks.filter(x => x.status === 'unverified').reduce((a, x) => a + x.max, 0); c.na = c.checks.every(x => x.status === 'na'); });
+  const earned = C.reduce((a, c) => a + c.earned, 0), applies = C.reduce((a, c) => a + c.applies, 0), unver = C.reduce((a, c) => a + c.unverified, 0);
+  return {C, earned:Math.round(earned), applies, unver, score:applies ? Math.round(earned / applies * 100) : 0, dupes, wordy, many, titles, ph, lowC, qc:qcOk ? qc : null, paper:!!paper, D, all, bs, consistent};
+}
+/* --- the page: ten steps --- */
+let psRun = null;
+async function psAsk(label, prompt, apply, tier = 'default'){
+  if (!aiReady()) { toast('Claude is not available on this page'); return false; }
+  if (psRun || presRun || aiRun) { toast('Claude is still working — please wait or press Stop'); return false; }
+  const ctl = new AbortController(); psRun = {ctl, label}; RENDER.present();
+  try { const r = await AI.json(prompt, {signal:ctl.signal, modelTier:tier, cache:false}); const ok = apply(r); save(); if (ok === false) alert('Claude answered, but nothing usable could be read from the answer. Please try again.'); return ok !== false; }
+  catch (e){ if (e && e.code !== 'cancelled') alert(aiError(e)); return false; }
+  finally { psRun = null; RENDER.present(); }
+}
+function psStepper(stage){
+  const k = PS_STAGES.findIndex(s => s[0] === stage);
+  return `<nav class="ps-steps" aria-label="Presentation steps"><ol>${PS_STAGES.map(([id, l], i) => `<li><button data-act="ps-stage" data-v="${id}" ${id === stage ? 'aria-current="step"' : ''} class="${i < k ? 'done' : ''}"><span class="ps-sn">${i + 1}</span><span class="ps-sl">${l}</span></button></li>`).join('')}</ol></nav>`;
+}
+function psNav(stage){
+  const k = PS_STAGES.findIndex(s => s[0] === stage), prev = PS_STAGES[k - 1], next = PS_STAGES[k + 1];
+  return `<div class="ps-nav">${prev ? `<button class="btn" data-act="ps-stage" data-v="${prev[0]}">${icon('back')}${k}. ${prev[1]}</button>` : '<span></span>'}
+    ${next ? `<button class="btn primary" data-act="ps-stage" data-v="${next[0]}">${k + 2}. ${next[1]}${icon('fwd')}</button>` : ''}</div>`;
+}
+const psSwatches = D => `<div class="ps-sw">${[['Background', D.P.bg], ['Text', D.P.ink], ['Headings', D.P.head], ['Accent', D.P.accent], ['Second accent', D.P.accent2], ['Title slide', D.P.hero]].map(([l, c]) => `<span class="ps-swi"><span class="ps-swc" style="background:#${c}"></span><span class="small">${l}<br><code>#${c}</code></span></span>`).join('')}</div>`;
+function psReps(all){                                              // representative slides: the title, a slide that shows the design's composition, and a comparison or figure
+  const pick = ks => all.findIndex(s => ks.includes(s.kind));
+  return [...new Set([0, pick(['method', 'stat', 'content']), pick(['compare', 'figure', 'framework']), pick(['content'])].filter(i => i >= 0))].slice(0, 3);
+}
+function psRun1(){ return psRun ? `<div class="ai-run"><span class="spin" aria-hidden="true"></span><span>${esc(psRun.label)}…</span><button class="btn sm" data-act="ps-stop">${icon('stop')}Stop</button></div>` : ''; }
+function psStageHTML(stage, P0){
+  const ds = psState(), deck = presDeck(), src = S.pres.source;
+  if (stage === 'docs'){
+    const papers = psFigPapers(), pid = psFigPaperId();
+    return P0.source + `<div class="card ps-card"><h3>The original research paper <span class="chip tag">strongly recommended</span></h3>
+      <p class="small muted">Used for its figures (step 6) and to check the slides’ accuracy (step 9). Papers come from the Research Reader (step 2.1) or Figure Lab. Without it, accuracy is shown as <b>not verified</b>.</p>
+      ${papers.length ? `<label class="f" for="psPaper">Paper</label><select id="psPaper" data-psd="paper">${papers.map(p => `<option value="${p.id}" ${p.id === pid ? 'selected' : ''}>${esc(clip(p.label, 80))} · ${pl(p.n, 'figure')}</option>`).join('')}</select>`
+        : `<p class="st-note st-note-warn">${icon('info')}No paper with figures yet. <a href="#critiquing/1" data-act="goto" data-part="critiquing" data-i="0">Add the paper in the Research Reader</a> — its figures are found and cropped there.</p>`}</div>`;
+  }
+  if (stage === 'custom'){
+    const opt = (k, v, l, cur) => `<label class="ps-opt"><input type="radio" name="ps-${k}" data-psd="${k}" value="${v}" ${String(cur) === String(v) ? 'checked' : ''}><span>${l}</span></label>`;
+    return `<div class="card ps-card"><h3>Customize your presentation</h3><p class="small muted">Slide count, detail, language and speaker notes shape the outline — outline again in step 5 after changing them. Theme and design apply straight away.</p>
+      <div class="ps-form">
+        <fieldset><legend class="f">Theme</legend>${opt('theme', 'auto', 'Automatic — the design’s recommended look', ds.theme)}${opt('theme', 'light', 'Light', ds.theme)}${opt('theme', 'dark', 'Dark', ds.theme)}${opt('theme', 'custom', 'Custom colours (set in step 4)', ds.theme)}</fieldset>
+        <fieldset><legend class="f">Number of slides</legend><select data-psd="count" aria-label="Number of slides"><option value="auto" ${ds.count === 'auto' ? 'selected' : ''}>Automatic — ${PRES_COUNT[S.pres.minutes]} for ${S.pres.minutes} minutes</option>${[5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15].map(n => `<option value="${n}" ${String(ds.count) === String(n) ? 'selected' : ''}>${n} slides</option>`).join('')}</select></fieldset>
+        <fieldset><legend class="f">Content detail</legend>${Object.entries(PS_DETAIL).map(([k, v]) => opt('detail', k, `${v.l} — ${v.b} points, up to ${v.w} words each`, ds.detail)).join('')}</fieldset>
+        <fieldset><legend class="f">Figures and diagrams</legend><label class="ps-opt"><input type="checkbox" data-psd="figs" ${ds.figs ? 'checked' : ''}><span>Use the paper’s own figures where they help</span></label><label class="ps-opt"><input type="checkbox" data-psd="diagrams" ${ds.diagrams ? 'checked' : ''}><span>Add diagrams drawn from my critique</span></label></fieldset>
+        <fieldset><legend class="f">Presentation language</legend>${opt('lang', 'en', 'English', ds.lang)}${opt('lang', 'ar', 'العربية (right to left)', ds.lang)}</fieldset>
+        <fieldset><legend class="f">Speaker notes</legend>${opt('notes', 'true', 'Include speaker notes in the PowerPoint', String(ds.notes))}${opt('notes', 'false', 'No speaker notes', String(ds.notes))}</fieldset>
+      </div></div>`;
+  }
+  if (stage === 'designs'){
+    const all = psSlides(deck), reps = psReps(all), D0 = psDesign('elegant');
+    return `<div class="card ps-card"><h3>Three design proposals</h3><p class="small muted">Each is drawn from <b>your own slides</b>, tuned to your topic (${esc(D0.topic.label)}${D0.topic.n ? `, from ${D0.topic.n} topic words in your critique` : ''}) and to your theme. They differ in composition, typography and layout — not only colour. Compare them side by side, then choose one.</p></div>
+      <div class="ps-designs">${Object.keys(PS_DESIGNS).map(id => { const D = psDesign(id), on = ds.style === id;
+        return `<section class="card ps-dcard ${on ? 'on' : ''}" aria-labelledby="psd-${id}"><div class="output-head"><h3 id="psd-${id}" style="margin:0">${esc(D.name)}</h3>${on ? `<span class="chip ok-chip">${icon('check')}Chosen</span>` : ''}</div>
+          <p class="small">${esc(D.what)}</p>
+          <div class="ps-reps">${reps.map(i => psSlideHTML(all[i], i, all, D)).join('')}</div>
+          <p class="small"><b>Typography:</b> ${esc(D.F.l)}</p>${psSwatches(D)}
+          <button class="btn ${on ? '' : 'primary'}" data-act="ps-style" data-v="${id}">${on ? `${icon('check')}Chosen — refine it` : `Choose ${esc(D.name)}`}</button></section>`; }).join('')}</div>`;
+  }
+  if (stage === 'refine'){
+    if (!ds.style) return `<div class="card ps-card"><p>Choose one of the three designs first.</p><button class="btn primary" data-act="ps-stage" data-v="designs">See the three designs</button></div>`;
+    const D = psDesign(), all = psSlides(deck), reps = psReps(all).concat(all.findIndex(s => s.kind === 'closing')).filter((v, i, a) => v >= 0 && a.indexOf(v) === i).slice(0, 4);
+    const q = all.flatMap((s, i) => psEls(s, i, all, D).filter(e => (e.t === 'text' || e.t === 'list') && psContrast(e.color, e.on) < ((e.pt >= 24 || (e.bold && e.pt >= 18.66)) ? 3 : 4.5)).map(e => i + 1));
+    return `<div class="card ps-card"><h3>${esc(D.name)} — refine it</h3>
+      <div class="ps-form">
+        <fieldset><legend class="f">Colours</legend><p class="small muted" style="margin:0 0 8px">${ds.theme === 'custom' ? 'Your colours.' : `Tuned to your topic (${esc(D.topic.label)}). Pick your own to switch to custom colours.`}</p>
+          <label class="ps-col">Accent <input type="color" data-psd="accent" value="#${D.P.accent}"></label><label class="ps-col">Second accent <input type="color" data-psd="accent2" value="#${D.P.accent2}"></label>
+          ${ds.theme === 'custom' ? `<button class="btn sm ghost" data-act="ps-reset-colours">${icon('refresh')}Back to the design’s colours</button>` : ''}</fieldset>
+        <fieldset><legend class="f">Fonts</legend><select data-psd="fonts" aria-label="Fonts">${Object.entries(PS_FONTS).map(([k, f]) => `<option value="${k}" ${(ds.fonts || PS_DESIGNS[D.id].fonts) === k ? 'selected' : ''}>${esc(f.l)}${k === PS_DESIGNS[D.id].fonts ? ' (design default)' : ''}</option>`).join('')}</select>
+          <p class="small muted" style="margin:6px 0 0">Fonts that come with Windows and macOS, so the PowerPoint looks the same on other computers.${D.ar ? ' Arabic slides use Arial.' : ''}</p></fieldset>
+        <fieldset><legend class="f">Theme</legend><select data-psd="theme" aria-label="Theme">${[['auto', 'Automatic'], ['light', 'Light'], ['dark', 'Dark'], ['custom', 'Custom colours']].map(([v, l]) => `<option value="${v}" ${ds.theme === v ? 'selected' : ''}>${l}</option>`).join('')}</select></fieldset>
+      </div>
+      ${q.length ? `<p class="st-note st-note-warn">${icon('info')}Some text is hard to read with these colours (slide${new Set(q).size > 1 ? 's' : ''} ${[...new Set(q)].join(', ')}). Choose a darker or lighter accent, or go back to the design’s colours.</p>` : `<p class="small" style="color:var(--ok)">${icon('check')} All text passes the WCAG AA contrast check with these colours.</p>`}
+      ${psSwatches(D)}</div>
+      <div class="ps-grid">${reps.map(i => psSlideHTML(all[i], i, all, D)).join('')}</div>`;
+  }
+  if (stage === 'outline') return P0.steps + P0.slides;
+  if (stage === 'figures'){
+    const figs = psFigList(), st = psFigState(), dg = S.pres.diags[src];
+    return `<div class="card ps-card"><div class="output-head"><h3 style="margin:0">Recommended Research Visuals</h3>
+      <span class="row">${figs.length ? `<button class="btn sm primary" data-act="ps-fig-ai" data-ai-btn>${icon('sparkle')}${st.at ? 'Recommend again' : 'Recommend with Claude'}</button><button class="btn sm" data-act="ps-fig-match">${icon('search')}Match by words (no Claude)</button>` : ''}</span></div>
+      <p class="small muted">The paper’s own figures and tables, as published — their numbers, labels and relationships are never redrawn or changed. Include the ones that support a slide; each appears once, after its slide, with its caption, page and source.${!ds.figs ? ' <b>Figures are switched off in step 2.</b>' : ''}</p>
+      ${!figs.length ? `<p class="st-note">${icon('info')}No figures found for the chosen paper (step 1). Add the paper in the Research Reader, or crop figures in Figure Lab.</p>` : `<div class="ps-figs">${figs.map(f => { const it = st.items[f.id] || {};
+        return `<article class="ps-fig ${it.inc ? 'on' : ''}"><div class="ps-thumb">${f.img ? `<img data-pskey="${esc(f.key)}" alt="${esc(f.label)}">` : '<span class="small muted">No picture extracted</span>'}</div>
+          <div class="ps-fig-t"><b>${esc(f.label)}</b>${f.page ? ` · page ${esc(String(f.page))}` : ''}<p class="small">${esc(clip(f.caption || '(no caption)', 220))}</p>
+          ${it.why ? `<p class="small"><span class="chip">${it.by === 'claude' ? 'by Claude — check it' : 'matched by words'}</span> ${esc(it.why)}</p>` : ''}
+          <div class="row"><label class="ps-opt"><input type="checkbox" data-psfig="inc" data-id="${esc(f.id)}" ${it.inc ? 'checked' : ''} ${f.img ? '' : 'disabled'}><span>Include</span></label>
+          <label class="small">after slide <select data-psfig="slide" data-id="${esc(f.id)}" aria-label="Show ${esc(f.label)} after slide">${['<option value="0">—</option>', ...deck.slides.map((s, i) => `<option value="${i + 1}" ${+it.slide === i + 1 ? 'selected' : ''}>${i + 1}. ${esc(clip(s.title, 34))}</option>`)].join('')}</select></label></div>
+          <p class="small muted" style="margin:6px 0 0">${f.img ? 'Original picture.' : ''} Want an editable version? Rebuild it in <a href="#writing/4" data-act="goto" data-part="writing" data-i="3">Figure Lab</a> from the paper’s own numbers — ScholarPath never guesses them.</p></div></article>`; }).join('')}</div>`}</div>
+      <div class="card ps-card"><div class="output-head"><h3 style="margin:0">Diagrams from your critique</h3><button class="btn sm primary" data-act="ps-diag-ai" data-ai-btn>${icon('sparkle')}${dg ? 'Create again' : 'Create diagrams with Claude'}</button></div>
+      <p class="small muted">Methodology flowchart, recommendations framework, strengths and limitations, timeline, conceptual diagram — <b>only from what your critique says</b>. Every point must come with your critique’s exact words, or it is left out.${!ds.diagrams ? ' <b>Diagrams are switched off in step 2.</b>' : ''}</p>
+      ${dg ? (dg.list.length ? `<div class="ps-figs">${dg.list.map(d => `<article class="ps-fig ${d.inc ? 'on' : ''}"><div class="ps-fig-t"><b>${esc(PS_DIAG[d.type])}</b> · “${esc(d.title)}” <span class="chip">by Claude — check it</span>
+        <ul class="small">${d.items.map(x => `<li><b>${esc(x.label)}</b>${x.detail ? ' — ' + esc(x.detail) : ''}<br><span class="muted">From your critique: “${esc(clip(x.quote, 140))}”</span></li>`).join('')}</ul>
+        <div class="row"><label class="ps-opt"><input type="checkbox" data-psdg="inc" data-id="${d.id}" ${d.inc ? 'checked' : ''}><span>Include</span></label><label class="small">after slide <select data-psdg="slide" data-id="${d.id}" aria-label="Show this diagram after slide">${deck.slides.map((s, i) => `<option value="${i + 1}" ${+d.slide === i + 1 ? 'selected' : ''}>${i + 1}. ${esc(clip(s.title, 34))}</option>`).join('')}</select></label></div></div></article>`).join('')}</div>` : '<p class="small muted">Your critique did not support any diagram well enough — nothing was drawn.</p>') : ''}</div>`;
+  }
+  if (stage === 'generate'){
+    const D = psDesign(), all = psSlides(deck);
+    return `<div class="card ps-card"><h3>Generate the presentation</h3><ul class="ps-sum">
+      <li><b>Design:</b> ${ds.style ? esc(D.name) : '<span class="st-warn-t">not chosen — Academic Elegant is used</span>'} · ${esc({auto:'automatic', light:'light', dark:'dark', custom:'custom colours'}[ds.theme])} theme · ${esc(D.F.l)}</li>
+      <li><b>Slides:</b> ${all.length} — ${deck.slides.length} from your outline${all.filter(s => s.kind === 'figure').length ? `, ${pl(all.filter(s => s.kind === 'figure').length, 'figure')} from the paper` : ''}${all.filter(s => s.diagram).length ? `, ${pl(all.filter(s => s.diagram).length, 'diagram')}` : ''}</li>
+      <li><b>Outline:</b> ${deck.kind === 'template' ? '<span class="st-warn-t">the template — outline it from your critique in step 5 first</span>' : deck.kind === 'claude' || deck.kind === 'pasted' ? 'by Claude from your critique' : 'from your critique’s sections'} · ${S.pres.minutes} minutes · ${esc(PS_DETAIL[ds.detail].l)} detail · ${ds.lang === 'ar' ? 'Arabic' : 'English'} · ${ds.notes ? 'with' : 'without'} speaker notes</li></ul>
+      <button class="btn primary" data-act="ps-gen">${icon('sparkle')}Generate the presentation</button>
+      <p class="small muted" style="margin:10px 0 0">You will see every slide in the next step, where you can change them before the quality review and the export.</p></div>`;
+  }
+  if (stage === 'preview'){
+    const D = psDesign(), all = psSlides(deck);
+    return `<div class="card ps-card"><h3>Preview &amp; edit</h3><p class="small muted">Exactly what the PowerPoint will contain, in ${esc(D.name)}. Edit a slide’s words, or remove a figure or diagram.</p></div>
+      <div class="ps-grid ps-preview">${all.map((s, i) => `<figure class="ps-pv">${psSlideHTML(s, i, all, D)}<figcaption class="row"><span class="small"><b>${i + 1}</b> · ${esc(clip(s.title || '', 46))}</span>
+        ${s.oi != null ? (deck.kind === 'template' ? '' : `<button class="btn sm ghost" data-act="ps-edit" data-i="${s.oi}">${icon('pen')}Edit</button>`) : s.fig ? `<button class="btn sm ghost" data-act="ps-unfig" data-id="${esc(s.fig.id)}">${icon('x')}Remove figure</button>` : s.diagram ? `<button class="btn sm ghost" data-act="ps-undiag" data-id="${s.diagram.id}">${icon('x')}Remove diagram</button>` : ''}</figcaption></figure>`).join('')}</div>`;
+  }
+  if (stage === 'quality'){
+    const Q = psQuality(), qc = Q.qc, fixes = psFixes(Q);
+    const cls = x => x.status === 'pass' ? 'ok' : x.status === 'warn' ? 'warn' : x.status === 'fail' ? 'bad' : 'grey';
+    return `<div class="card ps-card ps-score"><div class="ps-big"><span class="ps-n">${Q.score}</span><span class="ps-of">/100</span></div>
+      <div><h3 style="margin:0 0 4px">Overall Quality Score</h3><p class="small" style="margin:0">${Q.earned} of the ${Q.applies} points that could be checked${Q.unver ? `. <b>${Q.unver} accuracy points are not verified</b> and are not counted` : ''}. Every point comes from a check listed below.</p>
+      ${!Q.paper ? `<p class="st-note st-note-warn" style="margin:10px 0 0">${icon('info')}<span><b>Academic accuracy cannot be fully verified:</b> the original paper has not been added (step 1). The slides are checked against your critique only.</span></p>` : ''}</div></div>
+      <div class="card ps-card"><div class="output-head"><h3 style="margin:0">The rubric</h3><button class="btn sm primary" data-act="ps-check" data-ai-btn>${icon('shield')}${qc ? 'Check accuracy again with Claude' : 'Check accuracy with Claude'}</button></div>
+      <div class="st-tablewrap"><table class="ps-rub"><thead><tr><th>Criterion and checks</th><th>Result</th><th>Points</th></tr></thead><tbody>
+      ${Q.C.map(c => `<tr class="ps-crit"><th scope="row">${esc(c.label)}</th><td>${c.na ? 'Not applicable' : c.unverified ? `${c.unverified} points not verified` : ''}</td><td><b>${c.na ? '—' : `${c.earned} / ${c.applies}`}</b> <span class="small muted">(max ${c.max})</span></td></tr>
+        ${c.checks.map(x => `<tr><td><span class="e-tag e-tag-${cls(x)}">${x.status === 'unverified' ? 'Not verified' : x.status === 'na' ? 'N/A' : x.status === 'pass' ? 'Pass' : x.status === 'warn' ? 'Check' : 'Fix'}</span> ${esc(x.label)}</td><td class="small">${esc(x.detail)}</td><td>${['unverified', 'na'].includes(x.status) ? '—' : `${x.pts} / ${x.max}`}</td></tr>`).join('')}`).join('')}
+      </tbody></table></div></div>
+      ${qc ? `<div class="card ps-card"><h3>Academic accuracy warnings <span class="chip">by Claude — check it</span></h3>${qc.issues.length ? `<ul>${qc.issues.map(x => `<li><b>Slide ${x.slide}:</b> “${esc(x.slideQuote)}” — ${esc(x.problem)}<br><span class="small muted">The ${x.source} says: “${esc(clip(x.sourceQuote, 220))}”</span></li>`).join('')}</ul>` : '<p class="small">No problem found. Each reported problem must quote the slide and the source word for word.</p>'}
+        ${qc.missing.length ? `<h4>Important points from your critique that are missing</h4><ul>${qc.missing.map(x => `<li>${esc(x.point)} <span class="small muted">— “${esc(clip(x.quote, 160))}”</span></li>`).join('')}</ul>` : ''}</div>` : ''}
+      <div class="card ps-card"><h3>Improve My Presentation</h3><p class="small muted">Suggested changes. Nothing changes until you press a button, and the words of your critique are never rewritten.</p>
+      ${fixes.length ? `<ul class="ps-fixes">${fixes.map(f => `<li><span>${f.html}</span>${f.k ? `<button class="btn sm" data-act="ps-fix" data-k="${esc(f.k)}">${icon('check')}${esc(f.btn)}</button>` : f.edit != null ? `<button class="btn sm ghost" data-act="ps-edit" data-i="${f.edit}">${icon('pen')}Edit slide ${f.edit + 1}</button>` : f.go ? `<button class="btn sm ghost" data-act="ps-stage" data-v="${f.go}">${esc(f.btn)}</button>` : ''}</li>`).join('')}</ul>` : `<p class="small" style="color:var(--ok)">${icon('check')} Nothing to improve from the checks.</p>`}</div>`;
+  }
+  if (stage === 'export'){
+    const D = psDesign();
+    return `<div class="card ps-card"><h3>Export</h3><div class="ps-exports">
+      <div><b>Editable PowerPoint (.pptx)</b><p class="small muted">${esc(D.name)} design, editable text and shapes, the paper’s figures and ${ds.notes ? 'speaker notes with timings' : 'no speaker notes'}. Opens in PowerPoint, Keynote and Google Slides.</p><button class="btn primary" data-act="pres-pptx">${icon('download')}Download the PowerPoint</button></div>
+      <div><b>PDF</b><p class="small muted">Prints every slide on its own 16:9 page. In the print window, choose <b>Save as PDF</b>.</p><button class="btn" data-act="ps-print">${icon('file')}Print or save as PDF</button></div>
+      <div><b>Slide outline (text)</b><p class="small muted">Titles, points, notes and timings, to paste anywhere.</p><button class="btn" data-act="copy" data-target="#presOut">${icon('copy')}Copy the outline</button></div></div>
+      <div class="output" id="presOut" hidden>${esc(presOutline(deck))}</div></div>
+      <div class="card ps-card"><h3>Use it in Canva</h3>
+      <p class="small">ScholarPath is not connected to Canva: a direct connection needs Canva’s approval and a server to keep the login safe, which a free website without accounts does not have. Canva is never required — the PowerPoint above is complete on its own.</p>
+      <ol class="small"><li>Download the PowerPoint above.</li><li>In Canva, choose <b>Create a design → Import file</b> (or drag the .pptx onto the Canva home page).</li><li>Canva turns each slide into an editable page. Check the fonts — Canva may replace Georgia, Calibri or Trebuchet MS with similar fonts — and the speaker notes, which may not all come across.</li><li>Charts and figures arrive as pictures; diagrams arrive as shapes you can edit.</li></ol>
+      <a class="btn" href="https://www.canva.com/" target="_blank" rel="noopener">${icon('ext')}Open Canva</a></div>`;
+  }
+  return '';
+}
+function psFixes(Q){
+  const deck = presDeck(), o = (S.pres.outlines || {})[S.pres.source], out = [], det = PS_DETAIL[psState().detail] || PS_DETAIL.standard;
+  if (!o) return [{html:'The slides are still the template — outline them from your critique first.', go:'outline', btn:'Go to the slide outline'}];
+  o.slides.forEach((s, i) => { const w = [s.title, ...(s.bullets || [])].join(' ').split(/\s+/).length;
+    if ((s.bullets || []).length > 6 || (w > det.max * 1.2 && (s.bullets || []).length >= 4)) out.push({html:`<b>Slide ${i + 1}</b> is crowded (${pl((s.bullets || []).length, 'point')}, ${w} words). Split it into two slides — the words stay exactly the same.`, k:'split:' + i, btn:'Split it'}); });
+  Q.dupes.forEach(d => { if (d.s.oi != null && d.of.oi != null) out.push({html:`<b>Slide ${d.s.oi + 1}</b> repeats a point from slide ${d.of.oi + 1}: “${esc(clip(d.b, 80))}”. Remove the repeat?`, k:`dedupe:${d.s.oi}:${d.j}`, btn:'Remove the repeat'}); });
+  if (!Q.consistent) out.push({html:'Points end in different ways (some with a full stop). Remove the final full stops so every point looks the same?', k:'punct', btn:'Make them consistent'});
+  Q.titles.forEach(s => s.oi != null && out.push({html:`<b>Slide ${s.oi + 1}</b>: shorten the title (at most 10 words, no full stop) — “${esc(clip(s.title, 80))}”.`, edit:s.oi}));
+  Q.ph.forEach(s => s.oi != null && out.push({html:`<b>Slide ${s.oi + 1}</b> still has a [placeholder] — fill it from your critique.`, edit:s.oi}));
+  const flagged = o.slides.map((s, i) => [s, i]).filter(([s]) => (s.flags || []).length);
+  flagged.forEach(([s, i]) => out.push({html:`<b>Slide ${i + 1}</b>: check ${esc(s.flags.join(', '))} — not found in your critique. ScholarPath never changes numbers for you.`, edit:i}));
+  if (Q.lowC.length) out.push(psState().theme === 'custom' ? {html:'Some text is hard to read with your custom colours.', k:'colours', btn:'Use the design’s colours'} : {html:'Some text is hard to read with these colours — try another theme in step 4.', go:'refine', btn:'Refine the design'});
+  return out.filter(f => f.k || f.edit != null || f.go);
+}
+function psApplyFix(k){
+  if (k === 'colours'){ const ds = psState(); ds.theme = 'auto'; ds.accent = ''; ds.accent2 = ''; save(); RENDER.present(); toast('Back to the design’s colours'); return; }
+  const o = (S.pres.outlines || {})[S.pres.source]; if (!o) return;
+  const [kind, a, b] = k.split(':');
+  if (kind === 'split'){ const i = +a, s = o.slides[i], half = Math.ceil(s.bullets.length / 2), secs = s.secs || 60;
+    o.slides.splice(i, 1, {...s, bullets:s.bullets.slice(0, half), secs:Math.max(10, Math.round(secs / 2 / 5) * 5)}, {...s, title:s.title + ' (continued)', bullets:s.bullets.slice(half), notes:'', secs:Math.max(10, secs - Math.max(10, Math.round(secs / 2 / 5) * 5))});
+    toast(`Slide ${i + 1} split into two — same words`); }
+  if (kind === 'dedupe'){ const s = o.slides[+a]; if (s){ s.bullets.splice(+b, 1); toast(`The repeated point was removed from slide ${+a + 1}`); } }
+  if (kind === 'punct'){ o.slides.forEach(s => s.bullets = (s.bullets || []).map(x => x.replace(/\.\s*$/, ''))); toast('Final full stops removed — words unchanged'); }
+  if (kind === 'colours'){ const ds = psState(); ds.theme = 'auto'; ds.accent = ''; ds.accent2 = ''; toast('Back to the design’s colours'); }
+  presFlags(S.pres.source, o.slides); save(); RENDER.present();
+}
+function psPrint(){
+  const deck = presDeck(), D = psDesign(), all = psSlides(deck);
+  let box = $('#psPrint'); if (!box){ box = document.createElement('div'); box.id = 'psPrint'; document.body.appendChild(box); }
+  box.innerHTML = all.map((s, i) => psSlideHTML(s, i, all, D, 'ps-print-slide')).join('');
+  psHydrate(box).then(() => { document.body.classList.add('ps-printing'); const done = () => { document.body.classList.remove('ps-printing'); window.removeEventListener('afterprint', done); };
+    window.addEventListener('afterprint', done); try { window.print(); } catch { done(); toast('Printing is blocked here — download the PowerPoint and save it as PDF instead'); } setTimeout(() => { if (!matchMedia('print').matches) done(); }, 60000); });
+}
+RENDER.present = () => {
+  const ds = psState(), P0 = presOldParts(), stage = ds.stage, k = PS_STAGES.findIndex(s => s[0] === stage);
+  $('#panel-present').innerHTML = `${P0.head}${psStepper(stage)}<div id="psRunBar">${psRun1()}</div>
+    <h2 class="ps-h">${k + 1}. ${esc(PS_STAGES[k][1])}</h2>${psStageHTML(stage, P0)}${psNav(stage)}`;
+  if (aiRun || presRun || psRun) $$('#panel-present [data-ai-btn]').forEach(b => b.disabled = true);
+  psHydrate($('#panel-present'));
+};
+const PS_ACTIONS = {
+  'ps-stage': el => { if (!el.dataset.v) return; psState().stage = el.dataset.v; save(); RENDER.present(); $('#panel-present .ps-steps')?.scrollIntoView({block:'start'}); },
+  'ps-style': el => { const ds = psState(); ds.style = el.dataset.v; ds.fonts = ''; ds.stage = 'refine'; save(); RENDER.present(); toast(`${PS_DESIGNS[ds.style].name} chosen — refine it here`); },
+  'ps-stop': () => psRun && psRun.ctl.abort(),
+  'ps-reset-colours': () => psApplyFix('colours'),
+  'ps-fig-ai': () => { const figs = psFigList(), deck = presDeck(); psAsk('Recommending figures for your slides', psFigPrompt(figs, deck), r => psApplyFigs(r, figs, deck)); },
+  'ps-fig-match': () => { psFigMatch(psFigList(), presDeck()); save(); RENDER.present(); toast('Matched by shared words — check each one'); },
+  'ps-diag-ai': () => { const src = S.pres.source, deck = presDeck(); if (!presText(src).trim()) return toast('Add your critique first'); psAsk('Drawing diagrams from your critique', psDiagPrompt(src, deck), r => psApplyDiags(src, r, deck)); },
+  'ps-check': () => { const src = S.pres.source, deck = presDeck(), paper = psPaperText(); psAsk('Checking the slides’ accuracy', psCheckPrompt(src, deck, paper), r => psApplyCheck(src, deck, paper, r), 'complex'); },
+  'ps-fix': el => { const k = el.dataset.k, [kind, a] = k.split(':'), o = (S.pres.outlines || {})[S.pres.source];
+    const before = kind === 'split' || kind === 'dedupe' ? o.slides[+a] : null;
+    openDialog('Apply this change?', `${before ? `<p class="small"><b>Slide ${+a + 1} now:</b> ${esc(before.title)}</p><ul class="small">${(before.bullets || []).map((b, j) => `<li ${kind === 'dedupe' && j === +k.split(':')[2] ? 'style="text-decoration:line-through"' : ''}>${esc(b)}</li>`).join('')}</ul>` : ''}
+      <p class="small">${kind === 'split' ? 'It becomes two slides: the first half of the points, then the rest under the same title “(continued)”. No word changes.' : kind === 'dedupe' ? 'The crossed-out point is removed; the same point stays on the earlier slide.' : kind === 'punct' ? 'The full stop at the end of every point is removed. No other character changes.' : 'Your custom colours are replaced by the design’s own colours.'}</p>`, () => psApplyFix(k), 'Apply'); },
+  'ps-edit': el => { presEdit = +el.dataset.i; psState().stage = 'outline'; save(); RENDER.present(); const f = $(`#psT${presEdit}`); if (f){ f.focus(); $(`#pr-slide-${presEdit}`).scrollIntoView({block:'center'}); } },
+  'ps-unfig': el => { const it = psFigState().items[el.dataset.id]; if (it) it.inc = false; save(); RENDER.present(); },
+  'ps-undiag': el => { const d = ((S.pres.diags[S.pres.source] || {}).list || []).find(x => x.id === el.dataset.id); if (d) d.inc = false; save(); RENDER.present(); },
+  'ps-gen': () => { psState().stage = 'preview'; S.pres.built = {at:Date.now(), hash:psDeckHash(presDeck())}; save(); RENDER.present(); toast('Your presentation is ready to preview'); },
+  'ps-print': () => psPrint()
+};
+function psChange(t){
+  if (!t.dataset) return false;
+  const ds = psState();
+  if (t.dataset.psd){ const k = t.dataset.psd;
+    if (k === 'figs' || k === 'diagrams') ds[k] = t.checked;
+    else if (k === 'notes') ds.notes = t.value === 'true';
+    else if (k === 'accent' || k === 'accent2'){ ds[k] = t.value.replace('#', '').toUpperCase(); if (ds.theme !== 'custom'){ const D = psDesign(); ds.accent = k === 'accent' ? ds.accent : D.P.accent; ds.accent2 = k === 'accent2' ? ds.accent2 : D.P.accent2; ds.theme = 'custom'; } }
+    else ds[k] = t.value;
+    save(); RENDER.present(); return true; }
+  if (t.dataset.psfig){ const st = psFigState(), it = st.items[t.dataset.id] ||= {inc:false, slide:0, why:'', by:'me'};
+    if (t.dataset.psfig === 'inc'){ it.inc = t.checked; if (it.inc && !+it.slide) it.slide = Math.max(1, presDeck().slides.length - 1); } else it.slide = +t.value;
+    save(); RENDER.present(); return true; }
+  if (t.dataset.psdg){ const d = ((S.pres.diags[S.pres.source] || {}).list || []).find(x => x.id === t.dataset.id); if (d){ if (t.dataset.psdg === 'inc') d.inc = t.checked; else d.slide = +t.value; save(); RENDER.present(); } return true; }
+  return false;
+}
+
+const psCount = () => { const c = psState().count; return c === 'auto' ? PRES_COUNT[S.pres.minutes] : Math.max(5, Math.min(15, +c || PRES_COUNT[S.pres.minutes])); };
+Object.assign(ACTIONS, V_ACTIONS, D_ACTIONS, E_ACTIONS, ST_ACTIONS, PS_ACTIONS);
 document.addEventListener('click', e => {
   $$('details.menu[open]').forEach(d => { if (!d.contains(e.target) || e.target.closest('.menu-item')) d.open = false; });
   const el = e.target.closest('[data-act]'); if (!el || el.disabled) return;
@@ -9372,7 +10192,7 @@ document.addEventListener('input', e => {
 });
 document.addEventListener('change', e => {
   const t = e.target;
-  if (vChange(t) || dChange(t) || eChange(t) || stChange(t)) return;
+  if (vChange(t) || dChange(t) || eChange(t) || stChange(t) || psChange(t)) return;
   if (t.dataset.fl === 'critId'){ RENDER.figlab(); return; }
   if (t.id === 'presFile' && t.files[0]){ const file = t.files[0]; t.value = ''; toast('Reading your critique…');
     presReadFile(file).then(units => presAddCritique(file.name, (file.name.split('.').pop() || '').toLowerCase(), units)).catch(err => alert((err && err.message) || 'This file could not be read.')); return; }
