@@ -337,6 +337,7 @@ The scripts lived in the session's scratch area. **Next step:** add them to `tes
 
 | Date | Change |
 |---|---|
+| 2026-10-13 | The selected paragraph's toolbar (Explain · Translate · Notes · Ask Claude · Listen) always sits below the paragraph in Read, Study and Compare — it no longer floats over the words (owner's report from Compare on iPad) |
 | 2026-10-13 | Simple English never shows the original: *Not simplified yet* with Simplify buttons, a banner to simplify the whole paper, automatic simplifying when switching to Simple English, a much plainer prompt (A2–B1, new words), copies of the original refused; the website's Claude features are on from the first screen |
 | 2026-10-13 | **Becoming a public website** (GitHub Pages, open to any student): copy-prompt bridge so every Claude feature works off claude.ai; About & privacy page; 404 page; icon, app manifest and link-preview picture; robots.txt and .nojekyll; `tests/site-check.js` |
 | 2026-10-09 | v1: six tabs, light/dark, localStorage, examples |

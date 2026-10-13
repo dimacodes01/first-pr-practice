@@ -125,6 +125,29 @@ const overflow = page => page.evaluate(() => document.documentElement.scrollWidt
       await ctx.close();
     }
 
+    console.log('The paragraph toolbar never covers the text');
+    for (const [w, layout] of [[1440, 'compare'], [1024, 'compare'], [1024, 'study'], [1024, 'read'], [390, 'compare'], [390, 'read']]){
+      const {ctx, page} = await newPage(browser, w, 'light');
+      await page.goto(BASE + 'index.html#critiquing/1'); await page.waitForTimeout(400);
+      await page.evaluate(l => { const b = document.querySelector(`[data-act="rp-layout"][data-v="${l}"], [data-act="rd-layout"][data-v="${l}"]`); if (b) b.click(); }, layout);
+      await page.waitForTimeout(300);
+      // pick the longest paragraph, so the old floating toolbar would have landed on its words
+      const r = await page.evaluate(() => {
+        const ps = [...document.querySelectorAll('#panel-reader article.rd-p:not(.cmp-ver)')]; if (!ps.length) return {skip:true};
+        const a = ps.sort((x, y) => y.textContent.length - x.textContent.length)[0];
+        a.querySelector('.rd-no').click();
+        const art = document.getElementById(a.id), t = art.querySelector('.orig-full'), bar = art.querySelector('.rd-ctx');
+        if (!t || !bar) return {skip:true, why:!t ? 'no text' : 'no toolbar'};
+        art.scrollIntoView({block:'start'});
+        const T = t.getBoundingClientRect(), B = bar.getBoundingClientRect();
+        return {below:B.top >= T.bottom - 1, gap:Math.round(B.top - T.bottom)};
+      });
+      const name = `${layout} at ${w}px`;
+      if (r.skip) fail(`${name}: could not test (${r.why || 'no paragraphs'})`);
+      else r.below ? ok(`${name}: the toolbar sits below the paragraph`) : fail(`${name}: the toolbar covers the paragraph by ${-r.gap}px`);
+      await ctx.close();
+    }
+
     console.log('Simple English never shows the original text');
     {
       const {ctx, page, errs} = await newPage(browser, 1280, 'light');
