@@ -7,21 +7,24 @@
 <meta name="description" content="ScholarPath — a research companion for master's students and early researchers: find literature, organise ideas, critique papers, write and present.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Inter:wght@400;500;600&family=IBM+Plex+Sans+Arabic:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800&family=IBM+Plex+Sans+Arabic:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
-/* ScholarPath design system — Modern Academic: midnight navy, warm ivory, charcoal, restrained champagne gold.
-   Light is the default; dark keeps the same identity. Text colours meet WCAG 2.2 AA on every surface they sit on. */
+/* ScholarPath design system — friendly school-platform look (13 Oct 2026, from the owner's own school platform):
+   a dark-blue top bar, a dark slate sidebar with a white tile for the current page, a light blue-grey background,
+   white cards with soft shadows, colourful icons and initials, blue underlined tabs and rounded pill buttons.
+   Text colours meet WCAG 2.2 AA on every surface they sit on, in light and dark. */
 :root{
-  --bg:#faf9f6; --surface:#ffffff; --surface-2:#f2f0eb; --surface-3:#e9e6df; --ink:#242a31; --heading:#142338; --muted:#5f6a76; --line:#e2e5e8; --line-strong:#d5dadf;
-  --accent:#142338; --accent-hover:#263b53; --accent-ink:#ffffff; --accent-soft:#ebeef3;
-  --gold:#b49a67; --gold-ink:#7f6a3e; --gold-soft:#f3ebda; --focus:#3a5a86;
-  --ok:#2f6b4f; --ok-soft:#eaf2ec; --warn:#9a5b13; --warn-soft:#f8efe2; --danger:#a23b3b; --danger-soft:#f7e9e9;
-  --violet:#5b4a8b; --violet-soft:#eeebf5; --example:#6f5c33; --example-soft:#f3ebda;
-  --side-bg:#142338; --side-hover:rgba(255,255,255,.06); --side-active:#263b53; --side-ink:#aeb8c4; --side-strong:#ffffff; --side-label:#9aa6b4; --side-line:rgba(255,255,255,.08); --side-gold:#b49a67;
-  --shadow:0 1px 2px rgba(20,35,56,.04); --shadow-lg:0 1px 2px rgba(20,35,56,.05),0 12px 32px rgba(20,35,56,.10);
-  --radius:14px; --radius-md:10px; --radius-sm:8px; --radius-lg:16px;
-  --serif:"Libre Baskerville",Georgia,"Times New Roman",serif;
-  --sans:Inter,system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
+  --bg:#eef2f6; --surface:#ffffff; --surface-2:#f5f8fb; --surface-3:#e3e9ef; --ink:#2b3440; --heading:#1f2a37; --muted:#5e6b78; --line:#e1e7ed; --line-strong:#c9d2db;
+  --accent:#1565c0; --accent-hover:#0d47a1; --accent-ink:#ffffff; --accent-soft:#e3f0fd; --brand:#0d2b55; --brand-hover:#173f74; --brand-ink:#ffffff;
+  --gold:#f5b800; --gold-ink:#1565c0; --gold-soft:#fff3c4; --focus:#1565c0;
+  --ok:#2e7d32; --ok-soft:#e8f5e9; --warn:#9a5200; --warn-soft:#fff3e0; --danger:#c62828; --danger-soft:#fdecea;
+  --violet:#7b3fa0; --violet-soft:#f3e8fa; --example:#9a5200; --example-soft:#fff3e0;
+  --side-bg:#2c3e50; --side-hover:rgba(255,255,255,.08); --side-active:#ffffff; --side-tile-ink:#1565c0; --side-ink:#c3cdd6; --side-strong:#ffffff; --side-label:#9fb0c0; --side-line:rgba(255,255,255,.10); --side-gold:#1976d2;
+  --shadow:0 1px 3px rgba(16,24,40,.08),0 1px 2px rgba(16,24,40,.04); --shadow-lg:0 4px 12px rgba(16,24,40,.10),0 16px 40px rgba(16,24,40,.10); --card-line:transparent;
+  --c-purple:#8e44ad; --c-blue:#1976d2; --c-orange:#b85600; --c-green:#2e7d32; --c-teal:#00796b; --c-pink:#d6336c;   /* white text and icons on these pass 4.5:1 */
+  --radius:10px; --radius-md:8px; --radius-sm:8px; --radius-lg:12px;
+  --serif:Nunito,"Segoe UI",system-ui,-apple-system,Roboto,Arial,sans-serif;
+  --sans:Nunito,"Segoe UI",system-ui,-apple-system,Roboto,Arial,sans-serif;
   --arabic:"IBM Plex Sans Arabic","Noto Sans Arabic","Geeza Pro","Segoe UI",Tahoma,sans-serif;
   --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
   --s1:#2a78d6; --s2:#eb6834; --s3:#1baf7a;
@@ -30,36 +33,36 @@
 }
 @media (prefers-color-scheme:dark){
   :root:not([data-theme="light"]){
-    --bg:#0f1824; --surface:#162233; --surface-2:#1b2a3d; --surface-3:#22344a; --ink:#ece9e2; --heading:#f5f2ea; --muted:#a3adb8; --line:#2a3a4e; --line-strong:#36485e;
-    --accent:#e4dccb; --accent-hover:#f2ecdf; --accent-ink:#142338; --accent-soft:#24364d;
-    --gold:#c9b07a; --gold-ink:#d4bc88; --gold-soft:#332d21; --focus:#c9b07a;
-    --ok:#7fbf9c; --ok-soft:#173226; --warn:#e3a866; --warn-soft:#33281a; --danger:#e79a9a; --danger-soft:#3a1f22;
-    --violet:#b6a7ec; --violet-soft:#29233f; --example:#d4bc88; --example-soft:#332d21;
-    --side-bg:#0b131d; --side-hover:rgba(255,255,255,.05); --side-active:#1b2a3d; --side-ink:#a3adb8; --side-strong:#f5f2ea; --side-label:#8d99a6; --side-line:rgba(255,255,255,.07); --side-gold:#c9b07a;
-    --shadow:0 1px 2px rgba(0,0,0,.3); --shadow-lg:0 1px 2px rgba(0,0,0,.35),0 14px 36px rgba(0,0,0,.4);
+    --bg:#151e27; --surface:#1e2a36; --surface-2:#243341; --surface-3:#2c3d4d; --ink:#e6ecf1; --heading:#f4f7fa; --muted:#a9b6c3; --line:#2e3f4f; --line-strong:#3b4f62;
+    --accent:#90caf9; --accent-hover:#bbdefb; --accent-ink:#0d2137; --accent-soft:#1d3a57; --brand:#0f2747; --brand-hover:#1b3d68; --brand-ink:#ffffff;
+    --gold:#f5c542; --gold-ink:#90caf9; --gold-soft:#4a3f12; --focus:#90caf9;
+    --ok:#81c784; --ok-soft:#1c3324; --warn:#ffb74d; --warn-soft:#3a2a12; --danger:#ef9a9a; --danger-soft:#3d1f22;
+    --violet:#ce93d8; --violet-soft:#33233d; --example:#ffb74d; --example-soft:#3a2a12;
+    --side-bg:#0f1720; --side-hover:rgba(255,255,255,.06); --side-active:#243341; --side-tile-ink:#90caf9; --side-ink:#a9b6c3; --side-strong:#f4f7fa; --side-label:#8a99a8; --side-line:rgba(255,255,255,.07); --side-gold:#90caf9;
+    --shadow:0 1px 2px rgba(0,0,0,.3); --shadow-lg:0 1px 2px rgba(0,0,0,.35),0 14px 36px rgba(0,0,0,.4); --card-line:#2e3f4f;
     --s1:#3987e5; --s2:#d95926; --s3:#199e70;
     color-scheme:dark;
   }
 }
 :root[data-theme="dark"]{
-  --bg:#0f1824; --surface:#162233; --surface-2:#1b2a3d; --surface-3:#22344a; --ink:#ece9e2; --heading:#f5f2ea; --muted:#a3adb8; --line:#2a3a4e; --line-strong:#36485e;
-  --accent:#e4dccb; --accent-hover:#f2ecdf; --accent-ink:#142338; --accent-soft:#24364d;
-  --gold:#c9b07a; --gold-ink:#d4bc88; --gold-soft:#332d21; --focus:#c9b07a;
-  --ok:#7fbf9c; --ok-soft:#173226; --warn:#e3a866; --warn-soft:#33281a; --danger:#e79a9a; --danger-soft:#3a1f22;
-  --violet:#b6a7ec; --violet-soft:#29233f; --example:#d4bc88; --example-soft:#332d21;
-  --side-bg:#0b131d; --side-hover:rgba(255,255,255,.05); --side-active:#1b2a3d; --side-ink:#a3adb8; --side-strong:#f5f2ea; --side-label:#8d99a6; --side-line:rgba(255,255,255,.07); --side-gold:#c9b07a;
-  --shadow:0 1px 2px rgba(0,0,0,.3); --shadow-lg:0 1px 2px rgba(0,0,0,.35),0 14px 36px rgba(0,0,0,.4);
-  --s1:#3987e5; --s2:#d95926; --s3:#199e70;
-  color-scheme:dark;
+    --bg:#151e27; --surface:#1e2a36; --surface-2:#243341; --surface-3:#2c3d4d; --ink:#e6ecf1; --heading:#f4f7fa; --muted:#a9b6c3; --line:#2e3f4f; --line-strong:#3b4f62;
+    --accent:#90caf9; --accent-hover:#bbdefb; --accent-ink:#0d2137; --accent-soft:#1d3a57; --brand:#0f2747; --brand-hover:#1b3d68; --brand-ink:#ffffff;
+    --gold:#f5c542; --gold-ink:#90caf9; --gold-soft:#4a3f12; --focus:#90caf9;
+    --ok:#81c784; --ok-soft:#1c3324; --warn:#ffb74d; --warn-soft:#3a2a12; --danger:#ef9a9a; --danger-soft:#3d1f22;
+    --violet:#ce93d8; --violet-soft:#33233d; --example:#ffb74d; --example-soft:#3a2a12;
+    --side-bg:#0f1720; --side-hover:rgba(255,255,255,.06); --side-active:#243341; --side-tile-ink:#90caf9; --side-ink:#a9b6c3; --side-strong:#f4f7fa; --side-label:#8a99a8; --side-line:rgba(255,255,255,.07); --side-gold:#90caf9;
+    --shadow:0 1px 2px rgba(0,0,0,.3); --shadow-lg:0 1px 2px rgba(0,0,0,.35),0 14px 36px rgba(0,0,0,.4); --card-line:#2e3f4f;
+    --s1:#3987e5; --s2:#d95926; --s3:#199e70;
+    color-scheme:dark;
 }
 *{box-sizing:border-box}
 html{-webkit-text-size-adjust:100%;scroll-padding-top:calc(var(--hdr,72px) + 12px)}
 html[data-tab="reader"]{scroll-padding-bottom:150px}       /* focused or scrolled-to items never hide under the sticky header or the docked player */
 body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.6 var(--sans);overflow-x:hidden;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
 h1,h2,h3,h4{line-height:1.3;margin:0 0 .45em;color:var(--heading)}
-h1,h2{font-family:var(--serif);font-weight:400;letter-spacing:-.012em}
-h3,h4{font-family:var(--sans);font-weight:600;letter-spacing:-.005em}
-h1{font-size:2.25rem;line-height:1.22} h2{font-size:1.6rem} h3{font-size:1.125rem} h4{font-size:1rem}
+h1,h2{font-family:var(--serif);font-weight:800;letter-spacing:-.01em}
+h3,h4{font-family:var(--sans);font-weight:700;letter-spacing:0}
+h1{font-size:2rem;line-height:1.25} h2{font-size:1.5rem} h3{font-size:1.125rem} h4{font-size:1rem}
 @media(max-width:620px){h1{font-size:1.75rem}h2{font-size:1.35rem}}
 p{margin:0 0 .8em}
 a{color:var(--accent);text-underline-offset:3px;text-decoration-thickness:1px}
@@ -82,17 +85,18 @@ svg.i{width:18px;height:18px;flex:none;stroke:currentColor;fill:none;stroke-widt
 .brand-mark{width:36px;height:36px;border-radius:10px;background:var(--side-active);color:var(--side-gold);display:grid;place-items:center;flex:none}
 .brand-mark svg.i{width:20px;height:20px}
 .brand-txt{display:flex;flex-direction:column;min-width:0}
-.brand-name{font-family:var(--serif);font-size:17px;line-height:1.3;letter-spacing:-.01em;color:var(--side-strong);white-space:nowrap}
+.brand-name{font-family:var(--serif);font-weight:800;font-size:18px;line-height:1.3;letter-spacing:-.01em;color:var(--side-strong);white-space:nowrap}
 .brand-tag{font-size:12px;line-height:1.3;color:var(--side-label);white-space:nowrap;margin-top:2px}
 .side-btn{appearance:none;width:36px;height:36px;border:0;border-radius:8px;background:transparent;color:var(--side-ink);display:grid;place-items:center;cursor:pointer;flex:none}
 .side-btn:hover{background:var(--side-hover);color:var(--side-strong)}
 .side :focus-visible{outline-color:var(--side-gold)}
 .side-nav{flex:1;overflow-y:auto;overscroll-behavior:contain;padding:12px 12px 16px;display:flex;flex-direction:column;gap:2px;scrollbar-width:thin;scrollbar-color:var(--side-line) transparent}
-.nav-item{appearance:none;display:flex;align-items:center;gap:12px;width:100%;min-height:44px;padding:0 12px;border:0;border-radius:8px;background:transparent;color:var(--side-ink);font:500 14px/1.25 var(--sans);text-align:left;text-decoration:none;cursor:pointer;transition:background-color .16s,color .16s}
+.nav-item{appearance:none;display:flex;align-items:center;gap:12px;width:100%;min-height:44px;padding:0 12px;border:0;border-radius:10px;background:transparent;color:var(--side-ink);font:600 14.5px/1.25 var(--sans);text-align:left;text-decoration:none;cursor:pointer;transition:background-color .16s,color .16s}
 .nav-item svg.i{width:20px;height:20px}
 .nav-item:hover{background:var(--side-hover);color:var(--side-strong)}
-.nav-item[aria-current="page"]{background:var(--side-active);color:var(--side-strong)}
+.nav-item[aria-current="page"]{background:var(--side-active);color:var(--side-tile-ink);font-weight:700;box-shadow:0 1px 3px rgba(0,0,0,.18)}
 .nav-item[aria-current="page"] svg.i{color:var(--side-gold)}
+.nav-item[aria-current="page"] .nav-no{color:var(--side-tile-ink)}
 .nav-label{flex:1;min-width:0;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;padding:6px 0}
 .nav-no{font:500 12px var(--sans);color:var(--side-label);font-variant-numeric:tabular-nums}
 .nav-group{appearance:none;display:flex;align-items:center;gap:8px;width:100%;min-height:36px;border:0;background:transparent;color:var(--side-label);font:600 12px var(--sans);letter-spacing:.08em;text-transform:uppercase;padding:14px 12px 6px;cursor:pointer;text-align:left;border-radius:8px}
@@ -125,15 +129,23 @@ svg.i{width:18px;height:18px;flex:none;stroke:currentColor;fill:none;stroke-widt
   #sideToggle{display:none}
 }
 .work{flex:1;min-width:0;display:flex;flex-direction:column}
-header.top{position:sticky;top:0;z-index:20;height:72px;flex:none;display:flex;align-items:center;gap:12px;padding:0 32px;background:color-mix(in srgb,var(--bg) 92%,transparent);backdrop-filter:saturate(1.3) blur(10px);-webkit-backdrop-filter:saturate(1.3) blur(10px);border-bottom:1px solid var(--line)}
+header.top{position:sticky;top:0;z-index:20;height:72px;flex:none;display:flex;align-items:center;gap:12px;padding:0 32px;background:var(--brand);color:var(--brand-ink);box-shadow:0 2px 6px rgba(16,24,40,.12)}
+header.top .btn.ghost{color:var(--brand-ink)}
+header.top .btn.ghost:hover{background:rgba(255,255,255,.16);color:var(--brand-ink)}
+header.top :focus-visible{outline-color:#ffffff}
+.top-logo{position:absolute;left:50%;top:6px;transform:translateX(-50%);width:76px;height:76px;border-radius:999px;background:var(--brand);border:6px solid var(--bg);display:grid;place-items:center;color:var(--brand);z-index:2;text-decoration:none}
+.top-logo span{width:52px;height:52px;border-radius:999px;background:var(--brand);color:#fff;display:grid;place-items:center;box-shadow:0 0 0 3px rgba(255,255,255,.95) inset}
+.top-logo svg.i{width:28px;height:28px}
+.top-logo:hover span{background:var(--brand-hover)}
+@media(max-width:900px){.top-logo{display:none}}
 .menu-btn{display:none}
 @media(max-width:1023px){.menu-btn{display:inline-flex}header.top{padding:0 20px 0 12px}}
-.crumbs{display:flex;align-items:center;gap:8px;min-width:0;font-size:14px;color:var(--muted)}
+.crumbs{display:flex;align-items:center;gap:8px;min-width:0;font-size:15px;color:rgba(255,255,255,.88)}
 .crumbs > *{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.crumbs .cur{color:var(--ink);font-weight:500}
-.crumbs svg.i{width:14px;height:14px;color:var(--line-strong);flex:none}
+.crumbs .cur{color:#ffffff;font-weight:700}
+.crumbs svg.i{width:14px;height:14px;color:rgba(255,255,255,.7);flex:none}
 .crumbs a{color:inherit;text-decoration:none}
-.crumbs a:hover{color:var(--ink)}
+.crumbs a:hover{color:#ffffff;text-decoration:underline}
 @media(max-width:620px){header.top{height:60px;gap:6px}.crumbs .crumb-part,.crumbs .crumb-sep{display:none}}
 .spacer{flex:1}
 .top-actions{display:flex;align-items:center;gap:8px}
@@ -149,7 +161,7 @@ main{width:100%;max-width:1200px;margin:0 auto;padding:32px 40px 56px}
 .eyebrow{font:600 .75rem var(--sans);letter-spacing:.09em;text-transform:uppercase;color:var(--gold-ink);margin-bottom:8px}
 
 /* Surfaces */
-.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:24px;box-shadow:var(--shadow)}
+.card{background:var(--surface);border:1px solid var(--card-line);border-radius:var(--radius);padding:24px;box-shadow:var(--shadow)}
 @media(max-width:620px){.card{padding:18px}}
 .grid{display:grid;gap:16px}
 .g-auto{grid-template-columns:repeat(auto-fill,minmax(min(300px,100%),1fr))}
@@ -163,7 +175,7 @@ main{width:100%;max-width:1200px;margin:0 auto;padding:32px 40px 56px}
 .label{font:600 12px var(--sans);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
 
 /* Buttons: 40 px standard, 32 px small; navy primary, white secondary, quiet ghost */
-.btn{appearance:none;display:inline-flex;align-items:center;justify-content:center;gap:8px;border:1px solid var(--line-strong);background:var(--surface);color:var(--heading);font:500 14px/1.2 var(--sans);padding:9px 16px;border-radius:var(--radius-sm);cursor:pointer;text-decoration:none;min-height:40px;transition:background-color .16s,border-color .16s,color .16s,box-shadow .16s}
+.btn{appearance:none;display:inline-flex;align-items:center;justify-content:center;gap:8px;border:1px solid var(--line-strong);background:var(--surface);color:var(--heading);font:700 14px/1.2 var(--sans);padding:9px 18px;border-radius:999px;cursor:pointer;text-decoration:none;min-height:40px;transition:background-color .16s,border-color .16s,color .16s,box-shadow .16s}
 .btn:hover{background:var(--surface-2);color:var(--heading)}
 .btn:active{transform:translateY(.5px)}
 .btn:focus-visible,.input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
@@ -297,7 +309,7 @@ details.what li{margin-bottom:3px}
 .sub:first-of-type{border-top:0}
 .sub h4{font-size:1.05rem}
 .sub details.what{margin-top:10px}
-.reserved{opacity:.85;border-style:dashed}
+.reserved{border-style:dashed}
 .input.ro{background:var(--surface-2);color:var(--muted);display:flex;align-items:center}
 .qc-auto{cursor:default}
 .qc-auto .qc-ico{width:20px;height:20px;border-radius:50%;display:grid;place-items:center;flex:none;margin-top:1px;background:var(--danger-soft);color:var(--danger)}
@@ -429,6 +441,7 @@ svg.mini{width:100%;max-width:220px;height:auto;display:block}
 .fig-shot{scroll-margin-top:calc(var(--hdr,120px) + 10px);margin:4px 0 14px;background:#fff;border:1px solid var(--line);border-radius:var(--radius-sm);padding:8px;text-align:center}
 .fig-shot img{max-width:100%;max-height:420px;display:block;margin:0 auto 6px}
 .fig-shot .small{text-align:left}
+.fig-shot .muted{color:#5e6b78}                               /* the picture box is white in dark mode too */
 .ai-note{margin:-4px 0 12px;padding:8px 10px;background:var(--accent-soft);border-radius:var(--radius-sm)}
 
 
@@ -597,9 +610,16 @@ textarea.rd-title:focus{border-color:var(--focus);background:var(--surface)}
 .pl-right{flex:0 0 auto;display:flex;justify-content:flex-end;align-items:center;gap:8px;margin-left:auto}
 select.pl-rate{width:auto;min-height:36px;padding:4px 30px 4px 10px;font:600 13px var(--sans);background-position:right 8px center}
 .pl-track{height:3px;background:var(--surface-2)}
-.pl-track span{display:block;height:100%;background:var(--gold);transition:width .3s var(--ease)}
+.pl-track span{display:block;height:100%;background:var(--c-blue);transition:width .3s var(--ease)}
 .pl-more-in{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));border-top:1px solid var(--line);background:var(--bg)}
 .pl-more-in[hidden]{display:none}
+.pl-more-in{position:relative}
+.pl-close{position:absolute;top:8px;right:8px;z-index:1}
+.pl-grp:first-of-type{padding-right:44px}
+.pl-pick{gap:6px}
+.pl-warn{display:flex;gap:6px;align-items:flex-start;color:var(--warn)}
+.pl-warn svg.i{width:16px;height:16px;margin-top:2px;flex:none}
+.rd-ar-main{margin-top:0;font-size:19px;line-height:2}
 .pl-grp{padding:14px 18px;display:flex;flex-direction:column;align-items:flex-start;gap:10px;border-right:1px solid var(--line);min-width:0}
 .pl-grp:last-child{border-right:0}
 .pl-grp .row{gap:6px}
@@ -614,7 +634,7 @@ select.pl-rate{width:auto;min-height:36px;padding:4px 30px 4px 10px;font:600 13p
 .as-tabs{display:flex;gap:0;padding:6px 8px 0;border-bottom:1px solid var(--line);overflow-x:auto;scrollbar-width:none;position:sticky;top:0;background:var(--surface);z-index:2}
 .as-tab{appearance:none;flex:1 0 auto;border:0;background:none;height:40px;padding:0 6px;font:500 13px var(--sans);color:var(--muted);border-bottom:2px solid transparent;margin-bottom:-1px;cursor:pointer;white-space:nowrap;transition:color .16s,border-color .16s}
 .as-tab:hover{color:var(--ink)}
-.as-tab[aria-selected="true"]{color:var(--heading);border-bottom-color:var(--gold)}
+.as-tab[aria-selected="true"]{color:var(--accent);border-bottom-color:var(--accent)}
 .as-body{padding:20px;display:flex;flex-direction:column;gap:22px}
 .as-sec{display:flex;flex-direction:column;gap:8px;min-width:0}
 .as-sec .simple-box{margin:0}
@@ -685,19 +705,72 @@ body[data-tab="reader"] .step-foot{max-width:none}
 .cross-link{margin:8px 0 0}
 .help-tools{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin:-4px 0 14px}
 
+/* Colourful accents (icons, initials and part tiles are decoration; text never relies on these colours) */
+.c-purple{--c:var(--c-purple)} .c-blue{--c:var(--c-blue)} .c-orange{--c:var(--c-orange)} .c-green{--c:var(--c-green)} .c-teal{--c:var(--c-teal)} .c-pink{--c:var(--c-pink)}
+.pill{display:inline-flex;align-items:center;gap:6px;font:700 13px var(--sans);padding:5px 14px;border-radius:999px;background:var(--surface-3);color:var(--heading);white-space:nowrap}
+.pill-blue{background:var(--accent-soft);color:var(--accent)}
+.card-h{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:14px}
+.card-t{font:800 15px var(--sans);letter-spacing:.05em;text-transform:uppercase;color:var(--heading);margin:0}
+.card-ic{width:34px;height:34px;border-radius:9px;display:grid;place-items:center;color:#fff;background:var(--c);flex:none}
+.card-ic svg.i{width:19px;height:19px}
+.card-foot{border-top:1px solid var(--line);display:flex;justify-content:center;flex-wrap:wrap;gap:8px 20px;padding:10px 12px}
+.linkbtn{appearance:none;border:0;background:none;font:800 14px var(--sans);text-transform:uppercase;letter-spacing:.04em;color:var(--accent);display:inline-flex;gap:6px;align-items:center;cursor:pointer;padding:8px 12px;border-radius:8px;min-height:40px}
+.linkbtn:hover{background:var(--accent-soft)}
+.linkbtn svg.i{width:16px;height:16px}
+.av{width:44px;height:44px;border-radius:999px;display:grid;place-items:center;color:#fff;font:700 14px var(--sans);letter-spacing:.12em;text-indent:.12em;background:var(--c);flex:none}
+.sum{padding:22px 26px}
+.sum-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:8px;margin-top:4px}
+.sum-it{appearance:none;border:0;background:none;display:flex;align-items:flex-start;gap:12px;padding:10px;border-radius:10px;text-align:left;cursor:pointer;font:inherit;color:var(--ink);transition:background-color .16s}
+.sum-it:hover{background:var(--surface-2)}
+.sum-ic{color:var(--c);padding-top:3px}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .sum-ic{color:color-mix(in srgb,var(--c) 55%,#fff)}}
+:root[data-theme="dark"] .sum-ic{color:color-mix(in srgb,var(--c) 55%,#fff)}   /* the bare icons stay clearly visible on dark cards */
+.sum-ic svg.i{width:28px;height:28px;stroke-width:2.2}
+.sum-t{display:flex;flex-direction:column}
+.sum-t b{font:800 30px/1.1 var(--sans);color:var(--heading)}
+.sum-t b small{font-size:17px;font-weight:700;color:var(--muted)}
+.sum-t span{font:700 14.5px var(--sans);color:var(--ink);margin-top:4px}
+.wk-card{padding:18px 0 0;overflow:hidden}
+.wk-card .card-h{padding:0 24px}
+.wk{overflow-x:auto;border-top:1px solid var(--line)}
+.wk-row{display:grid;grid-template-columns:repeat(7,minmax(118px,1fr));min-width:826px}
+.wk-head .wk-c{font:700 15px var(--sans);text-align:center;padding:12px 8px;color:var(--heading);border-bottom:1px solid var(--line)}
+.wk-head .wk-c.today{color:var(--accent)}
+.wk-row:not(.wk-head) .wk-c{min-height:112px;padding:10px 10px 16px;border-right:1px solid var(--line);display:flex;flex-direction:column;align-items:flex-start;gap:6px}
+.wk-row .wk-c:last-child{border-right:0}
+.wk-row:not(.wk-head) .wk-c.today{background:color-mix(in srgb,var(--accent-soft) 55%,transparent)}
+.wk-n{font:700 14px var(--sans);color:var(--muted)}
+.wk-it{font:700 14px/1.35 var(--sans);color:var(--accent);text-decoration:none}
+.wk-it::before{content:"";display:inline-block;width:8px;height:8px;border-radius:999px;background:var(--c);margin-right:6px;vertical-align:1px}
+.wk-it:hover{text-decoration:underline}
+.wk-more{font-size:13px;color:var(--muted)}
+.wk-dn{display:none}
+@media(max-width:620px){                                         /* phones: one row per day, nothing hidden off to the side */
+  .wk-row{display:block;min-width:0}
+  .wk-row.wk-head{display:none}
+  .wk-row:not(.wk-head) .wk-c{min-height:0;flex-direction:row;flex-wrap:wrap;align-items:baseline;gap:4px 12px;border-right:0;border-bottom:1px solid var(--line);padding:10px 20px}
+  .wk-row .wk-c:last-child{border-bottom:0}
+  .wk-dn{display:inline;color:var(--heading)}
+  .wk-c.today .wk-dn{color:var(--accent)}
+  .wk-n{min-width:118px}
+}
+.ws-top{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.ws-sub{font-size:16px;font-weight:700;color:var(--ink)!important;margin:0}
+body[data-tab="reader"] .rd-top{padding-top:22px}
+
 /* Dashboard: Your Research Workspace */
 .ws-kicker{font:600 12px var(--sans);letter-spacing:.1em;text-transform:uppercase;color:var(--gold-ink);margin-bottom:12px}
 .ws{display:flex;flex-direction:column;gap:32px}
-.ws-hero{display:flex;flex-wrap:wrap;gap:32px;padding:32px}
-@media(max-width:620px){.ws-hero{padding:20px;gap:24px}}
-.ws-hero-main{flex:3 1 420px;min-width:0;display:flex;flex-direction:column;gap:14px}
-.ws-hero-title{font-size:1.55rem;line-height:1.35;margin:0}
+.ws-hero{display:flex;flex-direction:column;gap:16px;padding:24px}
+@media(max-width:620px){.ws-hero{padding:18px}}
+.ws-hero-main{min-width:0;display:flex;flex-direction:column;gap:14px}
+.ws-hero-title{font:800 22px/1.35 var(--sans);color:var(--heading);margin:0}
 .ws-meta{display:flex;flex-wrap:wrap;gap:8px 20px;font-size:14px;color:var(--muted)}
 .ws-meta span{display:inline-flex;align-items:center;gap:7px}
 .ws-meta svg.i{width:16px;height:16px}
 .ws-prog{display:flex;flex-direction:column;gap:8px;max-width:520px}
 .ws-actions{margin-top:6px}
-.ws-next{flex:2 1 280px;min-width:0;background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:20px 24px;display:flex;flex-direction:column;gap:6px}
+.ws-next{min-width:0;background:var(--surface-2);border-radius:10px;padding:16px 20px;display:flex;flex-direction:column;gap:6px}
 .ws-next ol,.ws-steps{list-style:none;margin:0;padding:0}
 .ws-next li + li{border-top:1px solid var(--line)}
 .ws-step{appearance:none;display:flex;align-items:center;gap:12px;width:100%;min-height:48px;padding:6px 0;border:0;background:none;font:inherit;color:var(--ink);text-align:left;cursor:pointer;border-radius:6px}
@@ -708,9 +781,11 @@ body[data-tab="reader"] .step-foot{max-width:none}
 .ws-st b{font-weight:500;font-size:14px}
 .ws-st .small{font-size:12.5px}
 .ws-cols{display:flex;flex-wrap:wrap;gap:24px;align-items:flex-start}
-.ws-cols > .card{padding:0;overflow:hidden;min-width:0}
-.ws-lib{flex:7 1 440px}
-.ws-act{flex:5 1 320px}
+.ws-cols > .card{min-width:0}
+.ws-hero{flex:7 1 440px}
+.ws-lib{flex:5 1 320px;padding:20px 0 0;overflow:hidden;display:flex;flex-direction:column}
+.ws-lib .card-h{padding:0 24px;margin-bottom:8px}
+.ws-lib .ws-list{flex:1}
 .ws-head{display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px;padding:18px 24px;border-bottom:1px solid var(--line)}
 .ws-head h2{font:600 17px var(--sans);letter-spacing:0;margin:0}
 .ws-list,.ws-acts{list-style:none;margin:0;padding:0}
@@ -732,7 +807,8 @@ body[data-tab="reader"] .step-foot{max-width:none}
 .ws-tool > p{margin:0 0 4px;line-height:1.55}
 .ws-tool-top{display:flex;align-items:center;justify-content:space-between;gap:8px}
 .ws-tool-top .ws-ico{width:40px;height:40px;border-radius:10px}
-.ws-tool.here .ws-ico{background:var(--side-bg);color:var(--side-gold)}
+.ws-tool.here{box-shadow:0 0 0 2px var(--c-blue),var(--shadow)}
+.ws-tool .ws-ico{background:var(--c);color:#fff}
 .ws-part{font:600 12px var(--sans);letter-spacing:.08em;text-transform:uppercase;color:var(--gold-ink)}
 .ws-steps{border-top:1px solid var(--line);margin-top:auto;padding-top:4px}
 .ws-steps li + li{border-top:1px solid var(--line)}
@@ -781,12 +857,12 @@ body[data-tab="reader"] .step-foot{max-width:none}
 .v-stat.ok b{color:var(--ok)} .v-stat.bad b{color:var(--danger)} .v-stat.warn b{color:var(--warn)}
 .v-verdict{margin:10px 0 0;display:flex;gap:8px;align-items:flex-start}
 .v-score.ok .v-verdict{color:var(--ok)}
-.v-views{display:flex;gap:6px;overflow-x:auto;padding:2px 0 6px;margin-bottom:12px;scrollbar-width:thin}
-.v-view{flex:none;appearance:none;border:1px solid var(--line);background:var(--surface);color:var(--muted);font:500 .88rem var(--sans);padding:7px 13px;border-radius:999px;cursor:pointer;min-height:36px}
-.v-view:hover{border-color:var(--accent);color:var(--ink)}
-.v-view.on{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.v-views{display:flex;gap:4px;overflow-x:auto;padding:0;margin-bottom:16px;border-bottom:1px solid var(--line);scrollbar-width:thin}
+.v-view{flex:none;appearance:none;border:0;border-bottom:3px solid transparent;background:transparent;color:var(--muted);font:600 15px var(--sans);padding:8px 14px 7px;border-radius:0;cursor:pointer;min-height:42px}
+.v-view:hover{color:var(--ink)}
+.v-view.on{color:var(--accent);border-bottom-color:var(--accent)}
 .v-count{display:inline-block;min-width:1.4em;padding:0 6px;border-radius:999px;background:var(--surface-2);color:var(--ink);font-size:.74rem;margin-left:3px;text-align:center}
-.v-view.on .v-count{background:color-mix(in srgb,var(--accent-ink) 22%,transparent);color:var(--accent-ink)}
+.v-view.on .v-count{background:var(--accent-soft);color:var(--accent)}
 #vRun:empty{display:none}
 #vRun{margin-bottom:12px}
 .v-body > .card,.v-body > .empty{margin-bottom:14px}
@@ -1096,11 +1172,11 @@ details.guide[open] summary::after{transform:rotate(-135deg)}
 .slide ul{margin:0;padding-left:20px;font-size:.92rem}
 .notes{font-size:.86rem;color:var(--muted);background:var(--surface-2);border-radius:var(--radius-sm);padding:10px 12px;margin-top:auto}
 .notes b{color:var(--ink);font-weight:600}
-.seg{display:inline-flex;padding:3px;gap:2px;border-radius:var(--radius-md);background:var(--surface-2);max-width:100%;overflow-x:auto;scrollbar-width:none}
-.seg button{appearance:none;border:0;background:none;font:500 14px var(--sans);padding:6px 14px;color:var(--muted);cursor:pointer;min-height:34px;border-radius:var(--radius-sm);white-space:nowrap;display:inline-flex;align-items:center;gap:6px;transition:background-color .16s,color .16s}
+.seg{display:inline-flex;padding:0;gap:4px;border-radius:0;background:transparent;border-bottom:1px solid var(--line);max-width:100%;overflow-x:auto;scrollbar-width:none}
+.seg button{appearance:none;border:0;border-bottom:3px solid transparent;background:none;font:600 15px var(--sans);padding:8px 14px 7px;color:var(--muted);cursor:pointer;min-height:40px;border-radius:0;white-space:nowrap;display:inline-flex;align-items:center;gap:6px;transition:color .16s,border-color .16s}
 .seg button:hover{color:var(--ink)}
 
-.seg button[aria-pressed="true"]{background:var(--surface);color:var(--heading);box-shadow:0 1px 2px rgba(20,35,56,.10)}
+.seg button[aria-pressed="true"]{color:var(--accent);border-bottom-color:var(--accent)}
 .timeline{display:flex;height:12px;border-radius:999px;overflow:hidden;gap:2px;margin:8px 0 4px}
 .timeline span{background:var(--accent);opacity:.85}
 .timeline span:nth-child(even){opacity:.55}
@@ -1157,6 +1233,7 @@ dialog::backdrop{background:rgba(10,15,25,.45);backdrop-filter:blur(2px)}
 <header class="top">
   <button class="btn ghost icon menu-btn" data-act="side-open" aria-label="Open the menu" aria-controls="side" aria-expanded="false"></button>
   <nav class="crumbs" id="crumbs" aria-label="Breadcrumb"></nav>
+  <a class="top-logo" href="#start" data-act="part" data-part="start" aria-label="ScholarPath dashboard" title="Dashboard"><span></span></a>
   <span class="spacer"></span>
   <div class="top-actions" id="topActions"></div>
   <button class="btn ghost icon" id="themeBtn" data-act="theme" title="Theme" aria-label="Change theme"></button>
@@ -1294,6 +1371,12 @@ const TABS = [
   {id:'progress', label:'My Progress', icon:'chart'}
 ];
 
+function inkSafe(hex){                                           // the database's own colour, darkened just enough for white letters (WCAG AA)
+  let c = [1, 3, 5].map(i => parseInt(hex.slice(i, i + 2), 16));
+  const lum = () => c.map(x => x / 255).map(x => x <= .03928 ? x / 12.92 : ((x + .055) / 1.055) ** 2.4).reduce((s, x, i) => s + x * [.2126, .7152, .0722][i], 0);
+  while (1.05 / (lum() + .05) < 4.6) c = c.map(x => Math.floor(x * .94));
+  return `rgb(${c.join(',')})`;
+}
 const enc = encodeURIComponent;
 const DATABASES = [
   {id:'ieee', name:'IEEE Xplore', abbr:'IEEE', color:'#00629b', url:'https://ieeexplore.ieee.org/',
@@ -1833,12 +1916,37 @@ function startStatus(){                                          // a short, hon
 function logActivity(text, part, i, sub=''){
   const A = (S.activity ||= []), last = A[0], now = Date.now();
   if (last && last.part === part && last.i === i && last.text === text){ last.at = now; last.sub = sub; return; }
-  A.unshift({text, part, i, sub, at:now}); if (A.length > 40) A.length = 40;
+  A.unshift({text, part, i, sub, at:now}); if (A.length > 150) A.length = 150;
 }
 function whenTxt(t){
   const d = new Date(t), now = new Date(), today = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime();
   const hm = d.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
   return t >= today ? `Today, ${hm}` : t >= today - 864e5 ? `Yesterday, ${hm}` : `${d.toLocaleDateString([], {day:'numeric', month:'short'})}, ${hm}`;
+}
+const PART_COLOR = {writing:'purple', critiquing:'blue', presenting:'orange', verifying:'green', start:'teal', progress:'teal'};
+const AV_COLORS = ['purple', 'orange', 'teal', 'blue', 'green', 'pink'];
+function initials(t){                                               // two letters for a coloured circle (decoration only)
+  const w = String(t || '').replace(/^demo:\s*/i, '').match(/[A-Za-z؀-ۿ]+/g) || ['?'];
+  const big = w.filter(x => x.length > 3); const a = (big[0] || w[0])[0], b = ((big[1] || w[1] || '')[0] || '');
+  return (a + b).toUpperCase();
+}
+const avColor = t => AV_COLORS[[...String(t || '')].reduce((n, c) => (n * 31 + c.charCodeAt(0)) >>> 0, 7) % AV_COLORS.length];
+const dayStart = d => new Date(d.getFullYear(), d.getMonth(), d.getDate()).getTime();
+function weekHTML(){                                                // the last seven days, with the steps opened on each (from S.activity)
+  const today = new Date(), t0 = dayStart(today), A = (S.activity || []).filter(a => partOf(a.part).no && a.part === partOf(a.part).id);
+  const days = [...Array(7)].map((_, k) => { const d = new Date(t0 - (6 - k) * 864e5); return {d, from:dayStart(d), to:dayStart(d) + 864e5}; });
+  const name = (x, k) => k === 6 ? 'Today' : k === 5 ? 'Yesterday' : x.d.toLocaleDateString([], {weekday:'long'});
+  return `<div class="wk" role="table" aria-label="Your last seven days">
+    <div class="wk-row wk-head" role="row">${days.map((x, k) => `<div class="wk-c ${k === 6 ? 'today' : ''}" role="columnheader">${name(x, k)}</div>`).join('')}</div>
+    <div class="wk-row" role="row">${days.map((x, k) => {
+      const seen = new Map();
+      A.filter(a => a.at >= x.from && a.at < x.to).forEach(a => { const key = a.part + '/' + a.i; if (!seen.has(key)) seen.set(key, a); });
+      const items = [...seen.values()];
+      return `<div class="wk-c ${k === 6 ? 'today' : ''}" role="cell"><span class="wk-n"><span class="wk-dn">${name(x, k)} </span>${x.d.getDate()}</span>
+        ${items.slice(0, 3).map(a => { const p = partOf(a.part), st = p.steps[Math.min(a.i, p.steps.length - 1)];
+          return `<a href="#${p.id}/${a.i + 1}" class="wk-it c-${PART_COLOR[p.id]}" data-act="goto" data-part="${p.id}" data-i="${Math.min(a.i, p.steps.length - 1)}">${p.no}.${Math.min(a.i, p.steps.length - 1) + 1} ${esc(st.label)}</a>`; }).join('')}
+        ${items.length > 3 ? `<span class="wk-more">+${items.length - 3} more</span>` : ''}</div>`;
+    }).join('')}</div></div>`;
 }
 RENDER.start = () => {
   const status = startStatus(), A = (S.activity || []).filter(a => partOf(a.part).no && a.part === partOf(a.part).id);
@@ -1850,53 +1958,63 @@ RENDER.start = () => {
   const mark = paper && (S.reader.marks || {})[paper.id];
   const parts = PARTS.filter(p => p.no), pi = parts.indexOf(tp);
   const next = tk < tp.steps.length - 1 ? {p:tp, from:tk + 1} : pi < parts.length - 1 ? {p:parts[pi + 1], from:0} : null;
+  const qs = S.verify.sets.flatMap(s => dState(s).qs), prep = qs.filter(q => q.status === 'prepared').length;
+  const critsDone = S.critiques.filter(critDone).length, figs = S.figlab.reviews.filter(figDone).length;
   const stepBtn = (p, i) => `<button class="ws-step" data-act="goto" data-part="${p.id}" data-i="${i}"><span class="ws-n">${p.no}.${i + 1}</span><span class="ws-st"><b>${esc(p.steps[i].label)}</b><span class="small muted">${esc(status[p.id + '/' + i] || '')}</span></span>${icon('chevr')}</button>`;
+  const stat = (ic, col, n, of, lbl, part, i) => `<button class="sum-it" data-act="goto" data-part="${part}" data-i="${i}"><span class="sum-ic c-${col}">${icon(ic)}</span><span class="sum-t"><b>${n}${of !== '' ? `<small> of ${of}</small>` : ''}</b><span>${lbl}</span></span></button>`;
   const onReader = tp.id === 'critiquing' && tk === 0;
   $('#panel-start').innerHTML = `
-  <div class="page-head"><div class="ws-kicker">AAU · Advanced Research Methods 0106112</div><h1>Your Research Workspace</h1>
-  <p>Read, critique, present and defend a paper, one step at a time. Everything you write stays in this browser.</p></div>
+  <div class="page-head ws-top"><div><h1>Your Research Workspace</h1><p class="ws-sub">AAU · Advanced Research Methods 0106112</p></div>
+    <span class="pill">4 parts · 12 steps</span></div>
   <div class="ws">
-  <section class="card ws-hero" aria-labelledby="wsCont">
-    <div class="ws-hero-main">
-      <div class="row"><span class="label">${last ? 'Continue researching' : 'Start here'}</span>${paper && paper.example ? '<span class="chip">Demo text · not a real study</span>' : ''}</div>
-      <h2 class="ws-hero-title" id="wsCont">${paper ? esc(paper.title || paper.name) : 'Add your first paper'}</h2>
-      <div class="ws-meta">
-        <span>${icon(stepIcon(tst))}${last ? 'Last step' : 'Begin with'} ${tp.no}.${tk + 1} · ${esc(tst.label)}</span>
-        ${paper ? `<span>${icon('file')}${pl(text.length, 'paragraph')}${nf ? ` · ${pl(nf, 'figure')}` : ''}</span><span>${icon('lang')}${langs}</span>` : ''}
-      </div>
-      ${text.length ? `<div class="ws-prog"><div class="row" style="justify-content:space-between"><span class="small muted">Simple versions written</span><span class="small"><b>${done} of ${text.length}</b> paragraphs</span></div><div class="progress"><span style="width:${Math.round(done / text.length * 100)}%"></span></div></div>` : ''}
-      <div class="row ws-actions">
-        ${paper ? `<button class="btn primary" data-act="goto" data-part="critiquing" data-i="0">${mark ? 'Continue reading' : 'Open the paper'}${icon('fwd')}</button>` : `<button class="btn primary" data-act="dash-upload">${icon('upload')}Upload a PDF</button>`}
-        ${last && !onReader ? `<button class="btn" data-act="goto" data-part="${tp.id}" data-i="${tk}">Back to ${tp.no}.${tk + 1} ${esc(tst.label)}</button>` : ''}
-        ${paper && TTS.ok ? `<button class="btn" data-act="dash-listen">${icon('headphones')}${mark ? 'Continue listening' : 'Listen'}</button>` : ''}
-      </div>
+  <section class="card sum" aria-labelledby="sumT">
+    <h2 class="card-t" id="sumT">Progress summary</h2>
+    <div class="sum-row">
+      ${stat('check', 'green', done, paper ? text.length : '', 'Paragraphs simplified', 'critiquing', 0)}
+      ${stat('clip', 'blue', critsDone, S.critiques.length, 'Critiques complete', 'critiquing', 2)}
+      ${stat('image', 'orange', figs, '', figs === 1 ? 'Figure explained' : 'Figures explained', 'critiquing', 1)}
+      ${stat('messages', 'purple', prep, qs.length, 'Questions prepared', 'verifying', 1)}
     </div>
-    ${next ? `<div class="ws-next"><span class="label">Next in Part ${next.p.no} · ${esc(next.p.short || next.p.label)}</span>
-      <ol>${next.p.steps.map((st, i) => i < next.from ? '' : `<li>${stepBtn(next.p, i)}</li>`).join('')}</ol></div>` : ''}
+  </section>
+
+  <section class="card wk-card" aria-labelledby="wkT">
+    <div class="card-h"><span class="card-ic c-blue">${icon('clock')}</span><h2 class="card-t" id="wkT">This week</h2><span class="small muted">The steps you opened, day by day</span></div>
+    ${weekHTML()}
   </section>
 
   <div class="ws-cols">
-    <section class="card ws-lib" aria-labelledby="wsLib">
-      <div class="ws-head"><h2 id="wsLib">Library</h2><span class="small muted">${pl(papers.length, 'paper')}</span><span class="spacer"></span>
-        <button class="btn sm" data-act="dash-paste">${icon('clip')}Paste text</button><button class="btn sm" data-act="dash-upload">${icon('upload')}Upload PDF</button></div>
-      <ul class="ws-list">${papers.map(p => {
-        const np = p.paras.filter(isReadable).length, pg = (p.pages || []).length;
-        return `<li><button class="ws-row" data-act="dash-open" data-id="${p.id}"><span class="ws-doc">${icon('file')}</span><span class="ws-row-t"><b>${esc(p.title || p.name)}</b><span class="small muted">${p.example ? 'Demo text written for ScholarPath · ' : ''}${pg ? pl(pg, 'page') + ' · ' : ''}${pl(np, 'paragraph')} · added ${new Date(p.created || Date.now()).toLocaleDateString([], {day:'numeric', month:'short', year:'numeric'})}</span></span>${paper && p.id === paper.id ? '<span class="chip tag">Open</span>' : ''}</button></li>`;
-      }).join('')}</ul>
-      <p class="ws-add" style="margin:0"><span class="ws-doc">${icon('plus')}</span><span>Upload your own paper as a PDF. Its text is read inside your browser, every word is kept, and figures stay as pictures.</span></p>
+    <section class="card ws-hero" aria-labelledby="wsCont">
+      <div class="card-h"><span class="card-ic c-teal">${icon('book')}</span><h2 class="card-t" id="wsCont">${last ? 'Continue researching' : 'Start here'}</h2>${paper && paper.example ? '<span class="pill">Demo text · not a real study</span>' : ''}</div>
+      <div class="ws-hero-main">
+        <h3 class="ws-hero-title">${paper ? esc(paper.title || paper.name) : 'Add your first paper'}</h3>
+        <div class="ws-meta">
+          <span>${icon(stepIcon(tst))}${last ? 'Last step' : 'Begin with'} ${tp.no}.${tk + 1} · ${esc(tst.label)}</span>
+          ${paper ? `<span>${icon('file')}${pl(text.length, 'paragraph')}${nf ? ` · ${pl(nf, 'figure')}` : ''}</span><span>${icon('lang')}${langs}</span>` : ''}
+        </div>
+        ${text.length ? `<div class="ws-prog"><div class="row" style="justify-content:space-between"><span class="small muted">Simple versions written</span><span class="small"><b>${done} of ${text.length}</b> paragraphs</span></div><div class="progress"><span style="width:${Math.round(done / text.length * 100)}%"></span></div></div>` : ''}
+        <div class="row ws-actions">
+          ${paper ? `<button class="btn primary" data-act="goto" data-part="critiquing" data-i="0">${mark ? 'Continue reading' : 'Open the paper'}${icon('fwd')}</button>` : `<button class="btn primary" data-act="dash-upload">${icon('upload')}Upload a PDF</button>`}
+          ${last && !onReader ? `<button class="btn" data-act="goto" data-part="${tp.id}" data-i="${tk}">Back to ${tp.no}.${tk + 1} ${esc(tst.label)}</button>` : ''}
+          ${paper && TTS.ok ? `<button class="btn" data-act="dash-listen">${icon('headphones')}${mark ? 'Continue listening' : 'Listen'}</button>` : ''}
+        </div>
+      </div>
+      ${next ? `<div class="ws-next"><span class="label">Next in Part ${next.p.no} · ${esc(next.p.short || next.p.label)}</span>
+        <ol>${next.p.steps.map((st, i) => i < next.from ? '' : `<li>${stepBtn(next.p, i)}</li>`).join('')}</ol></div>` : ''}
     </section>
-    <section class="card ws-act" aria-labelledby="wsAct">
-      <div class="ws-head"><h2 id="wsAct">Recent activity</h2></div>
-      ${A.length ? `<ol class="ws-acts">${A.slice(0, 6).map(a => { const p = partOf(a.part), st = p.steps[a.i] || p.steps[0];
-        return `<li><button class="ws-row" data-act="goto" data-part="${p.id}" data-i="${Math.min(a.i, p.steps.length - 1)}"><span class="ws-ico">${icon(stepIcon(st))}</span><span class="ws-row-t"><span>${esc(a.text)}</span><span class="small muted">${a.sub ? esc(clip(a.sub, 60)) + ' · ' : ''}${whenTxt(a.at)}</span></span></button></li>`; }).join('')}</ol>`
-        : '<p class="ws-act-empty">The steps you open will appear here, so you can pick up where you left off.</p>'}
+    <section class="card ws-lib" aria-labelledby="wsLib">
+      <div class="card-h"><span class="card-ic c-orange">${icon('library')}</span><h2 class="card-t" id="wsLib">Library</h2><span class="small muted">${pl(papers.length, 'paper')}</span></div>
+      <ul class="ws-list">${papers.map(p => {
+        const np = p.paras.filter(isReadable).length, pg = (p.pages || []).length, t = p.title || p.name;
+        return `<li><button class="ws-row" data-act="dash-open" data-id="${p.id}"><span class="av c-${avColor(t)}" aria-hidden="true">${esc(initials(t))}</span><span class="ws-row-t"><b>${esc(t)}</b><span class="small muted">${p.example ? 'Demo text · ' : ''}${pg ? pl(pg, 'page') + ' · ' : ''}${pl(np, 'paragraph')} · added ${new Date(p.created || Date.now()).toLocaleDateString([], {day:'numeric', month:'short'})}</span></span>${paper && p.id === paper.id ? '<span class="pill pill-blue">Open</span>' : ''}</button></li>`;
+      }).join('') || '<li class="ws-act-empty">No papers yet.</li>'}</ul>
+      <div class="card-foot"><button class="linkbtn" data-act="dash-upload">${icon('upload')}Upload a PDF</button><button class="linkbtn" data-act="dash-paste">${icon('clip')}Paste text</button></div>
     </section>
   </div>
 
   <section aria-labelledby="wsTools">
     <div class="section-title" style="margin-top:8px"><div><h2 id="wsTools">Research tools</h2><p class="muted" style="margin:6px 0 0">Four parts, in the order you will use them.</p></div></div>
     <div class="ws-tools">${parts.map(p => `<article class="card ws-tool ${p.id === tp.id ? 'here' : ''}">
-      <div class="ws-tool-top"><span class="ws-ico">${icon(p.icon)}</span><span class="ws-part">Part ${p.no}${p.id === tp.id ? ' · You are here' : ''}</span></div>
+      <div class="ws-tool-top"><span class="ws-ico c-${PART_COLOR[p.id]}">${icon(p.icon)}</span><span class="ws-part">Part ${p.no}${p.id === tp.id ? ' · You are here' : ''}</span></div>
       <h3>${esc(p.label)}</h3><p class="small muted">${esc(p.blurb)}</p>
       <ol class="ws-steps">${p.steps.map((st, i) => `<li>${stepBtn(p, i)}</li>`).join('')}</ol>
     </article>`).join('')}</div>
@@ -1928,7 +2046,7 @@ RENDER.hub = () => {
   <div class="section-title"><h2>Databases</h2><span class="muted small">Tap a card to open the database</span></div>
   <div class="grid g-auto">
     ${DATABASES.map(d => `<a class="card db-card" href="${d.url}" target="_blank" rel="noopener">
-      <div class="db-top"><span class="db-logo" style="background:${d.color}">${d.abbr}</span><span class="db-name">${esc(d.name)}</span></div>
+      <div class="db-top"><span class="db-logo" style="background:${inkSafe(d.color)}">${d.abbr}</span><span class="db-name">${esc(d.name)}</span></div>
       <p class="db-desc">${esc(d.desc)}</p>
       <span class="db-cta">Open ${icon('ext')}</span></a>`).join('')}
   </div>
@@ -3151,11 +3269,13 @@ function ttsUtter(x, voice){
 }
 
 const PART_LABEL = {orig:'Original', idea:'Simple', ar:'Arabic', head:'Heading', sel:'Selection'};
-const MODE_PARTS = {orig:{orig:true}, simple:{idea:true}, both:{orig:true, ar:true}};     // the text shown above the paper decides what is read
+const MODE_PARTS = {orig:{orig:true}, simple:{idea:true}, ar:{ar:true}};     // the version shown above the paper is the version read
+const rdMode = () => MODE_PARTS[S.reader.mode] ? S.reader.mode : 'orig';
 const PARTS_SAID = {orig:'Original', idea:'Simple English', ar:'Arabic'};
 const partsLabel = parts => ['orig', 'idea', 'ar'].filter(k => parts && parts[k]).map(k => PARTS_SAID[k]).join(' + ') || 'Original';
+const MISSING_SAID = {idea:'no simple version yet', ar:'no Arabic translation yet'};
 function ttsSegs(paper, opts){                                // opts: {from, only, section, parts}
-  const parts = opts.parts || S.reader.ttsParts || MODE_PARTS[S.reader.mode || 'orig'];
+  const parts = opts.parts || MODE_PARTS[rdMode()];
   const list = paper.paras.filter(isReadable);
   let ps;
   if (opts.only) ps = list.filter(p => p.id === opts.only);
@@ -3165,12 +3285,17 @@ function ttsSegs(paper, opts){                                // opts: {from, on
     ps = list.slice(a, b + 1);
   } else ps = list.slice(opts.from ? Math.max(0, list.findIndex(p => p.id === opts.from)) : 0);
   const heads = S.reader.headings !== false && !opts.only;
-  return ps.flatMap((p, k) => [
-    heads && p.section && (k === 0 || ps[k - 1].section !== p.section) && {pid:p.id, part:'head', text:p.section + '.', lang:isArabic(p.section) ? 'ar' : 'en'},
-    (parts.orig || (!opts.only && parts.idea && !simpleOf(p) && !ideaOf(p))) && p.text && {pid:p.id, part:'orig', text:p.text, lang:'en'},     // no simple version yet: read what is shown, the original
-    parts.idea && (simpleOf(p) || ideaOf(p)) && {pid:p.id, part:'idea', text:simpleOf(p) ? 'In simple words: ' + simpleOf(p) : 'Main idea: ' + ideaOf(p), lang:'en'},
-    parts.ar && (p.ar || '').trim() && {pid:p.id, part:'ar', text:p.ar, lang:'ar', voc:arVocOf(p)}
-  ].filter(Boolean));
+  return ps.flatMap((p, k) => {
+    const simple = simpleOf(p), ar = (p.ar || '').trim();
+    const shownOrig = !opts.only && !parts.orig && !(parts.idea && simple) && !(parts.ar && ar);     // the chosen version is missing: the original is what is shown
+    return [
+      heads && p.section && (k === 0 || ps[k - 1].section !== p.section) && {pid:p.id, part:'head', text:p.section + '.', lang:isArabic(p.section) ? 'ar' : 'en'},
+      (parts.orig || shownOrig) && p.text && {pid:p.id, part:'orig', text:p.text, lang:'en', missing:shownOrig ? (parts.ar ? 'ar' : 'idea') : ''},
+      parts.idea && simple && {pid:p.id, part:'idea', text:parts.orig ? 'In simple words: ' + simple : simple, lang:'en'},
+      parts.idea && !simple && opts.only && ideaOf(p) && {pid:p.id, part:'idea', text:'Main idea: ' + ideaOf(p), lang:'en'},
+      parts.ar && ar && {pid:p.id, part:'ar', text:p.ar, lang:'ar', voc:arVocOf(p)}
+    ].filter(Boolean);
+  });
 }
 function ttsLoad(segs, ctx){
   TTS.list = segs.flatMap((s, si) => { const vpos = s.voc ? vocMap(s.text, s.voc) : null;
@@ -3257,7 +3382,7 @@ function ttsStop(){ ttsFinish(); }                               // stop and for
 const ttsStartPid = () => { const paper = rPaper(), sel = paper && rdSel(paper); return sel ? sel.id : null; };   // Play starts at the selected paragraph
 function ttsPlayAll(from){
   const paper = rPaper(); if (!paper) return;
-  const ctx = {paperId:paper.id, from:from || null, parts:{...(S.reader.ttsParts || MODE_PARTS[S.reader.mode || 'orig'])}, follow:true};
+  const ctx = {paperId:paper.id, from:from || null, parts:{...MODE_PARTS[rdMode()]}, follow:true};
   ttsStart(ttsSegs(paper, ctx), ctx);
 }
 function ttsHerePid(){                                        // the paragraph being read, or where you paused, or the first one
@@ -3266,12 +3391,12 @@ function ttsHerePid(){                                        // the paragraph b
 }
 function ttsPlaySection(pid){
   const paper = rPaper(); if (!paper || !pid) return;
-  const ctx = {paperId:paper.id, section:pid, parts:{...(S.reader.ttsParts || MODE_PARTS[S.reader.mode || 'orig'])}, follow:true};
+  const ctx = {paperId:paper.id, section:pid, parts:{...MODE_PARTS[rdMode()]}, follow:true};
   ttsStart(ttsSegs(paper, ctx), ctx);
 }
 function ttsPlayPara(pid){
   const paper = rPaper(); if (!paper || !pid) return;
-  const ctx = {paperId:paper.id, only:pid, parts:{...(S.reader.ttsParts || MODE_PARTS[S.reader.mode || 'orig'])}, follow:true};
+  const ctx = {paperId:paper.id, only:pid, parts:{...MODE_PARTS[rdMode()]}, follow:true};
   ttsStart(ttsSegs(paper, ctx), ctx);
 }
 function ttsReadSelection(){
@@ -3326,12 +3451,12 @@ function ttsVoiceSummary(){
 function ttsBarHTML(){                                           // the read-aloud player: playback in front, voice and reading settings folded away
   if (!TTS.ok) return '<div class="pl pl-off"><span class="small muted">Read-aloud is not supported in this browser.</span></div>';
   const paper = rPaper(), mark = paper && (S.reader.marks || {})[paper.id], c = TTS.list[TTS.i];
-  const parts = S.reader.ttsParts || MODE_PARTS[S.reader.mode || 'orig'];
+  const parts = MODE_PARTS[rdMode()], arVoice = !!pickVoice('ar').v;
   const live = TTS.list.length && TTS.ctx && paper && TTS.ctx.paperId === paper.id && TTS.list[TTS.i];
   const paused = !TTS.playing && (live || mark);
   const where = TTS.playing && c ? c : paused ? (live ? TTS.list[TTS.i] : mark) : null;
   const startP = paper && rdSel(paper), startN = startP ? paraNo(paper, startP.id) : 1, isFirst = !startP || startP === paper.paras.find(isReadable);
-  const whereTxt = where && paper ? (where.part === 'sel' ? 'your selection' : `¶${paraNo(paper, where.pid)} · ${PART_LABEL[where.part]}`) : '';
+  const whereTxt = where && paper ? (where.part === 'sel' ? 'your selection' : `¶${paraNo(paper, where.pid)} · ${PART_LABEL[where.part]}${where.missing ? ` (${MISSING_SAID[where.missing]})` : ''}`) : '';
   const rate = S.reader.rate || 1, vol = S.reader.volume ?? 1, has = !!TTS.list.length || !!mark, open = !!S.reader.playerOpen;
   const pct = TTS.list.length ? Math.round((TTS.i + (TTS.playing ? .5 : 0)) / TTS.list.length * 100) : 0;
   const vocTodo = parts.ar && paper && aiReady() ? paper.paras.filter(p => isReadable(p) && (p.ar || '').trim() && !arVocOf(p)).length : 0;
@@ -3354,20 +3479,22 @@ function ttsBarHTML(){                                           // the read-alo
     </div>
     <div class="pl-track" aria-hidden="true"><span style="width:${pct}%"></span></div>
     <div class="pl-more-in" id="plMore" ${open ? '' : 'hidden'}>
+      <button class="btn ghost sm icon pl-close" data-act="tts-panel" aria-label="Close the settings" title="Close">${icon('x')}</button>
       <div class="pl-grp"><span class="label">Playback</span>
-        <p class="small muted" style="margin:0">The player reads the text shown above the paper (Original, Simple English, or Original + Arabic). You can change it here.</p>
-        <div class="row"><span class="small muted">Read</span><span class="filter-chips">${['orig', 'idea', 'ar'].map(k => `<button class="fchip sm-chip" data-act="tts-part" data-v="${k}" aria-pressed="${!!parts[k]}">${PART_LABEL[k]}${k === 'ar' ? ' translation' : ''}</button>`).join('')}</span></div>
+        <div class="row pl-pick" role="group" aria-label="What to hear"><span class="small muted">Hear</span>${RD_MODES.map(([k, l]) => `<button class="fchip sm-chip" data-act="rp-mode" data-v="${k}" aria-pressed="${rdMode() === k}">${l}</button>`).join('')}</div>
+        <p class="small muted" style="margin:0">One version at a time. The paper above shows the same version.</p>
         <div class="row tts-scope"><span class="small muted">Play only</span><button class="btn sm" id="ttsSelBtn" data-act="tts-sel" ${TTS.sel ? '' : 'disabled'} title="Select text in the paper, then press here">Selection</button><button class="btn sm" data-act="tts-para" title="Read the current paragraph">Paragraph</button><button class="btn sm" data-act="tts-section" title="Read the whole section">Section</button>${paused && !TTS.playing ? `<button class="btn sm ghost" data-act="tts-restart" title="Start again from the beginning">From the start</button>` : ''}</div>
         <p class="small muted" style="margin:0">Listening to one paragraph, a section or your selection keeps your place in the paper.</p></div>
       <div class="pl-grp"><span class="label">Voice</span>
         <div class="small tts-voices">${ttsVoiceSummary()}</div>
+        ${parts.ar && !arVoice ? `<p class="small pl-warn" style="margin:0">${icon('info')}<span>This device has no Arabic voice, so the Arabic text cannot be read aloud here. <b>Voices &amp; accents</b> explains how to add one.</span></p>` : ''}
         <button class="btn sm" data-act="tts-voices">${icon('volume')}Voices &amp; accents</button></div>
       <div class="pl-grp"><span class="label">Reading settings</span>
         <label class="small tts-ctl">Volume <input type="range" id="ttsVol" min="0.1" max="1" step="0.05" value="${vol}" aria-label="Volume"></label>
         ${TTS.note ? `<p class="small muted" style="margin:0">${esc(TTS.note)}</p>` : ''}
         ${vocTodo ? `<p class="small muted" style="margin:0">${pl(vocTodo, 'Arabic translation has', 'Arabic translations have')} no vowel marks for listening. Arabic voices pronounce text much more accurately with them. <button class="btn sm ghost" data-act="rp-voc-all" data-ai-btn>${icon('sparkle')}Add vowel marks with Claude</button></p>` : ''}
-        ${parts.idea && paper && aiReady() && paper.paras.some(p => isReadable(p) && !simpleOf(p)) ? `<p class="small muted" style="margin:0">${paper.paras.filter(p => isReadable(p) && !simpleOf(p)).length} paragraph(s) have no simple version yet, so “Simple” reads their main idea instead. <button class="btn sm ghost" data-act="rp-sum-all" data-ai-btn>${icon('sparkle')}Write them with Claude</button></p>` : ''}
-        ${parts.ar && paper && !paper.paras.some(p => (p.ar || '').trim()) ? `<p class="small muted" style="margin:0">No Arabic translations yet. Add them in the study panel’s Arabic tab${aiReady() ? ', or translate them all under Whole paper' : ''}.</p>` : ''}</div>
+        ${parts.idea && paper && aiReady() && paper.paras.some(p => isReadable(p) && !simpleOf(p)) ? `<p class="small muted" style="margin:0">${paper.paras.filter(p => isReadable(p) && !simpleOf(p)).length} paragraph(s) have no simple version yet, so their original text is read. <button class="btn sm ghost" data-act="rp-sum-all" data-ai-btn>${icon('sparkle')}Write them with Claude</button></p>` : ''}
+        ${parts.ar && paper && paper.paras.some(p => isReadable(p) && !(p.ar || '').trim()) ? `<p class="small muted" style="margin:0">${paper.paras.filter(p => isReadable(p) && !(p.ar || '').trim()).length} paragraph(s) have no Arabic translation yet, so their original text is read. Add translations in the study panel’s Arabic tab${aiReady() ? ', or translate them all under Paper' : ''}.</p>` : ''}</div>
     </div>
   </div>`;
 }
@@ -3595,9 +3722,9 @@ RENDER.reader = () => {
   loadReaderFigs();
   rdAssistInert();
 };
-const RD_MODES = [['orig', 'Original'], ['simple', 'Simple English'], ['both', 'Original + Arabic']];
+const RD_MODES = [['orig', 'Original'], ['simple', 'Simple English'], ['ar', 'Arabic']];     // one version at a time: what is shown is what is read
 function readerBody(paper, view){
-  const text = paper.paras.filter(isReadable), mode = S.reader.mode || 'orig';
+  const text = paper.paras.filter(isReadable), mode = rdMode();
   const pages = (paper.pages || []).length;
   return `
   <div class="rd ${S.ui.outline === false ? 'no-outline' : ''}" id="rd">
@@ -3617,7 +3744,7 @@ function readerBody(paper, view){
         <div class="row">${paper.example ? '<span class="chip">Demo text · not a real study</span>' : ''}<span class="small muted">${[pages ? pl(pages, 'page') : '', pl(text.length, 'paragraph'), paper.example ? 'written for ScholarPath to show a finished reading' : ''].filter(Boolean).join(' · ')}</span></div>
         <label class="sr-only" for="rpTitle">Paper title</label>
         <textarea id="rpTitle" class="rd-title" rows="1" placeholder="Paper title" spellcheck="false">${esc(paper.title)}</textarea>
-        ${view === 'paras' ? `<div class="rd-modes" role="group" aria-label="Text shown">${RD_MODES.map(([k, l]) => `<button class="fchip" data-act="rp-mode" data-v="${k}" aria-pressed="${mode === k}" ${k === 'both' ? 'title="The English original with its Arabic translation"' : ''}>${l}</button>`).join('')}</div>` : ''}
+        ${view === 'paras' ? `<div class="rd-modes" role="group" aria-label="Text shown">${RD_MODES.map(([k, l]) => `<button class="fchip" data-act="rp-mode" data-v="${k}" aria-pressed="${mode === k}" ${k === 'ar' ? 'lang="en" title="The Arabic translation (the original stays one click away)"' : ''}>${l}</button>`).join('')}</div>` : ''}
         <div id="aiBar"></div>
       </header>
       <div id="rpView">${view === 'flow' ? flowView(paper) : view === 'questions' ? questionsView(paper) : parasView(paper)}</div>
@@ -3650,6 +3777,8 @@ function parasView(paper){
 }
 const rdSelId = paper => (S.reader.sels || {})[paper.id];
 function rdSel(paper){ const id = rdSelId(paper); return paper.paras.find(p => p.id === id && isReadable(p)) || paper.paras.find(isReadable); }
+let rdCardT = 0;
+function rdCardSoon(p){ clearTimeout(rdCardT); rdCardT = setTimeout(() => refreshCards([p]), 350); }   // the paper shows what you type in the study panel
 function paraMenu(paper, p){
   const n = paraNo(paper, p.id);
   return `<details class="menu"><summary class="btn ghost sm icon" aria-label="More actions for ¶${n}" title="More">${icon('more')}</summary><div class="menu-pop">
@@ -3663,12 +3792,12 @@ function paraCard(paper, p){
   if (p.kind === 'front') return `<article class="para rd-p front" id="para-${p.id}" data-pid="${p.id}">
     <div class="para-head"><span class="para-no">¶${n}</span><span class="rd-loc">Title, authors and affiliations — not summarised</span><span class="spacer"></span><span class="rd-acts">${paraMenu(paper, p)}</span></div>
     <div class="orig-full" id="po-${p.id}" dir="auto">${esc(p.text)}</div></article>`;
-  const mode = S.reader.mode || 'orig', simple = simpleOf(p), ar = (p.ar || '').trim(), sel = rdSel(paper);
+  const mode = rdMode(), simple = simpleOf(p), ar = (p.ar || '').trim(), sel = rdSel(paper);
   const flags = [simple ? 'Simple' : '', ideaOf(p) ? 'Main idea' : '', ar ? 'Arabic' : '', p.mine ? 'Note' : ''].filter(Boolean);
   const orig = `<div class="orig-full" id="po-${p.id}" dir="auto">${esc(p.text)}</div>`;
   const missing = (what, tab) => `<p class="rd-missing">No ${what} yet. <button class="linkish" data-act="rp-tools" data-id="${p.id}" data-tab="${tab}">Add one in the study panel</button></p>`;
   const body = mode === 'simple' ? (simple ? `<div class="rd-alt" id="pv-${p.id}" dir="auto">${esc(simple)}</div><details class="rd-peek"><summary>Show the original text</summary>${orig}</details>` : orig + missing('simple version', 'explain'))
-    : mode === 'both' ? `<div class="rd-both">${orig}${ar ? `<div class="rd-ar" id="pa-${p.id}" dir="rtl" lang="ar">${esc(p.ar)}</div>` : missing('Arabic translation', 'arabic')}</div>`
+    : mode === 'ar' ? (ar ? `<div class="rd-ar rd-ar-main" id="pa-${p.id}" dir="rtl" lang="ar">${esc(p.ar)}</div><details class="rd-peek"><summary>Show the original text</summary>${orig}</details>` : orig + missing('Arabic translation', 'arabic'))
     : orig;
   return `<article class="para rd-p ${sel && sel.id === p.id ? 'sel' : ''}" id="para-${p.id}" data-pid="${p.id}" data-act="rp-sel" data-id="${p.id}">
     <div class="para-head">
@@ -7063,7 +7192,6 @@ const ACTIONS = {
   'tts-restart': () => { ttsStop(); ttsPlayAll(); },
   'tts-stop': () => ttsStop(),
   'tts-skip': el => ttsSkip(+el.dataset.v),
-  'tts-part': el => { const parts = S.reader.ttsParts, k = el.dataset.v; parts[k] = !parts[k]; if (!parts.orig && !parts.idea && !parts.ar) parts[k] = true; save(); renderTtsBar(); },
   'tts-gender': el => { S.reader.gender = el.dataset.v; S.reader.voiceEn = ''; S.reader.voiceAr = ''; save(); renderVoiceDlg(); if (TTS.playing){ ttsHalt(); ttsSpeak(false); } else renderTtsBar(); },
   'tts-sel': () => ttsReadSelection(),
   'tts-para': () => ttsPlayPara(ttsHerePid()),
@@ -7141,8 +7269,9 @@ const ACTIONS = {
   'rp-tools': el => rdSelect(el.dataset.id, {tab:el.dataset.tab || (S.reader.as === 'paper' ? 'explain' : S.reader.as || 'explain'), open:true}),
   'rp-as': el => { S.reader.as = el.dataset.tab; save(); renderAssist(); $('#as-tab-' + el.dataset.tab)?.focus(); },
   'rp-assist-close': () => { rdAssistOpen(false); const sel = rPaper() && rdSel(rPaper()); $(`#para-${sel && sel.id} .rd-study`)?.focus(); },
-  'rp-mode': el => { S.reader.mode = el.dataset.v; S.reader.ttsParts = {...MODE_PARTS[S.reader.mode]}; save();
-    const now = TTS.playing && ttsMain(TTS.ctx) && TTS.list[TTS.i]; if (now) ttsPlayAll(now.pid); else renderTtsBar(); const paper = rPaper(); $('#rpView').innerHTML = parasView(paper); $$('#panel-reader [data-act="rp-mode"]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.v === S.reader.mode))); loadReaderFigs(); if (TTS.playing) ttsMark(TTS.list[TTS.i], false); },
+  'rp-mode': el => { S.reader.mode = MODE_PARTS[el.dataset.v] ? el.dataset.v : 'orig'; S.reader.ttsParts = {...MODE_PARTS[S.reader.mode]}; save();
+    const now = TTS.playing && ttsMain(TTS.ctx) && TTS.list[TTS.i]; if (now) ttsPlayAll(now.pid); else renderTtsBar();
+    if (el.closest('#ttsBar')) $(`#ttsBar [data-act="rp-mode"][data-v="${S.reader.mode}"]`)?.focus(); const paper = rPaper(); $('#rpView').innerHTML = parasView(paper); $$('#panel-reader [data-act="rp-mode"]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.v === S.reader.mode))); loadReaderFigs(); if (TTS.playing) ttsMark(TTS.list[TTS.i], false); },
   'tts-panel': () => { S.reader.playerOpen = !S.reader.playerOpen; save(); renderTtsBar(); $('#ttsBar [data-act="tts-panel"]')?.focus(); },
   'rp-to-crit': () => {
     const paper = rPaper(); let c = activeCrit();
@@ -7235,6 +7364,7 @@ document.addEventListener('keydown', e => {
   if (e.target.dataset.chatIn && e.key === 'Enter' && !e.shiftKey && !e.isComposing){ e.preventDefault(); const sc = e.target.dataset.chatIn; const q = e.target.value; e.target.value = ''; chatSend(sc, q); }
   if (e.key === 'Escape' && $('#app').classList.contains('side-open')){ e.preventDefault(); sideDrawer(false); }
   if (e.key === 'Escape' && $('#rd.as-open')){ e.preventDefault(); ACTIONS['rp-assist-close'](); }
+  else if (e.key === 'Escape' && S.reader.playerOpen && e.target.closest('#ttsBar')){ e.preventDefault(); ACTIONS['tts-panel'](); }
   if (e.key === 'Escape' && e.target.closest('details.menu[open]')){ const d = e.target.closest('details.menu'); d.open = false; d.querySelector('summary').focus(); }
   if (e.target.classList.contains('as-tab') && /^(ArrowRight|ArrowLeft|Home|End)$/.test(e.key)){
     e.preventDefault(); const k = AS_TABS.findIndex(([t]) => t === e.target.dataset.tab), n = AS_TABS.length;
@@ -7251,8 +7381,8 @@ document.addEventListener('input', e => {
   if (t.dataset.fb){ S.figlab.build.chart[t.dataset.fb] = t.value; save(); updateBuild(); return; }
   if (t.dataset.fbs){ S.figlab.build.chart.series[+t.dataset.fbs][t.dataset.field] = t.value; save(); updateBuild(); return; }
   if (t.dataset.fcap){ S.figlab.build.cap[t.dataset.fcap] = t.value; save(); updateBuild(); return; }
-  if (t.dataset.rp === 'simple'){ const para = rPaper().paras.find(x => x.id === t.dataset.id); if (para){ para.simple = t.value; para.simpleSrc = t.value.trim() ? 'me' : ''; save(); grow(t); const d = $('#rpDone'); if (d) d.textContent = rPaper().paras.filter(x => isReadable(x) && simpleOf(x)).length; } return; }
-  if (t.dataset.rp === 'ar'){ const para = rPaper().paras.find(x => x.id === t.dataset.id); if (para){ para.ar = t.value; para.arSrc = 'me'; save(); grow(t); } return; }
+  if (t.dataset.rp === 'simple'){ const para = rPaper().paras.find(x => x.id === t.dataset.id); if (para){ para.simple = t.value; para.simpleSrc = t.value.trim() ? 'me' : ''; save(); grow(t); const d = $('#rpDone'); if (d) d.textContent = rPaper().paras.filter(x => isReadable(x) && simpleOf(x)).length; if (rdMode() === 'simple') rdCardSoon(para); } return; }
+  if (t.dataset.rp === 'ar'){ const para = rPaper().paras.find(x => x.id === t.dataset.id); if (para){ para.ar = t.value; para.arSrc = 'me'; save(); grow(t); if (rdMode() === 'ar') rdCardSoon(para); } return; }
   if (t.dataset.rp === 'idea' || t.dataset.rp === 'mine'){
     const para = rPaper().paras.find(x => x.id === t.dataset.id); if (!para) return;
     if (t.dataset.rp === 'idea'){ para.idea = t.value; para.src = t.value.trim() ? 'me' : ''; grow(t); } else para.mine = t.value;
@@ -7367,11 +7497,12 @@ document.addEventListener('toggle', e => { if (e.target.id === 'vDocsWrap'){ S.u
 
 /* ---------- Boot ---------- */
 $('.brand-mark').innerHTML = icon('cap');
+$('.top-logo span').innerHTML = icon('cap');
 $('.menu-btn').innerHTML = icon('menu');
 $('.side-close').innerHTML = icon('x');
 applySide();
 S.critiques.forEach(fixCrit);
-if (S.reader && S.reader.partsV !== 2){ S.reader.ttsParts = {...MODE_PARTS[S.reader.mode || 'orig']}; S.reader.partsV = 2; save(); }
+if (S.reader && S.reader.partsV !== 3){ if (S.reader.mode === 'both') S.reader.mode = 'ar'; S.reader.ttsParts = {...MODE_PARTS[rdMode()]}; S.reader.partsV = 3; save(); }
 applyTheme();
 route(location.hash);
 })();
