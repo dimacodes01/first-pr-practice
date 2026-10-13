@@ -963,7 +963,6 @@ body[data-tab="reader"] .step-foot{max-width:none}
   .wk-n{min-width:118px}
 }
 .ws-top{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;flex-wrap:wrap}
-.ws-sub{font-size:16px;font-weight:700;color:var(--ink)!important;margin:0}
 body[data-tab="reader"] .rd-top{padding-top:22px}
 
 /* Dashboard: Your Research Workspace */
@@ -2567,7 +2566,7 @@ RENDER.start = () => {
   const stat = (ic, col, n, of, lbl, part, i) => `<button class="sum-it" data-act="goto" data-part="${part}" data-i="${i}"><span class="sum-ic c-${col}">${icon(ic)}</span><span class="sum-t"><b>${n}${of !== '' ? `<small> of ${of}</small>` : ''}</b><span>${lbl}</span></span></button>`;
   const onReader = tp.id === 'critiquing' && tk === 0;
   $('#panel-start').innerHTML = `
-  <div class="page-head ws-top"><div><h1>Your Research Workspace</h1><p class="ws-sub">AAU · Advanced Research Methods 0106112</p></div>
+  <div class="page-head ws-top"><div><h1>Your Research Workspace</h1></div>
     <span class="pill">4 parts · 12 steps</span></div>
   <div class="ws">
   <section class="card sum" aria-labelledby="sumT">
