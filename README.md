@@ -54,6 +54,12 @@ The app opens with one example idea, two example papers and an example AAU-form 
 
 `vendor/pdfjs/` holds pdf.js 3.11.174 (Apache-2.0, see its LICENSE) so PDFs can be read without a CDN (figure crops are kept in the browser's IndexedDB); the app falls back to cdnjs if the folder is missing. `vendor/pptxgenjs/` holds PptxGenJS 4.0.1 (MIT, see its LICENSE), which makes the PowerPoint in step 3.1 in the browser; it falls back to jsDelivr.
 
+### Critique Study Studio
+
+Step 2.3 has two pathways: **Create a Critique** (the AAU form) and **Upload & Study My Critique**. The studio takes a finished critique (PDF, Word, text or pasted), with the original paper and slides if you have them, and helps you understand, check and defend it — explanations in English or Arabic, highlights, sentence-by-sentence help, “Where did this come from?”, Challenge My Critique, professor questions with practice, Read & explain, and a study checklist. Your critique is never rewritten. See spec §5.4c.
+
 ### Checking the site
 
 `PLAYWRIGHT_BROWSERS_PATH=/opt/pw-browsers node tests/site-check.js` serves the folder like GitHub Pages and checks every step at four widths in light and dark, the website pages and files, and the copy-prompt bridge.
+
+`node tests/studio-check.js` (same setup) checks the Critique Study Studio with the made-up documents in `tests/fixtures/`.

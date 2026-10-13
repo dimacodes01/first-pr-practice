@@ -1443,6 +1443,128 @@ dialog.ai-bridge{width:min(720px,calc(100vw - 24px));overflow:auto}
 .aib-imgs{display:flex;flex-wrap:wrap;gap:12px;margin:0 0 10px}.aib-imgs figure{margin:0;display:grid;gap:6px;justify-items:start}.aib-imgs img{max-width:150px;max-height:110px;border:1px solid var(--line);border-radius:var(--radius-sm);background:#fff}
 .aib-check{display:flex;gap:8px;align-items:center;margin:0 0 14px}
 .aib-err{color:var(--danger);margin:8px 0 0}
+/* Critique Study Studio (step 2.3, second pathway) */
+.st-path{display:inline-flex;gap:4px;padding:4px;background:var(--surface);border-radius:999px;box-shadow:var(--shadow);max-width:100%;margin:0 0 24px}
+.st-path button{appearance:none;border:0;background:transparent;font:700 14px var(--sans);color:var(--muted);padding:0 18px;min-height:40px;border-radius:999px;display:inline-flex;align-items:center;justify-content:center;gap:8px;cursor:pointer}
+.st-path button:hover{color:var(--heading)}
+.st-path button[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink)}
+@media(max-width:620px){.st-path{display:flex;width:100%}.st-path button{flex:1;padding:0 8px;font-size:13px;min-height:44px;text-align:center}}
+.st-bar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;margin-bottom:16px;padding:16px 20px}
+.st-upload h2{margin:0 0 6px}
+.st-up-rows{display:flex;flex-direction:column;margin-top:14px;border-top:1px solid var(--line)}
+.st-up-row{display:flex;flex-wrap:wrap;gap:10px 16px;align-items:center;justify-content:space-between;padding:14px 0;border-bottom:1px solid var(--line)}
+.st-up-row > div:first-child{min-width:min(260px,100%);flex:1}
+.st-up-row > .row{min-width:0;max-width:100%}
+.st-up-row select{width:auto;max-width:100%;min-width:0;min-height:40px;text-overflow:ellipsis}
+@media(max-width:620px){.st-up-row > .row{width:100%}.st-up-row select{width:100%}}
+.st-up-go{margin-top:16px}
+.st-docs-fold{margin:0 0 16px}
+.st-docs-fold > summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:12px 16px;background:var(--surface);border-radius:var(--radius);box-shadow:var(--shadow);font-size:.92rem}
+.st-docs-fold > summary::-webkit-details-marker{display:none}
+.st-docs-fold > summary .chev{margin-left:auto;transition:transform .2s var(--ease)}
+.st-docs-fold[open] > summary .chev{transform:rotate(180deg)}
+.st-docs-fold[open] > summary{margin-bottom:12px}
+.st-warn-t{color:var(--warn);font-weight:700}
+.st-note{display:flex;gap:8px;align-items:flex-start;font-size:.9rem;background:var(--accent-soft);color:var(--ink);padding:10px 14px;border-radius:var(--radius-sm);margin:0 0 14px}
+.st-note svg.i{color:var(--accent);margin-top:2px}
+.st-note-warn{background:var(--warn-soft)}.st-note-warn svg.i{color:var(--warn)}
+.st-overview{margin-bottom:16px}
+.st-modes{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:0 0 14px}
+.st-modes button{appearance:none;display:flex;gap:10px;align-items:flex-start;text-align:left;padding:12px 14px;border-radius:var(--radius);border:1.5px solid transparent;background:var(--surface);box-shadow:var(--shadow);color:var(--ink);cursor:pointer;font:inherit}
+.st-modes button > span{display:flex;flex-direction:column;gap:2px;min-width:0}
+.st-modes button b{font-size:15px;color:var(--heading)}
+.st-modes button .small{color:var(--muted)}
+.st-modes button svg.i{width:22px;height:22px;color:var(--accent);margin-top:1px}
+.st-modes button[aria-selected="true"]{border-color:var(--accent);background:var(--accent-soft)}
+@media(max-width:760px){.st-modes{grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}.st-modes button{flex-direction:column;align-items:center;text-align:center;padding:10px 6px}.st-modes button .small{display:none}}
+.st-panesw{display:none;gap:4px;padding:4px;background:var(--surface);border-radius:999px;box-shadow:var(--shadow);margin:0 0 12px}
+.st-panesw button{appearance:none;flex:1;border:0;background:transparent;border-radius:999px;min-height:40px;font:700 14px var(--sans);color:var(--muted);display:inline-flex;align-items:center;justify-content:center;gap:6px;cursor:pointer}
+.st-panesw button[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink)}
+.st-ws{display:grid;grid-template-columns:minmax(0,1.12fr) minmax(0,.88fr);gap:18px;align-items:start}
+.st-assist{position:sticky;top:calc(var(--hdr,72px) + 14px);max-height:calc(100vh - var(--hdr,72px) - 28px);overflow:auto;overscroll-behavior:contain;padding:20px}
+@media(max-width:999px){.st-panesw{display:flex}.st-ws{grid-template-columns:minmax(0,1fr)}.st-ws[data-pane="doc"] .st-assist{display:none}.st-ws[data-pane="study"] .st-docpane{display:none}.st-assist{position:static;max-height:none}}
+.st-outline{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 12px}
+.st-outline button{appearance:none;border:1px solid var(--line-strong);background:var(--surface);color:var(--ink);font:600 13px var(--sans);padding:5px 12px;border-radius:999px;cursor:pointer;min-height:34px}
+.st-outline button:hover{background:var(--surface-2)}
+.st-outline button[aria-current="true"]{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.st-outline button[aria-current="true"] .muted{color:inherit;opacity:.85}
+.st-listen{display:flex;flex-wrap:wrap;gap:6px;align-items:center;padding:10px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);margin:0 0 10px}
+.st-speed{display:inline-flex;align-items:center;gap:6px}.st-speed select{width:auto;min-height:32px;padding:3px 30px 3px 8px;font-size:13px}
+.st-hlbar{display:flex;flex-wrap:wrap;gap:6px 14px;margin:0 0 12px;font-size:.84rem}
+.st-hlk{display:inline-flex;align-items:center;gap:6px;cursor:pointer;min-height:30px}
+.st-doc{font:1.02rem/1.78 "Source Serif 4",Georgia,serif;color:var(--ink)}
+.st-h{font:800 1.08rem/1.35 var(--sans);color:var(--heading);margin:22px 0 8px;cursor:pointer;scroll-margin-top:calc(var(--hdr,72px) + 16px)}
+.st-h:first-child{margin-top:4px}
+.st-p{position:relative;padding:8px 12px 8px 14px;border-left:3px solid transparent;border-radius:8px;cursor:pointer;white-space:pre-line;margin:0 0 6px;scroll-margin-top:calc(var(--hdr,72px) + 16px);transition:background-color .15s}
+.st-p:hover{background:var(--surface-2)}
+.st-p.sel{background:var(--accent-soft);border-left-color:var(--accent)}
+.st-p.speaking{box-shadow:0 0 0 2px var(--gold)}
+.st-table{font:.92rem/1.6 var(--sans)}
+.st-no{display:block;font:600 11.5px var(--sans);color:var(--muted);margin-bottom:2px;white-space:normal}
+.st-study-btn{display:block;margin-top:8px;white-space:normal}
+@media(min-width:1000px){.st-study-btn{display:none}}
+.st-pg{font:600 11px var(--sans);letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin:16px 0 8px;display:flex;align-items:center;gap:10px}
+.st-pg::after{content:"";flex:1;height:1px;background:var(--line)}
+/* highlight colours: soft tints of the brand accents, with a coloured underline so the meaning never depends on colour alone */
+mark.sth{color:inherit;font-weight:inherit;border-radius:3px;padding:0 1px;cursor:pointer;border-bottom:2px solid;-webkit-box-decoration-break:clone;box-decoration-break:clone}
+mark.sth:focus-visible{outline:2px solid var(--focus);outline-offset:1px}
+mark.sth.on{box-shadow:0 0 0 2px var(--focus)}
+.sth-main{background:color-mix(in srgb,#f5b800 26%,var(--surface));border-color:#b88a00}
+.sth-evidence{background:color-mix(in srgb,#1976d2 18%,var(--surface));border-color:#1976d2}
+.sth-eval{background:color-mix(in srgb,#8e44ad 17%,var(--surface));border-color:#8e44ad}
+.sth-strength{background:color-mix(in srgb,#2e7d32 18%,var(--surface));border-color:#2e7d32}
+.sth-limit{background:color-mix(in srgb,#c62828 16%,var(--surface));border-color:#c62828}
+.sth-dot{width:12px;height:12px;border-radius:3px;flex:none;display:inline-block}
+.sth-dot.sth-main{background:#e0a800}.sth-dot.sth-evidence{background:#1976d2}.sth-dot.sth-eval{background:#8e44ad}.sth-dot.sth-strength{background:#2e7d32}.sth-dot.sth-limit{background:#c62828}
+.st-hlcard{border:1px solid var(--line);border-left:4px solid var(--accent);border-radius:var(--radius-sm);padding:12px 14px;margin:0 0 14px;background:var(--surface-2)}
+.sth-edge-main{border-left-color:#b88a00}.sth-edge-evidence{border-left-color:#1976d2}.sth-edge-eval{border-left-color:#8e44ad}.sth-edge-strength{border-left-color:#2e7d32}.sth-edge-limit{border-left-color:#c62828}
+.st-hlcard p{margin:0 0 6px}
+.st-ahead{display:flex;flex-wrap:wrap;gap:10px;align-items:flex-start;justify-content:space-between;margin:0 0 10px}
+.st-ahead h3{margin:2px 0 0}
+.st-lang{display:inline-flex;gap:2px;padding:3px;background:var(--surface-2);border-radius:999px}
+.st-lang button{appearance:none;border:0;background:transparent;border-radius:999px;padding:0 12px;min-height:32px;font:700 13px var(--sans);color:var(--muted);cursor:pointer}
+.st-lang button[lang="ar"]{font-family:var(--arabic)}
+.st-lang button[aria-pressed="true"]{background:var(--surface);color:var(--heading);box-shadow:0 1px 2px rgba(16,24,40,.14)}
+.st-tabs{display:flex;gap:4px;border-bottom:1px solid var(--line);margin:0 0 14px;overflow-x:auto;scrollbar-width:none}
+.st-tabs button{appearance:none;border:0;background:transparent;padding:10px 12px;font:700 14px var(--sans);color:var(--muted);border-bottom:2px solid transparent;margin-bottom:-1px;cursor:pointer;white-space:nowrap}
+.st-tabs button[aria-selected="true"]{color:var(--accent);border-bottom-color:var(--accent)}
+.st-abody > .row{margin-bottom:12px}
+.st-abody h4{margin:14px 0 6px}
+.st-out{border:1px solid var(--line);border-radius:var(--radius-sm);padding:12px 14px;margin:10px 0;background:var(--surface)}
+.st-out .output-head{margin-bottom:4px}
+.st-out p{margin:0 0 8px}.st-out p:last-child{margin-bottom:0}
+.st-out h4:first-child{margin-top:4px}
+.st-out[dir="rtl"]{font-family:var(--arabic);line-height:1.9}
+.st-sents,.st-qs,.st-claims,.st-more,.st-hllist{padding-left:0;list-style:none;margin:0;display:flex;flex-direction:column;gap:14px}
+.st-sents > li,.st-qs > li,.st-claims > li{border-bottom:1px dashed var(--line);padding-bottom:12px}
+.st-orig{background:var(--surface-2);border-radius:var(--radius-sm);padding:8px 12px;margin:0 0 6px;font-family:"Source Serif 4",Georgia,serif}
+.st-orig .label{display:block}
+.st-seltext{font-family:"Source Serif 4",Georgia,serif;margin:0 0 6px}
+.st-selbox{border:1px solid var(--line);border-radius:var(--radius-sm);padding:12px 14px;margin:0 0 14px;background:var(--surface-2)}
+.st-ev{margin-top:8px;padding:10px 12px;border-radius:var(--radius-sm);background:var(--surface-2)}
+.st-ev .row{margin-bottom:6px}
+.st-quote{margin:8px 0;padding:8px 12px;border-left:3px solid var(--accent);background:var(--surface);border-radius:0 6px 6px 0;font-family:"Source Serif 4",Georgia,serif}
+.st-hlbtn{appearance:none;display:flex;gap:10px;align-items:flex-start;width:100%;text-align:left;background:transparent;border:1px solid var(--line);border-radius:var(--radius-sm);padding:10px 12px;cursor:pointer;color:var(--ink);font:inherit;font-size:.92rem}
+.st-hlbtn:hover{background:var(--surface-2)}
+.st-hlbtn .sth-dot{margin-top:5px}
+.st-hint summary{cursor:pointer;color:var(--accent)}
+.st-prac{border:1px solid var(--line);border-radius:var(--radius);padding:14px;margin:0 0 12px}
+.st-pq{font:600 1.05rem/1.5 var(--sans);color:var(--heading);margin:4px 0 8px}
+.st-prac textarea{margin-bottom:8px}
+.st-term{border:1px solid var(--line);border-radius:var(--radius-sm);padding:12px 14px;margin:0 0 10px;background:var(--surface)}
+.st-term p{margin:0 0 6px}
+.st-terms{display:grid;gap:10px;grid-template-columns:repeat(auto-fill,minmax(min(320px,100%),1fr))}.st-terms .st-term{margin:0}
+.st-bottom{margin-top:18px}
+.st-bottom > summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:8px;font-size:1rem}
+.st-bottom > summary::-webkit-details-marker{display:none}
+.st-bottom > summary .chev{margin-left:auto;transition:transform .2s var(--ease)}
+.st-bottom[open] > summary{margin-bottom:12px}
+.st-bottom[open] > summary .chev{transform:rotate(180deg)}
+.st-tablewrap{overflow-x:auto}
+.st-check{width:100%;border-collapse:collapse;font-size:.9rem;min-width:560px}
+.st-check th,.st-check td{border-bottom:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top}
+.st-check th{font:700 12.5px var(--sans);color:var(--muted)}
+.st-cb{text-align:center!important}.st-cb input{width:20px;height:20px}
 .rd-nosimple{border:1px dashed var(--line-strong);border-radius:var(--radius-md);padding:12px 14px;background:var(--surface-2);font-family:var(--sans);font-size:.92rem;color:var(--ink)}
 .rd-nosimple p{margin:0 0 8px}.rd-nosimple p:last-child{margin:0}.rd-nosimple .row{display:flex;flex-wrap:wrap;gap:8px}
 .rd-simple-bar{display:flex;flex-wrap:wrap;align-items:center;gap:10px 12px;padding:12px 16px;margin:0 0 18px;border-radius:var(--radius-md);background:var(--accent-soft);color:var(--ink);font-family:var(--sans);font-size:.92rem}
@@ -1489,6 +1611,7 @@ html[data-tab="reader"] .toast{bottom:calc(var(--rdplf-doc,0px) + 16px)}   /* ab
   <section class="panel" id="panel-ideas" role="tabpanel" aria-labelledby="tab-ideas" hidden></section>
   <section class="panel" id="panel-reader" role="tabpanel" aria-labelledby="tab-reader" hidden></section>
   <section class="panel" id="panel-critique" role="tabpanel" aria-labelledby="tab-critique" hidden></section>
+  <section class="panel" id="panel-studio" role="tabpanel" hidden></section>
   <section class="panel" id="panel-write" role="tabpanel" aria-labelledby="tab-write" hidden></section>
   <section class="panel" id="panel-figlab" role="tabpanel" aria-labelledby="tab-figlab" hidden></section>
   <section class="panel" id="panel-present" role="tabpanel" aria-labelledby="tab-present" hidden></section>
@@ -1598,7 +1721,7 @@ const PARTS = [
   {id:'critiquing', no:2, label:'Critique a paper', short:'Critique', icon:'clip', blurb:'Understand the paper paragraph by paragraph, explain its figures, then complete the AAU critique form.', steps:[
     {tab:'reader', view:'paras', label:'Read the paper', desc:'Original text, simple English, Arabic, audio and Ask Claude'},
     {tab:'figlab', mode:'explain', label:'Explain the figures', desc:'What each figure shows, its strengths, weaknesses and role in the study'},
-    {tab:'critique', label:'Write the critique', desc:'The AAU 0106112 Paper Critique Form, with word limits and Word export'},
+    {tab:'critique', also:'studio', label:'Write or study the critique', desc:'Create a critique with the AAU 0106112 form — or upload a finished critique and study it in the Critique Study Studio'},
     {tab:'evidence', label:'Trace your evidence', desc:'Where did this come from? Each statement of your critique linked to the exact passage of the paper'}]},
   {id:'presenting', no:3, label:'Present', short:'Present', icon:'slides', blurb:'Turn your critique into a timed slide outline and a PowerPoint, and prepare for questions.', steps:[
     {tab:'present', label:'Build the slides', desc:'Add your critique, outline the slides from it and generate the PowerPoint, with speaker notes and timing'},
@@ -1614,6 +1737,7 @@ const TABS = [
   {id:'ideas', label:'Idea Organizer', icon:'bulb'},
   {id:'reader', label:'Paper Reader', icon:'book'},
   {id:'critique', label:'Critique Studio', icon:'clip'},
+  {id:'studio', label:'Critique Study Studio', icon:'book'},
   {id:'write', label:'Write Your Paper', icon:'pen'},
   {id:'figlab', label:'Figure Lab', icon:'image'},
   {id:'present', label:'Presentation Builder', icon:'slides'},
@@ -2082,8 +2206,8 @@ function sideDrawer(open, focus=true){
 mqSide.addEventListener('change', applySide);
 // which step shows a tab: prefer the current part, then the first part that has it
 function stepFor(tab){
-  const ok = st => st.tab === tab && (tab !== 'figlab' || !st.mode || st.mode === (S.figlab.mode || 'explain')) && (tab !== 'reader' || !st.view || st.view === (S.reader.view === 'questions' ? 'questions' : 'paras'));
-  const loose = st => st.tab === tab;
+  const ok = st => (st.tab === tab || st.also === tab) && (tab !== 'figlab' || !st.mode || st.mode === (S.figlab.mode || 'explain')) && (tab !== 'reader' || !st.view || st.view === (S.reader.view === 'questions' ? 'questions' : 'paras'));
+  const loose = st => st.tab === tab || st.also === tab;
   for (const test of [ok, loose]){
     const cur = partOf(S.ui.part), k = cur.steps.findIndex(test);
     if (k >= 0) return [cur.id, k];
@@ -2096,7 +2220,7 @@ function goStep(partId, i, push=true){
   if (st.mode) S.figlab.mode = st.mode;
   if (st.view) S.reader.view = st.view;
   S.ui.part = p.id; S.ui.step = k; (S.ui.partStep ||= {})[p.id] = k;
-  openTab(st.tab, push);
+  openTab(st.also && S.ui.critPath === st.also ? st.also : st.tab, push);   // step 2.3 reopens the pathway you used last
 }
 const RENDER = {};
 function showTab(id, push=true){                                 // used all over the app: keeps the journey in step
@@ -2514,7 +2638,8 @@ RENDER.critique = () => {
   S.critiques.forEach(fixCrit);
   const c = activeCrit(); S.activeCrit = c.id;
   const aau = c.form === 'aau';
-  $('#panel-critique').innerHTML = `
+  S.ui.critPath = 'critique';
+  $('#panel-critique').innerHTML = `${stPathSwitch('critique')}
   <div class="page-head"><div class="eyebrow">Paper Critique Studio</div><h1>Review a paper, section by section</h1>
   <p>${aau ? 'Complete the official AAU Paper Critique Form: guidance, word limits and weights for every section, evidence search inside the paper, a quality-control check and export to Word.'
            : 'Work through each part of the paper with the guiding questions, rate it from 1 to 5, then generate a formatted critique you can copy.'}</p>
@@ -3779,6 +3904,7 @@ function ttsMark(c, scroll){
   $$('.orig-full[data-marked]').forEach(e => { e.textContent = e.dataset.marked; delete e.dataset.marked; });
   $$('.evs.speaking').forEach(e => e.classList.remove('speaking'));
   if (!c || !c.pid) return;
+  if (/^st/.test(c.part)){ const s = $('#sp-' + c.pid); if (s){ s.classList.add('speaking'); if (scroll || c.segStart === 0) s.scrollIntoView({block:'nearest'}); } return; }   // Critique Study Studio
   if (c.part === 'ev'){ const s = $(`#evLeft [data-cid="${c.pid}"]`); if (s){ s.classList.add('speaking'); if (scroll || c.segStart === 0) s.scrollIntoView({block:'nearest'}); } return; }
   const paper = rPaper();
   if (TTS.playing && TTS.ctx && TTS.ctx.follow && paper && rdSelId(paper) !== c.pid && isReadable(paper.paras.find(x => x.id === c.pid) || {}) && !$('#rdAssist')?.contains(document.activeElement)) rdSelect(c.pid);
@@ -3855,7 +3981,7 @@ function ttsBarHTML(){                                           // the audio ba
     </div>
   </div>`;
 }
-function renderTtsBar(){ const el = $('#ttsBar'); if (el) el.innerHTML = ttsBarHTML(); evListenUI(); }
+function renderTtsBar(){ const el = $('#ttsBar'); if (el) el.innerHTML = ttsBarHTML(); evListenUI(); stListenUI(); }
 function ttsSkipPara(dir){                                        // previous / next paragraph; when nothing is loaded, it moves the selection so Play starts there
   const paper = rPaper(); if (!paper) return;
   if (!ttsRestore()){
@@ -8431,7 +8557,751 @@ const ACTIONS = {
     const theme = S.theme; S = seedState(); S.theme = theme; S.ui.tab = 'progress'; save(); showTab('progress'); toast('ScholarPath reset');
   }
 };
-Object.assign(ACTIONS, V_ACTIONS, D_ACTIONS, E_ACTIONS);
+/* ===================== Critique Study Studio (step 2.3, second pathway) =====================
+   For students who already have a finished critique: upload it (Word, PDF, text or pasted), optionally with the original
+   paper and the slides, then study it — never rewrite it. The critique is shown word for word on the left; the study
+   assistant on the right explains, questions and checks it. The three files also become a Part 4 document set, so
+   evidence mapping (2.4), verification (4.1) and the mock professor (4.2) work on the same documents.
+   Rules (spec §5.4c): the original text is never changed; Claude's work is marked and kept apart from it; every
+   highlight and quotation must be found word for word; pages come only from the paper; nothing is "done" until the
+   student does it. */
+const ST_HL = [['main', 'Main ideas', 'The central argument of a paragraph'], ['evidence', 'Research evidence', 'Information taken from the original paper'],
+  ['eval', 'Critical evaluation', 'Your own analysis, judgements and criticism'], ['strength', 'Strengths', 'Positive aspects you identified'], ['limit', 'Limitations', 'Weaknesses or methodological concerns']];
+const ST_HL_NAME = Object.fromEntries(ST_HL.map(([k, l]) => [k, l]));
+const ST_MODES = [['understand', 'Understand', 'bulb', 'Learn what each part of your critique means'], ['analyze', 'Analyze', 'search', 'Understand the reasoning and the evidence behind it'], ['prepare', 'Prepare', 'messages', 'Get ready to present and to answer your professor']];
+const ST_TABS = {understand:[['explain', 'Explain'], ['sentences', 'Sentence by sentence'], ['points', 'Key points']],
+  analyze:[['marks', 'Highlights'], ['evidence', 'Evidence'], ['critical', 'Critical thinking']],
+  prepare:[['questions', 'Questions'], ['practice', 'Practice'], ['remember', 'Remember']]};
+const ST_KINDS = {finding:'A finding of the paper', interpretation:'An interpretation', criticism:'A criticism', recommendation:'A recommendation', description:'A description', other:'Other'};
+const ST_RULES = `RULES (follow all of them)
+- You are explaining the student's OWN completed critique so they understand and can defend it. Never rewrite the critique and never write new critique text for them.
+- Do not assume the critique is factually correct. When something would need checking against the original paper, say so.
+- Clearly separate what the original researchers reported from the student's own interpretation or judgement.
+- Never invent evidence, citations, page numbers, statistics or research results. If something is not in the material below, say it is not available.
+- Explain research methods and concepts accurately; simple language must stay academically correct.
+- Adapt everything to this critique's actual topic and wording. Be clear about uncertainty.`;
+let stRun = null, stSelText = '', stHlSel = null;
+
+function stState(){
+  const d = {docs:[], active:'', mode:'understand', tab:{}, lang:'en', hl:{main:true, evidence:true, eval:true, strength:true, limit:true}, bottom:'check', bottomOpen:true, pane:'doc'};
+  S.studio = Object.assign(d, S.studio); S.studio.hl = Object.assign(d.hl, S.studio.hl); S.studio.tab ||= {};
+  return S.studio;
+}
+const stDoc = () => { const st = stState(); return st.docs.find(d => d.id === st.active) || st.docs[0] || null; };
+const stSet = doc => doc && (S.verify.sets || []).find(s => s.id === doc.setId) || null;
+const stParas = doc => doc.blocks.filter(b => b.kind === 'p');
+const stParaNo = (doc, id) => stParas(doc).findIndex(b => b.id === id) + 1;
+const stBlock = (doc, id) => doc.blocks.find(b => b.id === id);
+function stSections(doc){                                          // the critique's own sections, from its own headings
+  const out = []; let cur = null;
+  doc.blocks.forEach(b => {
+    if (b.kind === 'h'){ cur = {id:b.id, title:b.text, paras:[]}; out.push(cur); return; }
+    if (!cur){ cur = {id:'top', title:'Opening', paras:[]}; out.push(cur); }
+    cur.paras.push(b);
+  });
+  return out.filter(s => s.paras.length);
+}
+const stSecOf = (doc, pid) => stSections(doc).find(s => s.id === pid || s.paras.some(p => p.id === pid)) || stSections(doc)[0];
+const stSelId = doc => doc.sel || (stParas(doc)[0] || {}).id;
+const stSecText = sec => sec.paras.map(p => p.text).join('\n\n');
+const stMode = () => ST_MODES.some(m => m[0] === stState().mode) ? stState().mode : 'understand';
+const stTab = () => { const m = stMode(), t = stState().tab[m]; return ST_TABS[m].some(x => x[0] === t) ? t : ST_TABS[m][0][0]; };
+const stLang = () => stState().lang === 'ar' ? 'ar' : 'en';
+const stCopy = (target, label = 'Copy') => `<button class="btn ghost icon sm" data-act="st-copy" data-target="${target}" aria-label="${label}" title="${label}">${icon('copy')}</button>`;   // copies with its line breaks
+const stByClaude = '<span class="chip">by Claude — check it</span>';
+
+/* --- reading the critique into headings and paragraphs (nothing is reworded) --- */
+async function stDocxBlocks(zip){
+  const x = xmlDoc(await zip.text('word/document.xml')), body = byNS(x, 'w', 'body')[0], out = [];
+  const ptext = p => [...p.getElementsByTagNameNS(NS.w, '*')].map(el => el.localName === 't' ? el.textContent : el.localName === 'tab' ? '\t' : el.localName === 'br' ? '\n' : '').join('');
+  const isBold = p => { const runs = byNS(p, 'w', 'r').filter(r => byNS(r, 'w', 't').some(t => t.textContent.trim()));
+    return runs.length > 0 && runs.every(r => { const b = byNS(r, 'w', 'b')[0]; const v = b && b.getAttributeNS(NS.w, 'val'); return b && v !== '0' && v !== 'false'; }); };
+  const walk = node => {
+    for (const el of node ? [...node.children] : []){
+      if (el.namespaceURI !== NS.w) continue;
+      if (el.localName === 'p'){
+        const t = ptext(el).replace(/[ \t]+\n/g, '\n').trim(); if (!t) continue;
+        const style = (byNS(el, 'w', 'pStyle')[0] || {getAttributeNS:() => ''}).getAttributeNS(NS.w, 'val') || '';
+        const head = !t.includes('\n') && ((/heading|title/i.test(style) && t.length < 200) || presHeadLine(t, true) || (isBold(el) && t.length < 90 && !/[.!?;,]$/.test(t)));
+        out.push({kind:head ? 'h' : 'p', text:t});
+      } else if (el.localName === 'tbl'){
+        const rows = byNS(el, 'w', 'tr').map(tr => byNS(tr, 'w', 'tc').map(tc => byNS(tc, 'w', 'p').map(ptext).join(' ').trim()).join(' | ')).filter(r => r.replace(/[|\s]/g, ''));
+        if (rows.length) out.push({kind:'p', text:rows.join('\n'), table:true});
+      } else if (el.localName === 'sdt') walk(byNS(el, 'w', 'sdtContent')[0]);
+    }
+  };
+  walk(body);
+  return out;
+}
+function stPdfBlocks(pages){                                       // PDF: paragraphs inside each page, headings by the same rules as step 3.1
+  const out = [];
+  pages.forEach((t, i) => {
+    const lines = t.split('\n').map(l => l.trim()), max = Math.max(...lines.map(l => l.length), 1); let cur = [], prevEnd = true;
+    const flush = () => { const s = cur.join(' ').replace(/\s+/g, ' ').trim(); if (s) out.push({kind:'p', text:s, page:i + 1}); cur = []; };
+    for (const l of lines){
+      if (!l){ flush(); prevEnd = true; continue; }
+      if (presHeadLine(l, prevEnd) && !cur.length){ out.push({kind:'h', text:l, page:i + 1}); prevEnd = true; continue; }
+      if (presHeadLine(l, prevEnd)){ flush(); out.push({kind:'h', text:l, page:i + 1}); prevEnd = true; continue; }
+      cur.push(l); prevEnd = /[.!?:]["”’)]?$/.test(l);
+      if (prevEnd && l.length < max * 0.72) flush();
+    }
+    flush();
+  });
+  return out;
+}
+async function stPdfBlocksPos(file){                             // PDF with positions: bigger lines are headings, larger gaps or indents start paragraphs
+  const lib = await loadPdfJs(), pdf = await lib.getDocument({data:await file.arrayBuffer()}).promise, pages = [];
+  for (let n = 1; n <= pdf.numPages; n++) pages.push((await pdfPageLines(await pdf.getPage(n))).lines);
+  const all = pages.flat(), med = a => { const v = a.filter(x => x > 0).sort((x, y) => x - y); return v.length ? v[Math.floor(v.length / 2)] : 0; };
+  const bodyH = med(all.filter(l => l.text.length > 40).map(l => l.h)) || med(all.map(l => l.h)) || 10;
+  const gaps = []; pages.forEach(ls => ls.forEach((l, i) => { if (i && Math.abs(ls[i - 1].h - bodyH) < bodyH * .1 && Math.abs(l.h - bodyH) < bodyH * .1) gaps.push(ls[i - 1].y - l.y); }));
+  const pitch = med(gaps.filter(g => g > 0 && g < bodyH * 3)) || bodyH * 1.25;
+  const left = med(all.map(l => l.x));
+  const pageNoLine = l => l.edge && /^(page\s*)?\d+(\s*(of|\/)\s*\d+)?$/i.test(l.text);   // a printed page number is not part of the critique's wording
+  const out = []; let cur = null, prevEnd = true;
+  const flush = () => { if (cur){ const t = cur.lines.join(' ').replace(/\s+/g, ' ').trim(); if (t) out.push({kind:cur.kind, text:t, page:cur.page}); } cur = null; };
+  pages.forEach((ls, pi) => {
+    let prev = null;
+    ls.forEach(l => {
+      if (pageNoLine(l)) return;
+      const big = l.h > bodyH * 1.12 && l.text.length < 140, gap = prev ? prev.y - l.y : Infinity, newBlock = !prev || gap > pitch * 1.45 || gap < 0 || (l.x > left + bodyH * 0.8 && l.x < left + bodyH * 5);
+      const head = big || (newBlock && prevEnd && presHeadLine(l.text, true));
+      if (head){ if (!(cur && cur.kind === 'h' && !newBlock && Math.abs(cur.h - l.h) < 1)) { flush(); cur = {kind:'h', lines:[], page:pi + 1, h:l.h}; } cur.lines.push(l.text); prevEnd = true; }
+      else { if (!cur || cur.kind === 'h' || newBlock) { flush(); cur = {kind:'p', lines:[], page:pi + 1}; } cur.lines.push(l.text); prevEnd = /[.!?:]["”’)]?$/.test(l.text); }
+      prev = l;
+    });
+    if (cur && cur.kind === 'h') flush();                                   // a paragraph may run on to the next page; a heading does not
+  });
+  flush();
+  return out.map(b => b.kind === 'h' && b.text.length > 160 ? {...b, kind:'p'} : b);
+}
+function stTextBlocks(t){                                           // pasted or .txt: paragraphs are separated by blank lines; line breaks are kept
+  const out = [];
+  String(t || '').replace(/\r/g, '').split(/\n\s*\n/).forEach(chunk => {
+    const lines = chunk.split('\n').map(l => l.replace(/\s+$/, '')).filter(l => l.trim());
+    while (lines.length && presHeadLine(lines[0].trim(), true) && (lines.length > 1 || lines[0].trim().split(/\s+/).length <= 9)){ out.push({kind:'h', text:lines.shift().trim()}); }
+    if (lines.length) out.push({kind:'p', text:lines.join('\n').trim()});
+  });
+  return out;
+}
+async function stReadCritique(file){
+  const ext = (file.name.split('.').pop() || '').toLowerCase(), buf = await file.arrayBuffer();
+  let blocks;
+  if (ext === 'pdf'){ try { blocks = await stPdfBlocksPos(new File([buf], file.name)); } catch { blocks = null; }
+    if (!blocks || !blocks.some(b => b.kind === 'p')) blocks = stPdfBlocks(await extractPdf(new File([buf], file.name))); }
+  else if (ext === 'docx') blocks = await stDocxBlocks(await readZip(buf));
+  else if (ext === 'txt' || ext === 'md') blocks = stTextBlocks(new TextDecoder().decode(buf));
+  else throw new Error(`Please add your critique as a PDF, a Word file (.docx) or a text file (this was .${ext}). You can also paste it.`);
+  if (!blocks.some(b => b.kind === 'p' && b.text.trim())) throw new Error('No text could be read from this file. If it is a scanned PDF, paste the text instead.');
+  return {blocks, kind:ext};
+}
+function stNewDoc(name, kind, raw){
+  const blocks = raw.map((b, i) => ({id:'b' + (i + 1), kind:b.kind, text:b.text, ...(b.page ? {page:b.page} : {}), ...(b.table ? {table:true} : {})}));
+  const set = Object.assign(newVerifySet(), {name:`Study: ${clip(name, 50)}`});
+  const units = []; let head = 'Start', n = 0;
+  blocks.forEach(b => { if (b.kind === 'h'){ head = b.text; return; } n++; units.push({loc:`${clip(head, 80)} · ¶${n}`, text:b.text}); });
+  set.docs.critique = {src:'upload', name, kind, units, at:Date.now()};
+  S.verify.sets.push(set);
+  const doc = {id:uid(), name, kind, at:Date.now(), setId:set.id, blocks, sel:(blocks.find(b => b.kind === 'p') || {}).id, an:null, hls:[], secs:{}, sents:{}, ev:{}, evOn:{}, check:{}, prac:null, chal:{}};
+  const st = stState(); st.docs.unshift(doc); st.active = doc.id; st.mode = 'understand'; st.pane = 'doc';
+  logActivity('Added a critique to study', 'critiquing', 2, name); save();
+  return doc;
+}
+
+/* --- Claude: shared pieces --- */
+function stDocText(doc, max = 60000){
+  let out = '', cut = false;
+  for (const b of doc.blocks){ const piece = b.kind === 'h' ? `\n[${b.id} · HEADING] ${b.text}\n` : `[${b.id}] ${b.text}\n`; if (out.length + piece.length > max){ cut = true; break; } out += piece; }
+  return out + (cut ? '\n[… the rest of the critique was cut to fit — do not guess about it]\n' : '');
+}
+function stPaperCtx(doc, text, n = 6){                               // the passages of the paper that share the most words with the text (no AI), with their real pages
+  const set = stSet(doc), P = set ? ePassages(set) : [];
+  if (!P.length) return {has:false, block:'(The student has NOT added the original research paper. Nothing can be checked against it: do not state what the paper says; where the connection to the paper matters, say it must be checked in the paper.)'};
+  const seen = new Set(), picks = [];
+  for (const c of eCandidates(P, text, n * 3)){ if (seen.has(c.p.id)) continue; seen.add(c.p.id); picks.push(c.p); if (picks.length >= n) break; }
+  return {has:true, P, block:picks.length ? picks.map(p => `[${p.id} · ${p.page ? 'PDF p. ' + p.page : 'page unknown'} · ${p.section || 'section unknown'}]\n${clip(p.text, 1600)}`).join('\n\n')
+    : '(No passage of the paper shares enough words with this part — say the connection must be checked in the paper.)'};
+}
+const stLangLine = lang => lang === 'ar' ? 'Write every explanation in clear, natural Modern Standard Arabic that an Arabic-speaking master\'s student understands easily. The first time a technical term appears, add the English term in brackets.' : 'Write in clear, simple academic English (about B1–B2), with short sentences.';
+async function stAsk(label, prompt, apply, opts = {}){
+  if (!aiReady()){ toast('Claude is not available on this page — open the published ScholarPath page or the website'); return false; }
+  if (stRun || aiRun || eRun) { toast('Claude is still working — please wait or press Stop'); return false; }
+  const ctl = new AbortController(); stRun = {ctl, label}; stRenderRun();
+  try { const r = await AI.json(prompt, {signal:ctl.signal, modelTier:opts.tier || 'default', cache:false}); const ok = apply(r); save(); if (ok === false) alert('Claude answered, but nothing usable could be read from the answer. Please try again.'); return ok !== false; }
+  catch (e){ if (e && e.code !== 'cancelled') alert(aiError(e)); return false; }
+  finally { stRun = null; stRenderRun(); if (S.ui.tab === 'studio') RENDER.studio(); }
+}
+function stRenderRun(){
+  const el = $('#stRun'); if (!el) return;
+  el.innerHTML = stRun ? `<div class="ai-run"><span class="spin" aria-hidden="true"></span><span>${esc(stRun.label)}…</span><button class="btn sm" data-act="st-stop">${icon('stop')}Stop</button></div>` : '';
+  $$('[data-st-ai]').forEach(b => b.disabled = !!stRun || !aiReady());
+}
+
+/* 1. Analyze my critique: structure, terms, objectives, what to study more — then the highlights */
+function stAnalyzePrompt(doc){
+  const set = stSet(doc), hasPaper = !!(set && set.docs.paper);
+  return `A master's student uploaded their OWN completed research critique. Analyse it so ScholarPath can build a study guide around it.
+${ST_RULES}
+${hasPaper ? 'The student has also added the original paper; it is checked separately — here, work only from the critique.' : 'The student has NOT added the original paper, so nothing in the critique has been verified.'}
+Do not assume every critique has the same structure: use THIS critique's own sections (the blocks marked HEADING).
+
+THE CRITIQUE (block ids in brackets):
+${stDocText(doc)}
+Reply with only JSON:
+{"topic":"the research topic of the paper being critiqued, as the critique describes it",
+"overview":"2–3 simple sentences: what the critique argues overall",
+"sections":[{"id":"the HEADING block id","purpose":"what this section does in the critique (one sentence)","args":["its main argument(s), in simple words"]}],
+"strengths":["strengths of the paper that the critique identifies"],"limitations":["limitations it identifies"],"recommendations":["recommendations it makes"],
+"evaluation":["the student's own independent judgements"],
+"claims":[{"id":"paragraph block id","quote":"5–30 exact consecutive words from that paragraph: a claim that needs evidence from the paper"}],
+"terms":[{"term":"","definition":"accurate academic definition","simple":"simple explanation","ar":"Arabic meaning","context":"what it means in THIS research","example":"a short example, or empty"}],
+"objectives":[{"id":"HEADING block id","objective":"what the student must be able to explain or defend about this section"}],
+"studyMore":[{"area":"","kind":"method|statistics|terminology|weak argument|finding|interpretation|recommendation","why":"why it needs more study","action":"a concrete study action","id":"paragraph block id or null","priority":1}]}
+Limits: up to 12 terms the student genuinely needs (no common words); 1–3 objectives per section; up to 8 studyMore items, priority 1 = most important; up to 12 claims. Quote exactly.`;
+}
+function stHlPrompt(doc){
+  return `Mark the academically meaningful passages of this student's research critique, so the student can study them.
+${ST_RULES}
+Types: "main" = the central argument of a paragraph; "evidence" = information taken from the original research paper (what the authors did or found); "eval" = the student's own analysis, judgement or criticism; "strength" = a positive aspect the critique identifies; "limit" = a weakness or methodological concern.
+Do not highlight too much: at most 2 passages per paragraph, each 4–30 consecutive words copied EXACTLY from that paragraph, and skip paragraphs with nothing important.
+
+THE CRITIQUE (block ids in brackets):
+${stDocText(doc)}
+Reply with only JSON: {"highlights":[{"id":"paragraph block id","quote":"exact words","type":"main|evidence|eval|strength|limit","meaning":"what it means, simply","why":"why it matters in the critique","question":"a question a professor might ask about it"}]}`;
+}
+const stStrs = (a, n = 20, len = 600) => vArr(a).map(x => vStr(x, len)).filter(Boolean).slice(0, n);
+function stApplyAnalysis(doc, r){
+  if (!r || typeof r !== 'object') return false;
+  const heads = new Set(doc.blocks.filter(b => b.kind === 'h').map(b => b.id).concat(['top'])), paras = new Set(stParas(doc).map(b => b.id));
+  const claims = vArr(r.claims).map(c => ({id:vStr(c && c.id, 12), quote:vStr(c && c.quote, 400)})).filter(c => { const b = stBlock(doc, c.id); return b && paras.has(c.id) && vLocate(b.text, c.quote); });
+  doc.an = {at:Date.now(), topic:vStr(r.topic, 300), overview:vStr(r.overview, 900),
+    sections:vArr(r.sections).filter(s => s && heads.has(vStr(s.id, 12))).map(s => ({id:vStr(s.id, 12), purpose:vStr(s.purpose, 400), args:stStrs(s.args, 4, 400)})),
+    strengths:stStrs(r.strengths, 12), limitations:stStrs(r.limitations, 12), recommendations:stStrs(r.recommendations, 10), evaluation:stStrs(r.evaluation, 10), claims,
+    terms:vArr(r.terms).filter(t => t && vStr(t.term)).slice(0, 12).map(t => ({term:vStr(t.term, 80), definition:vStr(t.definition, 500), simple:vStr(t.simple, 400), ar:vStr(t.ar, 300), context:vStr(t.context, 500), example:vStr(t.example, 400)})),
+    objectives:vArr(r.objectives).filter(o => o && heads.has(vStr(o.id, 12)) && vStr(o.objective)).slice(0, 40).map((o, i) => ({k:'o' + i + '_' + textHash(vStr(o.objective)), id:vStr(o.id, 12), objective:vStr(o.objective, 300)})),
+    studyMore:vArr(r.studyMore).filter(x => x && vStr(x.area)).slice(0, 8).map(x => ({area:vStr(x.area, 200), kind:vStr(x.kind, 40), why:vStr(x.why, 500), action:vStr(x.action, 500), id:paras.has(vStr(x.id, 12)) ? vStr(x.id, 12) : '', priority:Math.max(1, Math.min(3, Math.round(+x.priority) || 2))})).sort((a, b) => a.priority - b.priority)};
+  return !!(doc.an.overview || doc.an.sections.length || doc.an.terms.length);
+}
+function stApplyHighlights(doc, r){
+  const list = vArr(r && (r.highlights || (Array.isArray(r) ? r : null))), out = [];
+  for (const h of list){
+    const b = stBlock(doc, vStr(h && h.id, 12)), type = vStr(h && h.type, 12);
+    if (!b || b.kind !== 'p' || !ST_HL_NAME[type]) continue;
+    const at = vLocate(b.text, vStr(h.quote, 600)); if (!at) continue;                       // never shown unless it is really in the critique
+    if (out.some(x => x.pid === b.id && at[0] < x.b && x.a < at[1])) continue;                 // no overlapping marks
+    out.push({pid:b.id, a:at[0], b:at[1], type, meaning:vStr(h.meaning, 500), why:vStr(h.why, 500), question:vStr(h.question, 300)});
+  }
+  doc.hls = out; doc.hlAt = Date.now();
+  return list.length ? true : false;
+}
+async function stAnalyze(doc){
+  const ok = await stAsk('Analysing your critique (1 of 2: structure, terms and study plan)', stAnalyzePrompt(doc), r => stApplyAnalysis(doc, r), {tier:'complex'});
+  if (!ok) return;
+  const ok2 = await stAsk('Analysing your critique (2 of 2: highlights)', stHlPrompt(doc), r => stApplyHighlights(doc, r));
+  toast(ok2 ? 'Your critique is analysed — by Claude, so check it against your own understanding' : 'The study guide is ready; the highlights can be added later with “Analyze My Critique again”');
+}
+
+/* 2. Explain this section (A–E, in English or Arabic) */
+function stExplainPrompt(doc, sec, lang){
+  const ctx = stPaperCtx(doc, stSecText(sec));
+  return `Explain one section of a master's student's OWN research critique to the student. Explain it — do not just paraphrase it.
+${ST_RULES}
+${stLangLine(lang)}
+Research topic: ${(doc.an && doc.an.topic) || 'see the critique'}
+THE SECTION "${sec.title}":
+${stSecText(sec).slice(0, 12000)}
+
+PASSAGES OF THE ORIGINAL PAPER THAT MAY RELATE (ids and pages are real; use them only if they truly relate):
+${ctx.block}
+
+Reply with only JSON:
+{"simple":"A. a simple, student-friendly explanation of the section (3–6 sentences)",
+"academic":"B. the academic meaning, the reasoning and the research concepts involved",
+"why":"C. why this section matters: its purpose within the critique",
+"connection":"D. how it connects to the researchers' methods, findings or conclusions${ctx.has ? ' — cite passage ids like [P12] only when a passage above supports it' : ' — say clearly that this must be checked in the paper, which was not added'}",
+"remember":["E. the most important points to remember before presenting (3–5 short points)"]}`;
+}
+function stApplyExplain(doc, sec, lang, r){
+  if (!r || typeof r !== 'object') return false;
+  const e = {simple:vStr(r.simple, 2000), academic:vStr(r.academic, 3000), why:vStr(r.why, 1500), connection:vStr(r.connection, 2000), remember:stStrs(r.remember, 6, 400), at:Date.now()};
+  if (!e.simple && !e.academic) return false;
+  ((doc.secs[sec.id] ||= {}).explain ||= {})[lang] = e; return true;
+}
+
+/* 3. Sentence by sentence (the original sentences come from the critique itself, never from Claude) */
+const stSentsOf = b => ttsSentences(b.text).map(s => b.text.slice(s.start, s.end).trim()).filter(s => /\p{L}{2}/u.test(s));
+function stSentPrompt(doc, b, lang){
+  const ctx = stPaperCtx(doc, b.text, 4), ss = stSentsOf(b);
+  return `Explain a paragraph of a master's student's OWN research critique, sentence by sentence.
+${ST_RULES}
+${stLangLine(lang)}
+Research topic: ${(doc.an && doc.an.topic) || 'see the critique'}
+THE SENTENCES:
+${ss.map((s, i) => `[s${i + 1}] ${s}`).join('\n')}
+
+PASSAGES OF THE ORIGINAL PAPER THAT MAY RELATE:
+${ctx.block}
+
+Reply with only JSON: {"items":[{"n":1,"simple":"its meaning in simple words","terms":[{"term":"a difficult academic term in the sentence","meaning":"plain definition"}],"reasoning":"the reasoning behind the statement and why it matters","connection":"how it connects to the original paper${ctx.has ? ' (cite [P..] ids only when a passage above supports it)' : ' — or that this needs checking in the paper, which was not added'}","kind":"finding|interpretation|criticism|recommendation|description|other"}]} — one item per sentence, in order.`;
+}
+function stApplySents(doc, b, lang, r){
+  const items = vArr(r && (r.items || (Array.isArray(r) ? r : null))), n = stSentsOf(b).length, out = [];
+  items.forEach((it, i) => { const k = Math.round(+(it && it.n)) || i + 1; if (k < 1 || k > n || out[k - 1]) return;
+    out[k - 1] = {simple:vStr(it.simple, 1200), terms:vArr(it.terms).filter(t => t && t.term).slice(0, 4).map(t => ({term:vStr(t.term, 80), meaning:vStr(t.meaning, 300)})), reasoning:vStr(it.reasoning, 1200), connection:vStr(it.connection, 1200), kind:ST_KINDS[it.kind] ? it.kind : 'other'}; });
+  if (!out.filter(Boolean).length) return false;
+  (doc.sents[b.id] ||= {})[lang] = {items:out, n, at:Date.now()}; return true;
+}
+
+/* 4. Critical thinking: Challenge my critique */
+function stChalPrompt(doc, sec){
+  return `Challenge a master's student's OWN research critique, so they understand and can defend their arguments. Write questions that make them think — do not answer for them.
+${ST_RULES}
+Research topic: ${(doc.an && doc.an.topic) || 'see the critique'}
+THE SECTION "${sec.title}":
+${stSecText(sec).slice(0, 12000)}
+Write 4–6 questions specific to THIS section's actual arguments (for example: why is this a strength or a limitation, what evidence supports it, could the researchers justify their decision, is there another interpretation, does it affect validity, how could the study be improved — but only where they fit).
+Reply with only JSON: {"questions":[{"q":"the question","why":"what this question tests (one sentence)","hint":"a hint for where to look or how to think about it"}]}`;
+}
+function stApplyChal(doc, sec, r){
+  const qs = vArr(r && (r.questions || (Array.isArray(r) ? r : null))).filter(q => q && vStr(q.q)).slice(0, 8).map(q => ({q:vStr(q.q, 500), why:vStr(q.why, 400), hint:vStr(q.hint, 500)}));
+  if (!qs.length) return false;
+  doc.chal[sec.id] = {qs, ans:{}, fb:{}, at:Date.now()}; return true;
+}
+
+/* 5. Professor questions and answers, per section */
+function stQaPrompt(doc, sec){
+  const ctx = stPaperCtx(doc, stSecText(sec), 5);
+  return `A professor will question a master's student about their OWN research critique. Prepare the student for THIS section.
+${ST_RULES}
+Research topic: ${(doc.an && doc.an.topic) || 'see the critique'}
+THE SECTION "${sec.title}":
+${stSecText(sec).slice(0, 12000)}
+
+PASSAGES OF THE ORIGINAL PAPER THAT MAY RELATE:
+${ctx.block}
+Write 3–5 realistic, specific professor questions about this section.
+Reply with only JSON: {"questions":[{"q":"the question","asks":"what the question is really asking","answer":"a detailed suggested answer built only from the critique${ctx.has ? ' and the passages above' : ''}","oral":"a short oral answer (2–3 sentences, natural spoken English)","evidence":{"from":"critique|paper","id":"block id like b7, or passage id like P12","quote":"5–30 exact words from it"},"followups":["challenging follow-up questions"]}]}`;
+}
+function stApplyQa(doc, sec, r){
+  const qs = vArr(r && (r.questions || (Array.isArray(r) ? r : null))).filter(q => q && vStr(q.q)).slice(0, 6).map(q => {
+    const ev = q.evidence && typeof q.evidence === 'object' ? q.evidence : {};
+    return {q:vStr(q.q, 500), asks:vStr(q.asks, 500), answer:vStr(q.answer, 3000), oral:vStr(q.oral, 900), followups:stStrs(q.followups, 4, 400),
+      ev:{from:ev.from === 'paper' ? 'paper' : 'critique', id:vStr(ev.id, 12), quote:vStr(ev.quote, 600)}};
+  });
+  if (!qs.length) return false;
+  (doc.secs[sec.id] ||= {}).qa = {qs, at:Date.now()}; return true;
+}
+function stEvCheck(doc, ev){                                         // a quotation counts only when it is found word for word, with its real place
+  if (!ev || !ev.quote) return null;
+  if (ev.from === 'paper'){ const set = stSet(doc), P = set ? ePassages(set) : []; const at = P.length ? eLocate(P, {pid:ev.id, quote:ev.quote}) : null;
+    return at ? {where:`Paper · ${ePage(set, at.p.page)}${at.p.section ? ' · ' + at.p.section : ''}`, text:at.p.text.slice(at.a, at.b)} : null; }
+  for (const b of stParas(doc)){ const at = vLocate(b.text, ev.quote); if (at) return {where:`Your critique · ¶${stParaNo(doc, b.id)}`, text:b.text.slice(at[0], at[1]), pid:b.id}; }
+  return null;
+}
+
+/* 6. Practice: one question, the student's answer, feedback, a follow-up — the model answer only on request */
+function stEvalPrompt(doc, sec, question, model, answer){
+  return `A master's student is practising for an oral discussion of their OWN research critique. Evaluate their spoken-style answer like a fair, supportive professor.
+${ST_RULES}
+THE SECTION "${sec.title}" OF THEIR CRITIQUE:
+${stSecText(sec).slice(0, 8000)}
+THE QUESTION: ${question}
+${model ? `A SUGGESTED ANSWER (for your reference only — do not reveal it): ${model}` : ''}
+THE STUDENT'S ANSWER: ${answer}
+Reply with only JSON: {"verdict":"strong|partly|weak","accurate":"what in the answer is accurate","missing":["important information that is missing"],"improve":"how to improve the answer (2–3 sentences)","followup":"one relevant follow-up question"}`;
+}
+function stApplyEval(r){
+  if (!r || typeof r !== 'object') return null;
+  const v = ['strong', 'partly', 'weak'].includes(r.verdict) ? r.verdict : 'partly';
+  return {verdict:v, accurate:vStr(r.accurate, 1200), missing:stStrs(r.missing, 6, 400), improve:vStr(r.improve, 1200), followup:vStr(r.followup, 500), at:Date.now()};
+}
+const ST_VERDICT = {strong:['Strong answer', 'ok'], partly:['Partly there', 'warn'], weak:['Needs more work', 'bad']};
+
+/* 7. Explain my selection */
+function stSelPrompt(doc, text){
+  const ctx = stPaperCtx(doc, text, 3);
+  return `Explain these words from a master's student's OWN research critique.
+${ST_RULES}
+${stLangLine(stLang())}
+THE WORDS: "${text}"
+THE PARAGRAPH THEY ARE IN: ${(stParas(doc).find(b => b.text.includes(text.slice(0, 40))) || {text:''}).text.slice(0, 3000)}
+PASSAGES OF THE ORIGINAL PAPER THAT MAY RELATE:
+${ctx.block}
+Reply with only JSON: {"meaning":"what it means, simply","why":"why it matters in the critique","kind":"finding|interpretation|criticism|recommendation|description|other","question":"a question a professor might ask about it"}`;
+}
+
+/* 8. Where did this come from? — the evidence-mapping check of step 2.4, for one statement */
+const stEvKey = text => 'k' + textHash(String(text).replace(/\s+/g, ' ').trim());
+async function stEvidence(doc, text, loc, secId){
+  const set = stSet(doc), P = set ? ePassages(set) : [];
+  if (!P.length){ toast('Upload the original research paper to verify the evidence supporting this statement'); return; }
+  const E = eState(set), keepT = E.target, cl = {cid:'adhoc', text:String(text).trim().slice(0, 1500), loc};
+  E.target = 'critique';
+  const ok = await stAsk('Finding where this comes from in the paper', eMapPrompt(set, P, [cl]), r => {
+    const keep = E.maps.critique, tmp = {}; E.maps.critique = tmp;
+    const res = eApply(set, [cl], r, P); E.maps.critique = keep;
+    if (!tmp.adhoc) return false;
+    doc.ev[stEvKey(text)] = {...tmp.adhoc, text:cl.text, loc, lost:res.lost};
+    if (secId){ doc.evOn[secId] = true; stMarkCheck(doc, secId, 'ev'); }
+  }, {tier:'complex'});
+  E.target = keepT; save();
+  if (ok && doc.ev[stEvKey(text)] && doc.ev[stEvKey(text)].lost) toast('A quotation Claude gave was not found word for word in the paper, so it was not used');
+}
+function stEvHTML(doc, text){
+  const set = stSet(doc), P = set ? ePassages(set) : [], r = doc.ev[stEvKey(text)];
+  if (!P.length) return `<p class="st-note">${icon('info')}Upload the original research paper to verify the evidence supporting this statement.</p>`;
+  if (!r) return '';
+  const st = r.type === 'unsup' ? ['Not supported by the paper', 'bad'] : r.type === 'interp' ? ['Your interpretation', 'violet'] : r.type === 'ext' ? ['Another source', 'grey'] : r.type === 'none' ? ['Not a claim', 'grey'] : r.type === 'partial' ? ['Partly supported', 'warn'] : (r.ev || []).length ? ['Supported by the paper', 'ok'] : ['Not verified', 'bad'];
+  const evs = [...(r.ev || []), ...(r.basis || [])].map(ev => ({ev, at:eLocate(P, ev)})).filter(x => x.at);
+  const id = 'stev' + stEvKey(text);
+  return `<div class="st-ev" id="${id}"><div class="row"><span class="e-tag e-tag-${st[1]}">${esc(st[0])}</span>${stByClaude}${stCopy('#' + id, 'Copy')}</div>
+    ${evs.length ? evs.map(x => `<blockquote class="st-quote"><span class="small muted">${esc(ePage(set, x.at.p.page))}${x.at.p.section ? ' · ' + esc(x.at.p.section) : ''} · paragraph ${x.at.p.n} — found word for word</span><br>“${esc(x.at.p.text.slice(x.at.a, x.at.b))}”</blockquote>`).join('') : '<p class="small muted">No passage of the paper was verified for this statement.</p>'}
+    ${r.explain ? `<p class="small"><b>How it is used:</b> ${esc(r.explain)}</p>` : ''}${r.needs ? `<p class="small"><b>What is missing:</b> ${esc(r.needs)}</p>` : ''}
+    ${r.type === 'interp' ? '<p class="small muted">This is your own evaluation: the passages show what you evaluated, not a criticism by the authors.</p>' : ''}
+    <button class="btn sm" data-act="st-ev-open" data-text="${esc(text)}" data-loc="${esc(r.loc || '')}">${icon('link')}See it in the paper (step 2.4)</button></div>`;
+}
+
+/* --- read and listen --- */
+function stSay(text, lang){ ttsStart([{pid:'say', part:'stsay', text, lang:lang || baseLang(text)}], {studio:true}); }
+function stListenFrom(doc, pid){
+  const ps = stParas(doc), k = Math.max(0, ps.findIndex(b => b.id === pid));
+  ttsStart(ps.slice(k).map(b => ({pid:b.id, part:'st', text:b.text, lang:baseLang(b.text)})), {studio:true, follow:true});
+}
+async function stReadExplain(doc, pid){                              // read the paragraph, then its simple explanation, then wait for the student
+  const b = stBlock(doc, pid); if (!b) return;
+  const lang = stLang();
+  if (!((doc.sents[pid] || {})[lang])){ const ok = await stAsk('Explaining this paragraph for Read & explain', stSentPrompt(doc, b, lang), r => stApplySents(doc, b, lang, r)); if (!ok) return; }
+  const items = ((doc.sents[pid] || {})[lang] || {items:[]}).items.filter(Boolean);
+  const say = (lang === 'ar' ? 'بكلمات بسيطة: ' : 'In simple words: ') + items.map(i => i.simple).join(' ');
+  doc.sel = pid; save(); stRenderDoc(doc);
+  ttsStart([{pid, part:'st', text:b.text, lang:baseLang(b.text)}, {pid, part:'stx', text:say, lang}], {studio:true, re:pid});
+}
+function stListenUI(){
+  const el = $('#stListen'), doc = S.ui.tab === 'studio' && stDoc(); if (!el || !doc) return;
+  const mine = TTS.ctx && TTS.ctx.studio, sel = stSelId(doc), ps = stParas(doc), k = ps.findIndex(b => b.id === sel), next = ps[k + 1];
+  const reDone = mine && TTS.ctx.re && !TTS.playing && !TTS.list.length;
+  el.innerHTML = `${mine && TTS.playing ? `<button class="btn sm primary" data-act="st-pause">${icon('pause')}Pause</button>` : mine && TTS.list[TTS.i] ? `<button class="btn sm primary" data-act="st-continue">${icon('play')}Continue</button>` : ''}
+    <button class="btn sm" data-act="st-listen" ${TTS.ok ? '' : 'disabled title="Your browser cannot read aloud"'}>${icon('volume')}Listen from ¶${Math.max(1, k + 1)}</button>
+    <button class="btn sm" data-act="st-re" data-id="${esc(sel || '')}" data-st-ai ${TTS.ok && aiReady() ? '' : 'disabled'}>${icon('headphones')}Read &amp; explain ¶${Math.max(1, k + 1)}</button>
+    ${reDone && next ? `<button class="btn sm primary" data-act="st-re-next" data-id="${next.id}">${icon('skipf')}Next paragraph</button>` : ''}
+    <label class="st-speed small">Speed <select data-st="rate">${[0.75, 0.85, 1, 1.15, 1.25, 1.5].map(r => `<option value="${r}" ${r === (S.reader.rate || 1) ? 'selected' : ''}>${r}×</option>`).join('')}</select></label>
+    <button class="btn sm ghost" data-act="tts-voices">${icon('sliders')}Voices &amp; accents</button>`;
+}
+
+/* --- the page --- */
+function stPathSwitch(cur){
+  return `<div class="st-path" role="group" aria-label="Choose how to work on your critique">
+    <button data-act="st-path" data-v="critique" aria-pressed="${cur === 'critique'}">${icon('pen')}Create a Critique</button>
+    <button data-act="st-path" data-v="studio" aria-pressed="${cur === 'studio'}">${icon('upload')}Upload &amp; Study My Critique</button></div>`;
+}
+function stUploadCard(doc){
+  const set = doc && stSet(doc), papers = S.reader.papers || [];
+  const docLine = (k, label) => { const d = set && set.docs[k]; return d ? `<span class="chip ok-chip">${icon('check')}${esc(clip(vDocName(set, k), 46))}</span><button class="btn ghost sm danger" data-act="st-doc-remove" data-k="${k}" aria-label="Remove the ${label}">${icon('x')}</button>` : ''; };
+  return `<section class="card st-upload" aria-labelledby="stUpH">
+    <h2 id="stUpH">${doc ? 'Your documents' : 'Study Your Existing Critique'}</h2>
+    <p class="muted">${doc ? 'Add the original paper to verify the evidence, and your slides if you have them.' : 'Upload your completed critique to understand its arguments, explore supporting evidence, and prepare for academic discussions.'}</p>
+    <div class="st-up-rows">
+      <div class="st-up-row"><div><b>Your critique</b> <span class="chip">required</span><div class="small muted">PDF, Word (.docx) or text — or paste it</div></div>
+        <div class="row">${doc ? `<span class="chip ok-chip">${icon('check')}${esc(clip(doc.name, 46))}</span>` : `<label class="btn primary" for="stCritFile" style="cursor:pointer">${icon('upload')}Upload Critique</label><button class="btn" data-act="st-paste">${icon('clip')}Paste text</button>`}</div></div>
+      <div class="st-up-row"><div><b>Original research paper</b> <span class="chip tag">strongly recommended</span><div class="small muted">Needed to verify every claim and page against the source</div></div>
+        <div class="row">${docLine('paper', 'paper') || (doc ? `<label class="btn" for="stPaperFile" style="cursor:pointer">${icon('upload')}Add Original Research Paper</label>${papers.length ? `<select data-st="reader-paper" aria-label="Or use a paper from the Research Reader"><option value="">…or use a paper from the reader</option>${papers.map(p => `<option value="${p.id}">${esc(clip(p.title || p.name || 'Paper', 60))}</option>`).join('')}</select>` : ''}` : '<span class="small muted">Add after the critique</span>')}</div></div>
+      <div class="st-up-row"><div><b>Presentation</b> <span class="chip">optional</span><div class="small muted">PowerPoint (.pptx) or a PDF of the slides</div></div>
+        <div class="row">${docLine('pres', 'presentation') || (doc ? `<label class="btn" for="stPresFile" style="cursor:pointer">${icon('upload')}Add Presentation</label>` : '<span class="small muted">Add after the critique</span>')}</div></div>
+    </div>
+    <input type="file" id="stCritFile" accept=".pdf,.docx,.txt,.md" hidden><input type="file" id="stPaperFile" accept=".pdf,.txt" hidden><input type="file" id="stPresFile" accept=".pptx,.pdf" hidden>
+    ${doc ? `<div class="row st-up-go"><button class="btn primary" data-act="st-analyze" data-st-ai ${aiReady() ? '' : 'disabled'}>${icon('sparkle')}${doc.an ? 'Analyze My Critique again' : 'Analyze My Critique'}</button>
+      <span class="small muted">${doc.an ? `Analysed ${new Date(doc.an.at).toLocaleString()} · by Claude — check it` : 'Claude reads your critique and builds a study guide around it. Your critique is never changed.'}</span></div>` : ''}
+    <p class="small muted" style="margin:12px 0 0">Files are read inside your browser. Your critique is shown exactly as you wrote it.</p>
+  </section>`;
+}
+RENDER.studio = () => {
+  const st = stState(), doc = stDoc(); if (doc) st.active = doc.id;
+  S.ui.critPath = 'studio';
+  const set = doc && stSet(doc);
+  $('#panel-studio').innerHTML = `${stPathSwitch('studio')}
+  <div class="page-head"><h1>Critique Study Studio</h1><p>Understand your critique. Explore the evidence. Prepare to defend your ideas.</p></div>
+  ${st.docs.length ? `<div class="card st-bar"><div class="row" style="flex:1;min-width:220px"><label class="sr-only" for="stDocSel">Choose a critique to study</label>
+    <select id="stDocSel" data-st="doc" style="flex:1;max-width:460px">${st.docs.map(d => `<option value="${d.id}" ${doc && d.id === doc.id ? 'selected' : ''}>${esc(clip(d.name, 70))}</option>`).join('')}</select></div>
+    <div class="row"><button class="btn" data-act="st-new">${icon('plus')}Study another critique</button><button class="btn ghost danger" data-act="st-del">${icon('trash')}Remove</button></div></div>` : ''}
+  ${!doc || st.adding ? stUploadCard(null) + (doc ? `<p><button class="btn" data-act="st-cancel-add">${icon('back')}Back to ${esc(clip(doc.name, 40))}</button></p>` : '') : `<details class="st-docs-fold" ${!doc.an || !set.docs.paper ? 'open' : ''}><summary>${icon('file')}<b>Documents</b> · ${esc(clip(doc.name, 40))}${set && set.docs.paper ? ' · paper added' : ' · <span class="st-warn-t">no paper yet</span>'}${set && set.docs.pres ? ' · slides added' : ''}${icon('chevd', 'chev')}</summary>${stUploadCard(doc)}</details>`}
+  ${doc && !st.adding ? stWorkspace(doc) : ''}`;
+  stRenderRun(); stListenUI();
+};
+function stWorkspace(doc){
+  const st = stState(), set = stSet(doc), secs = stSections(doc), selSec = stSecOf(doc, stSelId(doc));
+  return `${!set || !set.docs.paper ? `<p class="st-note st-note-warn">${icon('info')}The original paper hasn't been added, so the facts and source references in your critique have <b>not been independently verified</b>. Explanations still work; evidence needs the paper.</p>` : ''}
+  ${doc.an ? `<div class="card st-overview"><div class="output-head"><h3 style="margin:0">${esc(doc.an.topic || 'Your critique')}</h3><span class="row">${stByClaude}${stCopy('#stOv', 'Copy the overview')}</span></div><p id="stOv" style="margin:0">${esc(doc.an.overview)}</p></div>` : ''}
+  <div class="st-modes" role="tablist" aria-label="Study mode">${ST_MODES.map(([k, l, ic, d]) => `<button role="tab" id="st-mode-${k}" aria-selected="${stMode() === k}" data-act="st-mode" data-v="${k}" title="${esc(d)}">${icon(ic)}<span><b>${l}</b><span class="small">${esc(d)}</span></span></button>`).join('')}</div>
+  <div id="stRun"></div>
+  <div class="st-panesw" role="group" aria-label="Show"><button data-act="st-pane" data-v="doc" aria-pressed="${st.pane !== 'study'}">${icon('file')}Your critique</button><button data-act="st-pane" data-v="study" aria-pressed="${st.pane === 'study'}">${icon('sparkle')}Study assistant</button></div>
+  <div class="st-ws" data-pane="${st.pane === 'study' ? 'study' : 'doc'}">
+    <section class="card st-docpane" aria-label="Your original critique">
+      <nav class="st-outline" aria-label="Sections of your critique">${secs.map(s => `<button data-act="st-sec" data-id="${s.paras[0].id}" aria-current="${s.id === selSec.id}">${esc(clip(s.title, 42))}<span class="small muted"> · ${s.paras.length}¶</span></button>`).join('')}</nav>
+      <div class="st-listen" id="stListen"></div>
+      <div class="st-hlbar" role="group" aria-label="Highlights">${doc.hls.length ? ST_HL.map(([k, l, d]) => `<label class="st-hlk" title="${esc(d)}"><input type="checkbox" data-st="hl" data-k="${k}" ${st.hl[k] ? 'checked' : ''}><span class="sth-dot sth-${k}" aria-hidden="true"></span>${l} <span class="muted">${doc.hls.filter(h => h.type === k).length}</span></label>`).join('') : `<span class="small muted">${doc.an ? 'No highlights yet.' : 'Highlights appear after “Analyze My Critique”.'}</span>`}</div>
+      <article class="st-doc" id="stDoc" lang="en">${stDocHTML(doc)}</article>
+    </section>
+    <aside class="card st-assist" id="stAssist" aria-label="Study assistant">${stAssistHTML(doc)}</aside>
+  </div>
+  <details class="card st-bottom" ${st.bottomOpen ? 'open' : ''} id="stBottom"><summary>${icon('chart')}<b>Study progress &amp; key concepts</b>${icon('chevd', 'chev')}</summary>${stBottomHTML(doc)}</details>`;
+}
+function stMarked(doc, b){                                          // the original words, with the chosen highlights as marks — the text itself never changes
+  const st = stState(), hs = doc.hls.filter(h => h.pid === b.id && st.hl[h.type]).sort((x, y) => x.a - y.a);
+  let out = '', at = 0;
+  hs.forEach(h => { const i = doc.hls.indexOf(h); out += esc(b.text.slice(at, h.a)) + `<mark class="sth sth-${h.type}${stHlSel === i ? ' on' : ''}" data-act="st-hl" data-i="${i}" tabindex="0" role="button" aria-label="${esc(ST_HL_NAME[h.type])}: ${esc(clip(b.text.slice(h.a, h.b), 60))}">${esc(b.text.slice(h.a, h.b))}</mark>`; at = h.b; });
+  return out + esc(b.text.slice(at));
+}
+function stDocHTML(doc){
+  const sel = stSelId(doc); let lastPage = null, n = 0;
+  return doc.blocks.map(b => {
+    const pg = b.page && b.page !== lastPage && lastPage !== null ? `<div class="st-pg" aria-hidden="true">Page ${b.page}</div>` : ''; if (b.page) lastPage = b.page;
+    if (b.kind === 'h') return `${pg}<h3 class="st-h" id="sp-${b.id}" data-act="st-sec" data-id="${b.id}" dir="auto">${esc(b.text)}</h3>`;
+    n++;
+    return `${pg}<div class="st-p${b.id === sel ? ' sel' : ''}${b.table ? ' st-table' : ''}" id="sp-${b.id}" data-act="st-sel" data-id="${b.id}" dir="auto"><span class="st-no" aria-hidden="true">¶${n}${b.page ? ` · p. ${b.page}` : ''}</span>${stMarked(doc, b)}${b.id === sel ? `<span class="st-study-btn"><button class="btn sm" data-act="st-pane" data-v="study">${icon('sparkle')}Study ¶${n}</button></span>` : ''}</div>`;
+  }).join('');
+}
+function stRenderDoc(doc){ const el = $('#stDoc'); if (el) el.innerHTML = stDocHTML(doc); const sec = stSecOf(doc, stSelId(doc)); $$('.st-outline button').forEach(bt => bt.setAttribute('aria-current', String(stSecOf(doc, bt.dataset.id).id === sec.id))); stListenUI(); }
+function stRenderAssist(doc){ const el = $('#stAssist'); if (el) el.innerHTML = stAssistHTML(doc); stRenderRun(); }
+
+function stAssistHTML(doc){
+  const m = stMode(), t = stTab(), pid = stSelId(doc), b = stBlock(doc, pid), sec = stSecOf(doc, pid), n = stParaNo(doc, pid);
+  const head = `<div class="st-ahead"><div><span class="label">Studying</span><h3>${esc(clip(sec.title, 70))}</h3><span class="small muted">¶${n} selected${sec.paras.length > 1 ? ` · ${sec.paras.length} paragraphs in this section` : ''}</span></div>
+    <div class="st-lang" role="group" aria-label="Explanations in"><button data-act="st-lang" data-v="en" aria-pressed="${stLang() === 'en'}">English</button><button data-act="st-lang" data-v="ar" aria-pressed="${stLang() === 'ar'}" lang="ar">العربية</button></div></div>`;
+  const tabs = `<div class="st-tabs" role="tablist" aria-label="${esc(ST_MODES.find(x => x[0] === m)[1])} tools">${ST_TABS[m].map(([k, l]) => `<button role="tab" aria-selected="${t === k}" data-act="st-tab" data-v="${k}">${l}</button>`).join('')}</div>`;
+  const hl = stHlSel != null && doc.hls[stHlSel] ? stHlCard(doc, doc.hls[stHlSel]) : '';
+  const selBox = `<div id="stSelBox">${stSelBoxHTML(doc)}</div>`;
+  const body = !b ? '<p class="muted">Select a paragraph of your critique.</p>' : ({explain:stTabExplain, sentences:stTabSents, points:stTabPoints, marks:stTabMarks, evidence:stTabEvidence, critical:stTabCritical, questions:stTabQuestions, practice:stTabPractice, remember:stTabRemember}[t])(doc, sec, b);
+  return head + tabs + hl + selBox + `<div class="st-abody" role="tabpanel">${body}</div>`;
+}
+const stAr = lang => lang === 'ar' ? ' dir="rtl" lang="ar"' : '';
+function stSelBoxHTML(doc){
+  if (!stSelText) return '';
+  const r = (doc.selx || {})[stEvKey(stSelText)];
+  return `<div class="st-selbox"><span class="label">Your selection</span><p class="st-seltext">“${esc(clip(stSelText, 220))}”</p>
+    <div class="row"><button class="btn sm" data-act="st-sel-explain" data-st-ai>${icon('bulb')}Explain my selection</button><button class="btn sm" data-act="st-sel-ev" data-st-ai>${icon('link')}Where did this come from?</button><button class="btn sm ghost" data-act="st-sel-clear">${icon('x')}Clear</button></div>
+    ${r ? `<div class="st-out" id="stSelOut"${stAr(r.lang)}><div class="output-head"><span class="chip">${esc(ST_KINDS[r.kind] || 'Statement')}</span><span class="row">${stByClaude}${stCopy('#stSelOut', 'Copy')}</span></div><p><b>${r.lang === 'ar' ? 'المعنى' : 'Meaning'}:</b> ${esc(r.meaning)}</p><p><b>${r.lang === 'ar' ? 'لماذا هو مهم' : 'Why it matters'}:</b> ${esc(r.why)}</p>${r.question ? `<p><b>${r.lang === 'ar' ? 'سؤال محتمل من الأستاذ' : 'Possible professor question'}:</b> ${esc(r.question)}</p>` : ''}</div>` : ''}
+    ${stEvHTML(doc, stSelText)}</div>`;
+}
+function stHlCard(doc, h){
+  const b = stBlock(doc, h.pid), text = b.text.slice(h.a, h.b), id = 'sthl' + doc.hls.indexOf(h);
+  return `<div class="st-hlcard sth-edge-${h.type}"><div class="output-head"><span class="row"><span class="sth-dot sth-${h.type}" aria-hidden="true"></span><b>${esc(ST_HL_NAME[h.type])}</b>${stByClaude}</span><span class="row">${stCopy('#' + id, 'Copy')}<button class="btn ghost icon sm" data-act="st-hl-close" aria-label="Close">${icon('x')}</button></span></div>
+    <div id="${id}"><p class="st-seltext">“${esc(text)}”</p>
+    ${h.meaning ? `<p><b>Meaning:</b> ${esc(h.meaning)}</p>` : ''}${h.why ? `<p><b>Why it is important:</b> ${esc(h.why)}</p>` : ''}
+    <p><b>Type of statement:</b> ${esc(ST_HL[ST_HL.findIndex(x => x[0] === h.type)][2])}</p>
+    ${h.question ? `<p><b>A possible professor question:</b> ${esc(h.question)}</p>` : ''}</div>
+    <div class="row"><button class="btn sm" data-act="st-ev" data-text="${esc(text)}" data-loc="¶${stParaNo(doc, h.pid)}" data-sec="${stSecOf(doc, h.pid).id}" data-st-ai>${icon('link')}Where did this come from?</button><button class="btn sm ghost" data-act="st-say" data-target="#${id}">${icon('volume')}Listen</button></div>
+    ${stEvHTML(doc, text)}</div>`;
+}
+function stOut(id, lang, inner, extra=''){                         // a block of Claude's output: marked, copyable, listenable
+  return `<div class="st-out" id="${id}"${stAr(lang)}><div class="output-head"><span class="row">${stByClaude}${extra}</span><span class="row"><button class="btn ghost icon sm" data-act="st-say" data-target="#${id}-t" aria-label="Listen" title="Listen">${icon('volume')}</button>${stCopy('#' + id + '-t', 'Copy')}</span></div><div id="${id}-t">${inner}</div></div>`;
+}
+const stP = t => `<p>${esc(t)}</p>`;
+function stTabExplain(doc, sec){
+  const lang = stLang(), e = ((doc.secs[sec.id] || {}).explain || {})[lang], other = ((doc.secs[sec.id] || {}).explain || {})[lang === 'ar' ? 'en' : 'ar'];
+  const L = lang === 'ar' ? {a:'أ. شرح مبسّط', b:'ب. الشرح الأكاديمي', c:'ج. لماذا هذا القسم مهم', d:'د. الصلة بالبحث الأصلي', e:'هـ. ما يجب أن أتذكره'} : {a:'A. Simple explanation', b:'B. Detailed academic explanation', c:'C. Why this section matters', d:'D. Connection to the original research', e:'E. What I should remember'};
+  const an = doc.an && doc.an.sections.find(s => s.id === sec.id);
+  return `${an ? `<p class="small muted">${esc(an.purpose)}</p>` : ''}
+    <div class="row"><button class="btn sm primary" data-act="st-explain" data-id="${sec.id}" data-st-ai>${icon('sparkle')}${e ? (lang === 'ar' ? 'Explain again in Arabic' : 'Explain this section again') : (lang === 'ar' ? 'Explain this section in Arabic' : 'Explain This Section')}</button>
+    ${!e && other ? `<button class="btn sm ghost" data-act="st-lang" data-v="${lang === 'ar' ? 'en' : 'ar'}">Show the ${lang === 'ar' ? 'English' : 'Arabic'} explanation</button>` : ''}</div>
+    ${e ? stOut('stEx', lang, `<h4>${L.a}</h4>${stP(e.simple)}<h4>${L.b}</h4>${stP(e.academic)}<h4>${L.c}</h4>${stP(e.why)}<h4>${L.d}</h4>${stP(e.connection)}${e.remember.length ? `<h4>${L.e}</h4><ul>${e.remember.map(x => `<li>${esc(x)}</li>`).join('')}</ul>` : ''}`)
+      : `<p class="small muted">${lang === 'ar' ? 'F. ' : ''}Claude explains this section: a simple explanation, the academic meaning, why it matters, how it connects to the paper and what to remember${lang === 'ar' ? ' — in Arabic' : ''}. Switch to العربية above for an Arabic explanation.</p>`}`;
+}
+function stTabSents(doc, sec, b){
+  const lang = stLang(), r = (doc.sents[b.id] || {})[lang], ss = stSentsOf(b), n = stParaNo(doc, b.id);
+  const L = lang === 'ar' ? {s:'المعنى ببساطة', t:'المصطلحات', r:'المنطق وراء العبارة', c:'الصلة بالبحث الأصلي'} : {s:'In simple words', t:'Terms', r:'The reasoning', c:'Connection to the original paper'};
+  return `<div class="row"><button class="btn sm primary" data-act="st-sents" data-id="${b.id}" data-st-ai>${icon('list')}${r ? 'Explain sentence by sentence again' : `Explain ¶${n} Sentence by Sentence`}</button></div>
+    <ol class="st-sents">${ss.map((s, i) => { const it = r && r.items[i]; const id = `stS${i}`;
+      return `<li><p class="st-orig"><span class="label">Original</span>${esc(s)}</p>
+      ${it ? stOut(id, lang, `${stP(L.s + ': ' + it.simple)}${it.terms.length ? `<p><b>${L.t}:</b> ${it.terms.map(t => `<b>${esc(t.term)}</b> — ${esc(t.meaning)}`).join('; ')}</p>` : ''}${it.reasoning ? stP(L.r + ': ' + it.reasoning) : ''}${it.connection ? stP(L.c + ': ' + it.connection) : ''}`, `<span class="chip tag">${esc(ST_KINDS[it.kind])}</span>`) : ''}
+      <div class="row"><button class="btn sm ghost" data-act="st-ev" data-text="${esc(s)}" data-loc="¶${n}, sentence ${i + 1}" data-sec="${sec.id}" data-st-ai>${icon('link')}Where did this come from?</button></div>${stEvHTML(doc, s)}</li>`; }).join('')}</ol>
+    ${!r ? '<p class="small muted">Each sentence is shown as you wrote it, then explained: its meaning, difficult terms, the reasoning, the link to the paper, and whether it is a finding, an interpretation, a criticism or a recommendation.</p>' : ''}`;
+}
+function stTermCard(t, i){
+  const id = 'stT' + i;
+  return `<div class="st-term" id="${id}"><div class="output-head"><b>${esc(t.term)}</b><span class="row"><button class="btn ghost icon sm" data-act="st-say" data-target="#${id}-t" aria-label="Listen">${icon('volume')}</button>${stCopy('#' + id + '-t', 'Copy')}</span></div>
+    <div id="${id}-t"><p>${esc(t.definition)}</p>${t.simple ? `<p><b>Simply:</b> ${esc(t.simple)}</p>` : ''}${t.ar ? `<p dir="rtl" lang="ar"><b>بالعربية:</b> ${esc(t.ar)}</p>` : ''}${t.context ? `<p><b>In this research:</b> ${esc(t.context)}</p>` : ''}${t.example ? `<p><b>Example:</b> ${esc(t.example)}</p>` : ''}</div></div>`;
+}
+function stSecTerms(doc, sec){ const all = (doc.an && doc.an.terms) || [], txt = stSecText(sec).toLowerCase(); const hit = all.filter(t => txt.includes(t.term.toLowerCase())); return {hit, all}; }
+function stTabPoints(doc, sec){
+  const an = doc.an && doc.an.sections.find(s => s.id === sec.id), {hit} = stSecTerms(doc, sec), e = ((doc.secs[sec.id] || {}).explain || {}).en;
+  if (!doc.an) return `<p class="muted">Run <b>Analyze My Critique</b> to see this section's key points and the academic terms you need.</p>`;
+  return `${an && an.args.length ? stOut('stArgs', 'en', `<h4>Main argument${an.args.length > 1 ? 's' : ''} of this section</h4><ul>${an.args.map(a => `<li>${esc(a)}</li>`).join('')}</ul>`) : ''}
+    ${e && e.remember.length ? stOut('stRem1', 'en', `<h4>What to remember</h4><ul>${e.remember.map(a => `<li>${esc(a)}</li>`).join('')}</ul>`) : ''}
+    <h4 style="margin:16px 0 8px">Academic terms in this section</h4>${hit.length ? hit.map((t, i) => stTermCard(t, 's' + i)).join('') : '<p class="small muted">No key term from the analysis appears in this section. All key concepts are in the panel below the page.</p>'}`;
+}
+function stTabMarks(doc, sec){
+  const list = doc.hls.filter(h => sec.paras.some(p => p.id === h.pid));
+  if (!doc.hls.length) return `<p class="muted">Run <b>Analyze My Critique</b>: Claude marks the main ideas, the research evidence, your own evaluation, strengths and limitations — at most two short passages per paragraph, each checked word for word in your text.</p>`;
+  return `<p class="small muted">Turn the colours on or off above your critique. Select a highlight to see what it means, why it matters and a question your professor may ask.</p>
+    ${list.length ? `<ul class="st-hllist">${list.map(h => { const i = doc.hls.indexOf(h), b = stBlock(doc, h.pid); return `<li><button class="st-hlbtn" data-act="st-hl" data-i="${i}"><span class="sth-dot sth-${h.type}" aria-hidden="true"></span><span><b>${esc(ST_HL_NAME[h.type])}</b> · ¶${stParaNo(doc, h.pid)}<br>“${esc(clip(b.text.slice(h.a, h.b), 140))}”</span></button></li>`; }).join('')}</ul>` : '<p class="small muted">No highlights in this section.</p>'}`;
+}
+function stTabEvidence(doc, sec, b){
+  const set = stSet(doc), hasP = !!(set && ePassages(set).length), n = stParaNo(doc, b.id), claims = ((doc.an && doc.an.claims) || []).filter(c => sec.paras.some(p => p.id === c.id));
+  return `${!hasP ? `<p class="st-note st-note-warn">${icon('info')}Upload the original research paper to verify the evidence supporting your statements. <button class="linkish" data-act="st-docs">Add it</button></p>` : '<p class="small muted">Each statement is checked against the original paper: a quotation counts only when it is found word for word, and the page comes from the paper itself.</p>'}
+    ${claims.length ? `<h4>Statements in this section that need evidence</h4><ul class="st-claims">${claims.map(c => `<li><p class="st-seltext">“${esc(c.quote)}” <span class="small muted">¶${stParaNo(doc, c.id)}</span></p><button class="btn sm" data-act="st-ev" data-text="${esc(c.quote)}" data-loc="¶${stParaNo(doc, c.id)}" data-sec="${sec.id}" data-st-ai ${hasP ? '' : 'disabled'}>${icon('link')}Where did this come from?</button>${stEvHTML(doc, c.quote)}</li>`).join('')}</ul>` : ''}
+    <h4>¶${n}, sentence by sentence</h4><ul class="st-claims">${stSentsOf(b).map((s, i) => `<li><p class="st-seltext">${esc(s)}</p><button class="btn sm" data-act="st-ev" data-text="${esc(s)}" data-loc="¶${n}, sentence ${i + 1}" data-sec="${sec.id}" data-st-ai ${hasP ? '' : 'disabled'}>${icon('link')}Where did this come from?</button>${stEvHTML(doc, s)}</li>`).join('')}</ul>
+    <p class="small"><button class="linkish" data-act="st-open-evidence">Map every statement of your critique in step 2.4</button></p>`;
+}
+function stTabCritical(doc, sec){
+  const c = doc.chal[sec.id];
+  return `<div class="row"><button class="btn sm primary" data-act="st-chal" data-id="${sec.id}" data-st-ai>${icon('quest')}${c ? 'New questions for this section' : 'Challenge My Critique'}</button></div>
+    ${c ? `<ol class="st-qs">${c.qs.map((q, i) => { const fb = c.fb[i]; return `<li><div class="st-out" id="stC${i}"><div class="output-head"><span class="row">${stByClaude}</span><span class="row">${stCopy('#stC' + i + '-t', 'Copy')}</span></div><div id="stC${i}-t"><p><b>${esc(q.q)}</b></p>${q.why ? `<p class="small muted">${esc(q.why)}</p>` : ''}</div>
+      ${q.hint ? `<details class="st-hint"><summary class="small">Hint</summary><p class="small">${esc(q.hint)}</p></details>` : ''}</div>
+      <label class="f" for="stCA${i}">Your answer</label><textarea id="stCA${i}" data-st="chal-ans" data-sec="${sec.id}" data-i="${i}" rows="3" placeholder="Think it through and write your answer">${esc(c.ans[i] || '')}</textarea>
+      <div class="row"><button class="btn sm" data-act="st-chal-check" data-sec="${sec.id}" data-i="${i}" data-st-ai>${icon('check')}Check my answer</button></div>${fb ? stFbHTML(fb, 'stCF' + i) : ''}</li>`; }).join('')}</ol>`
+      : '<p class="small muted">Claude asks questions about THIS section\'s arguments — why something is a strength or a limitation, what evidence supports it, whether the researchers could justify their choice, other interpretations and the effect on validity — so you understand and can defend your critique.</p>'}`;
+}
+function stFbHTML(fb, id){
+  const v = ST_VERDICT[fb.verdict];
+  return `<div class="st-out st-fb" id="${id}"><div class="output-head"><span class="e-tag e-tag-${v[1]}">${v[0]}</span><span class="row">${stByClaude}${stCopy('#' + id + '-t', 'Copy')}</span></div><div id="${id}-t">
+    ${fb.accurate ? `<p><b>Accurate:</b> ${esc(fb.accurate)}</p>` : ''}${fb.missing.length ? `<p><b>Missing:</b></p><ul>${fb.missing.map(x => `<li>${esc(x)}</li>`).join('')}</ul>` : ''}${fb.improve ? `<p><b>To improve:</b> ${esc(fb.improve)}</p>` : ''}${fb.followup ? `<p><b>Follow-up:</b> ${esc(fb.followup)}</p>` : ''}</div></div>`;
+}
+function stTabQuestions(doc, sec){
+  const qa = (doc.secs[sec.id] || {}).qa;
+  return `<div class="row"><button class="btn sm primary" data-act="st-qa" data-id="${sec.id}" data-st-ai>${icon('messages')}${qa ? 'New professor questions' : 'Professor Questions for this Section'}</button>${qa ? `<button class="btn sm" data-act="st-tab" data-v="practice">${icon('mic')}Practise them</button>` : ''}</div>
+    ${qa ? `<ol class="st-qs">${qa.qs.map((q, i) => { const ev = stEvCheck(doc, q.ev); return `<li><div class="st-out" id="stQ${i}"><div class="output-head"><span class="row">${stByClaude}</span><span class="row">${stCopy('#stQ' + i + '-t', 'Copy')}</span></div><div id="stQ${i}-t">
+      <p><b>${esc(q.q)}</b></p>${q.asks ? `<p class="small"><b>What it is asking:</b> ${esc(q.asks)}</p>` : ''}
+      <details><summary class="small">Show the suggested answer</summary><p>${esc(q.answer)}</p><p><b>Short oral answer:</b> ${esc(q.oral)}</p>
+      ${ev ? `<blockquote class="st-quote"><span class="small muted">${esc(ev.where)} — found word for word</span><br>“${esc(ev.text)}”</blockquote>` : q.ev.quote ? '<p class="small muted">The supporting quotation could not be found word for word, so it is not shown.</p>' : ''}
+      ${q.followups.length ? `<p><b>Follow-up questions:</b></p><ul>${q.followups.map(f => `<li>${esc(f)}</li>`).join('')}</ul>` : ''}</details></div>
+      <div class="row"><button class="btn sm ghost" data-act="st-say" data-text="${esc(q.oral || q.answer)}">${icon('volume')}Listen to the answer</button></div></div></li>`; }).join('')}</ol>
+      <p class="small"><button class="linkish" data-act="st-open-defend">Prepare across your whole critique and slides with the mock professor (step 4.2)</button></p>`
+      : '<p class="small muted">Realistic questions about this section, what each one is asking, a detailed suggested answer, a short oral answer, the supporting evidence (shown only when found word for word) and follow-up questions.</p>'}`;
+}
+function stTabPractice(doc, sec){
+  const qa = (doc.secs[sec.id] || {}).qa, p = doc.prac && doc.prac.sec === sec.id ? doc.prac : null;
+  if (!qa) return `<p class="muted">First write the professor questions for this section.</p><button class="btn sm primary" data-act="st-qa" data-id="${sec.id}" data-st-ai>${icon('messages')}Professor Questions for this Section</button>`;
+  const i = p ? p.i : 0, q = qa.qs[i] || qa.qs[0], cur = p && p.follow ? p.follow : q.q;
+  return `<p class="small muted">One question at a time. Answer it as you would aloud; Claude evaluates it. The suggested answer stays hidden unless you ask for it.</p>
+    <div class="st-prac"><span class="label">Question ${i + 1} of ${qa.qs.length}${p && p.follow ? ' · follow-up' : ''}</span><p class="st-pq">${esc(cur)}</p>
+    <button class="btn sm ghost" data-act="st-say" data-text="${esc(cur)}">${icon('volume')}Hear the question</button>
+    <label class="f" for="stPA">Your answer</label><textarea id="stPA" data-st="prac-ans" rows="4" placeholder="Type your answer">${esc((p && p.answer) || '')}</textarea>
+    <div class="row"><button class="btn sm primary" data-act="st-prac-submit" data-sec="${sec.id}" data-st-ai>${icon('send')}Submit my answer</button>
+    ${p && p.fb ? `${p.fb.followup ? `<button class="btn sm" data-act="st-prac-follow" data-sec="${sec.id}">${icon('quest')}Answer the follow-up</button>` : ''}` : ''}
+    <button class="btn sm" data-act="st-prac-next" data-sec="${sec.id}">${icon('skipf')}Next question</button>
+    <button class="btn sm ghost" data-act="st-prac-model" data-sec="${sec.id}">${icon('eye')}${p && p.model ? 'Hide' : 'Show'} the suggested answer</button></div>
+    ${p && p.fb ? stFbHTML(p.fb, 'stPF') : ''}
+    ${p && p.model && !p.follow ? `<div class="st-out"><p><b>Suggested answer:</b> ${esc(q.answer)}</p><p><b>Short oral answer:</b> ${esc(q.oral)}</p></div>` : ''}</div>
+    <p class="small"><button class="linkish" data-act="st-open-defend">A full mock professor across all your documents is in step 4.2</button></p>`;
+}
+function stTabRemember(doc, sec){
+  const e = ((doc.secs[sec.id] || {}).explain || {}).en, an = doc.an && doc.an.sections.find(s => s.id === sec.id), objs = ((doc.an && doc.an.objectives) || []).filter(o => o.id === sec.id);
+  if (!e && !an && !objs.length) return `<p class="muted">Explain this section (Understand → Explain) and analyse your critique to build the points to remember.</p>`;
+  return `${objs.length ? stOut('stObj', 'en', `<h4>You should be able to…</h4><ul>${objs.map(o => `<li>${esc(o.objective)}</li>`).join('')}</ul>`) : ''}
+    ${an && an.args.length ? stOut('stArg2', 'en', `<h4>The argument in one breath</h4><ul>${an.args.map(a => `<li>${esc(a)}</li>`).join('')}</ul>`) : ''}
+    ${e && e.remember.length ? stOut('stRem2', 'en', `<h4>Key points to remember</h4><ul>${e.remember.map(a => `<li>${esc(a)}</li>`).join('')}</ul>`) : ''}`;
+}
+function stBottomHTML(doc){
+  const st = stState(), k = ['check', 'concepts', 'more'].includes(st.bottom) ? st.bottom : 'check';
+  const tabs = `<div class="st-tabs" role="tablist" aria-label="Study progress">${[['check', 'Study checklist'], ['concepts', 'Key concepts'], ['more', 'What should I study more?']].map(([v, l]) => `<button role="tab" aria-selected="${k === v}" data-act="st-bottom" data-v="${v}">${l}</button>`).join('')}</div>`;
+  if (!doc.an) return tabs + '<p class="muted">Run <b>Analyze My Critique</b> to build your checklist, key concepts and study priorities from your own critique.</p>';
+  if (k === 'concepts') return tabs + (doc.an.terms.length ? `<div class="st-terms">${doc.an.terms.map((t, i) => stTermCard(t, 'a' + i)).join('')}</div>` : '<p class="muted">No key concepts were identified.</p>');
+  if (k === 'more') return tabs + (doc.an.studyMore.length ? `<ol class="st-more">${doc.an.studyMore.map((x, i) => `<li><div class="st-out" id="stM${i}"><div class="output-head"><span class="row"><span class="chip ${x.priority === 1 ? 'tag' : ''}">${x.priority === 1 ? 'Top priority' : x.priority === 2 ? 'Important' : 'Useful'}</span><span class="chip">${esc(x.kind)}</span></span><span class="row">${stByClaude}${stCopy('#stM' + i + '-t', 'Copy')}</span></div>
+      <div id="stM${i}-t"><p><b>${esc(x.area)}</b></p><p>${esc(x.why)}</p><p><b>Study action:</b> ${esc(x.action)}</p></div>${x.id ? `<button class="btn sm ghost" data-act="st-sel" data-id="${x.id}" data-go="1">${icon('eye')}Go to ¶${stParaNo(doc, x.id)}</button>` : ''}</div></li>`).join('')}</ol>` : '<p class="muted">Nothing was flagged.</p>');
+  const objs = doc.an.objectives, secs = stSections(doc), title = id => (secs.find(s => s.id === id) || {title:'Opening'}).title;
+  const done = f => objs.filter(o => (doc.check[o.k] || {})[f]).length;
+  return tabs + (objs.length ? `<p class="small muted">Tick “Understood” only when you can explain it without looking. “Practised” is ticked for you when Claude has given feedback on your answer for that section; you can change any box.</p>
+    <p class="small" id="stCheckSum" aria-live="polite">${stCheckSum(doc)}</p>
+    <div class="st-tablewrap"><table class="st-check"><thead><tr><th>Critique section</th><th>Learning objective</th><th>Evidence reviewed</th><th>Understood</th><th>Practised</th></tr></thead><tbody>
+    ${objs.map(o => { const c = doc.check[o.k] || {}; const box = f => `<td class="st-cb"><input type="checkbox" data-st="check" data-k="${o.k}" data-f="${f}" ${c[f] ? 'checked' : ''} aria-label="${f === 'ev' ? 'Evidence reviewed' : f === 'und' ? 'Understood' : 'Practised'}: ${esc(clip(o.objective, 60))}"></td>`;
+      return `<tr><td>${esc(clip(title(o.id), 50))}</td><td>${esc(o.objective)}</td>${box('ev')}${box('und')}${box('prac')}</tr>`; }).join('')}</tbody></table></div>` : '<p class="muted">No learning objectives yet.</p>');
+}
+function stCheckSum(doc){ const objs = doc.an.objectives, done = f => objs.filter(o => (doc.check[o.k] || {})[f]).length; return `<b>${done('und')}</b> of ${objs.length} understood · <b>${done('ev')}</b> evidence reviewed · <b>${done('prac')}</b> practised`; }
+function stMarkCheck(doc, secId, f){ ((doc.an && doc.an.objectives) || []).filter(o => o.id === secId).forEach(o => { (doc.check[o.k] ||= {})[f] = true; }); }
+
+/* --- actions, input --- */
+async function stAddFile(which, file){
+  const doc = stDoc(), set = stSet(doc); if (!doc || !set) return;
+  toast(`Reading the ${which === 'paper' ? 'paper' : 'slides'}…`);
+  try { await vLoadFile(set, which, file); save(); RENDER.studio(); toast(which === 'paper' ? 'Paper added — statements can now be checked against it' : 'Slides added'); }
+  catch (err){ alert((err && err.message) || 'This file could not be read.'); }
+}
+const ST_ACTIONS = {
+  'st-path': el => { S.ui.critPath = el.dataset.v; save(); showTab(el.dataset.v); },
+  'st-new': () => { stState().adding = true; RENDER.studio(); },
+  'st-cancel-add': () => { stState().adding = false; RENDER.studio(); },
+  'st-copy': el => { const t = $(el.dataset.target); if (t) copyText(t.innerText.trim()); },
+  'st-del': () => { const st = stState(), doc = stDoc(); if (!doc || !confirm(`Remove “${doc.name}” from the Study Studio? Your study notes for it will be deleted. The original file on your device is not affected.`)) return;
+    st.docs = st.docs.filter(d => d.id !== doc.id); st.active = (st.docs[0] || {}).id || ''; save(); RENDER.studio(); },
+  'st-paste': () => openDialog('Paste your critique', `<p class="small muted">Paste the whole critique. Separate paragraphs with an empty line; headings on their own line are recognised.</p><div class="field"><label class="f" for="stPasteName">Name</label><input class="input" id="stPasteName" name="name" value="My critique"></div><div class="field"><label class="f" for="stPasteText">Critique text</label><textarea id="stPasteText" name="text" style="min-height:220px" required></textarea></div>`, d => {
+    const blocks = stTextBlocks(d.text); if (!blocks.some(b => b.kind === 'p')){ alert('No text was found.'); return false; }
+    stState().adding = false; stNewDoc((d.name || 'My critique').trim(), 'paste', blocks); RENDER.studio(); toast('Your critique is ready to study'); }, 'Add critique'),
+  'st-analyze': () => { const doc = stDoc(); if (doc) stAnalyze(doc); },
+  'st-stop': () => stRun && stRun.ctl.abort(),
+  'st-docs': () => { const f = $('.st-docs-fold'); if (f){ f.open = true; f.scrollIntoView({block:'start', behavior:'smooth'}); } },
+  'st-doc-remove': el => { const doc = stDoc(), set = stSet(doc); if (!set || !confirm('Remove this document from your study set?')) return; set.docs[el.dataset.k] = null; save(); RENDER.studio(); },
+  'st-mode': el => { stState().mode = el.dataset.v; save(); RENDER.studio(); },
+  'st-tab': el => { stState().tab[stMode()] = el.dataset.v; save(); stRenderAssist(stDoc()); },
+  'st-lang': el => { stState().lang = el.dataset.v === 'ar' ? 'ar' : 'en'; save(); stRenderAssist(stDoc()); stListenUI(); },
+  'st-pane': el => { stState().pane = el.dataset.v; save(); const ws = $('.st-ws'); if (ws) ws.dataset.pane = el.dataset.v; $$('.st-panesw button').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.v === el.dataset.v))); (el.dataset.v === 'study' ? $('#stAssist') : $('#stDoc'))?.scrollIntoView({block:'start'}); },
+  'st-sel': (el, e) => { const s = getSelection(); if (s && !s.isCollapsed && s.toString().trim()) return; if (e && e.target.closest('button') && e.target.closest('button') !== el) return;
+    const doc = stDoc(); doc.sel = el.dataset.id; stHlSel = null; save(); stRenderDoc(doc); stRenderAssist(doc); if (el.dataset.go){ $('#sp-' + doc.sel)?.scrollIntoView({block:'center', behavior:'smooth'}); } },
+  'st-sec': el => { const doc = stDoc(), sec = stSecOf(doc, el.dataset.id); doc.sel = sec.paras[0].id; stHlSel = null; save(); stRenderDoc(doc); stRenderAssist(doc); $('#sp-' + sec.id)?.scrollIntoView({block:'start', behavior:'smooth'}); },
+  'st-hl': el => { const doc = stDoc(), h = doc.hls[+el.dataset.i]; if (!h) return; stHlSel = +el.dataset.i; doc.sel = h.pid; save(); stRenderDoc(doc); stRenderAssist(doc); if (innerWidth < 1000) ACTIONS['st-pane']({dataset:{v:'study'}}); },
+  'st-hl-close': () => { stHlSel = null; const doc = stDoc(); stRenderDoc(doc); stRenderAssist(doc); },
+  'st-explain': el => { const doc = stDoc(), sec = stSecOf(doc, el.dataset.id), lang = stLang(); stAsk(lang === 'ar' ? 'Explaining this section in Arabic' : 'Explaining this section', stExplainPrompt(doc, sec, lang), r => stApplyExplain(doc, sec, lang, r)); },
+  'st-sents': el => { const doc = stDoc(), b = stBlock(doc, el.dataset.id), lang = stLang(); stAsk('Explaining sentence by sentence', stSentPrompt(doc, b, lang), r => stApplySents(doc, b, lang, r)); },
+  'st-chal': el => { const doc = stDoc(), sec = stSecOf(doc, el.dataset.id); stAsk('Writing questions to challenge your critique', stChalPrompt(doc, sec), r => stApplyChal(doc, sec, r)); },
+  'st-chal-check': el => { const doc = stDoc(), sec = stSecOf(doc, el.dataset.sec), c = doc.chal[el.dataset.sec], i = +el.dataset.i, ans = (c.ans[i] || '').trim();
+    if (!ans) return toast('Write your answer first');
+    stAsk('Checking your answer', stEvalPrompt(doc, sec, c.qs[i].q, '', ans), r => { const fb = stApplyEval(r); if (!fb) return false; c.fb[i] = fb; }); },
+  'st-qa': el => { const doc = stDoc(), sec = stSecOf(doc, el.dataset.id); stAsk('Writing professor questions for this section', stQaPrompt(doc, sec), r => { if (stApplyQa(doc, sec, r) === false) return false; if (doc.prac && doc.prac.sec === sec.id) doc.prac = null; }); },
+  'st-prac-submit': el => { const doc = stDoc(), sec = stSecOf(doc, el.dataset.sec), qa = doc.secs[sec.id].qa, p = doc.prac && doc.prac.sec === sec.id ? doc.prac : (doc.prac = {sec:sec.id, i:0});
+    const ans = (p.answer || '').trim(); if (!ans) return toast('Type your answer first');
+    const q = qa.qs[p.i] || qa.qs[0];
+    stAsk('Evaluating your answer', stEvalPrompt(doc, sec, p.follow || q.q, p.follow ? '' : q.answer, ans), r => { const fb = stApplyEval(r); if (!fb) return false; p.fb = fb; stMarkCheck(doc, sec.id, 'prac'); }); },
+  'st-prac-follow': el => { const doc = stDoc(), p = doc.prac; if (!p || !p.fb) return; p.follow = p.fb.followup; p.fb = null; p.answer = ''; p.model = false; save(); stRenderAssist(doc); },
+  'st-prac-next': el => { const doc = stDoc(), qa = doc.secs[el.dataset.sec].qa, p = doc.prac && doc.prac.sec === el.dataset.sec ? doc.prac : {sec:el.dataset.sec, i:-1};
+    doc.prac = {sec:el.dataset.sec, i:(p.i + 1) % qa.qs.length, answer:'', fb:null, follow:'', model:false}; save(); stRenderAssist(doc); },
+  'st-prac-model': el => { const doc = stDoc(), p = doc.prac && doc.prac.sec === el.dataset.sec ? doc.prac : (doc.prac = {sec:el.dataset.sec, i:0}); p.model = !p.model; save(); stRenderAssist(doc); },
+  'st-ev': el => { const doc = stDoc(); stEvidence(doc, el.dataset.text, el.dataset.loc, el.dataset.sec); },
+  'st-ev-open': el => { const doc = stDoc(), set = stSet(doc), r = doc.ev[stEvKey(el.dataset.text)], E = eState(set);
+    E.target = 'critique'; E.adhoc = {cid:'adhoc', text:el.dataset.text, loc:el.dataset.loc || 'Your critique', m:r || null, at:Date.now()}; E.sel = 'adhoc'; E.view = 'viewer'; S.verify.active = set.id; save(); goStep('critiquing', 3); },
+  'st-open-evidence': () => { const set = stSet(stDoc()); if (set){ S.verify.active = set.id; eState(set).target = 'critique'; save(); } goStep('critiquing', 3); },
+  'st-open-defend': () => { const set = stSet(stDoc()); if (set){ S.verify.active = set.id; save(); } goStep('verifying', 1); },
+  'st-sel-clear': () => { stSelText = ''; getSelection()?.removeAllRanges(); const b = $('#stSelBox'); if (b) b.innerHTML = ''; },
+  'st-sel-explain': () => { const doc = stDoc(), t = stSelText; if (!t) return; stAsk('Explaining your selection', stSelPrompt(doc, t), r => { if (!r || !vStr(r.meaning)) return false;
+    (doc.selx ||= {})[stEvKey(t)] = {meaning:vStr(r.meaning, 1000), why:vStr(r.why, 1000), kind:ST_KINDS[r.kind] ? r.kind : 'other', question:vStr(r.question, 400), lang:stLang()}; }); },
+  'st-sel-ev': () => { const doc = stDoc(), t = stSelText; if (t) stEvidence(doc, t, 'Your selection', stSecOf(doc, stSelId(doc)).id); },
+  'st-say': el => { const t = el.dataset.text || ($(el.dataset.target) || {}).innerText || ''; if (t.trim()) stSay(t.trim()); },
+  'st-listen': () => { const doc = stDoc(); stListenFrom(doc, stSelId(doc)); },
+  'st-re': el => { const doc = stDoc(); stReadExplain(doc, el.dataset.id || stSelId(doc)); },
+  'st-re-next': el => { const doc = stDoc(); stReadExplain(doc, el.dataset.id); },
+  'st-pause': () => ttsPause(),
+  'st-continue': () => { if (TTS.ctx && TTS.ctx.studio && TTS.list[TTS.i]){ ttsHalt(); ttsSpeak(true); } },
+  'st-bottom': el => { stState().bottom = el.dataset.v; save(); const b = $('#stBottom'); if (b) b.innerHTML = `<summary>${icon('chart')}<b>Study progress &amp; key concepts</b>${icon('chevd', 'chev')}</summary>${stBottomHTML(stDoc())}`; }
+};
+function stInput(t){
+  if (!t.dataset || !t.dataset.st) return false;
+  const doc = stDoc(); if (!doc) return true;
+  if (t.dataset.st === 'chal-ans'){ const c = doc.chal[t.dataset.sec]; if (c){ c.ans[+t.dataset.i] = t.value; save(); } return true; }
+  if (t.dataset.st === 'prac-ans'){ const sec = stSecOf(doc, stSelId(doc)); if (!doc.prac || doc.prac.sec !== sec.id) doc.prac = {sec:sec.id, i:0}; doc.prac.answer = t.value; save(); return true; }
+  return false;
+}
+function stChange(t){
+  if (t.id === 'stCritFile' && t.files[0]){ const file = t.files[0]; t.value = ''; toast('Reading your critique…');
+    stReadCritique(file).then(r => { stState().adding = false; stNewDoc(file.name, r.kind, r.blocks); RENDER.studio(); toast('Your critique is ready — exactly as you wrote it'); })
+      .catch(err => alert((err && err.message) || 'This file could not be read.')); return true; }
+  if (t.id === 'stPaperFile' && t.files[0]){ const f = t.files[0]; t.value = ''; stAddFile('paper', f); return true; }
+  if (t.id === 'stPresFile' && t.files[0]){ const f = t.files[0]; t.value = ''; stAddFile('pres', f); return true; }
+  if (!t.dataset || !t.dataset.st) return false;
+  const st = stState(), doc = stDoc();
+  if (t.dataset.st === 'doc'){ st.active = t.value; st.adding = false; stHlSel = null; save(); RENDER.studio(); return true; }
+  if (t.dataset.st === 'hl'){ st.hl[t.dataset.k] = t.checked; save(); if (doc) stRenderDoc(doc); return true; }
+  if (t.dataset.st === 'rate'){ S.reader.rate = +t.value || 1; save(); return true; }
+  if (t.dataset.st === 'reader-paper' && t.value){ const set = stSet(doc); set.docs.paper = {src:'reader', ref:t.value, at:Date.now()}; save(); RENDER.studio(); toast('Paper added from the reader'); return true; }
+  if (t.dataset.st === 'check'){ ((doc.check[t.dataset.k] ||= {}))[t.dataset.f] = t.checked; save(); const el = $('#stCheckSum'); if (el) el.innerHTML = stCheckSum(doc); return true; }
+  return false;
+}
+document.addEventListener('selectionchange', () => {                    // selected words in the critique: explain them, or find where they come from
+  const box = $('#stSelBox'); if (!box || S.ui.tab !== 'studio') return;
+  const s = getSelection(), n = s && !s.isCollapsed && s.anchorNode, el = n && (n.nodeType === 1 ? n : n.parentElement);
+  const t = s ? s.toString().replace(/\s+/g, ' ').trim() : '';
+  if (el && $('#stDoc') && $('#stDoc').contains(el) && t.length > 3 && t !== stSelText){ stSelText = t.slice(0, 1500); clearTimeout(stSelT); stSelT = setTimeout(() => { const d = stDoc(); if (d) box.innerHTML = stSelBoxHTML(d); stRenderRun(); }, 250); }
+});
+let stSelT = 0;
+document.addEventListener('keydown', e => { if ((e.key === 'Enter' || e.key === ' ') && e.target.classList && e.target.classList.contains('sth')){ e.preventDefault(); ST_ACTIONS['st-hl'](e.target); } });
+Object.assign(ACTIONS, V_ACTIONS, D_ACTIONS, E_ACTIONS, ST_ACTIONS);
 document.addEventListener('click', e => {
   $$('details.menu[open]').forEach(d => { if (!d.contains(e.target) || e.target.closest('.menu-item')) d.open = false; });
   const el = e.target.closest('[data-act]'); if (!el || el.disabled) return;
@@ -8460,7 +9330,7 @@ document.addEventListener('keydown', e => {
 });
 document.addEventListener('input', e => {
   const t = e.target, c = () => activeCrit();
-  if (vInput(t) || dInput(t) || eInput(t)) return;
+  if (vInput(t) || dInput(t) || eInput(t) || stInput(t)) return;
   if (t.dataset.chatIn){ t.style.height = 'auto'; t.style.height = Math.min(t.scrollHeight + 2, 160) + 'px'; return; }
   if (t.dataset.fl){ const r = activeFig(); r[t.dataset.fl] = t.value; save(); updateExplain(); return; }
   if (t.dataset.fb){ S.figlab.build.chart[t.dataset.fb] = t.value; save(); updateBuild(); return; }
@@ -8495,7 +9365,7 @@ document.addEventListener('input', e => {
 });
 document.addEventListener('change', e => {
   const t = e.target;
-  if (vChange(t) || dChange(t) || eChange(t)) return;
+  if (vChange(t) || dChange(t) || eChange(t) || stChange(t)) return;
   if (t.dataset.fl === 'critId'){ RENDER.figlab(); return; }
   if (t.id === 'presFile' && t.files[0]){ const file = t.files[0]; t.value = ''; toast('Reading your critique…');
     presReadFile(file).then(units => presAddCritique(file.name, (file.name.split('.').pop() || '').toLowerCase(), units)).catch(err => alert((err && err.message) || 'This file could not be read.')); return; }
