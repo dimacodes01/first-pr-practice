@@ -4,13 +4,21 @@ ScholarPath is a research companion web app built for **Dima Alkharraz** (Englis
 
 **Read `docs/SCHOLARPATH_SPEC.md` first.** It is the full specification: every requirement, rule, decision and known limitation.
 
+## ScholarPath is becoming a public website (owner's decision, 13 Oct 2026)
+Build every change for **a public website on GitHub Pages, open to any student** (spec §11), not only for the claude.ai page:
+- It must work as plain static files from any folder of a web address: relative paths only, no build step, no server, no login.
+- Claude features on the website use the **copy-prompt bridge** (`AI_BRIDGE`): never call Claude directly from the page and never put an API key in the code. On claude.ai the real capability is used automatically. New Claude features must go through `AI(…)` / `AI.json(…)` so they work in both places.
+- Keep `about.html` (About & privacy) true: if a change sends anything off the device or adds an outside service, update it in the same commit.
+- New pages share the icon, theme colour and tokens; link previews come from the `og:` tags in `index.html` (absolute address — update if the site moves).
+- Run `tests/site-check.js` before every commit.
+
 ## Hard rules (from the owner)
 - Never invent academic content (findings, numbers, references, DOIs, IDs). Use labelled placeholders.
 - Never delete or move a word of an uploaded paper. A paragraph interrupted by a figure stays one block, and the figure goes after it.
 - Figures and tables are not part of the Paper Reader's reading. They are shown as pictures and explained in Figure Lab.
 - Label all example content. Put a Copy button on every generated output. Keep it working on phones, in light and dark mode. No login.
 - Mark Claude-generated text as Claude's, and remind the user to check it against the paper.
-- Read aloud uses the device's own voices: label an accent or region only from the voice's language tag, never fake an accent, dialect or gender with pitch, and never change the written text — only the spoken copy (spec §5.3). Do not claim a voice was upgraded unless the app really uses it.
+- Read aloud uses the device's own voices: label an accent or region only from the voice's language tag, never fake an accent, dialect or gender with pitch, and never change the written text — only the spoken copy (spec §5.3). Do not claim a voice was upgraded unless the app really uses it. British English is the default English accent, and novelty or character voices (sound effects, whispering, comic styles — `UNSUITABLE_VOICE`) are never listed or chosen.
 - Evidence mapping (step 2.4): a quotation is shown only if it is found word for word in the paper, and pages, sections and paragraphs come from the paper, never from Claude; otherwise "Source not verified" (spec §5.4b).
 - Design (spec §2): use the CSS tokens on `:root` (the school-platform look the owner chose: dark-blue top bar, slate sidebar with a white tile for the current page, light blue-grey page, white cards, blue accent, pill buttons, underlined tabs, coloured icon tiles from `--c-*`), Nunito / IBM Plex Sans Arabic, Lucide icons via `icon()`. Keep the top bar dark blue. No emoji in the interface. Every text colour must pass WCAG AA in light and dark. No placeholder buttons that do nothing.
 - Part 4 · Verify & defend: the original paper is the source of truth; never mark a check as done unless it was actually checked on the current document versions; never resolve a contradiction silently; never call the documents fully consistent before the complete comparison (spec §5.9). Professor questions (4.2) are generated from the actual documents only — no fixed question bank — and a question is "prepared" only after the student has answered it (spec §5.10).
@@ -20,17 +28,21 @@ ScholarPath is a research companion web app built for **Dima Alkharraz** (Englis
 - `index.html` is the whole app: CSS, markup and one script in an IIFE. Each tab has a `RENDER.<tab>()`. Events use `data-act` → `ACTIONS`, plus `input` / `change` handlers keyed on `data-*`.
 - State lives in `localStorage['scholarpath.v1']` (`S`), and figure pictures in IndexedDB (`scholarpath` / `img`).
 - `vendor/pdfjs/` holds pdf.js 3.11.174 (with a cdnjs fallback); `vendor/pptxgenjs/` holds PptxGenJS 4.0.1 (jsDelivr fallback), loaded only when step 3.1 generates a PowerPoint (`presPptx`). Step 3.1 is spec §5.7: an added critique (`S.pres.upload`), outlines per source (`S.pres.outlines`, `presDeck()`), Claude's prompt `presPrompt`, the no-Claude `presFromSections`.
-- Claude runs only on the published page, via `window.claude.use('sample')`. Every AI feature needs a manual fallback.
+- Claude: on the claude.ai page `AI` is `window.claude.use('sample')`; everywhere else (the website, localhost, the plain file) `AI` is `AI_BRIDGE`, the copy-prompt bridge with the same interface (`AI(turns, opts)`, `AI.json(prompt, opts)`, `AI.limits()`), which shows the prompt in `#aiBridge`, takes the pasted reply and parses its JSON. Cancel rejects with code `cancelled` and stops every later request with the same AbortSignal; unticked "I attached the pictures" rejects with `images_unavailable` (Figure Lab then uses its text-only path). `aiReady()` is therefore true on the website.
+- Step 2.3 has two pathways: `critique` (the AAU builder) and `studio`, the **Critique Study Studio** (spec §5.4c): `ST_*`, `st*` functions, `ST_ACTIONS`, state `S.studio`. The uploaded critique is never rewritten — it is shown word for word, highlights and quotations are kept only when found word for word (`vLocate` / `eLocate`), and its files also form a Part 4 document set. All its Claude calls go through `stAsk`. Its workspace has three panels (spec §5.4c): the Critique Navigator (`stSections` → `stTree` → `stNavListHTML`; assessment lines such as "10% | Maximum 150 words" are secondary information via `stIsMeta` / `stSplitMeta`, never titles; suggested labels are always marked), the original critique with the reading toolbar (`stToolHTML`, `stListenUI`, Focus Mode) and the study assistant (`stAssistHTML`, five tabs, manual status in `doc.status`). Layout follows the studio's measured width (`stSize`: wide / mid / narrow). The step has its own palette tokens on `#panel-studio` (navy, ivory, champagne gold; Inter).
+- Step 3.1 is the **Presentation Studio** (spec §5.7b): ten steps (`S.pres.ds.stage`, `PS_STAGES`); `psEls` describes each slide once in inches and both `psSlideHTML` (preview, PDF) and `psPptx` draw from it — change layouts there, never in one renderer only. `PS_DESIGNS` / `psDesign` hold the three designs; `psQuality` scores only real checks; the old page is split by `presOldParts`. Never invent numbers or redraw paper figures; diagram points need verified critique quotations.
 - Match the existing style: plain functions, template strings, `esc()` for every user value, CSS tokens on `:root`.
 
 ## Before committing
 - Check the script compiles: extract the `<script>` from `index.html` and run `new Function(js)` in Node.
+- Run `PLAYWRIGHT_BROWSERS_PATH=/opt/pw-browsers NODE_PATH=$(npm root -g) node tests/site-check.js` (serves the folder like GitHub Pages; every step at four widths in light and dark, the website pages and files, and a click-through of the copy-prompt bridge). It must end with "All checks passed". Also run `tests/studio-check.js` and `tests/presentation-check.js` the same way (they end with "All studio checks passed" and "All presentation checks passed"; the latter needs `unzip`).
 - Run the app in Chromium (Playwright; `PLAYWRIGHT_BROWSERS_PATH=/opt/pw-browsers`). Check every tab for page errors, at 1440, 1280, 1024 and 390 px wide, light and dark, without horizontal scrolling. The reader's layout depends on the space next to the sidebar (container queries), so also check it with the sidebar collapsed.
 - If PDF reading changed, re-run the word-preservation check (spec §8): every word of every paragraph must survive.
 
 ## Publishing
+- **Website (main home from now on):** GitHub Pages from the repository root (`index.html`, `about.html`, `404.html`, `assets/`, `vendor/`, `robots.txt`, `.nojekyll`). Address: https://dimacodes01.github.io/first-pr-practice/ once Pages is switched on (spec §11 has the steps). `404.html` uses the `/first-pr-practice/` path — change it with the `og:` tags if the repository is renamed or a custom domain is added.
 - Published page: https://claude.ai/artifact/RQWX4dnGb7W68zTghnoLvz
-- Publish `index.html` with the supporting files `vendor/pdfjs/pdf.min.js`, `vendor/pdfjs/pdf.worker.min.js` and `vendor/pptxgenjs/pptxgen.bundle.js`, and the capabilities `{"sample": {"images": true}, "downloads": true}`.
+- claude.ai page: publish `index.html` with the supporting files `vendor/pdfjs/pdf.min.js`, `vendor/pdfjs/pdf.worker.min.js`, `vendor/pptxgenjs/pptxgen.bundle.js`, `about.html` and the files in `assets/`, and the capabilities `{"sample": {"images": true}, "downloads": true}`.
 - Work on branch `claude/scholarpath-research-app-jabga7`. Commit and push after each change, with an attribution footer.
 
 ## Owner's preferences

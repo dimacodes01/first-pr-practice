@@ -1,0 +1,10 @@
+[p. 1]
+Example paper — made up for testing ScholarPath. It is not a real study.
+
+Abstract. This imaginary study followed twenty secondary-school students who used an AI writing assistant for four weeks. We analysed their drafts and interviewed each student.
+
+[p. 2]
+Method. Participants were recruited through a convenience sample at one school. Twenty students took part. Data came from drafts and semi-structured interviews.
+
+[p. 3]
+Results. Students accepted most grammar suggestions but ignored most suggestions about structure and argument.
